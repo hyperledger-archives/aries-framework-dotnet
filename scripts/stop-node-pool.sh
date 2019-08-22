@@ -1,0 +1,1 @@
+docker stop indy_pool

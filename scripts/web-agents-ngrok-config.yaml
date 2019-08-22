@@ -1,0 +1,12 @@
+web_addr: 5037
+tunnels:
+  web-agent-1:
+    addr: 7000
+    proto: http
+    host_header: "localhost:7000"
+    bind-tls: false
+  web-agent-2:
+    addr: 8000
+    proto: http
+    host_header: "localhost:8000"
+    bind-tls: false

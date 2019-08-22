@@ -1,0 +1,41 @@
+﻿@using System.Linq
+@model ConnectionsViewModel
+
+<a class="btn btn-primary mt-3" role="button" asp-controller="Connections" asp-action="CreateInvitation">Create Invitation</a>
+
+@if (Model.Connections.Any())
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Connections)
+            {
+                <tr>
+                    <td>
+                        @if (item.State == ConnectionState.Connected)
+                        {
+                            <img src="@Url.Identicon(item.Alias.Name, size: 50)" style="width: 25px; height: 25px" />
+                            <a asp-area="" asp-controller="Connections" asp-action="Details" asp-route-id="@item.Id">@(item.Alias?.Name ?? item.Id)</a>
+                        }
+                        else
+                        {
+                            @(item.Alias?.Name ?? item.Id)   
+                        }
+                    </td>
+                    <td>
+                        @item.State
+                    </td>
+                    <td>
+                        @item.CreatedAtUtc.Value.ToLocalTime()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

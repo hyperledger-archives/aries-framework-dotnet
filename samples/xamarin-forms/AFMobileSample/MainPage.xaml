@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" x:Name="xMyForm" BindingContext="{x:Reference Name=xMyForm}" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:AFMobileSample" x:Class="AFMobileSample.MainPage">
+    <FlexLayout Direction="Column"
+                AlignItems="Center"
+                JustifyContent="SpaceEvenly">
+        <!-- Place new controls here -->
+        <Label Text="Welcome to Agent Framework!" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+        <ActivityIndicator x:Name="ProgressIndicator" IsRunning="{Binding IsBusy}" />
+        
+        <Button x:Name="ProvisionButton" Text="Provision New Agent" Clicked="OnProvision" VerticalOptions="Start" HorizontalOptions="Center"/>
+        <Label x:Name="DidLabel" WidthRequest="300" HorizontalTextAlignment="Center" Text="{Binding AgentKey, StringFormat='Agent Key: {0}'}" />
+        <Button x:Name="InvitationButton" Text="Create Invitation" Clicked="OnMakeInvitation" VerticalOptions="Start" HorizontalOptions="Center"/>
+        <Editor x:Name="InvitationDetails" WidthRequest="400" HeightRequest="200" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+    </FlexLayout>
+</ContentPage>

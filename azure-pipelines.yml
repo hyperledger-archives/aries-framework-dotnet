@@ -1,0 +1,34 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+  
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- script: dotnet restore
+  displayName: 'dotnet restore'
+- task: projectversionasvariable@1
+  inputs:
+    path: 'Directory.Build.props'
+- task: MSBuild@1
+  inputs:
+    solution: 'AgentFramework.sln'
+    msbuildArguments: '/t:pack /p:Version=$(Version.MajorMinorPatch)-preview.$(Build.BuildId) /p:Configuration=Release /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/pre'
+- task: MSBuild@1
+  inputs:
+    solution: 'AgentFramework.sln'
+    msbuildArguments: '/t:pack /p:Version=$(Version.MajorMinorPatch) /p:Configuration=Release /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/release'
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'drop'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
