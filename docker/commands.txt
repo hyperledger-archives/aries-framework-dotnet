@@ -1,0 +1,8 @@
+docker build -f indy-pool.dockerfile -t indy_pool .
+docker run -itd -p 9701-9709:9701-9709 indy_pool
+
+Run tests in PowerShell
+Get-ChildItem ".\test\" -recurse | where {$_.extension -eq ".csproj"} | % { dotnet test $_.FullName --verbosity normal }
+
+Run tests in Bash 
+ls test/**/*.csproj | xargs -L1 dotnet test --verbosity normal

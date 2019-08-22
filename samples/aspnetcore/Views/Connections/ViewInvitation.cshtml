@@ -1,0 +1,20 @@
+﻿@model AgentFramework.Core.Messages.Connections.ConnectionInvitationMessage
+@{
+    ViewData["Title"] = "ViewInvitation";
+    var invitationDetails = (string)ViewData["InvitationDetails"];
+}
+
+<form asp-controller="Connections" asp-action="AcceptInvitation">
+    <input type="hidden" name="InvitationDetails" value="@invitationDetails" />
+    <div class="card mt-3" style="width: 18rem;">
+        <div class="card-header">
+            Invitation Details
+        </div>
+        <img class="card-img" src="@Url.Identicon(Model.Label, size: 300)" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Label</h5>
+            <p class="card-text"><small class="text-muted">@Model.ServiceEndpoint</small></p>
+            <button type="submit" class="btn btn-primary">Accept Invitation</button>
+        </div>
+    </div>
+</form>

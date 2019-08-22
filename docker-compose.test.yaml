@@ -1,0 +1,28 @@
+version: '3'
+services:
+  indy-pool:
+    build:
+      context: .
+      dockerfile: docker/indy-pool.dockerfile
+      args:
+        pool_ip: 10.0.0.10
+    networks:
+      agent_net:
+        ipv4_address: 10.0.0.10
+
+  test-agent:
+    build:
+      context: .
+      dockerfile: docker/test-agent.dockerfile
+    depends_on:
+      - "indy-pool"
+    networks:
+      agent_net:
+        ipv4_address: 10.0.0.14
+
+networks:
+  agent_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16

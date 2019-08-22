@@ -1,0 +1,24 @@
+﻿@{
+    var invitation = (string)ViewData["Invitation"];
+    var qrUri = $"https://chart.googleapis.com/chart?cht=qr&chs=300x300&chld=L|0&chl={Uri.EscapeDataString(invitation)}";
+}
+
+<div class="card text-center mt-2" style="width: 18rem">
+    <div class="card-header">
+        Invitation Details
+    </div>
+    <img class="card-img" src="@qrUri" />
+    <div class="card-body">
+        <p>
+            <a href="#" data-toggle="modal" data-target="#exampleModalCenter">Open in app</a>
+        </p>
+        <form class="input-group mb-3">
+            <input readonly="readonly" type="text" id="invitationDetails" autocomplete="off" class="form-control" value="@invitation" aria-label="Recipient's username" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-info" onclick="copyToCliboard(document.getElementById('invitationDetails'));return false;">Copy</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("_LaunchApp", invitation)
