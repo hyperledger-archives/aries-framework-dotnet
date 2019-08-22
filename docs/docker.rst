@@ -20,4 +20,4 @@ Example build
 =============
 
 Check the `web agent docker file
-<https://github.com/streetcred-id/agent-framework/blob/master/docker/web-agent.dockerfile>`_ for an example of building and running ASP.NET Core project inside docker container with libindy support.
+<https://github.com/hyperledger/aries-framework-dotnet/blob/master/docker/web-agent.dockerfile>`_ for an example of building and running ASP.NET Core project inside docker container with libindy support.

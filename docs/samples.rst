@@ -6,7 +6,7 @@ ASP.NET Core Agents
 ===================
 
 A sample agent running in ASP.NET Core that runs the default agent middleware can be found in `samples/aspnetcore
-<https://github.com/streetcred-id/agent-framework/tree/master/samples/aspnetcore>`_. This agent is also used in the Docker sample.
+<https://github.com/hyperledger/aries-framework-dotnet/tree/master/samples/aspnetcore>`_. This agent is also used in the Docker sample.
 
 .. code-block:: bash
 

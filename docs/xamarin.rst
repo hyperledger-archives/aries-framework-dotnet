@@ -25,7 +25,7 @@ Download static libraries
 - Our repo (includes `libgnustl_shared.so`) - `samples/xamarin/libs-android`_ 
 - Sovrin repo - https://repo.sovrin.org/android/libindy/
 
-.. _`samples/xamarin/libs-android`: https://github.com/streetcred-id/agent-framework/tree/master/samples/xamarin/libs-android>
+.. _`samples/xamarin/libs-android`: https://github.com/hyperledger/aries-framework-dotnet/tree/master/samples/xamarin/libs-android>
 
 For Android the entire library and its dependencies are compiled into a single shared object (libindy.so). In order for ``libindy.so`` to be executable we must also include ``libgnustl_shared.so``.
 
@@ -117,7 +117,7 @@ Pre-built libraries
 ```````````````````
 
 Can be found in the `iOS sample project
-<https://github.com/streetcred-id/agent-framework/tree/master/samples/xamarin/libs-ios>`_.
+<https://github.com/hyperledger/aries-framework-dotnet/tree/master/samples/xamarin/libs-ios>`_.
 
 Build your own libs
 ```````````````````
@@ -186,7 +186,7 @@ If you prefer to add them directly in the project file, add the following line:
 
 .. warning:: This step is mandatory, otherwise you won't be able to build the project. 
     It prevents linking unused symbols in the static libraries. Make sure you add these arguments for all configurations. See `example project file
-    <https://github.com/streetcred-id/agent-framework/blob/771aaff84b6059a3a7d83e6d9ce1e01fefd10b64/samples/xamarin/AFMobileSample.iOS/AFMobileSample.iOS.csproj#L18>`_.
+    <https://github.com/hyperledger/aries-framework-dotnet/blob/771aaff84b6059a3a7d83e6d9ce1e01fefd10b64/samples/xamarin/AFMobileSample.iOS/AFMobileSample.iOS.csproj#L18>`_.
 
 Install NuGet packages
 ----------------------
@@ -202,4 +202,4 @@ Install the Nuget packages for Indy SDK and/or Agent Framework and build your so
 If you run into any errors or need help setting up, please open an issue in this repo.
 
 Finally, check the `Xamarin Sample
-<https://github.com/streetcred-id/agent-framework/tree/master/samples/xamarin-forms>`_ we have included for a fully configured project.
+<https://github.com/hyperledger/aries-framework-dotnet/tree/master/samples/xamarin-forms>`_ we have included for a fully configured project.

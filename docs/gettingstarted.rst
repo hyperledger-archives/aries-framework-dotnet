@@ -215,7 +215,7 @@ Click run, you should see your template home page will appear in your web browse
 WebAgent Walkthrough
 +++++++++++++++++++++
 
-We will learn how to create a web agent in this section. If you have created your own agent, you should be able to use that here. You may want to download the `View files <https://github.com/streetcred-id/agent-framework/tree/master/samples/aspnetcore/Views>`_ and import them into your project to save time on copy/paste:  
+We will learn how to create a web agent in this section. If you have created your own agent, you should be able to use that here. You may want to download the `View files <https://github.com/hyperledger/aries-framework-dotnet/tree/master/samples/aspnetcore/Views>`_ and import them into your project to save time on copy/paste:  
 We're assuming that you are already familiar with the high level concepts of Indy and Sovrin. 
 
 The first thing is to understand about Wallets. Read about wallets here:  

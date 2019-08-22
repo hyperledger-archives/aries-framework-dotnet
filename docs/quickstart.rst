@@ -47,7 +47,7 @@ Example if using Autofac
     builder.Populate(services);
 
 Check the `Xamarin Sample
-<https://github.com/streetcred-id/agent-framework/blob/master/samples/xamarin-forms/AFMobileSample/App.xaml.cs>`_ for example registration.
+<https://github.com/hyperledger/aries-framework-dotnet/blob/master/samples/xamarin-forms/AFMobileSample/App.xaml.cs>`_ for example registration.
 
 Provisioning an Agent
 =====================
@@ -66,7 +66,7 @@ Length of seed must be 32 characters.
         });
 
 Check the `ProvisioningConfiguration.cs
-<https://github.com/streetcred-id/agent-framework/blob/master/src/AgentFramework.Core/Models/Wallets/ProvisioningConfiguration.cs>`_
+<https://github.com/hyperledger/aries-framework-dotnet/blob/master/src/AgentFramework.Core/Models/Wallets/ProvisioningConfiguration.cs>`_
 for full configuration details. You can retrieve the generated details like agent Did and Verkey using
 
 .. code-block:: csharp
@@ -199,7 +199,7 @@ Established connections will have the ``State`` property set to ``Connected``.
 
 .. tip:: If you decide to use custom handlers and want more control over the negotiation process, the connection service provides methods to work with the connections message flows, such as processing and accepting requests/responses. 
     A full step by step code is available in the `unit tests project
-    <https://github.com/streetcred-id/agent-framework/blob/master/test/AgentFramework.Core.Tests/Scenarios.cs>`_ in ``EstablishConnectionAsync``.
+    <https://github.com/hyperledger/aries-framework-dotnet/blob/master/test/AgentFramework.Core.Tests/Scenarios.cs>`_ in ``EstablishConnectionAsync``.
 
 Credential issuance
 ===================

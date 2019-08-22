@@ -4,7 +4,7 @@
    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Company>AgentFramework</Company>
     <Authors>Tomislav Markovski, Tobias Looker</Authors>
-    <PackageProjectUrl>https://github.com/streetcred-id/agent-framework</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/streetcred-id/agent-framework</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/hyperledger/aries-framework-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hyperledger/aries-framework-dotnet</RepositoryUrl>
  </PropertyGroup>
 </Project>
