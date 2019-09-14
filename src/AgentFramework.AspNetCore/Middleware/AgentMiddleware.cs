@@ -57,8 +57,8 @@ namespace AgentFramework.AspNetCore.Middleware
                 if (response != null)
                 {
                     context.Response.ContentType = DefaultMessageService.AgentWireMessageMimeType;
-                    await response.Stream.CopyToAsync(context.Response.Body);
-                }
+					await context.Response.WriteAsync(response.GetData().GetUTF8String());
+				}
                 else
                     await context.Response.WriteAsync(string.Empty);
             }
