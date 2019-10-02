@@ -21,7 +21,7 @@ using Newtonsoft.Json.Linq;
 namespace AgentFramework.Core.Runtime
 {
     /// <inheritdoc />
-    public class DefaultCredentialService : ICredentialService
+    public partial class DefaultCredentialService : ICredentialService
     {
         /// <summary>
         /// The event aggregator.

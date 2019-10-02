@@ -9,5 +9,10 @@
         /// Text mime type attribute.
         /// </summary>
         public const string TextMimeType = "text/plain";
+
+        /// <summary>
+        /// Application JSON mime type
+        /// </summary>
+        public const string ApplicationJsonMimeType = "application/json";
     }
 }

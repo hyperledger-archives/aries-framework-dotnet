@@ -3,7 +3,7 @@
 namespace AgentFramework.Core.Decorators.Attachments
 {
     /// <summary>
-    /// 
+    /// Attachment content
     /// </summary>
     public class AttachmentContent
     {
