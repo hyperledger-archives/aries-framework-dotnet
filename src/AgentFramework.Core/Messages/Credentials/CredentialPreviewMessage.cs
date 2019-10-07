@@ -22,15 +22,6 @@ namespace AgentFramework.Core.Messages.Credentials
         }
 
         /// <summary>
-        /// Gets or sets the context.
-        /// </summary>
-        /// <value>
-        /// The context.
-        /// </value>
-        [JsonProperty("@context")]
-        public JObject Context { get; set; }
-
-        /// <summary>
         /// Gets or sets the attributes.
         /// </summary>
         /// <value>

@@ -9,6 +9,13 @@ namespace AgentFramework.Core.Decorators.Attachments
     public class Attachment
     {
         /// <summary>
+        /// Gets or sets the ID
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("@id")]
+        public string Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the nickname.
         /// </summary>
         /// <value>
@@ -51,6 +58,14 @@ namespace AgentFramework.Core.Decorators.Attachments
         /// The content.
         /// </value>
         [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
+        [Obsolete("Please use Data field instead.")]
         public AttachmentContent Content { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attachment data
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("data")]
+        public AttachmentContent Data { get; set; }
     }
 }

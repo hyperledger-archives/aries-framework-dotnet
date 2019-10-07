@@ -1,9 +1,9 @@
 <Project>
  <PropertyGroup>
-   <Version>4.0.2</Version>
+   <Version>4.1.0</Version>
    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Company>AgentFramework</Company>
-    <Authors>Tomislav Markovski, Tobias Looker</Authors>
+    <Company>Hyperledger</Company>
+    <Authors>Hyperledger Aries Dotnet Maintainers</Authors>
     <PackageProjectUrl>https://github.com/hyperledger/aries-framework-dotnet</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hyperledger/aries-framework-dotnet</RepositoryUrl>
  </PropertyGroup>

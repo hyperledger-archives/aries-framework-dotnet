@@ -89,5 +89,36 @@
         /// Discovery Disclose Message Type.
         /// </summary>
         public const string DiscoveryDiscloseMessageType = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/protocol-discovery/1.0/disclose";
+
+        /// <summary>
+        /// Issue Credential
+        /// </summary>
+        public static class IssueCredentialNames
+        {
+            /// <summary>
+            /// Credential Propose Message Type Name
+            /// </summary>
+            public const string ProposeCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/propose-credential";
+
+            /// <summary>
+            /// Credential Preview Message Type Name
+            /// </summary>
+            public const string PreviewCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/credential-preview";
+
+            /// <summary>
+            /// Offer Credential Message Type Name
+            /// </summary>
+            public const string OfferCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/offer-credential";
+
+            /// <summary>
+            /// Request Credential Message Type Name
+            /// </summary>
+            public const string RequestCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/request-credential";
+
+            /// <summary>
+            /// Issue Credential Message Type Name
+            /// </summary>
+            public const string IssueCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/issue-credential";
+        }
     }
 }

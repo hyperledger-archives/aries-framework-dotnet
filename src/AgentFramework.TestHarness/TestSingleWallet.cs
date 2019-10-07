@@ -58,8 +58,8 @@ namespace AgentFramework.TestHarness
                         .AddIssuerAgent(config =>
                         {
                             config.EndpointUri = new Uri("http://test");
-                            config.WalletConfiguration = new WalletConfiguration {Id = Guid.NewGuid().ToString()};
-                            config.WalletCredentials = new WalletCredentials {Key = "test"};
+                            config.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
+                            config.WalletCredentials = new WalletCredentials { Key = "test" };
                             config.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
                             config.PoolName = "TestPool";
                         })
