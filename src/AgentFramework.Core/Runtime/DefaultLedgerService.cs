@@ -20,6 +20,17 @@ namespace AgentFramework.Core.Runtime
     /// <inheritdoc />
     public class DefaultLedgerService : ILedgerService
     {
+        private readonly ILedgerSigningService _signingService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultLedgerService" /> class
+        /// </summary>
+        /// <param name="signingService"></param>
+        public DefaultLedgerService(ILedgerSigningService signingService)
+        {
+            _signingService = signingService;
+        }
+
         /// <inheritdoc />
         public virtual async Task<ParseResponseResult> LookupDefinitionAsync(Pool pool,
             string definitionId)
@@ -188,7 +199,8 @@ namespace AgentFramework.Core.Runtime
                     extra: null);
                 request = requestWithFees.Result;
             }
-            var response = await Ledger.SignAndSubmitRequestAsync(pool, wallet, submitterDid, request);
+            var signedRequest = await _signingService.SignRequestAsync(wallet, submitterDid, request);
+            var response = await Ledger.SubmitRequestAsync(pool, signedRequest);
 
             EnsureSuccessResponse(response);
 

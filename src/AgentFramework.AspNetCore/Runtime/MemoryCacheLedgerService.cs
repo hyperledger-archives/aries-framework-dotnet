@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Runtime;
 using Hyperledger.Indy.LedgerApi;
 using Hyperledger.Indy.PoolApi;
@@ -19,8 +20,13 @@ namespace AgentFramework.AspNetCore.Runtime
 
         /// <summary>Initializes a new instance of the <see cref="MemoryCacheLedgerService"/> class.</summary>
         /// <param name="memoryCache">The memory cache.</param>
+        /// <param name="signingService">Ledger signing service</param>
         /// <param name="options">The options.</param>
-        public MemoryCacheLedgerService(IMemoryCache memoryCache, MemoryCacheEntryOptions options = null)
+        public MemoryCacheLedgerService(
+            IMemoryCache memoryCache, 
+            ILedgerSigningService signingService,
+            MemoryCacheEntryOptions options = null)
+            : base(signingService)
         {
             _memoryCache = memoryCache;
             _options = options ?? new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(1));

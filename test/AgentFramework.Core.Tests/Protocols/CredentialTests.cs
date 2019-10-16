@@ -45,7 +45,7 @@ namespace AgentFramework.Core.Tests.Protocols
         public CredentialTests()
         {
             var recordService = new DefaultWalletRecordService();
-            var ledgerService = new DefaultLedgerService();
+            var ledgerService = new DefaultLedgerService(new DefaultLedgerSigningService());
 
             _eventAggregator = new EventAggregator();
 
