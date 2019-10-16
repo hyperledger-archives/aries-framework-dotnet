@@ -274,8 +274,7 @@ namespace AgentFramework.Core.Tests.Protocols
                         new RequestedAttribute
                         {
                             CredentialId = credentials.First().CredentialInfo.Referent,
-                            Revealed = true,
-                            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                            Revealed = true
                         });
                 }
 
@@ -379,8 +378,7 @@ namespace AgentFramework.Core.Tests.Protocols
                     new RequestedAttribute
                     {
                         CredentialId = credentials.First().CredentialInfo.Referent,
-                        Revealed = true,
-                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                        Revealed = true
                     });
             }
 
