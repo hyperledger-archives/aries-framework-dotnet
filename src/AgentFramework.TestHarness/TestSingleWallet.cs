@@ -34,6 +34,8 @@ namespace AgentFramework.TestHarness
 
         protected IHost Host { get; private set; }
 
+        protected virtual string GetPoolName() => "TestPool";
+        protected virtual string GetIssuerSeed() => null;
         public async Task DisposeAsync()
         {
             var walletOptions = Host.Services.GetService<IOptions<WalletOptions>>().Value;
@@ -61,7 +63,8 @@ namespace AgentFramework.TestHarness
                             config.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
                             config.WalletCredentials = new WalletCredentials { Key = "test" };
                             config.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
-                            config.PoolName = "TestPool";
+                            config.PoolName = GetPoolName();
+                            config.IssuerSeed = GetIssuerSeed();
                         })
                         .AddSovrinToken());
                 })
