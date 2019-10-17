@@ -408,8 +408,7 @@ namespace AgentFramework.Core.Runtime
             {
                 var paymentInfo = await PaymentService.GetTransactionCostAsync(agentContext, TransactionTypes.REVOC_REG_ENTRY);
 
-                await LedgerService.SendRevocationRegistryEntryAsync(wallet: agentContext.Wallet,
-                                                                     pool: await agentContext.Pool,
+                await LedgerService.SendRevocationRegistryEntryAsync(context: agentContext,
                                                                      issuerDid: issuerDid,
                                                                      revocationRegistryDefinitionId: revocationRegistryId,
                                                                      revocationDefinitionType: "CL_ACCUM",
@@ -464,8 +463,7 @@ namespace AgentFramework.Core.Runtime
             var paymentInfo = await PaymentService.GetTransactionCostAsync(agentContext, TransactionTypes.REVOC_REG_ENTRY);
 
             // Write the delta state on the ledger for the corresponding revocation registry
-            await LedgerService.SendRevocationRegistryEntryAsync(wallet: agentContext.Wallet,
-                                                                 pool: await agentContext.Pool,
+            await LedgerService.SendRevocationRegistryEntryAsync(context: agentContext,
                                                                  issuerDid: issuerDid,
                                                                  revocationRegistryDefinitionId: revocationRecord.Id,
                                                                  revocationDefinitionType: "CL_ACCUM",

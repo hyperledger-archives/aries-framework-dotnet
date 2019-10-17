@@ -320,8 +320,7 @@ namespace AgentFramework.Core.Runtime
                 var paymentInfo = await PaymentService.GetTransactionCostAsync(agentContext, TransactionTypes.REVOC_REG_ENTRY);
 
                 await LedgerService.SendRevocationRegistryEntryAsync(
-                    wallet: agentContext.Wallet,
-                    pool: await agentContext.Pool,
+                    context: agentContext,
                     issuerDid: provisioning.IssuerDid,
                     revocationRegistryDefinitionId: revocationRegistryId,
                     revocationDefinitionType: "CL_ACCUM",

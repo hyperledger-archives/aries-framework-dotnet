@@ -20,6 +20,17 @@ namespace AgentFramework.Core.Runtime
     /// <inheritdoc />
     public class DefaultLedgerService : ILedgerService
     {
+        private readonly ILedgerSigningService _signingService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultLedgerService" /> class
+        /// </summary>
+        /// <param name="signingService"></param>
+        public DefaultLedgerService(ILedgerSigningService signingService)
+        {
+            _signingService = signingService;
+        }
+
         /// <inheritdoc />
         public virtual async Task<ParseResponseResult> LookupDefinitionAsync(Pool pool,
             string definitionId)
@@ -52,6 +63,31 @@ namespace AgentFramework.Core.Runtime
         }
 
         /// <inheritdoc />
+        public async Task<IndyTaa> LookupTaaAsync(IAgentContext context, string data = null)
+        {
+            IndyTaa ParseTaa(string response)
+            {
+                var jresponse = JObject.Parse(response);
+                if (jresponse["result"]["data"].HasValues)
+                {
+                    return new IndyTaa
+                    {
+                        Text = jresponse["result"]["data"]["text"].ToString(),
+                        Version = jresponse["result"]["data"]["version"].ToString()
+                    };
+                }
+                return null;
+            };
+
+            var req = await Ledger.BuildGetTxnAuthorAgreementRequestAsync(null, data);
+            var res = await Ledger.SubmitRequestAsync(await context.Pool, req);
+
+            EnsureSuccessResponse(res);
+
+            return ParseTaa(res);
+        }
+
+        /// <inheritdoc />
         public virtual async Task<ParseRegistryResponseResult> LookupRevocationRegistryDeltaAsync(Pool pool, string revocationRegistryId,
              long from, long to)
         {
@@ -76,45 +112,45 @@ namespace AgentFramework.Core.Runtime
         }
 
         /// <inheritdoc />
-        public virtual async Task RegisterSchemaAsync(Pool pool, Wallet wallet, string issuerDid, string schemaJson, TransactionCost paymentInfo = null)
+        public virtual async Task RegisterSchemaAsync(IAgentContext context, string issuerDid, string schemaJson, TransactionCost paymentInfo = null)
         {
             var req = await Ledger.BuildSchemaRequestAsync(issuerDid, schemaJson);
-            var res = await SignAndSubmitAsync(pool, wallet, issuerDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, issuerDid, req, paymentInfo);
         }
 
         /// <inheritdoc />
-        public virtual async Task RegisterCredentialDefinitionAsync(Wallet wallet, Pool pool, string submitterDid, string data, TransactionCost paymentInfo = null)
+        public virtual async Task RegisterCredentialDefinitionAsync(IAgentContext context, string submitterDid, string data, TransactionCost paymentInfo = null)
         {
             var req = await Ledger.BuildCredDefRequestAsync(submitterDid, data);
-            var res = await SignAndSubmitAsync(pool, wallet, submitterDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo);
         }
 
         /// <inheritdoc />
-        public virtual async Task RegisterRevocationRegistryDefinitionAsync(Wallet wallet, Pool pool, string submitterDid,
+        public virtual async Task RegisterRevocationRegistryDefinitionAsync(IAgentContext context, string submitterDid,
             string data, TransactionCost paymentInfo = null)
         {
             var req = await Ledger.BuildRevocRegDefRequestAsync(submitterDid, data);
-            var res = await SignAndSubmitAsync(pool, wallet, submitterDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo);
         }
 
         /// <inheritdoc />
-        public virtual async Task SendRevocationRegistryEntryAsync(Wallet wallet, Pool pool, string issuerDid,
+        public virtual async Task SendRevocationRegistryEntryAsync(IAgentContext context, string issuerDid,
             string revocationRegistryDefinitionId, string revocationDefinitionType, string value, TransactionCost paymentInfo = null)
         {
             var req = await Ledger.BuildRevocRegEntryRequestAsync(issuerDid, revocationRegistryDefinitionId,
                 revocationDefinitionType, value);
-            var res = await SignAndSubmitAsync(pool, wallet, issuerDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, issuerDid, req, paymentInfo);
         }
 
         /// <inheritdoc />
-        public virtual async Task RegisterNymAsync(Wallet wallet, Pool pool, string submitterDid, string theirDid,
+        public virtual async Task RegisterNymAsync(IAgentContext context, string submitterDid, string theirDid,
             string theirVerkey, string role, TransactionCost paymentInfo = null)
         {
             if (DidUtils.IsFullVerkey(theirVerkey))
                 theirVerkey = await Did.AbbreviateVerkeyAsync(theirDid, theirVerkey);
 
             var req = await Ledger.BuildNymRequestAsync(submitterDid, theirDid, theirVerkey, null, role);
-            var res = await SignAndSubmitAsync(pool, wallet, submitterDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo);
         }
 
         /// <inheritdoc />
@@ -136,13 +172,13 @@ namespace AgentFramework.Core.Runtime
         }
 
         /// <inheritdoc />
-        public virtual async Task RegisterAttributeAsync(Pool pool, Wallet wallet, string submittedDid, string targetDid,
+        public virtual async Task RegisterAttributeAsync(IAgentContext context, string submittedDid, string targetDid,
             string attributeName, object value, TransactionCost paymentInfo = null)
         {
             var data = $"{{\"{attributeName}\": {value.ToJson()}}}";
 
             var req = await Ledger.BuildAttribRequestAsync(submittedDid, targetDid, null, data, null);
-            var res = await SignAndSubmitAsync(pool, wallet, submittedDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, submittedDid, req, paymentInfo);
         }
 
         /// <inheritdoc />
@@ -168,12 +204,12 @@ namespace AgentFramework.Core.Runtime
             return jobj["result"]["data"].ToObject<IList<AuthorizationRule>>();
         }
 
-        private async Task<string> SignAndSubmitAsync(Pool pool, Wallet wallet, string submitterDid, string request, TransactionCost paymentInfo)
+        private async Task<string> SignAndSubmitAsync(IAgentContext context, string submitterDid, string request, TransactionCost paymentInfo)
         {
             if (paymentInfo != null)
             {
                 var requestWithFees = await IndyPayments.AddRequestFeesAsync(
-                    wallet: wallet,
+                    wallet: context.Wallet,
                     submitterDid: null,
                     reqJson: request,
                     inputsJson: paymentInfo.PaymentAddress.Sources.Select(x => x.Source).ToJson(),
@@ -188,7 +224,8 @@ namespace AgentFramework.Core.Runtime
                     extra: null);
                 request = requestWithFees.Result;
             }
-            var response = await Ledger.SignAndSubmitRequestAsync(pool, wallet, submitterDid, request);
+            var signedRequest = await _signingService.SignRequestAsync(context.Wallet, submitterDid, request);
+            var response = await Ledger.SubmitRequestAsync(await context.Pool, signedRequest);
 
             EnsureSuccessResponse(response);
 

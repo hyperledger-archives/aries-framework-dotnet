@@ -14,6 +14,7 @@ using AgentFramework.Core.Models.Proofs;
 using AgentFramework.Core.Models.Records;
 using AgentFramework.Core.Models.Records.Search;
 using AgentFramework.Core.Utils;
+using Hyperledger.Indy.AnonCredsApi;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -151,7 +152,7 @@ namespace AgentFramework.Core.Runtime
                 {
                     Name = config.Name,
                     Version = "1.0",
-                    Nonce = $"0{Guid.NewGuid().ToString("N")}",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
                     RequestedAttributes = proofRequestConfig.RequestedAttributes,
                     RequestedPredicates = proofRequestConfig.RequestedPredicates,
                     NonRevoked = proofRequestConfig.NonRevoked

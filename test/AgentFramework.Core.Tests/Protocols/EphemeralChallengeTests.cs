@@ -46,7 +46,7 @@ namespace AgentFramework.Core.Tests.Protocols
         public EphemeralChallengeTests()
         {
             var recordService = new DefaultWalletRecordService();
-            var ledgerService = new DefaultLedgerService();
+            var ledgerService = new DefaultLedgerService(new DefaultLedgerSigningService());
 
             var eventAggregator = new EventAggregator();
 
@@ -241,8 +241,7 @@ namespace AgentFramework.Core.Tests.Protocols
                         new RequestedAttribute
                         {
                             CredentialId = credentials.First().CredentialInfo.Referent,
-                            Revealed = true,
-                            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                            Revealed = true
                         });
                 }
 

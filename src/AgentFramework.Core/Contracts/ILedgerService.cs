@@ -40,7 +40,7 @@ namespace AgentFramework.Core.Contracts
         /// <param name="attributeName">Attribute name.</param>
         /// <param name="value">The attribute value.</param>
         /// <param name="paymentInfo">Payment information</param>
-        Task RegisterAttributeAsync(Pool pool, Wallet wallet, string submittedDid, string targetDid,
+        Task RegisterAttributeAsync(IAgentContext context, string submittedDid, string targetDid,
             string attributeName, object value, TransactionCost paymentInfo = null);
 
         /// <summary>
@@ -60,6 +60,14 @@ namespace AgentFramework.Core.Contracts
         /// <param name="did"></param>
         /// <returns></returns>
         Task<string> LookupNymAsync(Pool pool, string did);
+
+        /// <summary>
+        /// Lookup Transaction Author Agreement on the ledger
+        /// </summary>
+        /// <param name="context">The agent context</param>
+        /// <param name="version">Taa version. Pass null to get latest.</param>
+        /// <returns></returns>
+        Task<IndyTaa> LookupTaaAsync(IAgentContext context, string version = null);
 
         /// <summary>
         /// Lookup the ledger transaction async.
@@ -124,7 +132,7 @@ namespace AgentFramework.Core.Contracts
         /// <returns>
         /// Registration async.
         /// </returns>
-        Task RegisterNymAsync(Wallet wallet, Pool pool, string submitterDid, string theirDid,
+        Task RegisterNymAsync(IAgentContext context, string submitterDid, string theirDid,
             string theirVerkey, string role, TransactionCost paymentInfo = null);
 
         /// <summary>
@@ -138,7 +146,7 @@ namespace AgentFramework.Core.Contracts
         /// <returns>
         /// The credential definition async.
         /// </returns>
-        Task RegisterCredentialDefinitionAsync(Wallet wallet, Pool pool, string submitterDid,
+        Task RegisterCredentialDefinitionAsync(IAgentContext context, string submitterDid,
             string data, TransactionCost paymentInfo = null);
 
         /// <summary>
@@ -150,7 +158,7 @@ namespace AgentFramework.Core.Contracts
         /// <param name="data">The data.</param>
         /// <param name="paymentInfo">Payment information</param>
         /// <returns></returns>
-        Task RegisterRevocationRegistryDefinitionAsync(Wallet wallet, Pool pool, string submitterDid,
+        Task RegisterRevocationRegistryDefinitionAsync(IAgentContext context, string submitterDid,
             string data, TransactionCost paymentInfo = null);
 
         /// <summary>
@@ -164,7 +172,7 @@ namespace AgentFramework.Core.Contracts
         /// <param name="value">The value.</param>
         /// <param name="paymentInfo">Payment information</param>
         /// <returns></returns>
-        Task SendRevocationRegistryEntryAsync(Wallet wallet, Pool pool, string issuerDid,
+        Task SendRevocationRegistryEntryAsync(IAgentContext context, string issuerDid,
             string revocationRegistryDefinitionId, string revocationDefinitionType, string value,
             TransactionCost paymentInfo = null);
 
@@ -177,7 +185,7 @@ namespace AgentFramework.Core.Contracts
         /// <param name="schemaJson">The schema json.</param>
         /// <param name="paymentInfo">Payment information</param>
         /// <returns></returns>
-        Task RegisterSchemaAsync(Pool pool, Wallet wallet, string issuerDid, string schemaJson,
+        Task RegisterSchemaAsync(IAgentContext context, string issuerDid, string schemaJson,
             TransactionCost paymentInfo = null);
     }
 }

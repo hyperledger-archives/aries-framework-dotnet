@@ -46,6 +46,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.TryAddSingleton<IConnectionService, DefaultConnectionService>();
             builder.TryAddSingleton<ICredentialService, DefaultCredentialService>();
             builder.TryAddSingleton<ILedgerService, DefaultLedgerService>();
+            builder.TryAddSingleton<ILedgerSigningService, DefaultLedgerSigningService>();
             builder.TryAddSingleton<IPoolService, DefaultPoolService>();
             builder.TryAddSingleton<IProofService, DefaultProofService>();
             builder.TryAddSingleton<IEphemeralChallengeService, DefaultEphemeralChallengeService>();
