@@ -6,6 +6,7 @@ using AgentFramework.Core.Models.Proofs;
 using AgentFramework.Core.Models.Wallets;
 using AgentFramework.TestHarness;
 using AgentFramework.TestHarness.Mock;
+using Hyperledger.Indy.AnonCredsApi;
 using Xunit;
 
 namespace AgentFramework.Core.Tests.Integration
@@ -50,7 +51,7 @@ namespace AgentFramework.Core.Tests.Integration
                 {
                     Name = "ProofReq",
                     Version = "1.0",
-                    Nonce = $"0{Guid.NewGuid().ToString("N")}",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
                     RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
                     {
                         {"first-name-requirement", new ProofAttributeInfo {Name = "first_name"}}

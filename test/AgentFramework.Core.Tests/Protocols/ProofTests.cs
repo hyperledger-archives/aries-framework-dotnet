@@ -21,6 +21,7 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 using AgentFramework.Core.Runtime;
+using Hyperledger.Indy.AnonCredsApi;
 
 namespace AgentFramework.Core.Tests.Protocols
 {
@@ -130,7 +131,7 @@ namespace AgentFramework.Core.Tests.Protocols
                 {
                     Name = "ProofReq",
                     Version = "1.0",
-                    Nonce = $"0{Guid.NewGuid().ToString("N")}",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
                     RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
                     {
                         {"first-name-requirement", new ProofAttributeInfo {Name = "first_name"}}
@@ -148,7 +149,7 @@ namespace AgentFramework.Core.Tests.Protocols
             var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreateProofRequestAsync(_issuerWallet, new ProofRequest
             {
                 Name = "Test",
-                Nonce = "123"
+                Nonce = await AnonCreds.GenerateNonceAsync()
             }, "bad-proof-id"));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
@@ -165,7 +166,7 @@ namespace AgentFramework.Core.Tests.Protocols
             var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreateProofRequestAsync(_issuerWallet, new ProofRequest
             {
                 Name = "Test",
-                Nonce = "123"
+                Nonce = await AnonCreds.GenerateNonceAsync()
             }, connectionId));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
@@ -177,7 +178,7 @@ namespace AgentFramework.Core.Tests.Protocols
             var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreateProofRequestAsync(_issuerWallet, new ProofRequest
             {
                 Name = "Test",
-                Nonce = "1234"
+                Nonce = await AnonCreds.GenerateNonceAsync()
             }, "bad-connection-id"));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
@@ -194,7 +195,7 @@ namespace AgentFramework.Core.Tests.Protocols
             var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreateProofRequestAsync(_issuerWallet, new ProofRequest
             {
                 Name = "Test",
-                Nonce = "1234"
+                Nonce = await AnonCreds.GenerateNonceAsync()
             }, connectionId));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
@@ -239,7 +240,7 @@ namespace AgentFramework.Core.Tests.Protocols
                 {
                     Name = "ProofReq",
                     Version = "1.0",
-                    Nonce = "123",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
                     RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
                     {
                         {"first-name-requirement", new ProofAttributeInfo {Name = "first_name"}}
@@ -344,7 +345,7 @@ namespace AgentFramework.Core.Tests.Protocols
                 {
                     Name = "ProofReq",
                     Version = "1.0",
-                    Nonce = "123",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
                     RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
                     {
                         {"first-name-requirement", new ProofAttributeInfo {Name = "first_name"}}
@@ -438,7 +439,7 @@ namespace AgentFramework.Core.Tests.Protocols
                 {
                     Name = "ProofReq",
                     Version = "1.0",
-                    Nonce = "123",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
                     RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
                     {
                         {"first-name-requirement", new ProofAttributeInfo {Name = "first_name"}}
