@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AgentFramework.Core.Models.Ledger;
 using AgentFramework.Core.Models.Payments;
@@ -33,8 +34,7 @@ namespace AgentFramework.Core.Contracts
         /// Register an attribute for the specified <paramref name="targetDid"/> to the ledger.
         /// </summary>
         /// <returns>The attribute async.</returns>
-        /// <param name="pool">Pool.</param>
-        /// <param name="wallet">Wallet.</param>
+        /// <param name="context">Agent context.</param>
         /// <param name="submittedDid">Submitted did.</param>
         /// <param name="targetDid">Target did.</param>
         /// <param name="attributeName">Attribute name.</param>
@@ -68,6 +68,15 @@ namespace AgentFramework.Core.Contracts
         /// <param name="version">Taa version. Pass null to get latest.</param>
         /// <returns></returns>
         Task<IndyTaa> LookupTaaAsync(IAgentContext context, string version = null);
+
+        /// <summary>
+        /// Lookup acceptance mechanisms list
+        /// </summary>
+        /// <param name="context">The agent context</param>
+        /// <param name="timestamp"></param>
+        /// <param name="version"></param>
+        /// <returns>The acceptance mechanisms list</returns>
+        Task<IndyAml> LookupAmlAsync(IAgentContext context, DateTimeOffset timestamp = default(DateTimeOffset), string version = null);
 
         /// <summary>
         /// Lookup the ledger transaction async.
