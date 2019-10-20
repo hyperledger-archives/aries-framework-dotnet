@@ -82,7 +82,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static AgentFrameworkBuilder RegisterIssuerAgent(
             this AgentFrameworkBuilder frameworkBuilder,
-            Action<IssuerProvisioningConfiguration> config) 
+            Action<IServiceProvider, IssuerProvisioningConfiguration> config) 
             => RegisterIssuerAgent<DefaultAgent>(frameworkBuilder, config);
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static AgentFrameworkBuilder RegisterIssuerAgent<T>(
             this AgentFrameworkBuilder builder, 
-            Action<IssuerProvisioningConfiguration> config)
+            Action<IServiceProvider, IssuerProvisioningConfiguration> config)
             where T : class, IAgent
         {
             builder.AddAgentProvider();
@@ -102,6 +102,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddSingleton<IHostedService>(provider => 
                 new IssuerProvisioningHostedService(
                     provisioningService: provider.GetRequiredService<IProvisioningService>(),
+                    serviceProvider: provider,
                     configuration: config));
 
             return builder;
