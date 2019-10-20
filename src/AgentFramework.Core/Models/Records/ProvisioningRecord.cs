@@ -111,6 +111,13 @@ namespace AgentFramework.Core.Models.Records
             set => Set(value);
         }
 
+        /// <summary>
+        /// Gets or sets the issuer seed for deterministic 
+        /// DID generation
+        /// </summary>
+        /// <value></value>
+        public string IssuerSeed { get; set; }
+
         /// <inheritdoc />
         public override string ToString() =>
             $"{GetType().Name}: " +
