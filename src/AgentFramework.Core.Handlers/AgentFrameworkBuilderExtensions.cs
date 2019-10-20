@@ -22,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The basic agent.</returns>
         /// <param name="frameworkBuilder">Builder.</param>
         /// <param name="config">Config.</param>
+        [Obsolete("This configuration method is obsolete. Please use 'RegisterAgent' instead.")]
         public static AgentFrameworkBuilder AddBasicAgent(this AgentFrameworkBuilder frameworkBuilder, Action<BasicProvisioningConfiguration> config)
         {
             return AddBasicAgent<DefaultAgent>(frameworkBuilder, config);
@@ -34,6 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="frameworkBuilder">Builder.</param>
         /// <param name="config">Config.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
+        [Obsolete("This configuration method is obsolete. Please use 'RegisterAgent<T>' instead.")]
         public static AgentFrameworkBuilder AddBasicAgent<T>(this AgentFrameworkBuilder frameworkBuilder, Action<BasicProvisioningConfiguration> config)
             where T : class, IAgent
         {
@@ -49,6 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The issuer agent.</returns>
         /// <param name="frameworkBuilder">Builder.</param>
         /// <param name="config">Config.</param>
+        [Obsolete("This configuration method is obsolete. Please use 'RegisterIssuerAgent' instead.")]
         public static AgentFrameworkBuilder AddIssuerAgent(this AgentFrameworkBuilder frameworkBuilder, Action<IssuerProvisioningConfiguration> config)
         {
             return AddIssuerAgent<DefaultAgent>(frameworkBuilder, config);
@@ -61,6 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="frameworkBuilder">Builder.</param>
         /// <param name="config">Config.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
+        [Obsolete("This configuration method is obsolete. Please use 'RegisterIssuerAgent<T>' instead.")]
         public static AgentFrameworkBuilder AddIssuerAgent<T>(this AgentFrameworkBuilder frameworkBuilder, Action<IssuerProvisioningConfiguration> config)
             where T : class, IAgent
         {
@@ -71,6 +75,74 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
+        /// Registers and provisions an agent configured as Issuer.
+        /// </summary>
+        /// <param name="frameworkBuilder"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static AgentFrameworkBuilder RegisterIssuerAgent(
+            this AgentFrameworkBuilder frameworkBuilder,
+            Action<IServiceProvider, IssuerProvisioningConfiguration> config) 
+            => RegisterIssuerAgent<DefaultAgent>(frameworkBuilder, config);
+
+        /// <summary>
+        /// Registers and provisions an agent configured as Issuer.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static AgentFrameworkBuilder RegisterIssuerAgent<T>(
+            this AgentFrameworkBuilder builder, 
+            Action<IServiceProvider, IssuerProvisioningConfiguration> config)
+            where T : class, IAgent
+        {
+            builder.AddAgentProvider();
+            builder.Services.AddDefaultMessageHandlers();
+            builder.Services.AddSingleton<IAgent, T>();
+            builder.Services.AddSingleton<IHostedService>(provider => 
+                new IssuerProvisioningHostedService(
+                    provisioningService: provider.GetRequiredService<IProvisioningService>(),
+                    serviceProvider: provider,
+                    configuration: config));
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Registers and provisions an agent.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static AgentFrameworkBuilder RegisterAgent(
+            this AgentFrameworkBuilder builder,
+            Action<IServiceProvider, BasicProvisioningConfiguration> config) 
+            => RegisterAgent<DefaultAgent>(builder, config);
+
+        /// <summary>
+        /// Registers and provisions an agent with custom implementation
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static AgentFrameworkBuilder RegisterAgent<T>(
+            this AgentFrameworkBuilder builder, 
+            Action<IServiceProvider, BasicProvisioningConfiguration> config)
+            where T : class, IAgent 
+        {
+            builder.AddAgentProvider();
+            builder.Services.AddDefaultMessageHandlers();
+            builder.Services.AddSingleton<IAgent, T>();
+            builder.Services.AddSingleton<IHostedService>(provider => 
+                new DefaultProvisioningHostedService(
+                    provisioningService: provider.GetRequiredService<IProvisioningService>(),
+                    serviceProvider: provider,
+                    configuration: config));
+
+            return builder;
+        }
+
+        /// <summary>
         /// Adds a custom agent service provisioned with custom <see cref="ProvisioningConfiguration"/>
         /// </summary>
         /// <returns>The agent.</returns>
@@ -78,6 +150,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="createConfiguration">Create configuration.</param>
         /// <typeparam name="TAgent">The 1st type parameter.</typeparam>
         /// <typeparam name="TConfiguration">The 2nd type parameter.</typeparam>
+        [Obsolete("This configuration method is obsolete. Please use 'RegisterAgent<T>' instead.")]
         public static AgentFrameworkBuilder AddAgent<TAgent, TConfiguration>(this AgentFrameworkBuilder frameworkBuilder, Func<TConfiguration> createConfiguration)
             where TAgent : class, IAgent
             where TConfiguration : ProvisioningConfiguration

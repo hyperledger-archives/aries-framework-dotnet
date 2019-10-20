@@ -34,10 +34,38 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">Services.</param>
         /// <param name="builder">Builder.</param>
-        public static void AddAgentFramework(this IServiceCollection services, Action<AgentFrameworkBuilder> builder)
+        public static AgentFrameworkBuilder AddAgentFramework(this IServiceCollection services, Action<AgentFrameworkBuilder> builder)
         {
             AddAgentFramework(services);
-            builder.Invoke(new AgentFrameworkBuilder(services));
+
+            var frameworkBuilder = new AgentFrameworkBuilder(services);
+            builder.Invoke(frameworkBuilder);
+            return frameworkBuilder;
+        }
+
+        /// <summary>
+        /// Configure the wallet options
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static AgentFrameworkBuilder ConfigureWallet(this AgentFrameworkBuilder builder, Action<WalletOptions> options)
+        {
+            builder.Services.Configure<WalletOptions>(options);
+            return builder;
+        }
+
+        /// <summary>
+        /// Configure the pool configuration options
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static AgentFrameworkBuilder ConfigurePool(this AgentFrameworkBuilder builder, Action<PoolOptions> options)
+        {
+            builder.Services.Configure<PoolOptions>(options);
+            builder.Services.AddHostedService<PoolConfigurationHostedService>();
+            return builder;
         }
 
         internal static IServiceCollection AddDefaultServices(this IServiceCollection builder)

@@ -38,6 +38,7 @@ namespace AgentFramework.Core.Models.Wallets
             var issuer = await Did.CreateAndStoreMyDidAsync(
                 context.Wallet, IssuerSeed != null ? new { seed = IssuerSeed }.ToJson() : "{}");
 
+            record.IssuerSeed = IssuerSeed;
             record.IssuerDid = issuer.Did;
             record.IssuerVerkey = issuer.VerKey;
             record.TailsBaseUri = TailsBaseUri?.ToString();

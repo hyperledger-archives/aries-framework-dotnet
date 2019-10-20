@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AgentFramework.Core\AgentFramework.Core.csproj" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
   </ItemGroup>
 
 </Project>
