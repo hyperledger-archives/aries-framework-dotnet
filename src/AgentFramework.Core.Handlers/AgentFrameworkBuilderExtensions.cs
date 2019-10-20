@@ -115,7 +115,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static AgentFrameworkBuilder RegisterAgent(
             this AgentFrameworkBuilder builder,
-            Action<BasicProvisioningConfiguration> config) 
+            Action<IServiceProvider, BasicProvisioningConfiguration> config) 
             => RegisterAgent<DefaultAgent>(builder, config);
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static AgentFrameworkBuilder RegisterAgent<T>(
             this AgentFrameworkBuilder builder, 
-            Action<BasicProvisioningConfiguration> config)
+            Action<IServiceProvider, BasicProvisioningConfiguration> config)
             where T : class, IAgent 
         {
             builder.AddAgentProvider();
@@ -135,6 +135,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddSingleton<IHostedService>(provider => 
                 new DefaultProvisioningHostedService(
                     provisioningService: provider.GetRequiredService<IProvisioningService>(),
+                    serviceProvider: provider,
                     configuration: config));
 
             return builder;

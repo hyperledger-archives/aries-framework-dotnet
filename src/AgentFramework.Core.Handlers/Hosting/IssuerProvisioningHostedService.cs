@@ -25,12 +25,13 @@ namespace AgentFramework.Core.Handlers.Hosting
         /// <inheritdoc />
         public IssuerProvisioningHostedService(
             IProvisioningService provisioningService,
-            Action<IssuerProvisioningConfiguration> configuration)
+            IServiceProvider serviceProvider,
+            Action<IServiceProvider, IssuerProvisioningConfiguration> configuration)
             : this(provisioningService)
         {
             if (configuration != null)
             {
-                configuration(Configuration);
+                configuration(serviceProvider, Configuration);
             }
         }
 
