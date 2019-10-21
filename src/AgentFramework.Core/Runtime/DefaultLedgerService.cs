@@ -251,7 +251,7 @@ namespace AgentFramework.Core.Runtime
                     extra: null);
                 request = requestWithFees.Result;
             }
-            var signedRequest = await _signingService.SignRequestAsync(context.Wallet, submitterDid, request);
+            var signedRequest = await _signingService.SignRequestAsync(context, submitterDid, request);
             var response = await Ledger.SubmitRequestAsync(await context.Pool, signedRequest);
 
             EnsureSuccessResponse(response);
