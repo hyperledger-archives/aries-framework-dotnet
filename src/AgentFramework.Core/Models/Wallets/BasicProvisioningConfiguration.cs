@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Models.Records;
 
@@ -7,6 +8,7 @@ namespace AgentFramework.Core.Models.Wallets
     /// <summary>
     /// Basic provisioning configuration.
     /// </summary>
+    [Obsolete("This class will no longer be used.")]
     public class BasicProvisioningConfiguration : ProvisioningConfiguration
     {
         /// <summary>

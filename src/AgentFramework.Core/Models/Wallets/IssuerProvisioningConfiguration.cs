@@ -10,6 +10,7 @@ namespace AgentFramework.Core.Models.Wallets
     /// <summary>
     /// Issuer provisioning configuraton.
     /// </summary>
+    [Obsolete("This class will no longer be used.")]
     public class IssuerProvisioningConfiguration : ProvisioningConfiguration
     {
         /// <summary>

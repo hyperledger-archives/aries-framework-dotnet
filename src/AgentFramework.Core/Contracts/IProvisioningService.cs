@@ -36,6 +36,7 @@ namespace AgentFramework.Core.Contracts
         /// </summary>
         /// <param name="configuration">The provisioning configuration.</param>
         /// <returns></returns>
+        [Obsolete("This method is obsolete. Please use extensions methods to configure agent provisioning")]
         Task ProvisionAgentAsync(ProvisioningConfiguration configuration);
 
         /// <summary>

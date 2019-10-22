@@ -9,6 +9,7 @@ namespace AgentFramework.Core.Models.Wallets
     /// <summary>
     /// A configuration object for controlling the provisioning of a new agent.
     /// </summary>
+    [Obsolete("This class will no longer be used.")]
     public class ProvisioningConfiguration
     {
         /// <summary>
