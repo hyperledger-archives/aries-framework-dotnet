@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using AgentFramework.Core.Extensions;
 using Hyperledger.Indy.CryptoApi;
 using Hyperledger.Indy.WalletApi;
@@ -70,6 +72,28 @@ namespace AgentFramework.Core.Utils
             var result = await Crypto.UnpackMessageAsync(wallet, message);
             var unpacked = result.ToObject<UnpackResult>();
             return unpacked.Message.ToObject<T>();
+        }
+
+        /// <summary>
+        /// Generate unique random alpha-numeric key
+        /// </summary>
+        /// <param name="maxSize"></param>
+        /// <returns></returns>
+        public static string GetUniqueKey(int maxSize)
+        {
+            var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
+            var data = new byte[maxSize];
+            using (var crypto = new RNGCryptoServiceProvider())
+            {
+                crypto.GetNonZeroBytes(data);
+            }
+
+            var result = new StringBuilder(maxSize);
+            foreach (var b in data)
+            {
+                result.Append(chars[b % (chars.Length)]);
+            }
+            return result.ToString();
         }
     }
 
