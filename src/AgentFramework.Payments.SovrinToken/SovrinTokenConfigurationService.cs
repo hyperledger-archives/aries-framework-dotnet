@@ -5,6 +5,7 @@ using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Handlers.Agents;
 using AgentFramework.Core.Models.Payments;
 using AgentFramework.Core.Models.Wallets;
+using AgentFramework.Core.Utils;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,26 +18,26 @@ namespace AgentFramework.Payments.SovrinToken
         private readonly IProvisioningService provisioningService;
         private readonly IAgentProvider agentProvider;
         private readonly IWalletRecordService recordService;
+        private readonly AddressOptions addressOptions;
         private readonly ILogger<SovrinTokenConfigurationService> logger;
-
-        public ProvisioningConfiguration AgentConfiguration { get; }
 
         public SovrinTokenConfigurationService(
             IApplicationLifetime applicationLifetime,
-            IOptions<ProvisioningConfiguration> configuration,
             IPaymentService paymentService,
             IProvisioningService provisioningService,
             IAgentProvider agentProvider,
             IWalletRecordService recordService,
+            IOptions<AddressOptions> addressOptions,
             ILogger<SovrinTokenConfigurationService> logger)
         {
             applicationLifetime.ApplicationStarted.Register(CreateDefaultPaymentAddress);
-            AgentConfiguration = configuration.Value;
             this.paymentService = paymentService;
             this.provisioningService = provisioningService;
             this.agentProvider = agentProvider;
             this.recordService = recordService;
+            this.addressOptions = addressOptions.Value;
             this.logger = logger;
+
         }
 
         private async void CreateDefaultPaymentAddress()
@@ -48,13 +49,15 @@ namespace AgentFramework.Payments.SovrinToken
                 var provisioning = await provisioningService.GetProvisioningAsync(context.Wallet);
                 if (provisioning.DefaultPaymentAddressId == null)
                 {
-                    var address = await paymentService.CreatePaymentAddressAsync(context,
-                        new AddressOptions
-                        {
-                            Seed = AgentConfiguration.AddressSeed,
-                            Method = TokenConfiguration.MethodName
-                        });
+                    if (addressOptions.Seed == null)
+                    {
+                        addressOptions.Seed = CryptoUtils.GetUniqueKey(32);
+                    }
+                    addressOptions.Method = "sov";
+                    var address = await paymentService.CreatePaymentAddressAsync(context, addressOptions);
+
                     provisioning.DefaultPaymentAddressId = address.Id;
+                    provisioning.SetTag("AddressSeed", addressOptions.Seed);
                     await recordService.UpdateAsync(context.Wallet, provisioning);
                 }
             }
