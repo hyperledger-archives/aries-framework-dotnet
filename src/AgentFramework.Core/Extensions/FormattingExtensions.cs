@@ -51,11 +51,26 @@ namespace AgentFramework.Core.Extensions
                 : GetUTF8Bytes(ToJson(value));
 
         /// <summary>
-        /// Converts the specified string, which encodes binary data as base-64 digits,
+        /// Converts the specified string encoded as binary data as base-64 digits,
         /// to an equivalent 8-bit unsigned integer array.</summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
+        [Obsolete("Please use 'BytesFromBase64' or 'BytesFromBase64Url'")]
         public static byte[] GetBytesFromBase64(this string value) => Base64UrlEncoder.DecodeBytes(value);
+
+        /// <summary>
+        /// Converts the specified encoded string as base-64 URL,
+        /// to an equivalent 8-bit unsigned integer array.</summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static byte[] BytesFromBase64Url(this string value) => Base64UrlEncoder.DecodeBytes(value);
+
+        /// <summary>
+        /// Converts the specified encoded string as base-64,
+        /// to an equivalent 8-bit unsigned integer array.</summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static byte[] BytesFromBase64(this string value) => Convert.FromBase64String(value);
 
         /// <summary>
         /// Converts an array of 8-bit unsigned integers to its equivalent string
