@@ -1,9 +1,11 @@
-﻿using AgentFramework.Core.Configuration;
+﻿using System;
+using AgentFramework.Core.Configuration;
 using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Handlers.Agents;
-using Microsoft.Extensions.DependencyInjection;
+using AgentFramework.Core.Models.Payments;
+using AgentFramework.Payments.SovrinToken;
 
-namespace AgentFramework.Payments.SovrinToken
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AgentBuilderExtensions
     {
@@ -13,6 +15,12 @@ namespace AgentFramework.Payments.SovrinToken
             agentFrameworkBuilder.Services.AddSingleton<IPaymentService, SovrinPaymentService>();
             agentFrameworkBuilder.Services.AddSingleton<IAgentMiddleware, PaymentsAgentMiddleware>();
             return agentFrameworkBuilder;
+        }
+
+        public static AgentFrameworkBuilder ConfigurePaymentAddress(this AgentFrameworkBuilder builder, Action<AddressOptions> options)
+        {
+            builder.Services.Configure<AddressOptions>(options);
+            return builder;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AgentFramework.Core.Configuration.Options;
 using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Models;
 using AgentFramework.Core.Models.Records;
@@ -35,6 +36,7 @@ namespace AgentFramework.Core.Contracts
         /// </summary>
         /// <param name="configuration">The provisioning configuration.</param>
         /// <returns></returns>
+        [Obsolete("This method is obsolete. Please use extensions methods to configure agent provisioning")]
         Task ProvisionAgentAsync(ProvisioningConfiguration configuration);
 
         /// <summary>

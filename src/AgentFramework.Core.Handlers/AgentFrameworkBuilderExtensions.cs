@@ -78,32 +78,29 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers and provisions an agent configured as Issuer.
         /// </summary>
         /// <param name="frameworkBuilder"></param>
-        /// <param name="config"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         public static AgentFrameworkBuilder RegisterIssuerAgent(
             this AgentFrameworkBuilder frameworkBuilder,
-            Action<IServiceProvider, IssuerProvisioningConfiguration> config) 
-            => RegisterIssuerAgent<DefaultAgent>(frameworkBuilder, config);
+            Action<AgentOptions> options) 
+            => RegisterIssuerAgent<DefaultAgent>(frameworkBuilder, options);
 
         /// <summary>
         /// Registers and provisions an agent configured as Issuer.
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="config"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         public static AgentFrameworkBuilder RegisterIssuerAgent<T>(
             this AgentFrameworkBuilder builder, 
-            Action<IServiceProvider, IssuerProvisioningConfiguration> config)
+            Action<AgentOptions> options)
             where T : class, IAgent
         {
             builder.AddAgentProvider();
             builder.Services.AddDefaultMessageHandlers();
             builder.Services.AddSingleton<IAgent, T>();
-            builder.Services.AddSingleton<IHostedService>(provider => 
-                new IssuerProvisioningHostedService(
-                    provisioningService: provider.GetRequiredService<IProvisioningService>(),
-                    serviceProvider: provider,
-                    configuration: config));
+            builder.Services.Configure(options);
+            builder.Services.AddHostedService<IssuerProvisioningHostedService>();
 
             return builder;
         }
@@ -112,32 +109,29 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Registers and provisions an agent.
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="config"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         public static AgentFrameworkBuilder RegisterAgent(
             this AgentFrameworkBuilder builder,
-            Action<IServiceProvider, BasicProvisioningConfiguration> config) 
-            => RegisterAgent<DefaultAgent>(builder, config);
+            Action<AgentOptions> options) 
+            => RegisterAgent<DefaultAgent>(builder, options);
 
         /// <summary>
         /// Registers and provisions an agent with custom implementation
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="config"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         public static AgentFrameworkBuilder RegisterAgent<T>(
             this AgentFrameworkBuilder builder, 
-            Action<IServiceProvider, BasicProvisioningConfiguration> config)
+            Action<AgentOptions> options)
             where T : class, IAgent 
         {
             builder.AddAgentProvider();
             builder.Services.AddDefaultMessageHandlers();
             builder.Services.AddSingleton<IAgent, T>();
-            builder.Services.AddSingleton<IHostedService>(provider => 
-                new DefaultProvisioningHostedService(
-                    provisioningService: provider.GetRequiredService<IProvisioningService>(),
-                    serviceProvider: provider,
-                    configuration: config));
+            builder.Services.Configure(options);
+            builder.Services.AddHostedService<DefaultProvisioningHostedService>();
 
             return builder;
         }

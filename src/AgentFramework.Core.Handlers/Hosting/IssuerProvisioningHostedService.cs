@@ -1,64 +1,71 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AgentFramework.Core.Configuration.Options;
 using AgentFramework.Core.Contracts;
-using AgentFramework.Core.Exceptions;
-using AgentFramework.Core.Models.Wallets;
+using AgentFramework.Core.Extensions;
+using AgentFramework.Core.Utils;
+using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.WalletApi;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace AgentFramework.Core.Handlers.Hosting
 {
     /// <inheritdoc />
-    public class IssuerProvisioningHostedService : IHostedService
+    public class IssuerProvisioningHostedService : DefaultProvisioningHostedService
     {
-        private readonly IProvisioningService _provisioningService;
-
-        private IssuerProvisioningConfiguration Configuration { get; }
-        
-        /// <inheritdoc />
-        public IssuerProvisioningHostedService(IProvisioningService provisioningService)
-        {
-            Configuration = new IssuerProvisioningConfiguration();
-            _provisioningService = provisioningService;
-        }
         /// <inheritdoc />
         public IssuerProvisioningHostedService(
-            IProvisioningService provisioningService,
-            IServiceProvider serviceProvider,
-            Action<IServiceProvider, IssuerProvisioningConfiguration> configuration)
-            : this(provisioningService)
+            IProvisioningService provisioningService, 
+            IWalletService walletService, 
+            IWalletRecordService recordService, 
+            IOptions<AgentOptions> agentOptions, 
+            IOptions<WalletOptions> walletOptions) 
+            : base(
+                provisioningService, 
+                walletService, 
+                recordService, 
+                agentOptions, 
+                walletOptions)
         {
-            if (configuration != null)
-            {
-                configuration(serviceProvider, Configuration);
-            }
         }
 
         /// <inheritdoc />
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
             try
             {
-                await _provisioningService.ProvisionAgentAsync(Configuration);
-            }
-            catch (WalletExistsException)
-            {
-                // Wallet already exists, swallow exception
-            }
-            catch (AgentFrameworkException ex) when (ex.ErrorCode == ErrorCode.WalletAlreadyProvisioned)
-            {
-                // Wallet already provisioned
-            }
-            catch (WalletStorageException)
-            {
-                // Aggregate exception thrown when using custom wallets
+                await ProvisionAsync(cancellationToken);
 
-                // TODO: TM: add support to Indy SDK to expose exception types
+                var wallet = await _walletService.GetWalletAsync(
+                        configuration: _walletOptions.WalletConfiguration,
+                        credentials: _walletOptions.WalletCredentials);
+
+                if (_agentOptions.AgentKeySeed == null)
+                {
+                    _agentOptions.AgentKeySeed = CryptoUtils.GetUniqueKey(32);
+                }
+
+                var issuer = await Did.CreateAndStoreMyDidAsync(
+                    wallet: wallet,
+                    didJson: new
+                    {
+                        did = _agentOptions.IssuerDid,
+                        seed = _agentOptions.IssuerKeySeed
+                    }.ToJson());
+
+                var record = await _provisioningService.GetProvisioningAsync(wallet);
+                record.IssuerSeed = _agentOptions.IssuerKeySeed;
+                record.IssuerDid = issuer.Did;
+                record.IssuerVerkey = issuer.VerKey;
+                //record.TailsBaseUri = TailsBaseUri?.ToString();
+
+                await _recordService.UpdateAsync(wallet, record);
+            }
+            catch
+            {
+                // OK
             }
         }
-
-        /// <inheritdoc />
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }
