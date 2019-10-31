@@ -79,6 +79,13 @@ namespace AgentFramework.Core.Extensions
         /// <returns></returns>
         public static string ToBase64String(this byte[] value) => Base64UrlEncoder.Encode(value);
 
+        /// <summary>
+        /// Converts an array of 8-bit unsigned integers to its equivalent string
+        /// representation that is encoded with base-64 digits.</summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static string ToBase64(this byte[] value) => Convert.ToBase64String(value);
+
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             Converters = new List<JsonConverter> {new AgentMessageWriter()},
@@ -115,6 +122,19 @@ namespace AgentFramework.Core.Extensions
         /// <param name="value">The base64 value.</param>
         /// <returns>The value decoded.</returns>
         public static string FromBase64(this string value) => Base64UrlEncoder.Decode(value);
+
+        /// <summary>
+        /// Convert a byte array into a hex string
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public static string ToHexString(this byte[] buffer)
+        {
+            var hex = new StringBuilder(buffer.Length * 2);
+            foreach (var b in buffer)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
+        }
 
         /// <summary>
         /// Decodes a set of query parameters from a uri.

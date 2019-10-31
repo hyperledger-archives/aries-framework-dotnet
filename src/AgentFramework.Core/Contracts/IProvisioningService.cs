@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AgentFramework.Core.Configuration.Options;
 using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Models;
+using AgentFramework.Core.Models.Ledger;
 using AgentFramework.Core.Models.Records;
 using AgentFramework.Core.Models.Wallets;
 using Hyperledger.Indy.WalletApi;
@@ -46,5 +47,13 @@ namespace AgentFramework.Core.Contracts
         /// <param name="endpoint">The endpoint.</param>
         /// <returns></returns>
         Task UpdateEndpointAsync(Wallet wallet, AgentEndpoint endpoint);
+
+        /// <summary>
+        /// Accepts the transaction author agreement
+        /// </summary>
+        /// <param name="wallet"></param>
+        /// <param name="txnAuthorAgreement"></param>
+        /// <returns></returns>
+        Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement);
     }
 }
