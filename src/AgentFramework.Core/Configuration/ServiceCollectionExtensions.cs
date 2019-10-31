@@ -65,6 +65,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             builder.Services.Configure<PoolOptions>(options);
             builder.Services.AddHostedService<PoolConfigurationHostedService>();
+            builder.Services.AddHostedService<TxnAuthorAcceptanceHostedService>();
             return builder;
         }
 

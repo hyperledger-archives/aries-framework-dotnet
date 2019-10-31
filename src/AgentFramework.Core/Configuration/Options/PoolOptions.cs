@@ -37,6 +37,14 @@
             set;
         } = 2;
 
+        /// <summary>
+        /// If set to <c>true</c> automatically accept
+        /// the transaction author agreement if set on
+        /// the ledger
+        /// </summary>
+        /// <value></value>
+        public bool AcceptTxnAuthorAgreement { get; set; }
+
         /// <inheritdoc />
         public override string ToString() =>
             $"{GetType().Name}: " +

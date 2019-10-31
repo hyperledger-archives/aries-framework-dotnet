@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Models;
+using AgentFramework.Core.Models.Ledger;
 using AgentFramework.Core.Models.Records;
 using AgentFramework.Core.Models.Wallets;
 using Hyperledger.Indy.AnonCredsApi;
@@ -33,6 +35,31 @@ namespace AgentFramework.Core.Runtime
         {
             RecordService = walletRecord;
             WalletService = walletService;
+        }
+
+        /// <inheritdoc />
+        public async Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement)
+        {
+            var provisioning = await GetProvisioningAsync(wallet);
+
+            provisioning.TaaAcceptance = new IndyTaaAcceptance
+            {
+                Digest = GetDigest(txnAuthorAgreement),
+                Text = txnAuthorAgreement.Text,
+                Version = txnAuthorAgreement.Version,
+                AcceptanceDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            };
+
+            await RecordService.UpdateAsync(wallet, provisioning);
+        }
+
+        private string GetDigest(IndyTaa taa)
+        {
+            using(var shaAlgorithm = SHA256.Create())
+            return shaAlgorithm.ComputeHash(
+                $"{taa.Version}{taa.Text}"
+                .GetUTF8Bytes())
+            .ToHexString();
         }
 
         /// <inheritdoc />

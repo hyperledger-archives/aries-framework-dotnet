@@ -49,10 +49,12 @@ namespace AgentFramework.Core.Handlers.Agents
             var agent = await GetAgentAsync(args);
             return new DefaultAgentContext
             {
-                Wallet = await _walletService.GetWalletAsync(_walletOptions.WalletConfiguration,
-                    _walletOptions.WalletCredentials),
+                Wallet = await _walletService.GetWalletAsync(
+                    configuration: _walletOptions.WalletConfiguration,
+                    credentials: _walletOptions.WalletCredentials),
                 Pool = new PoolAwaitable(() => _poolService.GetPoolAsync(
-                    _poolOptions.PoolName, _poolOptions.ProtocolVersion)),
+                    poolName: _poolOptions.PoolName,
+                    protocolVersion: _poolOptions.ProtocolVersion)),
                 SupportedMessages = agent.GetSupportedMessageTypes()
             };
         }
