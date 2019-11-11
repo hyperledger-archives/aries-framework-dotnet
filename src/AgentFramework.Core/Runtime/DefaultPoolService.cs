@@ -18,9 +18,17 @@ namespace AgentFramework.Core.Runtime
         protected static readonly ConcurrentDictionary<string, Pool> Pools =
             new ConcurrentDictionary<string, Pool>();
 
+        /// <summary>
+        /// Concurrent collection of txn author agreements
+        /// </summary>
+        /// <returns></returns>
         protected static readonly ConcurrentDictionary<string, IndyTaa> Taas =
             new ConcurrentDictionary<string, IndyTaa>();
 
+        /// <summary>
+        /// Concurrent collection of acceptance mechanisms lists
+        /// </summary>
+        /// <returns></returns>
         protected static readonly ConcurrentDictionary<string, IndyAml> Amls =
             new ConcurrentDictionary<string, IndyAml>();
 

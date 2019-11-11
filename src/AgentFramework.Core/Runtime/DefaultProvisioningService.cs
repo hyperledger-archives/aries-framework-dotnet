@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using AgentFramework.Core.Configuration.Options;
@@ -9,7 +8,6 @@ using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Models;
 using AgentFramework.Core.Models.Ledger;
 using AgentFramework.Core.Models.Records;
-using AgentFramework.Core.Models.Wallets;
 using AgentFramework.Core.Utils;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.DidApi;
@@ -27,7 +25,13 @@ namespace AgentFramework.Core.Runtime
 
         /// <summary>The wallet service</summary>
         protected readonly IWalletService WalletService;
+        /// <summary>
+        /// Agent options
+        /// </summary>
         protected readonly AgentOptions AgentOptions;
+        /// <summary>
+        /// Wallet Options
+        /// </summary>
         protected readonly WalletOptions WalletOptions;
 
         // ReSharper restore InconsistentNaming
@@ -83,116 +87,6 @@ namespace AgentFramework.Core.Runtime
                 throw new AgentFrameworkException(ErrorCode.RecordNotFound, "Provisioning record not found");
 
             return record;
-        }
-
-        /// <inheritdoc />
-        [Obsolete]
-        public virtual async Task ProvisionAgentAsync(Wallet wallet, ProvisioningConfiguration provisioningConfiguration)
-        {
-            if (provisioningConfiguration == null)
-                throw new ArgumentNullException(nameof(provisioningConfiguration));
-            if (provisioningConfiguration.EndpointUri == null)
-                throw new ArgumentNullException(nameof(provisioningConfiguration.EndpointUri));
-
-            ProvisioningRecord record = null;
-            try
-            {
-                record = await GetProvisioningAsync(wallet);
-            }
-            catch (AgentFrameworkException e) when(e.ErrorCode == ErrorCode.RecordNotFound){}
-
-            if (record != null)
-                throw new AgentFrameworkException(ErrorCode.WalletAlreadyProvisioned);
-
-            var agent = await Did.CreateAndStoreMyDidAsync(wallet,
-                provisioningConfiguration.AgentSeed != null
-                    ? new {seed = provisioningConfiguration.AgentSeed}.ToJson()
-                    : "{}");
-
-            var masterSecretId = await AnonCreds.ProverCreateMasterSecretAsync(wallet, null);
-
-            record = new ProvisioningRecord
-            {
-                MasterSecretId = masterSecretId,
-                Endpoint =
-                {
-                    Uri = provisioningConfiguration.EndpointUri.ToString(),
-                    Did = agent.Did,
-                    Verkey = agent.VerKey
-                },
-                Owner =
-                {
-                    Name = provisioningConfiguration.OwnerName,
-                    ImageUrl = provisioningConfiguration.OwnerImageUrl
-                }
-            };
-
-            await provisioningConfiguration.ConfigureAsync(record, new DefaultAgentContext { Wallet = wallet });
-
-            await RecordService.AddAsync(wallet, record);
-        }
-
-        /// <inheritdoc />
-        public virtual async Task ProvisionAgentAsync(ProvisioningConfiguration configuration)
-        {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
-            if (configuration.WalletConfiguration == null ||
-                configuration.WalletCredentials == null)
-                throw new ArgumentNullException(nameof(configuration),
-                    "Wallet configuration and credentials must be specified");
-
-            // Create agent wallet
-            await WalletService.CreateWalletAsync(configuration.WalletConfiguration, configuration.WalletCredentials);
-            var wallet =
-                await WalletService.GetWalletAsync(configuration.WalletConfiguration, configuration.WalletCredentials);
-
-            // Configure agent endpoint
-            AgentEndpoint endpoint = null;
-            if (configuration.EndpointUri != null)
-            {
-                endpoint = new AgentEndpoint { Uri = configuration.EndpointUri?.ToString() };
-                if (configuration.AgentSeed != null)
-                {
-                    var agent = await Did.CreateAndStoreMyDidAsync(wallet, new { seed = configuration.AgentSeed }.ToJson());
-                    endpoint.Did = agent.Did;
-                    endpoint.Verkey = agent.VerKey;
-                }
-                else if (configuration.AgentDid != null && configuration.AgentVerkey != null)
-                {
-                    endpoint.Did = configuration.AgentDid;
-                    endpoint.Verkey = configuration.AgentVerkey;
-                }
-                else
-                {
-                    var agent = await Did.CreateAndStoreMyDidAsync(wallet, "{}");
-                    endpoint.Did = agent.Did;
-                    endpoint.Verkey = agent.VerKey;
-                }
-            }
-
-            var masterSecretId = await AnonCreds.ProverCreateMasterSecretAsync(wallet, null);
-
-            var record = new ProvisioningRecord
-            {
-                MasterSecretId = masterSecretId,
-                Endpoint = endpoint,
-                Owner =
-                {
-                    Name = configuration.OwnerName,
-                    ImageUrl = configuration.OwnerImageUrl
-                }
-            };
-
-            // Populate initial tags if any passed
-            if (configuration.Tags != null && configuration.Tags.Any())
-                foreach (var item in configuration.Tags)
-                    record.Tags.Add(item.Key, item.Value);
-
-            // Create issuer
-            await configuration.ConfigureAsync(record, new DefaultAgentContext { Wallet = wallet });
-
-            await RecordService.AddAsync(wallet, record);
         }
 
         /// <inheritdoc />

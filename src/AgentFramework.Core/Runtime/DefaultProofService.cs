@@ -323,6 +323,7 @@ namespace AgentFramework.Core.Runtime
             return result.ToJson();
         }
 
+        /// <inheritdoc />
         public Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(
             IAgentContext agentContext,
             ProofRequest proofRequest,
@@ -332,6 +333,7 @@ namespace AgentFramework.Core.Runtime
                 proofRequestJson: proofRequest?.ToJson(),
                 connectionId: connectionId);
 
+        /// <inheritdoc />
         public async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, string proofRequestJson, string connectionId)
         {
             Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
@@ -379,6 +381,7 @@ namespace AgentFramework.Core.Runtime
             return (message, proofRecord);
         }
 
+        /// <inheritdoc />
         public async Task<ProofRecord> ProcessRequestAsync(IAgentContext agentContext, RequestPresentationMessage requestPresentationMessage, ConnectionRecord connection)
         {
             var requestAttachment = requestPresentationMessage.Requests.FirstOrDefault(x => x.Id == "libindy-request-presentation-0")
@@ -409,6 +412,7 @@ namespace AgentFramework.Core.Runtime
             return proofRecord;
         }
 
+        /// <inheritdoc />
         public async Task<ProofRecord> ProcessPresentationAsync(IAgentContext agentContext, PresentationMessage presentationMessage)
         {
             var requestAttachment = presentationMessage.Presentations.FirstOrDefault(x => x.Id == "libindy-presentation-0")
@@ -436,11 +440,11 @@ namespace AgentFramework.Core.Runtime
             return proofRecord;
         }
 
-        public Task<string> CreatePresentationAsync(IAgentContext agentContext, ProofRequest proofRequest, RequestedCredentials requestedCredentials)
-        {
-            return CreateProofAsync(agentContext, proofRequest, requestedCredentials);
-        }
+        /// <inheritdoc />
+        public Task<string> CreatePresentationAsync(IAgentContext agentContext, ProofRequest proofRequest, RequestedCredentials requestedCredentials) => 
+            CreateProofAsync(agentContext, proofRequest, requestedCredentials);
 
+        /// <inheritdoc />
         public async Task<(PresentationMessage, ProofRecord)> CreatePresentationAsync(IAgentContext agentContext, string proofRecordId, RequestedCredentials requestedCredentials)
         {
             var record = await GetAsync(agentContext, proofRecordId);

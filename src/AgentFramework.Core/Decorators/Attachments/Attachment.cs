@@ -52,16 +52,6 @@ namespace AgentFramework.Core.Decorators.Attachments
         public DateTimeOffset? LastModifiedTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the content.
-        /// </summary>
-        /// <value>
-        /// The content.
-        /// </value>
-        [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-        [Obsolete("Please use Data field instead.")]
-        public AttachmentContent Content { get; set; }
-
-        /// <summary>
         /// Gets or sets the attachment data
         /// </summary>
         /// <value></value>

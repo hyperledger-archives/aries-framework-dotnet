@@ -167,7 +167,7 @@ namespace AgentFramework.Core.Runtime
                 request.AddAttachment(new Attachment
                 {
                     Nickname = "profile-image",
-                    Content = new AttachmentContent {Links = new[] {provisioning.Owner.ImageUrl}}
+                    Data = new AttachmentContent {Links = new[] {provisioning.Owner.ImageUrl}}
                 });
             }
             

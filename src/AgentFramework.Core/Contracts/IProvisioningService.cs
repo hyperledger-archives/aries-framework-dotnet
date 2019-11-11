@@ -25,23 +25,6 @@ namespace AgentFramework.Core.Contracts
         Task<ProvisioningRecord> GetProvisioningAsync(Wallet wallet);
 
         /// <summary>
-        /// Stores the endpoint asynchronous.
-        /// </summary>
-        /// <param name="wallet">The wallet.</param>
-        /// <param name="provisioningConfiguration">The provisioning request.</param>
-        /// <returns>The response async.</returns>
-        [Obsolete]
-        Task ProvisionAgentAsync(Wallet wallet, ProvisioningConfiguration provisioningConfiguration);
-
-        /// <summary>
-        /// Creates a wallet and provisions a new agent with the given <see cref="ProvisioningConfiguration" />
-        /// </summary>
-        /// <param name="configuration">The provisioning configuration.</param>
-        /// <returns></returns>
-        [Obsolete("This method is obsolete. Please use extensions methods to configure agent provisioning")]
-        Task ProvisionAgentAsync(ProvisioningConfiguration configuration);
-
-        /// <summary>
         /// Creates a wallet and provisions a new agent with the default <see cref="AgentOptions" /> and <see cref="WalletOptions" />
         /// </summary>
         /// <returns></returns>
