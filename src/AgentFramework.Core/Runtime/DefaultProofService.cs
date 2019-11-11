@@ -415,12 +415,12 @@ namespace AgentFramework.Core.Runtime
         /// <inheritdoc />
         public async Task<ProofRecord> ProcessPresentationAsync(IAgentContext agentContext, PresentationMessage presentationMessage)
         {
+            var proofRecord = await this.GetByThreadIdAsync(agentContext, presentationMessage.GetThreadId());
+
             var requestAttachment = presentationMessage.Presentations.FirstOrDefault(x => x.Id == "libindy-presentation-0")
                 ?? throw new ArgumentException("Presentation attachment not found.");
 
             var proofJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
-
-            var proofRecord = await this.GetByThreadIdAsync(agentContext, presentationMessage.GetThreadId());
 
             if (proofRecord.State != ProofState.Requested)
                 throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
