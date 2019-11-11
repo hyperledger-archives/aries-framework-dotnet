@@ -7,8 +7,6 @@ using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Messages;
 using AgentFramework.Core.Messages.Connections;
-using AgentFramework.Core.Messages.Credentials;
-using AgentFramework.Core.Messages.Proofs;
 using AgentFramework.Core.Models.Connections;
 using AgentFramework.Core.Models.Credentials;
 using AgentFramework.Core.Models.Proofs;
@@ -118,14 +116,14 @@ namespace AgentFramework.TestHarness
             };
             
             // Send an offer to the holder using the established connection channel
-            var (offerMessage, _) = await credentialService.CreateOfferV1Async(
+            var (offerMessage, _) = await credentialService.CreateOfferAsync(
                 agentContext: issuerContext,
                 config: offerConfig,
                 connectionId: issuerConnection.Id);
             messages.TryAdd(offerMessage);
 
             // Holder retrieves message from their cloud agent
-            var credentialOffer = FindContentMessage<Core.Messages.Credentials.V1.CredentialOfferMessage>(messages);
+            var credentialOffer = FindContentMessage<CredentialOfferMessage>(messages);
 
             // Holder processes the credential offer by storing it
             var holderCredentialId =
@@ -139,7 +137,7 @@ namespace AgentFramework.TestHarness
             messages.TryAdd(request);
 
             // Issuer retrieves credential request from cloud agent
-            var credentialRequest = FindContentMessage<Core.Messages.Credentials.V1.CredentialRequestMessage>(messages);
+            var credentialRequest = FindContentMessage<CredentialRequestMessage>(messages);
             Assert.NotNull(credentialRequest);
 
             // Issuer processes the credential request by storing it
@@ -154,7 +152,7 @@ namespace AgentFramework.TestHarness
             messages.TryAdd(credentialMessage);
 
             // Holder retrieves the credential from their cloud agent
-            var credential = FindContentMessage<Core.Messages.Credentials.V1.CredentialIssueMessage>(messages);
+            var credential = FindContentMessage<CredentialIssueMessage>(messages);
             Assert.NotNull(credential);
 
             // Holder processes the credential by storing it in their wallet

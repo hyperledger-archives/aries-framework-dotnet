@@ -1,10 +1,11 @@
-﻿using System;
+using System;
+using AgentFramework.Core.Decorators.Attachments;
 using Newtonsoft.Json;
 
-namespace AgentFramework.Core.Messages.Credentials
+namespace AgentFramework.Core.Messages
 {
     /// <summary>
-    /// A credential request content message.
+    /// A credential content message.
     /// </summary>
     public class CredentialRequestMessage : AgentMessage
     {
@@ -12,32 +13,21 @@ namespace AgentFramework.Core.Messages.Credentials
         public CredentialRequestMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.CredentialRequest;
+            Type = MessageTypes.IssueCredentialNames.RequestCredential;
         }
 
         /// <summary>
-        /// Gets or sets the comment.
+        /// Gets or sets human readable information about this Credential Proposal
         /// </summary>
-        /// <value>
-        /// The comment.
-        /// </value>
-        [JsonProperty("comment", NullValueHandling = NullValueHandling.Ignore)]
+        /// <value></value>
+        [JsonProperty("comment")]
         public string Comment { get; set; }
 
         /// <summary>
-        /// Gets or sets the credential request json.
+        /// Gets or sets the offer attachment
         /// </summary>
-        /// <value>
-        /// The credential request json.
-        /// </value>
-        [JsonProperty("request")]
-        public string CredentialRequestJson { get; set; }
-
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"Id={Id}, " +
-            $"Type={Type}, " +
-            $"CredentialRequestJson={(CredentialRequestJson?.Length > 0 ? "[hidden]" : null)}";
+        /// <value></value>
+        [JsonProperty("requests~attach")]
+        public Attachment[] Requests { get; set; }
     }
 }

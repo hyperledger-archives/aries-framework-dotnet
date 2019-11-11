@@ -119,7 +119,7 @@ namespace AgentFramework.TestHarness
             var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(issuer.Context, schemaService,
                 issuerProv.IssuerDid, credentialAttributes.Select(_ => _.Name).ToArray());
 
-            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferV1Async(
+            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferAsync(
                 agentContext: issuer.Context,
                 config: new OfferConfiguration
                 {

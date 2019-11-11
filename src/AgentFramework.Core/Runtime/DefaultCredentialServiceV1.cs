@@ -7,7 +7,7 @@ using AgentFramework.Core.Decorators.Attachments;
 using AgentFramework.Core.Decorators.Threading;
 using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Extensions;
-using AgentFramework.Core.Messages.Credentials.V1;
+using AgentFramework.Core.Messages;
 using AgentFramework.Core.Models.Credentials;
 using AgentFramework.Core.Models.Events;
 using AgentFramework.Core.Models.Ledger;
@@ -166,7 +166,7 @@ namespace AgentFramework.Core.Runtime
             return credentialRecord.Id;
         }
 
-        public async Task<(CredentialOfferMessage, CredentialRecord)> CreateOfferV1Async(IAgentContext agentContext, OfferConfiguration config, string connectionId = null)
+        public async Task<(CredentialOfferMessage, CredentialRecord)> CreateOfferAsync(IAgentContext agentContext, OfferConfiguration config, string connectionId = null)
         {
             Logger.LogInformation(LoggingEvents.CreateCredentialOffer, "DefinitionId {0}, IssuerDid {1}",
                 config.CredentialDefinitionId, config.IssuerDid);
@@ -238,7 +238,7 @@ namespace AgentFramework.Core.Runtime
                 },
                 CredentialPreview = credentialRecord.CredentialAttributesValues != null ? new CredentialPreviewMessage
                 {
-                    Attributes = credentialRecord.CredentialAttributesValues.Select(x => new CredentialPreviewAttriubute
+                    Attributes = credentialRecord.CredentialAttributesValues.Select(x => new CredentialPreviewAttribute
                     {
                         Name = x.Name,
                         MimeType = x.MimeType,
@@ -248,7 +248,7 @@ namespace AgentFramework.Core.Runtime
             }, credentialRecord);
         }
 
-        public async Task<string> ProcessCredentialRequestAsync(IAgentContext agentContext, Messages.Credentials.V1.CredentialRequestMessage credentialRequest, ConnectionRecord connection)
+        public async Task<string> ProcessCredentialRequestAsync(IAgentContext agentContext, CredentialRequestMessage credentialRequest, ConnectionRecord connection)
         {
             Logger.LogInformation(LoggingEvents.StoreCredentialRequest, "Type {0},", credentialRequest.Type);
 
@@ -283,7 +283,7 @@ namespace AgentFramework.Core.Runtime
             return CreateCredentialAsync(agentContext, credentialId, values: null);
         }
 
-        public async Task<(CredentialIssueMessage, CredentialRecord)> CreateCredentialAsync(IAgentContext agentContext, string credentialId, IEnumerable<CredentialPreviewAttribute> values)
+        public async Task<(CredentialIssueMessage, CredentialRecord)> CreateCredentialAsync(IAgentContext agentContext, string credentialId, IEnumerable<Models.Credentials.CredentialPreviewAttribute> values)
         {
             var credential = await GetAsync(agentContext, credentialId);
 

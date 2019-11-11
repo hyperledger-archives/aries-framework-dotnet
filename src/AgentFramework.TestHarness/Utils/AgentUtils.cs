@@ -40,14 +40,14 @@ namespace AgentFramework.TestHarness.Utils
                 new MessageType(MessageTypes.ConnectionResponse),
 
                 //Credential Protocol
-                new MessageType(MessageTypes.CredentialOffer),
-                new MessageType(MessageTypes.CredentialPreview),
-                new MessageType(MessageTypes.CredentialRequest),
-                new MessageType(MessageTypes.Credential),
+                new MessageType(MessageTypes.IssueCredentialNames.OfferCredential),
+                new MessageType(MessageTypes.IssueCredentialNames.PreviewCredential),
+                new MessageType(MessageTypes.IssueCredentialNames.RequestCredential),
+                new MessageType(MessageTypes.IssueCredentialNames.IssueCredential),
 
                 //Proof protocol
-                new MessageType(MessageTypes.ProofRequest),
-                new MessageType(MessageTypes.DisclosedProof),
+                new MessageType(MessageTypes.PresentProofNames.RequestPresentation),
+                new MessageType(MessageTypes.PresentProofNames.Presentation),
 
                 //Trust ping protocol
                 new MessageType(MessageTypes.TrustPingMessageType),

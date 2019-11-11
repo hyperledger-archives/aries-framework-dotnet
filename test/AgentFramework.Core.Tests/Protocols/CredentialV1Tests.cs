@@ -43,7 +43,7 @@ namespace AgentFramework.Core.Tests.Protocols
 
             // Send offer
             var (offer, record) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
-                .CreateOfferV1Async(pair.Agent1.Context, new OfferConfiguration
+                .CreateOfferAsync(pair.Agent1.Context, new OfferConfiguration
                 {
                     CredentialDefinitionId = definitionId,
                     IssuerDid = issuerConfiguration.IssuerDid,

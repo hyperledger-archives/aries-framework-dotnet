@@ -40,7 +40,7 @@ namespace AgentFramework.Core.Models.Credentials
         /// <value>
         /// The type of the MIME.
         /// </value>
-        [JsonProperty("mime_type")]
+        [JsonProperty("mime-type")]
         public string MimeType { get; set; }
 
         /// <summary>

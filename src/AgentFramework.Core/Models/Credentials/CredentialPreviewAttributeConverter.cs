@@ -19,7 +19,7 @@ namespace AgentFramework.Core.Models.Credentials
 
             var name = item["name"];
             var value = item["value"];
-            var mimeType = item["mime_type"];
+            var mimeType = item["mime-type"];
 
             var obj = new CredentialPreviewAttribute();
             obj.Name = name.Value<string>();

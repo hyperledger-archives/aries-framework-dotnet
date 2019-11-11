@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AgentFramework.Core.Messages;
-using AgentFramework.Core.Messages.Proofs;
 using AgentFramework.Core.Models.Credentials;
 using AgentFramework.Core.Models.Proofs;
 using AgentFramework.Core.Models.Records;
@@ -23,10 +22,6 @@ namespace AgentFramework.Core.Contracts
         /// <param name="proofRequest">An enumeration of attribute we wish the prover to disclose.</param>
         /// <param name="connectionId">Connection identifier of who the proof request will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
-        [Obsolete]
-        Task<(ProofRequestMessage, ProofRecord)> CreateProofRequestAsync(IAgentContext agentContext,
-            ProofRequest proofRequest, string connectionId = null);
-
         Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext,
             ProofRequest proofRequest, string connectionId = null);
 
@@ -38,10 +33,6 @@ namespace AgentFramework.Core.Contracts
         /// <param name="proofRequestJson">A string representation of proof request json object</param>
         /// <param name="connectionId">Connection identifier of who the proof request will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
-        [Obsolete]
-        Task<(ProofRequestMessage, ProofRecord)> CreateProofRequestAsync(IAgentContext agentContext,
-            string proofRequestJson, string connectionId);
-
         Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext,
             string proofRequestJson, string connectionId);
 
@@ -53,9 +44,6 @@ namespace AgentFramework.Core.Contracts
         /// <param name="proofRequest">A proof request.</param>
         /// <param name="connection">Connection.</param>
         /// <returns>Proof identifier.</returns>
-        [Obsolete]
-        Task<string> ProcessProofRequestAsync(IAgentContext agentContext, ProofRequestMessage proofRequest, ConnectionRecord connection);
-
         Task<ProofRecord> ProcessRequestAsync(IAgentContext agentContext, RequestPresentationMessage proofRequest, ConnectionRecord connection);
 
         /// <summary>
@@ -65,9 +53,6 @@ namespace AgentFramework.Core.Contracts
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="proof">A proof.</param>
         /// <returns>Proof identifier.</returns>
-        [Obsolete]
-        Task<string> ProcessProofAsync(IAgentContext agentContext, ProofMessage proof);
-
         Task<ProofRecord> ProcessPresentationAsync(IAgentContext agentContext, PresentationMessage proof);
 
         /// <summary>
@@ -79,10 +64,6 @@ namespace AgentFramework.Core.Contracts
         /// <returns>
         /// The proof.
         /// </returns>
-        [Obsolete]
-        Task<string> CreateProofAsync(IAgentContext agentContext,
-            ProofRequest proofRequest, RequestedCredentials requestedCredentials);
-
         Task<string> CreatePresentationAsync(IAgentContext agentContext,
             ProofRequest proofRequest, RequestedCredentials requestedCredentials);
 
@@ -90,19 +71,13 @@ namespace AgentFramework.Core.Contracts
         /// Creates a proof.
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
-        /// <param name="proofRequestId">Identifier of the proof request.</param>
+        /// <param name="proofRecordId">Identifier of the proof request.</param>
         /// <param name="requestedCredentials">The requested credentials.</param>
         /// <returns>
         /// The proof.
         /// </returns>
-        [Obsolete]
-        Task<(ProofMessage, ProofRecord)> CreateProofAsync(IAgentContext agentContext, string proofRequestId,
-            RequestedCredentials requestedCredentials);
-
-        Task<(PresentationMessage, ProofRecord)> CreatePresentationAsync(
-            IAgentContext agentContext, 
-            string proofRecordId,
-            RequestedCredentials requestedCredentials);
+        Task<(PresentationMessage, ProofRecord)> CreatePresentationAsync(IAgentContext agentContext, 
+            string proofRecordId, RequestedCredentials requestedCredentials);
 
         /// <summary>
         /// Rejects a proof request.
