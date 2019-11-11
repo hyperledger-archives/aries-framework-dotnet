@@ -11,18 +11,17 @@ namespace AgentFramework.Core.Models.Credentials
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public CredentialPreviewAttribute() { }
+        public CredentialPreviewAttribute() => MimeType = CredentialMimeTypes.TextMimeType;
 
         /// <summary>
         /// String type credential attribute constructor.
         /// </summary>
         /// <param name="name">Name of the credential attribute.</param>
         /// <param name="value">Value of the credential attribute.</param>
-        public CredentialPreviewAttribute(string name, string value)
+        public CredentialPreviewAttribute(string name, string value) : this()
         {
             Name = name;
             Value = value;
-            MimeType = CredentialMimeTypes.TextMimeType;
         }
 
         /// <summary>

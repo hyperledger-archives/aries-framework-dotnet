@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace AgentFramework.Core.Models.Ledger
+namespace AgentFramework.Core.Models
 {
     /// <summary>
     /// Indy Transaction Author Agreement Model

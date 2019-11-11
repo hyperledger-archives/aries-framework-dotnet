@@ -64,8 +64,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static AriesFrameworkBuilder ConfigurePool(this AriesFrameworkBuilder builder, Action<PoolOptions> options)
         {
             builder.Services.Configure<PoolOptions>(options);
-            builder.Services.AddHostedService<PoolConfigurationHostedService>();
-            builder.Services.AddHostedService<TxnAuthorAcceptanceHostedService>();
+            builder.Services.AddHostedService<PoolConfigurationService>();
+            builder.Services.AddHostedService<TxnAuthorAcceptanceService>();
             return builder;
         }
 

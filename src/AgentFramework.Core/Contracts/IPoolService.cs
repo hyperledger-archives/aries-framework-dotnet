@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AgentFramework.Core.Models;
 using AgentFramework.Core.Models.Ledger;
 using Hyperledger.Indy.PoolApi;
 

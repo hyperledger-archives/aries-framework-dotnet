@@ -114,8 +114,7 @@ namespace AgentFramework.Core.Contracts
         /// <summary>
         /// Registers the nym async.
         /// </summary>
-        /// <param name="wallet">The wallet.</param>
-        /// <param name="pool">The pool.</param>
+        /// <param name="context"></param>
         /// <param name="submitterDid">The submitter did.</param>
         /// <param name="theirDid">Their did.</param>
         /// <param name="theirVerkey">Their verkey.</param>
@@ -130,8 +129,7 @@ namespace AgentFramework.Core.Contracts
         /// <summary>
         /// Registers the credential definition async.
         /// </summary>
-        /// <param name="wallet">The wallet.</param>
-        /// <param name="pool">The pool.</param>
+        /// <param name="context"></param>
         /// <param name="submitterDid">The submitter did.</param>
         /// <param name="data">Data.</param>
         /// <param name="paymentInfo">Payment information</param>
@@ -144,8 +142,7 @@ namespace AgentFramework.Core.Contracts
         /// <summary>
         /// Registers the revocation registry definition asynchronous.
         /// </summary>
-        /// <param name="wallet">The wallet.</param>
-        /// <param name="pool">The pool.</param>
+        /// <param name="context"></param>
         /// <param name="submitterDid">The submitter did.</param>
         /// <param name="data">The data.</param>
         /// <param name="paymentInfo">Payment information</param>
@@ -156,8 +153,7 @@ namespace AgentFramework.Core.Contracts
         /// <summary>
         /// Sends the revocation registry entry asynchronous.
         /// </summary>
-        /// <param name="wallet">The wallet.</param>
-        /// <param name="pool">The pool.</param>
+        /// <param name="context"></param>
         /// <param name="issuerDid">The issuer did.</param>
         /// <param name="revocationRegistryDefinitionId">The revocation registry definition identifier.</param>
         /// <param name="revocationDefinitionType">Type of the revocation definition.</param>
@@ -171,8 +167,7 @@ namespace AgentFramework.Core.Contracts
         /// <summary>
         /// Registers the schema asynchronous.
         /// </summary>
-        /// <param name="pool">The pool.</param>
-        /// <param name="wallet">The wallet.</param>
+        /// <param name="context"></param>
         /// <param name="issuerDid">The issuer did.</param>
         /// <param name="schemaJson">The schema json.</param>
         /// <param name="paymentInfo">Payment information</param>

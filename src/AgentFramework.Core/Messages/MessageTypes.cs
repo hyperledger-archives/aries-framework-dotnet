@@ -91,11 +91,29 @@
             public const string IssueCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/issue-credential";
         }
 
+        /// <summary>
+        /// Type names for Present Proof Protocol
+        /// </summary>
         public class PresentProofNames
         {
+            /// <summary>
+            /// Propose Presentation Message Type Name
+            /// </summary>
             public const string ProposePresentation = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/propose-presentation";
+
+            /// <summary>
+            /// Request Presentation Message Type Name
+            /// </summary>
             public const string RequestPresentation = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/request-presentation";
+
+            /// <summary>
+            /// Presentation Message Type Name
+            /// </summary>
             public const string Presentation = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/presentation";
+
+            /// <summary>
+            /// Presentation Preview Message Type Name
+            /// </summary>
             public const string PresentationPreview = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/presentation-preview";
         }
     }

@@ -11,16 +11,26 @@ using Microsoft.Extensions.Options;
 
 namespace AgentFramework.Core.Configuration
 {
-    public class PoolConfigurationHostedService : IHostedService
+    /// <summary>
+    /// Pool configuration service registered as hosted service on startup
+    /// to create the required pool configuration
+    /// </summary>
+    public class PoolConfigurationService : IHostedService
     {
         private readonly PoolOptions _poolOptions;
         private readonly IPoolService _poolService;
-        private readonly ILogger<PoolConfigurationHostedService> _logger;
+        private readonly ILogger<PoolConfigurationService> _logger;
 
-        public PoolConfigurationHostedService(
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PoolConfigurationService" /> class.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="poolService"></param>
+        /// <param name="logger"></param>
+        public PoolConfigurationService(
             IOptions<PoolOptions> options,
             IPoolService poolService,
-            ILogger<PoolConfigurationHostedService> logger)
+            ILogger<PoolConfigurationService> logger)
         {
             _poolOptions = options.Value;
             _poolService = poolService;

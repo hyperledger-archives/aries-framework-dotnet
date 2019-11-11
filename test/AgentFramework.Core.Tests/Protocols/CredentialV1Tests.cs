@@ -47,15 +47,7 @@ namespace AgentFramework.Core.Tests.Protocols
                 {
                     CredentialDefinitionId = definitionId,
                     IssuerDid = issuerConfiguration.IssuerDid,
-                    CredentialAttributeValues = new []
-                    {
-                        new CredentialPreviewAttribute
-                        {
-                            Name = "name",
-                            Value = "random",
-                            MimeType = CredentialMimeTypes.TextMimeType
-                        }
-                    }
+                    CredentialAttributeValues = new [] { new CredentialPreviewAttribute("name", "random") }
                 });
             await pair.Agent1.Provider.GetRequiredService<IMessageService>()
                 .SendAsync(pair.Agent1.Context.Wallet, offer, pair.Connection1);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Extensions;
+using AgentFramework.Core.Models;
 using AgentFramework.Core.Models.Ledger;
 using Hyperledger.Indy.LedgerApi;
 using Hyperledger.Indy.PoolApi;
