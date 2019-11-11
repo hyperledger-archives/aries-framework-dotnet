@@ -26,12 +26,17 @@ namespace AgentFramework.Core.Configuration
             _poolService = poolService;
             _logger = logger;
         }
+
+        /// <inheritdoc />
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             try
             {
-                if (_poolOptions.GenesisFilename != null)
-                    await _poolService.CreatePoolAsync(_poolOptions.PoolName, _poolOptions.GenesisFilename);
+                if (_poolOptions.GenesisFilename == null)
+                {
+                    throw new ArgumentNullException(nameof(_poolOptions.GenesisFilename), "You must specify the pool configuration genesis file.");
+                }
+                await _poolService.CreatePoolAsync(_poolOptions.PoolName, _poolOptions.GenesisFilename);
             }
             catch (PoolLedgerConfigExistsException)
             {
@@ -44,9 +49,7 @@ namespace AgentFramework.Core.Configuration
             }
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
+        /// <inheritdoc />
+        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

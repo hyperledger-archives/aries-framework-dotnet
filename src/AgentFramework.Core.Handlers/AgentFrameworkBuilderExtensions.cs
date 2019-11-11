@@ -17,102 +17,13 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class AgentFrameworkBuilderExtensions
     {
         /// <summary>
-        /// Adds a <see cref="DefaultAgent"/> service provisioned with <see cref="BasicProvisioningConfiguration"/>
-        /// </summary>
-        /// <returns>The basic agent.</returns>
-        /// <param name="frameworkBuilder">Builder.</param>
-        /// <param name="config">Config.</param>
-        [Obsolete("This configuration method is obsolete. Please use 'RegisterAgent' instead.")]
-        public static AgentFrameworkBuilder AddBasicAgent(this AgentFrameworkBuilder frameworkBuilder, Action<BasicProvisioningConfiguration> config)
-        {
-            return AddBasicAgent<DefaultAgent>(frameworkBuilder, config);
-        }
-
-        /// <summary>
-        /// Adds a custom agent service provisioned with <see cref="BasicProvisioningConfiguration"/>
-        /// </summary>
-        /// <returns>The basic agent.</returns>
-        /// <param name="frameworkBuilder">Builder.</param>
-        /// <param name="config">Config.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        [Obsolete("This configuration method is obsolete. Please use 'RegisterAgent<T>' instead.")]
-        public static AgentFrameworkBuilder AddBasicAgent<T>(this AgentFrameworkBuilder frameworkBuilder, Action<BasicProvisioningConfiguration> config)
-            where T : class, IAgent
-        {
-            var configuration = new BasicProvisioningConfiguration();
-            config?.Invoke(configuration);
-
-            return AddAgent<T, BasicProvisioningConfiguration>(frameworkBuilder, () => configuration);
-        }
-
-        /// <summary>
-        /// Adds a <see cref="DefaultAgent"/> service provisioned with <see cref="IssuerProvisioningConfiguration"/>
-        /// </summary>
-        /// <returns>The issuer agent.</returns>
-        /// <param name="frameworkBuilder">Builder.</param>
-        /// <param name="config">Config.</param>
-        [Obsolete("This configuration method is obsolete. Please use 'RegisterIssuerAgent' instead.")]
-        public static AgentFrameworkBuilder AddIssuerAgent(this AgentFrameworkBuilder frameworkBuilder, Action<IssuerProvisioningConfiguration> config)
-        {
-            return AddIssuerAgent<DefaultAgent>(frameworkBuilder, config);
-        }
-
-        /// <summary>
-        /// Adds a custom agent service provisioned with <see cref="IssuerProvisioningConfiguration"/>
-        /// </summary>
-        /// <returns>The issuer agent.</returns>
-        /// <param name="frameworkBuilder">Builder.</param>
-        /// <param name="config">Config.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        [Obsolete("This configuration method is obsolete. Please use 'RegisterIssuerAgent<T>' instead.")]
-        public static AgentFrameworkBuilder AddIssuerAgent<T>(this AgentFrameworkBuilder frameworkBuilder, Action<IssuerProvisioningConfiguration> config)
-            where T : class, IAgent
-        {
-            var configuration = new IssuerProvisioningConfiguration();
-            config?.Invoke(configuration);
-
-            return AddAgent<T, IssuerProvisioningConfiguration>(frameworkBuilder, () => configuration);
-        }
-
-        /// <summary>
-        /// Registers and provisions an agent configured as Issuer.
-        /// </summary>
-        /// <param name="frameworkBuilder"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static AgentFrameworkBuilder RegisterIssuerAgent(
-            this AgentFrameworkBuilder frameworkBuilder,
-            Action<AgentOptions> options) 
-            => RegisterIssuerAgent<DefaultAgent>(frameworkBuilder, options);
-
-        /// <summary>
-        /// Registers and provisions an agent configured as Issuer.
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static AgentFrameworkBuilder RegisterIssuerAgent<T>(
-            this AgentFrameworkBuilder builder, 
-            Action<AgentOptions> options)
-            where T : class, IAgent
-        {
-            builder.AddAgentProvider();
-            builder.Services.AddDefaultMessageHandlers();
-            builder.Services.AddSingleton<IAgent, T>();
-            builder.Services.Configure(options);
-            builder.Services.AddHostedService<IssuerProvisioningHostedService>();
-
-            return builder;
-        }
-
-        /// <summary>
         /// Registers and provisions an agent.
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static AgentFrameworkBuilder RegisterAgent(
-            this AgentFrameworkBuilder builder,
+        public static AriesFrameworkBuilder RegisterAgent(
+            this AriesFrameworkBuilder builder,
             Action<AgentOptions> options) 
             => RegisterAgent<DefaultAgent>(builder, options);
 
@@ -122,8 +33,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="builder"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static AgentFrameworkBuilder RegisterAgent<T>(
-            this AgentFrameworkBuilder builder, 
+        public static AriesFrameworkBuilder RegisterAgent<T>(
+            this AriesFrameworkBuilder builder, 
             Action<AgentOptions> options)
             where T : class, IAgent 
         {
@@ -137,51 +48,11 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         /// <summary>
-        /// Adds a custom agent service provisioned with custom <see cref="ProvisioningConfiguration"/>
-        /// </summary>
-        /// <returns>The agent.</returns>
-        /// <param name="frameworkBuilder">Builder.</param>
-        /// <param name="createConfiguration">Create configuration.</param>
-        /// <typeparam name="TAgent">The 1st type parameter.</typeparam>
-        /// <typeparam name="TConfiguration">The 2nd type parameter.</typeparam>
-        [Obsolete("This configuration method is obsolete. Please use 'RegisterAgent<T>' instead.")]
-        public static AgentFrameworkBuilder AddAgent<TAgent, TConfiguration>(this AgentFrameworkBuilder frameworkBuilder, Func<TConfiguration> createConfiguration)
-            where TAgent : class, IAgent
-            where TConfiguration : ProvisioningConfiguration
-        {
-            var configuration = createConfiguration.Invoke();
-
-            frameworkBuilder.Services.Configure<WalletOptions>(obj =>
-            {
-                obj.WalletConfiguration = configuration.WalletConfiguration;
-                obj.WalletCredentials = configuration.WalletCredentials;
-            });
-
-            frameworkBuilder.Services.Configure<PoolOptions>(obj =>
-            {
-                obj.PoolName = configuration.PoolName;
-                obj.GenesisFilename = configuration.GenesisFilename;
-            });
-
-            frameworkBuilder.AddAgentProvider();
-            frameworkBuilder.Services.AddDefaultMessageHandlers();
-            frameworkBuilder.Services.AddSingleton<ProvisioningConfiguration>(configuration);
-            frameworkBuilder.Services.AddSingleton<IAgent, TAgent>();
-            frameworkBuilder.Services.AddSingleton<IHostedService>(s => new ProvisioningHostedService(
-                configuration,
-                s.GetRequiredService<IProvisioningService>(),
-                s.GetRequiredService<IPoolService>(),
-                s.GetRequiredService<IOptions<PoolOptions>>()));
-
-            return frameworkBuilder;
-        }
-
-        /// <summary>
         /// Adds agent provider services
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static AgentFrameworkBuilder AddAgentProvider(this AgentFrameworkBuilder builder)
+        public static AriesFrameworkBuilder AddAgentProvider(this AriesFrameworkBuilder builder)
         {
             builder.Services.AddSingleton<IAgentProvider, DefaultAgentProvider>();
             return builder;

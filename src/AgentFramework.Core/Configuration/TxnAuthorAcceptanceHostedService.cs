@@ -48,14 +48,7 @@ namespace AgentFramework.Core.Configuration
                 var digest = GetDigest(taa);
                 var provisioning = await provisioningService.GetProvisioningAsync(context.Wallet);
 
-                if (provisioning.TaaAcceptance != null)
-                {
-                    if (provisioning.TaaAcceptance.Digest != digest)
-                    {
-                        await provisioningService.AcceptTxnAuthorAgreementAsync(context.Wallet, taa);
-                    }
-                }
-                else
+                if (provisioning.TaaAcceptance == null || provisioning.TaaAcceptance.Digest != digest)
                 {
                     await provisioningService.AcceptTxnAuthorAgreementAsync(context.Wallet, taa);
                 }

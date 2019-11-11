@@ -97,16 +97,22 @@ namespace AgentFramework.TestHarness.Mock
                 {
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
-                    services.AddAgentFramework(builder =>
-                        builder.AddIssuerAgent(config =>
-                            {
-                                config.EndpointUri = new Uri("http://test");
-                                config.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
-                                config.WalletCredentials = new WalletCredentials { Key = "test" };
-                                config.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
-                                config.PoolName = "TestPool";
-                            })
-                            .AddSovrinToken());
+                    services.AddAriesFramework(builder => builder
+                        .ConfigureWallet(options =>
+                        {
+                            options.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
+                            options.WalletCredentials = new WalletCredentials { Key = "test" };
+                        })
+                        .ConfigurePool(options =>
+                        {
+                            options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
+                            options.PoolName = "TestPool";
+                        })
+                        .RegisterAgent(options =>
+                        {
+                            options.EndpointUri = "http://test";
+                        })
+                        .AddSovrinToken());
                     services.AddSingleton<IHttpClientFactory>(new InProcFactory(handler));
                 }).Build());
 

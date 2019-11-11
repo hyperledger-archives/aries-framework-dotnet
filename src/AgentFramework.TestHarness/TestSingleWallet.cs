@@ -56,15 +56,21 @@ namespace AgentFramework.TestHarness
                 {
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
-                    services.AddAgentFramework(builder => builder
-                        .AddIssuerAgent(config =>
+                    services.AddAriesFramework(builder => builder
+                        .ConfigureWallet(options =>
                         {
-                            config.EndpointUri = new Uri("http://test");
-                            config.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
-                            config.WalletCredentials = new WalletCredentials { Key = "test" };
-                            config.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
-                            config.PoolName = GetPoolName();
-                            config.IssuerSeed = GetIssuerSeed();
+                            options.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
+                            options.WalletCredentials = new WalletCredentials { Key = "test" };
+                        })
+                        .ConfigurePool(options =>
+                        {
+                            options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
+                            options.PoolName = GetPoolName();
+                        })
+                        .RegisterAgent(options =>
+                        {
+                            options.EndpointUri = "http://test";
+                            options.IssuerKeySeed = GetIssuerSeed();
                         })
                         .AddSovrinToken());
                 })

@@ -5,7 +5,7 @@ namespace AgentFramework.Payments.NullPay
 {
     public static class AgentBuilderExtensions
     {
-        public static AgentFrameworkBuilder AddNullPay(this AgentFrameworkBuilder agentFrameworkBuilder)
+        public static AriesFrameworkBuilder AddNullPay(this AriesFrameworkBuilder agentFrameworkBuilder)
         {
             agentFrameworkBuilder.Services.AddHostedService<NullPayConfigurationService>();
             return agentFrameworkBuilder;

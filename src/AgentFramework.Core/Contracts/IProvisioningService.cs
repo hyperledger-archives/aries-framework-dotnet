@@ -16,7 +16,8 @@ namespace AgentFramework.Core.Contracts
     public interface IProvisioningService
     {
         /// <summary>
-        /// Gets my endpoint asynchronous.
+        /// Returns the agent provisioning record. This is a single record that contains all
+        /// agent configuration parameters.
         /// </summary>
         /// <param name="wallet">The wallet.</param>
         /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
@@ -39,6 +40,18 @@ namespace AgentFramework.Core.Contracts
         /// <returns></returns>
         [Obsolete("This method is obsolete. Please use extensions methods to configure agent provisioning")]
         Task ProvisionAgentAsync(ProvisioningConfiguration configuration);
+
+        /// <summary>
+        /// Creates a wallet and provisions a new agent with the default <see cref="AgentOptions" /> and <see cref="WalletOptions" />
+        /// </summary>
+        /// <returns></returns>
+        Task ProvisionAgentAsync();
+
+        /// <summary>
+        /// Creates a wallet and provisions a new agent with the specified <see cref="AgentOptions" /> and <see cref="WalletOptions" />
+        /// </summary>
+        /// <returns></returns>
+        Task ProvisionAgentAsync(AgentOptions agentOptions, WalletOptions walletOptions);
 
         /// <summary>
         /// Updates the agent endpoint information.

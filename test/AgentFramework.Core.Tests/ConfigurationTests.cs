@@ -106,7 +106,7 @@ namespace AgentFramework.Core.Tests
 
             var provisioningMock = new Mock<IProvisioningService>();
             provisioningMock
-                .Setup(x => x.ProvisionAgentAsync(It.IsAny<ProvisioningConfiguration>()))
+                .Setup(x => x.ProvisionAgentAsync())
                 .Callback(() => { slim.Release(); provisioned = true; })
                 .Returns(Task.CompletedTask);
 
@@ -115,7 +115,7 @@ namespace AgentFramework.Core.Tests
                 {
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
-                    services.AddAgentFramework(b => b.AddBasicAgent(c => { }));
+                    services.AddAriesFramework(b => b.RegisterAgent(c => { }));
                     services.AddSingleton(provisioningMock.Object);
                 })
                 .Build();
@@ -142,12 +142,16 @@ namespace AgentFramework.Core.Tests
                 {
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
-                    services.AddAgentFramework(b => b.AddIssuerAgent(c =>
-                    {
-                        c.WalletCredentials = walletCredentials;
-                        c.WalletConfiguration = walletConfiguration;
-                        c.EndpointUri = new Uri("http://example.com");
-                    }));
+                    services.AddAriesFramework(b => b
+                        .ConfigureWallet(options =>
+                        {
+                            options.WalletCredentials = walletCredentials;
+                            options.WalletConfiguration = walletConfiguration;
+                        })
+                        .RegisterAgent(options =>
+                        {
+                            options.EndpointUri = "http://example.com";
+                        }));
                 })
                 .Build();
 
