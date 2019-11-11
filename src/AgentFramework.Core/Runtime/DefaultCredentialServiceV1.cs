@@ -30,7 +30,7 @@ namespace AgentFramework.Core.Runtime
             var offerAttachment = credentialOffer.Offers.FirstOrDefault(x => x.Id == "libindy-cred-offer-0")
                 ?? throw new ArgumentNullException(nameof(CredentialOfferMessage.Offers));
 
-            var offerJson = offerAttachment.Data.Base64.BytesFromBase64().GetUTF8String();
+            var offerJson = offerAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
             var offer = JObject.Parse(offerJson);
             var definitionId = offer["cred_def_id"].ToObject<string>();
             var schemaId = offer["schema_id"].ToObject<string>();
@@ -94,16 +94,21 @@ namespace AgentFramework.Core.Runtime
             var threadId = credential.GetTag(TagConstants.LastThreadId);
             var response = new CredentialRequestMessage
             {
-                Requests = new[] { 
+                // The comment was required by Aca-py, even though it is declared optional in RFC-0036
+                // Was added for interoperability
+                Comment = "",
+                Requests = new[]
+                { 
                     new Attachment
-                {
-                    Id = "libindy-cred-request-0",
-                    MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
-                    Data = new AttachmentContent
                     {
-                        Base64 = request.CredentialRequestJson.GetUTF8Bytes().ToBase64()
+                        Id = "libindy-cred-request-0",
+                        MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
+                        Data = new AttachmentContent
+                        {
+                            Base64 = request.CredentialRequestJson.GetUTF8Bytes().ToBase64String()
+                        }
                     }
-                } }
+                }
             };
 
             response.ThreadFrom(threadId);
@@ -115,7 +120,7 @@ namespace AgentFramework.Core.Runtime
             var credentialAttachment = credential.Credentials.FirstOrDefault(x => x.Id == "libindy-cred-0")
                 ?? throw new ArgumentException("Credential attachment not found");
 
-            var credentialJson = credentialAttachment.Data.Base64.BytesFromBase64().GetUTF8String();
+            var credentialJson = credentialAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
             var credentialJobj = JObject.Parse(credentialJson);
             var definitionId = credentialJobj["cred_def_id"].ToObject<string>();
             var revRegId = credentialJobj["rev_reg_id"]?.ToObject<string>();
@@ -227,7 +232,7 @@ namespace AgentFramework.Core.Runtime
                         MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
                         Data = new AttachmentContent
                         {
-                            Base64 = offerJson.GetUTF8Bytes().ToBase64()
+                            Base64 = offerJson.GetUTF8Bytes().ToBase64String()
                         }
                     }
                 },
@@ -257,7 +262,7 @@ namespace AgentFramework.Core.Runtime
                 throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Offered}', found '{credential.State}'");
 
-            credential.RequestJson = credentialAttachment.Data.Base64.BytesFromBase64().GetUTF8String();
+            credential.RequestJson = credentialAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
             credential.ConnectionId = connection.Id;
 
             await credential.TriggerAsync(CredentialTrigger.Request);
@@ -350,7 +355,7 @@ namespace AgentFramework.Core.Runtime
                         {
                             Base64 = issuedCredential.CredentialJson
                                 .GetUTF8Bytes()
-                                .ToBase64()
+                                .ToBase64String()
                         }
                     }
                 }

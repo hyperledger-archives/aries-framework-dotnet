@@ -478,5 +478,20 @@ namespace AgentFramework.Core.Runtime
             // Update local credential record
             await RecordService.UpdateAsync(agentContext.Wallet, credential);
         }
+
+        /// <inheritdoc />
+        public async Task DeleteCredentialAsync(IAgentContext agentContext, string credentialId)
+        {
+            var credentialRecord = await GetAsync(agentContext, credentialId);
+            try
+            {
+                await AnonCreds.ProverDeleteCredentialAsync(agentContext.Wallet, credentialRecord.CredentialId);
+            }
+            catch
+            {
+                // OK
+            }
+            await RecordService.DeleteAsync<CredentialRecord>(agentContext.Wallet, credentialId);
+        }
     }
 }

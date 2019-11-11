@@ -62,23 +62,6 @@ namespace AgentFramework.Core.Contracts
         Task<string> LookupNymAsync(Pool pool, string did);
 
         /// <summary>
-        /// Lookup Transaction Author Agreement on the ledger
-        /// </summary>
-        /// <param name="context">The agent context</param>
-        /// <param name="version">Taa version. Pass null to get latest.</param>
-        /// <returns></returns>
-        Task<IndyTaa> LookupTaaAsync(IAgentContext context, string version = null);
-
-        /// <summary>
-        /// Lookup acceptance mechanisms list
-        /// </summary>
-        /// <param name="context">The agent context</param>
-        /// <param name="timestamp"></param>
-        /// <param name="version"></param>
-        /// <returns>The acceptance mechanisms list</returns>
-        Task<IndyAml> LookupAmlAsync(IAgentContext context, DateTimeOffset timestamp = default(DateTimeOffset), string version = null);
-
-        /// <summary>
         /// Lookup the ledger transaction async.
         /// </summary>
         /// <param name="pool">The pool.</param>

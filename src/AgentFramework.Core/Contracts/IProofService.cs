@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AgentFramework.Core.Messages;
 using AgentFramework.Core.Messages.Proofs;
 using AgentFramework.Core.Models.Credentials;
 using AgentFramework.Core.Models.Proofs;
@@ -21,7 +23,11 @@ namespace AgentFramework.Core.Contracts
         /// <param name="proofRequest">An enumeration of attribute we wish the prover to disclose.</param>
         /// <param name="connectionId">Connection identifier of who the proof request will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
+        [Obsolete]
         Task<(ProofRequestMessage, ProofRecord)> CreateProofRequestAsync(IAgentContext agentContext,
+            ProofRequest proofRequest, string connectionId = null);
+
+        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext,
             ProofRequest proofRequest, string connectionId = null);
 
         /// <summary>
@@ -32,7 +38,11 @@ namespace AgentFramework.Core.Contracts
         /// <param name="proofRequestJson">A string representation of proof request json object</param>
         /// <param name="connectionId">Connection identifier of who the proof request will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
+        [Obsolete]
         Task<(ProofRequestMessage, ProofRecord)> CreateProofRequestAsync(IAgentContext agentContext,
+            string proofRequestJson, string connectionId);
+
+        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext,
             string proofRequestJson, string connectionId);
 
         /// <summary>
@@ -43,7 +53,10 @@ namespace AgentFramework.Core.Contracts
         /// <param name="proofRequest">A proof request.</param>
         /// <param name="connection">Connection.</param>
         /// <returns>Proof identifier.</returns>
+        [Obsolete]
         Task<string> ProcessProofRequestAsync(IAgentContext agentContext, ProofRequestMessage proofRequest, ConnectionRecord connection);
+
+        Task<ProofRecord> ProcessRequestAsync(IAgentContext agentContext, RequestPresentationMessage proofRequest, ConnectionRecord connection);
 
         /// <summary>
         /// Processes a proof and stores it for a given connection.
@@ -52,7 +65,10 @@ namespace AgentFramework.Core.Contracts
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="proof">A proof.</param>
         /// <returns>Proof identifier.</returns>
+        [Obsolete]
         Task<string> ProcessProofAsync(IAgentContext agentContext, ProofMessage proof);
+
+        Task<ProofRecord> ProcessPresentationAsync(IAgentContext agentContext, PresentationMessage proof);
 
         /// <summary>
         /// Processes a proof request and generates an accompanying proof.
@@ -63,7 +79,11 @@ namespace AgentFramework.Core.Contracts
         /// <returns>
         /// The proof.
         /// </returns>
+        [Obsolete]
         Task<string> CreateProofAsync(IAgentContext agentContext,
+            ProofRequest proofRequest, RequestedCredentials requestedCredentials);
+
+        Task<string> CreatePresentationAsync(IAgentContext agentContext,
             ProofRequest proofRequest, RequestedCredentials requestedCredentials);
 
         /// <summary>
@@ -75,7 +95,13 @@ namespace AgentFramework.Core.Contracts
         /// <returns>
         /// The proof.
         /// </returns>
+        [Obsolete]
         Task<(ProofMessage, ProofRecord)> CreateProofAsync(IAgentContext agentContext, string proofRequestId,
+            RequestedCredentials requestedCredentials);
+
+        Task<(PresentationMessage, ProofRecord)> CreatePresentationAsync(
+            IAgentContext agentContext, 
+            string proofRecordId,
             RequestedCredentials requestedCredentials);
 
         /// <summary>
@@ -83,16 +109,16 @@ namespace AgentFramework.Core.Contracts
         /// </summary>
         /// <returns>The proof.</returns>
         /// <param name="agentContext">Agent Context.</param>
-        /// <param name="proofRequestId">Identifier of the proof request.</param>
-        Task RejectProofRequestAsync(IAgentContext agentContext, string proofRequestId);
+        /// <param name="proofRecordId">Identifier of the proof request.</param>
+        Task RejectProofRequestAsync(IAgentContext agentContext, string proofRecordId);
 
         /// <summary>
         /// Verifies a proof.
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
-        /// <param name="proofRecId">Identifier of the proof record.</param>
+        /// <param name="proofRecordId">Identifier of the proof record.</param>
         /// <returns>Status indicating validity of proof.</returns>
-        Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRecId);
+        Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRecordId);
 
         /// <summary>
         /// Verifies a proof.

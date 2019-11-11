@@ -227,5 +227,13 @@ namespace AgentFramework.Core.Contracts
         /// <param name="issuerDid">The DID of the issuer who issued the credential and owns the definitions</param>
         /// <returns>The response async.</returns>
         Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId, string issuerDid);
+
+        /// <summary>
+        /// Deletes the credential and it's associated record
+        /// </summary>
+        /// <param name="agentContext"></param>
+        /// <param name="credentialId"></param>
+        /// <returns></returns>
+        Task DeleteCredentialAsync(IAgentContext agentContext, string credentialId);
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using AgentFramework.Core.Models.Ledger;
 using Hyperledger.Indy.PoolApi;
 
 namespace AgentFramework.Core.Contracts
@@ -25,6 +27,24 @@ namespace AgentFramework.Core.Contracts
         /// <returns>The pool async.</returns>
         /// <param name="poolName">Pool name.</param>
         Task<Pool> GetPoolAsync(string poolName);
+
+        /// <summary>
+        /// Gets the transaction author agreement if one is set on
+        /// the ledger. Otherwise, returns null.
+        /// </summary>
+        /// <param name="poolName"></param>
+        /// <returns></returns>
+        Task<IndyTaa> GetTaaAsync(string poolName);
+
+        /// <summary>
+        /// Gets the acceptance mechanisms list from the ledger
+        /// if one is set.await Otherwise, returns null.
+        /// </summary>
+        /// <param name="poolName"></param>
+        /// <param name="timestamp"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        Task<IndyAml> GetAmlAsync(string poolName, DateTimeOffset timestamp = default(DateTimeOffset), string version = null);
 
         /// <summary>
         /// Creates a pool configuration.

@@ -63,58 +63,6 @@ namespace AgentFramework.Core.Runtime
         }
 
         /// <inheritdoc />
-        public async Task<IndyTaa> LookupTaaAsync(IAgentContext context, string data = null)
-        {
-            IndyTaa ParseTaa(string response)
-            {
-                var jresponse = JObject.Parse(response);
-                if (jresponse["result"]["data"].HasValues)
-                {
-                    return new IndyTaa
-                    {
-                        Text = jresponse["result"]["data"]["text"].ToString(),
-                        Version = jresponse["result"]["data"]["version"].ToString()
-                    };
-                }
-                return null;
-            };
-
-            var req = await Ledger.BuildGetTxnAuthorAgreementRequestAsync(null, data);
-            var res = await Ledger.SubmitRequestAsync(await context.Pool, req);
-
-            EnsureSuccessResponse(res);
-
-            return ParseTaa(res);
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<IndyAml> LookupAmlAsync(
-            IAgentContext context, 
-            DateTimeOffset timestamp = default(DateTimeOffset), 
-            string version = null)
-        {
-            IndyAml ParseAml(string response)
-            {
-                var jresponse = JObject.Parse(response);
-                if (jresponse["result"]["data"].HasValues)
-                {
-                    return jresponse["result"]["data"].ToObject<IndyAml>();
-                }
-                return null;
-            };
-
-            var req = await Ledger.BuildGetAcceptanceMechanismsRequestAsync(
-                null, 
-                timestamp == DateTimeOffset.MinValue ? -1 : timestamp.ToUnixTimeSeconds(),
-                version);
-            var res = await Ledger.SubmitRequestAsync(await context.Pool, req);
-
-            EnsureSuccessResponse(res);
-
-            return ParseAml(res);
-        }
-
-        /// <inheritdoc />
         public virtual async Task<ParseRegistryResponseResult> LookupRevocationRegistryDeltaAsync(Pool pool, string revocationRegistryId,
              long from, long to)
         {

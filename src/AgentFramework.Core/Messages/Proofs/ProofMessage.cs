@@ -6,6 +6,7 @@ namespace AgentFramework.Core.Messages.Proofs
     /// <summary>
     /// A proof content message.
     /// </summary>
+    [Obsolete]
     public class ProofMessage : AgentMessage
     {
         /// <inheritdoc />
