@@ -1,10 +1,40 @@
-﻿namespace AgentFramework.Core.Configuration.Options
+﻿using AgentFramework.Core.Models.Wallets;
+
+namespace AgentFramework.Core.Configuration.Options
 {
     /// <summary>
     /// Agent options
     /// </summary>
     public class AgentOptions
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentOptions" /> class.
+        /// </summary>
+        public AgentOptions()
+        {
+            WalletConfiguration = new WalletConfiguration { Id = "DefaultWallet" };
+            WalletCredentials = new WalletCredentials { Key = "DefaultKey" };
+        }
+
+        /// <summary>
+        /// Gets or sets the wallet configuration.
+        /// </summary>
+        /// <value>The wallet configuration.</value>
+        public WalletConfiguration WalletConfiguration
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the wallet credentials.
+        /// </summary>
+        /// <value>The wallet credentials.</value>
+        public WalletCredentials WalletCredentials
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// The DID of the issuer key pair
         /// </summary>
@@ -52,5 +82,37 @@
         /// </summary>
         /// <value></value>
         public string AgentKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the pool.
+        /// </summary>
+        /// <value>The name of the pool.</value>
+        public string PoolName
+        {
+            get;
+            set;
+        } = "DefaultPool";
+
+        /// <summary>
+        /// Gets or sets the genesis filename.
+        /// </summary>
+        /// <value>The genesis filename.</value>
+        public string GenesisFilename
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the protocol version of the nodes.
+        /// </summary>
+        /// <value>
+        /// The protocol version.
+        /// </value>
+        public int ProtocolVersion
+        {
+            get;
+            set;
+        } = 2;
     }
 }

@@ -29,10 +29,6 @@ namespace AgentFramework.Core.Runtime
         /// Agent options
         /// </summary>
         protected readonly AgentOptions AgentOptions;
-        /// <summary>
-        /// Wallet Options
-        /// </summary>
-        protected readonly WalletOptions WalletOptions;
 
         // ReSharper restore InconsistentNaming
 
@@ -40,17 +36,14 @@ namespace AgentFramework.Core.Runtime
         /// <param name="walletRecord">The wallet record.</param>
         /// <param name="walletService">The wallet service.</param>
         /// <param name="agentOptions"></param>
-        /// <param name="walletOptions"></param>
         public DefaultProvisioningService(
             IWalletRecordService walletRecord, 
             IWalletService walletService,
-            IOptions<AgentOptions> agentOptions,
-            IOptions<WalletOptions> walletOptions)
+            IOptions<AgentOptions> agentOptions)
         {
             RecordService = walletRecord;
             WalletService = walletService;
             AgentOptions = agentOptions.Value;
-            WalletOptions = walletOptions.Value;
         }
 
         /// <inheritdoc />
@@ -99,27 +92,23 @@ namespace AgentFramework.Core.Runtime
         }
 
         /// <inheritdoc />
-        public Task ProvisionAgentAsync() => ProvisionAgentAsync(AgentOptions, WalletOptions);
+        public Task ProvisionAgentAsync() => ProvisionAgentAsync(AgentOptions);
 
         /// <inheritdoc />
-        public async Task ProvisionAgentAsync(AgentOptions agentOptions, WalletOptions walletOptions)
+        public async Task ProvisionAgentAsync(AgentOptions agentOptions)
         {
             if (agentOptions is null)
             {
                 throw new ArgumentNullException(nameof(agentOptions));
             }
 
-            if (walletOptions is null)
-            {
-                throw new ArgumentNullException(nameof(walletOptions));
-            }
             // Create agent wallet
             await WalletService.CreateWalletAsync(
-                configuration: walletOptions.WalletConfiguration,
-                credentials: walletOptions.WalletCredentials);
+                configuration: agentOptions.WalletConfiguration,
+                credentials: agentOptions.WalletCredentials);
             var wallet = await WalletService.GetWalletAsync(
-                configuration: walletOptions.WalletConfiguration,
-                credentials: walletOptions.WalletCredentials);
+                configuration: agentOptions.WalletConfiguration,
+                credentials: agentOptions.WalletCredentials);
 
             // Configure agent endpoint
             AgentEndpoint endpoint = null;

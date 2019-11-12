@@ -143,13 +143,10 @@ namespace AgentFramework.Core.Tests
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
                     services.AddAriesFramework(b => b
-                        .ConfigureWallet(options =>
+                        .RegisterAgent(options =>
                         {
                             options.WalletCredentials = walletCredentials;
                             options.WalletConfiguration = walletConfiguration;
-                        })
-                        .RegisterAgent(options =>
-                        {
                             options.EndpointUri = "http://example.com";
                         }));
                 })

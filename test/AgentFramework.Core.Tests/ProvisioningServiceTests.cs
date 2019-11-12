@@ -27,8 +27,7 @@ namespace AgentFramework.Core.Tests
             _provisioningService = new DefaultProvisioningService(
                 new DefaultWalletRecordService(), 
                 _walletService,
-                Options.Create(new AgentOptions()),
-                Options.Create(new WalletOptions
+                Options.Create(new AgentOptions
                 {
                     WalletConfiguration = _config,
                     WalletCredentials = _creds
@@ -41,11 +40,11 @@ namespace AgentFramework.Core.Tests
         public async Task ProvisionNewWalletWithEndpoint()
         {
             await _provisioningService.ProvisionAgentAsync(
-                new AgentOptions { EndpointUri = "http://mock" },
-                new WalletOptions
-                {
+                new AgentOptions
+                { 
+                    EndpointUri = "http://mock",
                     WalletConfiguration = _config,
-                    WalletCredentials = _creds,
+                    WalletCredentials = _creds
                 });
 
             var wallet = await _walletService.GetWalletAsync(_config, _creds);
@@ -66,8 +65,7 @@ namespace AgentFramework.Core.Tests
             var provisioningService = new DefaultProvisioningService(
                 new DefaultWalletRecordService(), 
                 walletService,
-                Options.Create(new AgentOptions()),
-                Options.Create(new WalletOptions
+                Options.Create(new AgentOptions
                 {
                     WalletConfiguration = _config,
                     WalletCredentials = _creds
@@ -91,8 +89,7 @@ namespace AgentFramework.Core.Tests
             var provisioningService = new DefaultProvisioningService(
                 new DefaultWalletRecordService(), 
                 walletService,
-                Options.Create(new AgentOptions()),
-                Options.Create(new WalletOptions
+                Options.Create(new AgentOptions
                 {
                     WalletConfiguration = _config,
                     WalletCredentials = _creds

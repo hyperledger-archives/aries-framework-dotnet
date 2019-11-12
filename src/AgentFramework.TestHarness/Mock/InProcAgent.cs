@@ -98,18 +98,12 @@ namespace AgentFramework.TestHarness.Mock
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
                     services.AddAriesFramework(builder => builder
-                        .ConfigureWallet(options =>
-                        {
-                            options.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
-                            options.WalletCredentials = new WalletCredentials { Key = "test" };
-                        })
-                        .ConfigurePool(options =>
+                        .RegisterAgent(options =>
                         {
                             options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
                             options.PoolName = "TestPool";
-                        })
-                        .RegisterAgent(options =>
-                        {
+                            options.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
+                            options.WalletCredentials = new WalletCredentials { Key = "test" };
                             options.EndpointUri = "http://test";
                         })
                         .AddSovrinToken());

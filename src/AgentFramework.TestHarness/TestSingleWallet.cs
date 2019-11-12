@@ -38,7 +38,7 @@ namespace AgentFramework.TestHarness
         protected virtual string GetIssuerSeed() => null;
         public async Task DisposeAsync()
         {
-            var walletOptions = Host.Services.GetService<IOptions<WalletOptions>>().Value;
+            var walletOptions = Host.Services.GetService<IOptions<AgentOptions>>().Value;
             await Host.StopAsync();
 
             await Context.Wallet.CloseAsync();
@@ -57,18 +57,12 @@ namespace AgentFramework.TestHarness
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
                     services.AddAriesFramework(builder => builder
-                        .ConfigureWallet(options =>
+                        .RegisterAgent(options =>
                         {
                             options.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
                             options.WalletCredentials = new WalletCredentials { Key = "test" };
-                        })
-                        .ConfigurePool(options =>
-                        {
                             options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
                             options.PoolName = GetPoolName();
-                        })
-                        .RegisterAgent(options =>
-                        {
                             options.EndpointUri = "http://test";
                             options.IssuerKeySeed = GetIssuerSeed();
                         })

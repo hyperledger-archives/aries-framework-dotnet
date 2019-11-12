@@ -23,7 +23,7 @@ namespace AgentFramework.Core.Configuration
         private readonly IWalletRecordService recordService;
         private readonly IPoolService _poolService;
         private readonly IAgentProvider _agentProvider;
-        private readonly PoolOptions poolOptions;
+        private readonly AgentOptions agentOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TxnAuthorAcceptanceService" /> class.
@@ -33,29 +33,27 @@ namespace AgentFramework.Core.Configuration
         /// <param name="recordService"></param>
         /// <param name="poolService"></param>
         /// <param name="agentProvider"></param>
-        /// <param name="poolOptions"></param>
+        /// <param name="agentOptions"></param>
         public TxnAuthorAcceptanceService(
             IApplicationLifetime applicationLifetime,
             IProvisioningService provisioningService,
             IWalletRecordService recordService,
             IPoolService poolService,
             IAgentProvider agentProvider,
-            IOptions<PoolOptions> poolOptions)
+            IOptions<AgentOptions> agentOptions)
         {
             applicationLifetime.ApplicationStarted.Register(AcceptTxnAuthorAgreement);
             this.provisioningService = provisioningService;
             this.recordService = recordService;
             _poolService = poolService;
             _agentProvider = agentProvider;
-            this.poolOptions = poolOptions.Value;
+            this.agentOptions = agentOptions.Value;
         }
 
         private async void AcceptTxnAuthorAgreement()
         {
-            if (!poolOptions.AcceptTxnAuthorAgreement) return;
-
             var context = await _agentProvider.GetContextAsync(nameof(TxnAuthorAcceptanceService));
-            var taa = await _poolService.GetTaaAsync(poolOptions.PoolName);
+            var taa = await _poolService.GetTaaAsync(agentOptions.PoolName);
             if (taa != null)
             {
                 var digest = GetDigest(taa);

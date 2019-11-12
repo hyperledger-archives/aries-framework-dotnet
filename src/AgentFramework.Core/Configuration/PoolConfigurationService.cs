@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +17,7 @@ namespace AgentFramework.Core.Configuration
     /// </summary>
     public class PoolConfigurationService : IHostedService
     {
-        private readonly PoolOptions _poolOptions;
+        private readonly AgentOptions _agentOptions;
         private readonly IPoolService _poolService;
         private readonly ILogger<PoolConfigurationService> _logger;
 
@@ -28,11 +28,11 @@ namespace AgentFramework.Core.Configuration
         /// <param name="poolService"></param>
         /// <param name="logger"></param>
         public PoolConfigurationService(
-            IOptions<PoolOptions> options,
+            IOptions<AgentOptions> options,
             IPoolService poolService,
             ILogger<PoolConfigurationService> logger)
         {
-            _poolOptions = options.Value;
+            _agentOptions = options.Value;
             _poolService = poolService;
             _logger = logger;
         }
@@ -42,11 +42,11 @@ namespace AgentFramework.Core.Configuration
         {
             try
             {
-                if (_poolOptions.GenesisFilename == null)
+                if (_agentOptions.GenesisFilename == null)
                 {
-                    throw new ArgumentNullException(nameof(_poolOptions.GenesisFilename), "You must specify the pool configuration genesis file.");
+                    throw new ArgumentNullException(nameof(_agentOptions.GenesisFilename), "You must specify the pool configuration genesis file.");
                 }
-                await _poolService.CreatePoolAsync(_poolOptions.PoolName, _poolOptions.GenesisFilename);
+                await _poolService.CreatePoolAsync(_agentOptions.PoolName, _agentOptions.GenesisFilename);
             }
             catch (PoolLedgerConfigExistsException)
             {

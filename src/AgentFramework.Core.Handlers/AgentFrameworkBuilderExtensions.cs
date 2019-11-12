@@ -5,6 +5,7 @@ using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Handlers;
 using AgentFramework.Core.Handlers.Agents;
 using AgentFramework.Core.Handlers.Hosting;
+using AgentFramework.Core.Models.Records;
 using AgentFramework.Core.Models.Wallets;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -43,7 +44,20 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddSingleton<IAgent, T>();
             builder.Services.Configure(options);
             builder.Services.AddHostedService<DefaultProvisioningHostedService>();
+            builder.Services.AddHostedService<PoolConfigurationService>();
 
+            return builder;
+        }
+
+        /// <summary>
+        /// Accepts the latest transaction author agreement on service startup
+        /// and stores the configuration in the <see cref="ProvisioningRecord" />.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static AriesFrameworkBuilder AcceptTxnAuthorAgreement(this AriesFrameworkBuilder builder)
+        {
+            builder.Services.AddHostedService<TxnAuthorAcceptanceService>();
             return builder;
         }
 

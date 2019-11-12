@@ -35,10 +35,7 @@ namespace AgentFramework.TestHarness.Mock
                 .ProvisionAgentAsync(new AgentOptions
                 {
                     EndpointUri = $"http://{agentName}",
-                    IssuerKeySeed = issuerSeed
-                },
-                new WalletOptions
-                {
+                    IssuerKeySeed = issuerSeed,
                     WalletConfiguration = configuration,
                     WalletCredentials = credentials,
                 });

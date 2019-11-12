@@ -21,8 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">Services.</param>
         public static void AddAgentFramework(this IServiceCollection services)
         {
-            services.AddOptions<WalletOptions>();
-            services.AddOptions<PoolOptions>();
+            services.AddOptions<AgentOptions>();
             services.AddLogging();
             services.AddHttpClient();
 
@@ -41,32 +40,6 @@ namespace Microsoft.Extensions.DependencyInjection
             var frameworkBuilder = new AriesFrameworkBuilder(services);
             builder.Invoke(frameworkBuilder);
             return frameworkBuilder;
-        }
-
-        /// <summary>
-        /// Configure the wallet options
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static AriesFrameworkBuilder ConfigureWallet(this AriesFrameworkBuilder builder, Action<WalletOptions> options)
-        {
-            builder.Services.Configure<WalletOptions>(options);
-            return builder;
-        }
-
-        /// <summary>
-        /// Configure the pool configuration options
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static AriesFrameworkBuilder ConfigurePool(this AriesFrameworkBuilder builder, Action<PoolOptions> options)
-        {
-            builder.Services.Configure<PoolOptions>(options);
-            builder.Services.AddHostedService<PoolConfigurationService>();
-            builder.Services.AddHostedService<TxnAuthorAcceptanceService>();
-            return builder;
         }
 
         internal static IServiceCollection AddDefaultServices(this IServiceCollection builder)

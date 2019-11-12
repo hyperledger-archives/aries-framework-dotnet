@@ -25,16 +25,16 @@ namespace AgentFramework.Core.Contracts
         Task<ProvisioningRecord> GetProvisioningAsync(Wallet wallet);
 
         /// <summary>
-        /// Creates a wallet and provisions a new agent with the default <see cref="AgentOptions" /> and <see cref="WalletOptions" />
+        /// Creates a wallet and provisions a new agent with the default <see cref="AgentOptions" />
         /// </summary>
         /// <returns></returns>
         Task ProvisionAgentAsync();
 
         /// <summary>
-        /// Creates a wallet and provisions a new agent with the specified <see cref="AgentOptions" /> and <see cref="WalletOptions" />
+        /// Creates a wallet and provisions a new agent with the specified <see cref="AgentOptions" />
         /// </summary>
         /// <returns></returns>
-        Task ProvisionAgentAsync(AgentOptions agentOptions, WalletOptions walletOptions);
+        Task ProvisionAgentAsync(AgentOptions agentOptions);
 
         /// <summary>
         /// Updates the agent endpoint information.
