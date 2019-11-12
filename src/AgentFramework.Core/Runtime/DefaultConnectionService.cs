@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
+using AgentFramework.Core.Decorators;
 using AgentFramework.Core.Decorators.Attachments;
 using AgentFramework.Core.Decorators.Signature;
 using AgentFramework.Core.Decorators.Threading;

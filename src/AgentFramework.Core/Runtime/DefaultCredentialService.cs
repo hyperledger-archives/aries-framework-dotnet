@@ -353,7 +353,10 @@ namespace AgentFramework.Core.Runtime
         }
 
         /// <inheritdoc />
-        public async Task<(CredentialOfferMessage, CredentialRecord)> CreateOfferAsync(IAgentContext agentContext, OfferConfiguration config, string connectionId = null)
+        public async Task<(CredentialOfferMessage, CredentialRecord)> CreateOfferAsync(
+            IAgentContext agentContext, 
+            OfferConfiguration config, 
+            string connectionId = null)
         {
             Logger.LogInformation(LoggingEvents.CreateCredentialOffer, "DefinitionId {0}, IssuerDid {1}",
                 config.CredentialDefinitionId, config.IssuerDid);
