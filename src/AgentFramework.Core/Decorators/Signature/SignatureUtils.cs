@@ -38,8 +38,8 @@ namespace AgentFramework.Core.Decorators.Signature
             var sigDecorator = new SignatureDecorator
             {
                 SignatureType = DefaultSignatureType,
-                SignatureData = sigData.ToBase64String(),
-                Signature = sig.ToBase64String(),
+                SignatureData = sigData.ToBase64UrlString(),
+                Signature = sig.ToBase64UrlString(),
                 Signer = signerKey
             };
 

@@ -22,10 +22,12 @@ namespace AgentFramework.Core.Handlers.Internal
         /// <value>
         /// The supported message types.
         /// </value>
-        public IEnumerable<MessageType> SupportedMessageTypes => new[]
+        public IEnumerable<MessageType> SupportedMessageTypes => new MessageType[]
         {
-            new MessageType(MessageTypes.ProofRequest),
-            new MessageType(MessageTypes.DisclosedProof)
+            MessageTypes.ProofRequest,
+            MessageTypes.DisclosedProof,
+            MessageTypes.PresentProofNames.Presentation,
+            MessageTypes.PresentProofNames.RequestPresentation
         };
 
         /// <summary>
@@ -39,6 +41,7 @@ namespace AgentFramework.Core.Handlers.Internal
         {
             switch (messageContext.GetMessageType())
             {
+                // v0.1
                 case MessageTypes.ProofRequest:
                 {
                     var request = messageContext.GetMessage<ProofRequestMessage>();
@@ -47,13 +50,30 @@ namespace AgentFramework.Core.Handlers.Internal
                     messageContext.ContextRecord = await _proofService.GetAsync(agentContext, proofId);
                     break;
                 }
-
                 case MessageTypes.DisclosedProof:
                 {
                     var proof = messageContext.GetMessage<ProofMessage>();
                     var proofId = await _proofService.ProcessProofAsync(agentContext, proof);
 
                     messageContext.ContextRecord = await _proofService.GetAsync(agentContext, proofId);
+                    break;
+                }
+
+                // v1.0
+                case MessageTypes.PresentProofNames.RequestPresentation:
+                {
+                    var message = messageContext.GetMessage<RequestPresentationMessage>();
+                    var record = await _proofService.ProcessRequestAsync(agentContext, message, messageContext.Connection);
+
+                    messageContext.ContextRecord = record;
+                    break;
+                }
+                case MessageTypes.PresentProofNames.Presentation:
+                {
+                    var message = messageContext.GetMessage<PresentationMessage>();
+                    var record = await _proofService.ProcessPresentationAsync(agentContext, message);
+
+                    messageContext.ContextRecord = record;
                     break;
                 }
                 default:

@@ -111,7 +111,7 @@ namespace AgentFramework.TestHarness
             // Hook into message event
             var offerSlim = new SemaphoreSlim(0, 1);
             holder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(x => x.MessageType == MessageTypes.CredentialOffer)
+                .Where(x => x.MessageType == MessageTypes.IssueCredentialNames.OfferCredential)
                 .Subscribe(x => offerSlim.Release());
 
             var issuerProv = await provisionService.GetProvisioningAsync(issuer.Context.Wallet);
@@ -119,12 +119,15 @@ namespace AgentFramework.TestHarness
             var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(issuer.Context, schemaService,
                 issuerProv.IssuerDid, credentialAttributes.Select(_ => _.Name).ToArray());
 
-            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferAsync(issuer.Context, new OfferConfiguration
-            {
-                IssuerDid = issuerProv.IssuerDid,
-                CredentialDefinitionId = definitionId,
-                CredentialAttributeValues = credentialAttributes,
-            }, issuerConnection.Id);
+            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferV1Async(
+                agentContext: issuer.Context,
+                config: new OfferConfiguration
+                {
+                    IssuerDid = issuerProv.IssuerDid,
+                    CredentialDefinitionId = definitionId,
+                    CredentialAttributeValues = credentialAttributes,
+                },
+                connectionId: issuerConnection.Id);
             await messsageService.SendAsync(issuer.Context.Wallet, offer, issuerConnection);
 
             await offerSlim.WaitAsync(TimeSpan.FromSeconds(30));
@@ -137,10 +140,10 @@ namespace AgentFramework.TestHarness
             // Hook into message event
             var requestSlim = new SemaphoreSlim(0, 1);
             issuer.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(x => x.MessageType == MessageTypes.CredentialRequest)
+                .Where(x => x.MessageType == MessageTypes.IssueCredentialNames.RequestCredential)
                 .Subscribe(x => requestSlim.Release());
 
-            (var request, var holderCredentialRecord) = await credentialService.CreateCredentialRequestAsync(holder.Context, offers[0].Id);
+            (var request, var holderCredentialRecord) = await credentialService.CreateRequestAsync(holder.Context, offers[0].Id);
 
             Assert.NotNull(holderCredentialRecord.CredentialAttributesValues);
             
@@ -153,11 +156,12 @@ namespace AgentFramework.TestHarness
             // Hook into message event
             var credentialSlim = new SemaphoreSlim(0, 1);
             holder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(x => x.MessageType == MessageTypes.Credential)
+                .Where(x => x.MessageType == MessageTypes.IssueCredentialNames.IssueCredential)
                 .Subscribe(x => credentialSlim.Release());
 
-            (var cred, _) = await credentialService.CreateCredentialAsync(issuer.Context, issuerProv.IssuerDid,
-                issuerCredentialRecord.Id);
+            (var cred, _) = await credentialService.CreateCredentialAsync(
+                agentContext: issuer.Context,
+                credentialId: issuerCredentialRecord.Id);
             await messsageService.SendAsync(issuer.Context.Wallet, cred, issuerConnection);
 
             await credentialSlim.WaitAsync(TimeSpan.FromSeconds(30));
@@ -182,10 +186,10 @@ namespace AgentFramework.TestHarness
             // Hook into message event
             var requestSlim = new SemaphoreSlim(0, 1);
             holder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(x => x.MessageType == MessageTypes.ProofRequest)
+                .Where(x => x.MessageType == MessageTypes.PresentProofNames.RequestPresentation)
                 .Subscribe(x => requestSlim.Release());
 
-            var (requestMsg, requestorRecord) = await proofService.CreateProofRequestAsync(requestor.Context, proofRequest, requestorConnection.Id);
+            var (requestMsg, requestorRecord) = await proofService.CreateRequestAsync(requestor.Context, proofRequest, requestorConnection.Id);
             await messageService.SendAsync(requestor.Context.Wallet, requestMsg, requestorConnection);
 
             await requestSlim.WaitAsync(TimeSpan.FromSeconds(30));
@@ -198,7 +202,7 @@ namespace AgentFramework.TestHarness
             // Hook into message event
             var proofSlim = new SemaphoreSlim(0, 1);
             requestor.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(x => x.MessageType == MessageTypes.DisclosedProof)
+                .Where(x => x.MessageType == MessageTypes.PresentProofNames.Presentation)
                 .Subscribe(x => requestSlim.Release());
 
             var record = holderRequests.FirstOrDefault();
@@ -208,7 +212,7 @@ namespace AgentFramework.TestHarness
                 await ProofServiceUtils.GetAutoRequestedCredentialsForProofCredentials(holder.Context, proofService,
                     request);
 
-            var (proofMsg, holderRecord) = await proofService.CreateProofAsync(holder.Context, record.Id, requestedCredentials);
+            var (proofMsg, holderRecord) = await proofService.CreatePresentationAsync(holder.Context, record.Id, requestedCredentials);
             await messageService.SendAsync(holder.Context.Wallet, proofMsg, holderConnection);
 
             await proofSlim.WaitAsync(TimeSpan.FromSeconds(30));

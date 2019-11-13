@@ -17,7 +17,7 @@ namespace AgentFramework.Core.Configuration
     {
         private readonly IProvisioningService provisioningService;
         private readonly IWalletRecordService recordService;
-        private readonly ILedgerService _ledgerService;
+        private readonly IPoolService _poolService;
         private readonly IAgentProvider _agentProvider;
         private readonly PoolOptions poolOptions;
 
@@ -25,14 +25,14 @@ namespace AgentFramework.Core.Configuration
             IApplicationLifetime applicationLifetime,
             IProvisioningService provisioningService,
             IWalletRecordService recordService,
-            ILedgerService ledgerService,
+            IPoolService poolService,
             IAgentProvider agentProvider,
             IOptions<PoolOptions> poolOptions)
         {
             applicationLifetime.ApplicationStarted.Register(AcceptTxnAuthorAgreement);
             this.provisioningService = provisioningService;
             this.recordService = recordService;
-            _ledgerService = ledgerService;
+            _poolService = poolService;
             _agentProvider = agentProvider;
             this.poolOptions = poolOptions.Value;
         }
@@ -42,7 +42,7 @@ namespace AgentFramework.Core.Configuration
             if (!poolOptions.AcceptTxnAuthorAgreement) return;
 
             var context = await _agentProvider.GetContextAsync(nameof(TxnAuthorAcceptanceHostedService));
-            var taa = await _ledgerService.LookupTaaAsync(context);
+            var taa = await _poolService.GetTaaAsync(poolOptions.PoolName);
             if (taa != null)
             {
                 var digest = GetDigest(taa);

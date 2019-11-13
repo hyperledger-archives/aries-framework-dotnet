@@ -61,6 +61,15 @@ namespace AgentFramework.Core.Messages
         /// </summary>
         public string MessageTypeUri { get; }
 
+        /// <summary>
+        /// Implcit operator that converts a string to MessageType
+        /// </summary>
+        /// <param name="value"></param>
+        public static implicit operator MessageType(string value)
+        {
+            return new MessageType(value);
+        }
+
         #region Equality methods
 
         /// <summary>

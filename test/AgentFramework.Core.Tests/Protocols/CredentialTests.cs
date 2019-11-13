@@ -92,9 +92,9 @@ namespace AgentFramework.Core.Tests.Protocols
         {
             var events = 0;
             _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(_ => (_.MessageType == MessageTypes.CredentialOffer ||
-                             _.MessageType == MessageTypes.CredentialRequest ||
-                             _.MessageType == MessageTypes.Credential))
+                .Where(_ => (_.MessageType == MessageTypes.IssueCredentialNames.OfferCredential ||
+                             _.MessageType == MessageTypes.IssueCredentialNames.RequestCredential ||
+                             _.MessageType == MessageTypes.IssueCredentialNames.IssueCredential))
                 .Subscribe(_ =>
                 {
                     events++;

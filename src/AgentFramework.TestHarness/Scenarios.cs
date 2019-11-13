@@ -118,11 +118,14 @@ namespace AgentFramework.TestHarness
             };
             
             // Send an offer to the holder using the established connection channel
-            var (offerMessage, _) = await credentialService.CreateOfferAsync(issuerContext, offerConfig, issuerConnection.Id);
+            var (offerMessage, _) = await credentialService.CreateOfferV1Async(
+                agentContext: issuerContext,
+                config: offerConfig,
+                connectionId: issuerConnection.Id);
             messages.TryAdd(offerMessage);
 
             // Holder retrieves message from their cloud agent
-            var credentialOffer = FindContentMessage<CredentialOfferMessage>(messages);
+            var credentialOffer = FindContentMessage<Core.Messages.Credentials.V1.CredentialOfferMessage>(messages);
 
             // Holder processes the credential offer by storing it
             var holderCredentialId =
@@ -132,11 +135,11 @@ namespace AgentFramework.TestHarness
             await AnonCreds.ProverCreateMasterSecretAsync(holderContext.Wallet, proverMasterSecretId);
 
             // Holder accepts the credential offer and sends a credential request
-            var (request, _) = await credentialService.CreateCredentialRequestAsync(holderContext, holderCredentialId);
+            var (request, _) = await credentialService.CreateRequestAsync(holderContext, holderCredentialId);
             messages.TryAdd(request);
 
             // Issuer retrieves credential request from cloud agent
-            var credentialRequest = FindContentMessage<CredentialRequestMessage>(messages);
+            var credentialRequest = FindContentMessage<Core.Messages.Credentials.V1.CredentialRequestMessage>(messages);
             Assert.NotNull(credentialRequest);
 
             // Issuer processes the credential request by storing it
@@ -144,13 +147,14 @@ namespace AgentFramework.TestHarness
                 await credentialService.ProcessCredentialRequestAsync(issuerContext, credentialRequest, issuerConnection);
 
             // Issuer accepts the credential requests and issues a credential
-            var (credentialMessage, _) = await credentialService.CreateCredentialAsync(issuerContext, issuer.Did,
-                issuerCredentialId,
-                credentialAttributes);
+            var (credentialMessage, _) = await credentialService.CreateCredentialAsync(
+                agentContext: issuerContext,
+                credentialRequestId: issuerCredentialId,
+                values: credentialAttributes);
             messages.TryAdd(credentialMessage);
 
             // Holder retrieves the credential from their cloud agent
-            var credential = FindContentMessage<CredentialMessage>(messages);
+            var credential = FindContentMessage<Core.Messages.Credentials.V1.CredentialIssueMessage>(messages);
             Assert.NotNull(credential);
 
             // Holder processes the credential by storing it in their wallet
@@ -172,16 +176,16 @@ namespace AgentFramework.TestHarness
         {
             
             //Requestor sends a proof request
-            var (message, requestorProofRecord) = await proofService.CreateProofRequestAsync(requestorContext, proofRequestObject, requestorConnection.Id);
+            var (message, requestorProofRecord) = await proofService.CreateRequestAsync(requestorContext, proofRequestObject, requestorConnection.Id);
             messages.TryAdd(message);
 
             // Holder accepts the proof requests and builds a proof
-            var proofRequest = FindContentMessage<ProofRequestMessage>(messages);
+            var proofRequest = FindContentMessage<RequestPresentationMessage>(messages);
             Assert.NotNull(proofRequest);
 
             //Holder stores the proof request
-            var holderProofRequestId = await proofService.ProcessProofRequestAsync(holderContext, proofRequest, holderConnection);
-            var holderProofRecord = await proofService.GetAsync(holderContext, holderProofRequestId);
+            var holderProofRequestRecord = await proofService.ProcessRequestAsync(holderContext, proofRequest, holderConnection);
+            var holderProofRecord = await proofService.GetAsync(holderContext, holderProofRequestRecord.Id);
             var holderProofRequest = JsonConvert.DeserializeObject<ProofRequest>(holderProofRecord.RequestJson);
 
             // Auto satify the proof with which ever credentials in the wallet are capable
@@ -190,20 +194,23 @@ namespace AgentFramework.TestHarness
                     holderProofRequest);
 
             //Holder accepts the proof request and sends a proof
-            (var proofMessage, _) = await proofService.CreateProofAsync(holderContext, holderProofRequestId, requestedCredentials);
+            (var proofMessage, _) = await proofService.CreatePresentationAsync(
+                holderContext, 
+                holderProofRequestRecord.Id, 
+                requestedCredentials);
             messages.TryAdd(proofMessage);
 
             //Requestor retrives proof message from their cloud agent
-            var proof = FindContentMessage<ProofMessage>(messages);
+            var proof = FindContentMessage<PresentationMessage>(messages);
             Assert.NotNull(proof);
 
             //Requestor stores proof
-            var requestorProofId = await proofService.ProcessProofAsync(requestorContext, proof);
+            requestorProofRecord = await proofService.ProcessPresentationAsync(requestorContext, proof);
 
             //Requestor verifies proof
-            var requestorVerifyResult = await proofService.VerifyProofAsync(requestorContext, requestorProofId);
+            var requestorVerifyResult = await proofService.VerifyProofAsync(requestorContext, requestorProofRecord.Id);
 
-            ////Verify the proof is valid
+            //Verify the proof is valid
             Assert.True(requestorVerifyResult);
 
             var requestorProofRecordResult = await proofService.GetAsync(requestorContext, requestorProofRecord.Id);

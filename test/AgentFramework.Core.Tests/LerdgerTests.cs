@@ -16,11 +16,11 @@ namespace AgentFramework.Core.Tests
         [Fact(DisplayName = "Get Transaction Author Agreement from ledger if exists")]
         public async Task GetTaaFromLedger()
         {
-            var taa = await Host.Services.GetService<ILedgerService>()
-                .LookupTaaAsync(Context);
+            var taa = await Host.Services.GetService<IPoolService>()
+                .GetTaaAsync(GetPoolName());
 
-            var aml = await Host.Services.GetService<ILedgerService>()
-                .LookupAmlAsync(Context);
+            var aml = await Host.Services.GetService<IPoolService>()
+                .GetAmlAsync(GetPoolName());
 
             Assert.True(true);
         }
@@ -28,8 +28,8 @@ namespace AgentFramework.Core.Tests
         [Fact(DisplayName = "Get Acceptance Mechanisms List from ledger if exists")]
         public async Task GetAmlFromLedger()
         {
-            var aml = await Host.Services.GetService<ILedgerService>()
-                .LookupAmlAsync(Context);
+            var aml = await Host.Services.GetService<IPoolService>()
+                .GetAmlAsync(GetPoolName());
 
             Assert.True(true);
         }

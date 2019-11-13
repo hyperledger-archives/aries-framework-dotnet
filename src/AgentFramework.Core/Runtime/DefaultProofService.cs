@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
+using AgentFramework.Core.Decorators.Attachments;
 using AgentFramework.Core.Decorators.Threading;
 using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Extensions;
+using AgentFramework.Core.Messages;
 using AgentFramework.Core.Messages.Proofs;
 using AgentFramework.Core.Models.Credentials;
 using AgentFramework.Core.Models.Events;
@@ -471,6 +473,166 @@ namespace AgentFramework.Core.Runtime
             }
 
             return result.ToJson();
+        }
+
+        public Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(
+            IAgentContext agentContext,
+            ProofRequest proofRequest,
+            string connectionId = null) => 
+            CreateRequestAsync(
+                agentContext: agentContext,
+                proofRequestJson: proofRequest?.ToJson(),
+                connectionId: connectionId);
+
+        public async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, string proofRequestJson, string connectionId)
+        {
+            Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
+
+            if (connectionId != null)
+            {
+                var connection = await ConnectionService.GetAsync(agentContext, connectionId);
+
+                if (connection.State != ConnectionState.Connected)
+                    throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                        $"Connection state was invalid. Expected '{ConnectionState.Connected}', found '{connection.State}'");
+            }
+
+            var threadId = Guid.NewGuid().ToString();
+            var proofRecord = new ProofRecord
+            {
+                Id = Guid.NewGuid().ToString(),
+                ConnectionId = connectionId,
+                RequestJson = proofRequestJson
+            };
+            proofRecord.SetTag(TagConstants.Role, TagConstants.Requestor);
+            proofRecord.SetTag(TagConstants.LastThreadId, threadId);
+
+            await RecordService.AddAsync(agentContext.Wallet, proofRecord);
+
+            var message = new RequestPresentationMessage
+            {
+                Id = threadId, 
+                Requests = new []
+                {
+                    new Attachment
+                    {
+                        Id = "libindy-request-presentation-0",
+                        MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
+                        Data = new AttachmentContent
+                        {
+                            Base64 = proofRequestJson
+                                .GetUTF8Bytes()
+                                .ToBase64String()
+                        }
+                    }
+                }
+            };
+            message.ThreadFrom(threadId);
+            return (message, proofRecord);
+        }
+
+        public async Task<ProofRecord> ProcessRequestAsync(IAgentContext agentContext, RequestPresentationMessage requestPresentationMessage, ConnectionRecord connection)
+        {
+            var requestAttachment = requestPresentationMessage.Requests.FirstOrDefault(x => x.Id == "libindy-request-presentation-0")
+                ?? throw new ArgumentException("Presentation request attachment not found.");
+
+            var requestJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
+
+            // Write offer record to local wallet
+            var proofRecord = new ProofRecord
+            {
+                Id = Guid.NewGuid().ToString(),
+                RequestJson = requestJson,
+                ConnectionId = connection.Id,
+                State = ProofState.Requested
+            };
+            proofRecord.SetTag(TagConstants.LastThreadId, requestPresentationMessage.GetThreadId());
+            proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
+
+            await RecordService.AddAsync(agentContext.Wallet, proofRecord);
+
+            EventAggregator.Publish(new ServiceMessageProcessingEvent
+            {
+                RecordId = proofRecord.Id,
+                MessageType = requestPresentationMessage.Type,
+                ThreadId = requestPresentationMessage.GetThreadId()
+            });
+
+            return proofRecord;
+        }
+
+        public async Task<ProofRecord> ProcessPresentationAsync(IAgentContext agentContext, PresentationMessage presentationMessage)
+        {
+            var requestAttachment = presentationMessage.Presentations.FirstOrDefault(x => x.Id == "libindy-presentation-0")
+                ?? throw new ArgumentException("Presentation attachment not found.");
+
+            var proofJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
+
+            var proofRecord = await this.GetByThreadIdAsync(agentContext, presentationMessage.GetThreadId());
+
+            if (proofRecord.State != ProofState.Requested)
+                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                    $"Proof state was invalid. Expected '{ProofState.Requested}', found '{proofRecord.State}'");
+
+            proofRecord.ProofJson = proofJson;
+            await proofRecord.TriggerAsync(ProofTrigger.Accept);
+            await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
+
+            EventAggregator.Publish(new ServiceMessageProcessingEvent
+            {
+                RecordId = proofRecord.Id,
+                MessageType = presentationMessage.Type,
+                ThreadId = presentationMessage.GetThreadId()
+            });
+
+            return proofRecord;
+        }
+
+        public Task<string> CreatePresentationAsync(IAgentContext agentContext, ProofRequest proofRequest, RequestedCredentials requestedCredentials)
+        {
+            return CreateProofAsync(agentContext, proofRequest, requestedCredentials);
+        }
+
+        public async Task<(PresentationMessage, ProofRecord)> CreatePresentationAsync(IAgentContext agentContext, string proofRecordId, RequestedCredentials requestedCredentials)
+        {
+            var record = await GetAsync(agentContext, proofRecordId);
+
+            if (record.State != ProofState.Requested)
+                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                    $"Proof state was invalid. Expected '{ProofState.Requested}', found '{record.State}'");
+
+            var proofJson = await CreatePresentationAsync(
+                agentContext, 
+                record.RequestJson.ToObject<ProofRequest>(), 
+                requestedCredentials);
+
+            record.ProofJson = proofJson;
+            await record.TriggerAsync(ProofTrigger.Accept);
+            await RecordService.UpdateAsync(agentContext.Wallet, record);
+
+            var threadId = record.GetTag(TagConstants.LastThreadId);
+
+            var proofMsg = new PresentationMessage
+            {
+                Id = threadId, 
+                Presentations = new []
+                {
+                    new Attachment
+                    {
+                        Id = "libindy-presentation-0",
+                        MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
+                        Data = new AttachmentContent
+                        {
+                            Base64 = proofJson
+                                .GetUTF8Bytes()
+                                .ToBase64String()
+                        }
+                    }
+                }
+            };
+            proofMsg.ThreadFrom(threadId);
+
+            return (proofMsg, record);
         }
 
         #endregion
