@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AgentBuilderExtensions
     {
-        public static AgentFrameworkBuilder AddSovrinToken(this AgentFrameworkBuilder agentFrameworkBuilder)
+        public static AriesFrameworkBuilder AddSovrinToken(this AriesFrameworkBuilder agentFrameworkBuilder)
         {
             agentFrameworkBuilder.Services.AddHostedService<SovrinTokenConfigurationService>();
             agentFrameworkBuilder.Services.AddSingleton<IPaymentService, SovrinPaymentService>();
@@ -17,7 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return agentFrameworkBuilder;
         }
 
-        public static AgentFrameworkBuilder ConfigurePaymentAddress(this AgentFrameworkBuilder builder, Action<AddressOptions> options)
+        public static AriesFrameworkBuilder ConfigurePaymentAddress(this AriesFrameworkBuilder builder, Action<AddressOptions> options)
         {
             builder.Services.Configure<AddressOptions>(options);
             return builder;

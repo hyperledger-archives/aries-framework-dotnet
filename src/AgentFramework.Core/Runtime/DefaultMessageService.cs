@@ -79,7 +79,7 @@ namespace AgentFramework.Core.Runtime
             return msg;
         }
         
-        private async Task<MessageContext> UnpackAsync(Wallet wallet, MessageContext message, ConnectionRecord connection)
+        private async Task<UnpackedMessageContext> UnpackAsync(Wallet wallet, PackedMessageContext message, ConnectionRecord connection)
         {
             UnpackResult unpacked;
 
@@ -93,9 +93,7 @@ namespace AgentFramework.Core.Runtime
                 throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Failed to un-pack message", e);
             }
 
-            message = new MessageContext(unpacked.Message, false, connection);
-
-            return message;
+            return new UnpackedMessageContext(unpacked.Message, connection);
         }
 
         /// <inheritdoc />
@@ -113,12 +111,11 @@ namespace AgentFramework.Core.Runtime
 
             var response = await SendAsync(wallet, message, recipientKey, connection.Endpoint.Uri, routingKeys, connection.MyVk, requestResponse);
 
-            if (response?.Packed != null)
+            if (response is PackedMessageContext responseContext)
             {
-                response = await UnpackAsync(wallet, response, connection);
+                return await UnpackAsync(wallet, responseContext, connection);
             }
-
-            return response;
+            return null;
         }
 
         /// <inheritdoc />
@@ -149,7 +146,7 @@ namespace AgentFramework.Core.Runtime
 
             var wireMsg = await PrepareAsync(wallet, message, recipientKey, routingKeys, senderKey);
 
-            return await dispatcher.DispatchAsync(uri, new MessageContext(wireMsg, true));
+            return await dispatcher.DispatchAsync(uri, new PackedMessageContext(wireMsg));
         }
 
         private IMessageDispatcher GetDispatcher(string scheme) => MessageDispatchers.FirstOrDefault(_ => _.TransportSchemes.Contains(scheme));

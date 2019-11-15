@@ -119,7 +119,7 @@ namespace AgentFramework.TestHarness
             var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(issuer.Context, schemaService,
                 issuerProv.IssuerDid, credentialAttributes.Select(_ => _.Name).ToArray());
 
-            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferV1Async(
+            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferAsync(
                 agentContext: issuer.Context,
                 config: new OfferConfiguration
                 {
@@ -239,11 +239,15 @@ namespace AgentFramework.TestHarness
 
             Assert.NotNull(rsp);
 
-            var discoveryMsg = rsp.GetMessage<DiscoveryDiscloseMessage>();
+            if (rsp is UnpackedMessageContext messageContext)
+            {
+                var discoveryMsg = messageContext.GetMessage<DiscoveryDiscloseMessage>();
 
-            Assert.NotNull(discoveryMsg);
+                Assert.NotNull(discoveryMsg);
 
-            return discoveryMsg;
+                return discoveryMsg;
+            }
+            throw new InvalidOperationException("The response was not of the expected type");
         }
     }
 }

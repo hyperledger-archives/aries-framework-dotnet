@@ -18,7 +18,7 @@ namespace AgentFramework.Core.Decorators.Transport
             message.AddDecorator(new TransportDecorator
             {
                 ReturnRoute = ReturnRouteTypes.all.ToString("G")
-            }, Decorators.TransportDecorator);
+            }, DecoratorNames.TransportDecorator);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace AgentFramework.Core.Decorators.Transport
         {
             try
             {
-                var transportDecorator = message.FindDecorator<TransportDecorator>(Decorators.TransportDecorator);
+                var transportDecorator = message.FindDecorator<TransportDecorator>(DecoratorNames.TransportDecorator);
 
                 if (transportDecorator != null)
                 {
@@ -47,11 +47,11 @@ namespace AgentFramework.Core.Decorators.Transport
         /// Adds return routing to message
         /// </summary>
         /// <param name="message">The message to add return routing</param>
-        public static bool ReturnRoutingRequested(this MessageContext message)
+        public static bool ReturnRoutingRequested(this UnpackedMessageContext message)
         {
             try
             {
-                var transportDecorator = message.FindDecorator<TransportDecorator>(Decorators.TransportDecorator);
+                var transportDecorator = message.FindDecorator<TransportDecorator>(DecoratorNames.TransportDecorator);
 
                 if (transportDecorator != null)
                 {

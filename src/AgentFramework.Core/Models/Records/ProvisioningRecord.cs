@@ -1,5 +1,4 @@
 ﻿using System;
-using AgentFramework.Core.Models.Ledger;
 using Newtonsoft.Json;
 
 namespace AgentFramework.Core.Models.Records
@@ -120,23 +119,10 @@ namespace AgentFramework.Core.Models.Records
         /// <value></value>
         public string IssuerSeed { get; set; }
 
+        /// <summary>
+        /// Gets or sets the <see cref="IndyTaaAcceptance" /> for this agent
+        /// </summary>
+        /// <value></value>
         public IndyTaaAcceptance TaaAcceptance { get; set; }
-
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"Endpoint={Endpoint}, " +
-            $"Controller={Owner}, " +
-            $"IssuerDid={IssuerDid}, " +
-            $"IssuerVerkey={(IssuerVerkey?.Length > 0 ? "[hidden]" : null)}, " +
-            $"MasterSecretId={(MasterSecretId?.Length > 0 ? "[hidden]" : null)}, " +
-            $"TailsBaseUri={TailsBaseUri}, " +
-            base.ToString(); 
-    }
-
-    public class IndyTaaAcceptance : IndyTaa
-    {
-        public string Digest { get; set; }
-        public long AcceptanceDate { get; set; }
     }
 }

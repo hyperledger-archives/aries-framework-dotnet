@@ -48,6 +48,8 @@ namespace AgentFramework.Core.Tests.Protocols
             var recordService = new DefaultWalletRecordService();
             var ledgerService = new DefaultLedgerService(new DefaultLedgerSigningService());
 
+            var messageService = new DefaultMessageService(new Mock<ILogger<DefaultMessageService>>().Object, new IMessageDispatcher[] { });
+
             var eventAggregator = new EventAggregator();
 
             var routingMock = new Mock<IMessageService>();
@@ -87,6 +89,7 @@ namespace AgentFramework.Core.Tests.Protocols
                 tailsService,
                 provisioningMock,
                 paymentService,
+                messageService,
                 new Mock<ILogger<DefaultCredentialService>>().Object);
 
             _proofService = new DefaultProofService(

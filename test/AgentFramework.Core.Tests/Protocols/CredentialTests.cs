@@ -9,7 +9,6 @@ using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Messages;
-using AgentFramework.Core.Messages.Credentials;
 using AgentFramework.Core.Models.Connections;
 using AgentFramework.Core.Models.Credentials;
 using AgentFramework.Core.Models.Events;
@@ -47,6 +46,8 @@ namespace AgentFramework.Core.Tests.Protocols
             var recordService = new DefaultWalletRecordService();
             var ledgerService = new DefaultLedgerService(new DefaultLedgerSigningService());
 
+            var messageService = new DefaultMessageService(new Mock<ILogger<DefaultMessageService>>().Object, new IMessageDispatcher[] { });
+
             _eventAggregator = new EventAggregator();
 
             var provisioning = ServiceUtils.GetDefaultMockProvisioningService();
@@ -74,6 +75,7 @@ namespace AgentFramework.Core.Tests.Protocols
                 tailsService,
                 provisioning,
                 paymentService,
+                messageService,
                 new Mock<ILogger<DefaultCredentialService>>().Object);
         }
 
@@ -106,10 +108,10 @@ namespace AgentFramework.Core.Tests.Protocols
 
             var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<Models.Credentials.CredentialPreviewAttribute>
                 {
-                    new CredentialPreviewAttribute("first_name", "Test"),
-                    new CredentialPreviewAttribute("last_name", "Holder")
+                    new Models.Credentials.CredentialPreviewAttribute("first_name", "Test"),
+                    new Models.Credentials.CredentialPreviewAttribute("last_name", "Holder")
                 });
 
             Assert.True(events == 3);
@@ -132,7 +134,7 @@ namespace AgentFramework.Core.Tests.Protocols
 
             Assert.Equal(CredentialState.Offered, credentialRecord.State);
             Assert.NotNull(msg);
-            Assert.Null(msg.Preview);
+            Assert.Null(msg.CredentialPreview);
         }
 
         [Fact]
@@ -148,18 +150,18 @@ namespace AgentFramework.Core.Tests.Protocols
                 new OfferConfiguration
                 {
                     CredentialDefinitionId = result.Item1,
-                    CredentialAttributeValues = new List<CredentialPreviewAttribute>
+                    CredentialAttributeValues = new List<Models.Credentials.CredentialPreviewAttribute>
                     {
-                        new CredentialPreviewAttribute("test-attr","test-attr-value")
+                        new Models.Credentials.CredentialPreviewAttribute("test-attr","test-attr-value")
                     }
                 });
 
             Assert.Equal(CredentialState.Offered, credentialRecord.State);
             Assert.NotNull(msg);
-            Assert.NotNull(msg.Preview);
-            Assert.True(msg.Preview.Attributes.Count() == 1);
+            Assert.NotNull(msg.CredentialPreview);
+            Assert.True(msg.CredentialPreview.Attributes.Count() == 1);
 
-            var previewAttr = msg.Preview.Attributes.ToArray()[0];
+            var previewAttr = msg.CredentialPreview.Attributes.ToArray()[0];
 
             Assert.True(previewAttr.Name == "test-attr");
             Assert.True(previewAttr.MimeType == CredentialMimeTypes.TextMimeType);
@@ -172,9 +174,9 @@ namespace AgentFramework.Core.Tests.Protocols
             var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
                 new OfferConfiguration
                 {
-                    CredentialAttributeValues = new List<CredentialPreviewAttribute>
+                    CredentialAttributeValues = new List<Models.Credentials.CredentialPreviewAttribute>
                     {
-                        new CredentialPreviewAttribute("test-attr","test-attr-value")
+                        new Models.Credentials.CredentialPreviewAttribute("test-attr","test-attr-value")
                         {
                             MimeType = "bad-mime-type"
                         }
@@ -190,13 +192,13 @@ namespace AgentFramework.Core.Tests.Protocols
             var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
                 new OfferConfiguration
                 {
-                    CredentialAttributeValues = new List<CredentialPreviewAttribute>
+                    CredentialAttributeValues = new List<Models.Credentials.CredentialPreviewAttribute>
                     {
-                        new CredentialPreviewAttribute("test-attr","test-attr-value")
+                        new Models.Credentials.CredentialPreviewAttribute("test-attr","test-attr-value")
                         {
                             MimeType = "bad-mime-type"
                         },
-                        new CredentialPreviewAttribute("test-attr1","test-attr-value1")
+                        new Models.Credentials.CredentialPreviewAttribute("test-attr1","test-attr-value1")
                         {
                             MimeType = "bad-mime-type"
                         }
@@ -251,7 +253,7 @@ namespace AgentFramework.Core.Tests.Protocols
             await AnonCreds.ProverCreateMasterSecretAsync(_holderWallet.Wallet, TestConstants.DefaultMasterSecret);
 
             // Holder accepts the credential offer and sends a credential request
-            var (request, _) = await _credentialService.CreateCredentialRequestAsync(_holderWallet, holderCredentialId);
+            var (request, _) = await _credentialService.CreateRequestAsync(_holderWallet, holderCredentialId);
             _messages.Add(request);
 
             // Issuer retrieves credential request from cloud agent
@@ -267,14 +269,14 @@ namespace AgentFramework.Core.Tests.Protocols
         }
 
         [Fact]
-        public async Task CreateOfferAsyncThrowsExceptionConnectionNotFound()
+        public async Task CreateOfferV1AsyncThrowsExceptionConnectionNotFound()
         {
             var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet, new OfferConfiguration(), "bad-connection-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
         [Fact]
-        public async Task CreateOfferAsyncThrowsExceptionConnectionInvalidState()
+        public async Task CreateOfferV1AsyncThrowsExceptionConnectionInvalidState()
         {
             var connectionId = Guid.NewGuid().ToString();
 
@@ -360,7 +362,7 @@ namespace AgentFramework.Core.Tests.Protocols
             await AnonCreds.ProverCreateMasterSecretAsync(_holderWallet.Wallet, TestConstants.DefaultMasterSecret);
 
             // Holder accepts the credential offer and sends a credential request
-            (var request, var _) = await _credentialService.CreateCredentialRequestAsync(_holderWallet, holderCredentialId);
+            (var request, var _) = await _credentialService.CreateRequestAsync(_holderWallet, holderCredentialId);
             _messages.Add(request);
 
             // Issuer retrieves credential request from cloud agent
@@ -385,7 +387,7 @@ namespace AgentFramework.Core.Tests.Protocols
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
                 new { seed = TestConstants.StewartDid }.ToJson());
             
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, issuer.Did, "bad-credential-id"));
+            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, "bad-credential-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -425,7 +427,7 @@ namespace AgentFramework.Core.Tests.Protocols
             await AnonCreds.ProverCreateMasterSecretAsync(_holderWallet.Wallet, TestConstants.DefaultMasterSecret);
 
             // Holder accepts the credential offer and sends a credential request
-            var (request, _) = await _credentialService.CreateCredentialRequestAsync(_holderWallet, holderCredentialId);
+            var (request, _) = await _credentialService.CreateRequestAsync(_holderWallet, holderCredentialId);
             _messages.Add(request);
 
             // Issuer retrieves credential request from cloud agent
@@ -437,12 +439,12 @@ namespace AgentFramework.Core.Tests.Protocols
                 await _credentialService.ProcessCredentialRequestAsync(_issuerWallet, credentialRequest, issuerConnection);
 
             // Issuer accepts the credential requests and issues a credential
-            var (credential, _) = await _credentialService.CreateCredentialAsync(_issuerWallet, issuer.Did, issuerCredentialId,
-                new List<CredentialPreviewAttribute> { new CredentialPreviewAttribute("dummy_attr","dummyVal")});
+            var (credential, _) = await _credentialService.CreateCredentialAsync(_issuerWallet, issuerCredentialId,
+                new List<Models.Credentials.CredentialPreviewAttribute> { new Models.Credentials.CredentialPreviewAttribute("dummy_attr","dummyVal")});
             _messages.Add(credential);
 
             //Try issue the credential again
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, issuer.Did, issuerCredentialId));
+            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, issuerCredentialId));
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
         
@@ -451,46 +453,6 @@ namespace AgentFramework.Core.Tests.Protocols
         {
             var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.RejectOfferAsync(_issuerWallet, "bad-credential-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
-        }
-
-        [Fact]
-        public async Task RejectOfferAsyncThrowsExceptionCredentialOfferInvalidState()
-        {
-            //Establish a connection between the two parties
-            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
-                _connectionService, _messages, _issuerWallet, _holderWallet);
-
-            // Create an issuer DID/VK. Can also be created during provisioning
-            var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
-
-            // Create a schema and credential definition for this issuer
-            var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(_issuerWallet, _schemaService, issuer.Did,
-                new[] { "dummy_attr" });
-
-            var offerConfig = new OfferConfiguration
-            {
-                IssuerDid = issuer.Did,
-                CredentialDefinitionId = definitionId
-            };
-
-            // Send an offer to the holder using the established connection channel
-            var (offer, _) = await _credentialService.CreateOfferAsync(_issuerWallet, offerConfig, issuerConnection.Id);
-            _messages.Add(offer);
-
-            // Holder retrieves message from their cloud agent
-            var credentialOffer = FindContentMessage<CredentialOfferMessage>(_messages);
-
-            // Holder processes the credential offer by storing it
-            var holderCredentialId =
-                await _credentialService.ProcessOfferAsync(_holderWallet, credentialOffer, holderConnection);
-
-            //Reject the offer
-            await _credentialService.RejectOfferAsync(_holderWallet, holderCredentialId);
-
-            //Try reject the offer again
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.RejectOfferAsync(_holderWallet, holderCredentialId));
-            Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 
         private static T FindContentMessage<T>(IEnumerable<AgentMessage> collection)

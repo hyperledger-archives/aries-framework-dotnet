@@ -18,7 +18,7 @@ namespace AgentFramework.Core.Extensions
         /// <param name="messageContext">Message Context.</param>
         /// <param name="name">The name.</param>
         /// <returns>The requested decorator or null</returns>
-        public static T FindDecorator<T>(this MessageContext messageContext, string name) where T : class
+        public static T FindDecorator<T>(this UnpackedMessageContext messageContext, string name) where T : class
         {
             if (messageContext.Packed)
                 throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Cannot fetch decorator from packed message.");

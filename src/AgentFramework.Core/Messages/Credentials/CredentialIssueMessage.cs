@@ -2,18 +2,18 @@ using System;
 using AgentFramework.Core.Decorators.Attachments;
 using Newtonsoft.Json;
 
-namespace AgentFramework.Core.Messages.Credentials.V1
+namespace AgentFramework.Core.Messages
 {
     /// <summary>
     /// A credential content message.
     /// </summary>
-    public class CredentialRequestMessage : AgentMessage
+    public class CredentialIssueMessage : AgentMessage
     {
         /// <inheritdoc />
-        public CredentialRequestMessage()
+        public CredentialIssueMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.IssueCredentialNames.RequestCredential;
+            Type = MessageTypes.IssueCredentialNames.IssueCredential;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace AgentFramework.Core.Messages.Credentials.V1
         /// Gets or sets the offer attachment
         /// </summary>
         /// <value></value>
-        [JsonProperty("requests~attach")]
-        public Attachment[] Requests { get; set; }
+        [JsonProperty("credentials~attach")]
+        public Attachment[] Credentials { get; set; }
     }
 }

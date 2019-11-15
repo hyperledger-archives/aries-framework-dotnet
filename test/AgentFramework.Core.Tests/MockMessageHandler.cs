@@ -10,7 +10,7 @@ namespace AgentFramework.Core.Tests
     public class MockMessageHandler : IMessageHandler
     {
         public IEnumerable<MessageType> SupportedMessageTypes { get; }
-        public Task<AgentMessage> ProcessAsync(IAgentContext agentContext, MessageContext messageContext)
+        public Task<AgentMessage> ProcessAsync(IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             throw new NotImplementedException();
         }

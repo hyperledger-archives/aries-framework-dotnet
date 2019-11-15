@@ -21,8 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">Services.</param>
         public static void AddAgentFramework(this IServiceCollection services)
         {
-            services.AddOptions<WalletOptions>();
-            services.AddOptions<PoolOptions>();
+            services.AddOptions<AgentOptions>();
             services.AddLogging();
             services.AddHttpClient();
 
@@ -34,39 +33,13 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">Services.</param>
         /// <param name="builder">Builder.</param>
-        public static AgentFrameworkBuilder AddAgentFramework(this IServiceCollection services, Action<AgentFrameworkBuilder> builder)
+        public static AriesFrameworkBuilder AddAriesFramework(this IServiceCollection services, Action<AriesFrameworkBuilder> builder)
         {
             AddAgentFramework(services);
 
-            var frameworkBuilder = new AgentFrameworkBuilder(services);
+            var frameworkBuilder = new AriesFrameworkBuilder(services);
             builder.Invoke(frameworkBuilder);
             return frameworkBuilder;
-        }
-
-        /// <summary>
-        /// Configure the wallet options
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static AgentFrameworkBuilder ConfigureWallet(this AgentFrameworkBuilder builder, Action<WalletOptions> options)
-        {
-            builder.Services.Configure<WalletOptions>(options);
-            return builder;
-        }
-
-        /// <summary>
-        /// Configure the pool configuration options
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static AgentFrameworkBuilder ConfigurePool(this AgentFrameworkBuilder builder, Action<PoolOptions> options)
-        {
-            builder.Services.Configure<PoolOptions>(options);
-            builder.Services.AddHostedService<PoolConfigurationHostedService>();
-            builder.Services.AddHostedService<TxnAuthorAcceptanceHostedService>();
-            return builder;
         }
 
         internal static IServiceCollection AddDefaultServices(this IServiceCollection builder)

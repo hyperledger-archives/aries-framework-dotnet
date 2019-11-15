@@ -33,8 +33,8 @@ namespace AgentFramework.TestHarness.Mock
         public IMessageService Messages => Host.Services.GetService<IMessageService>();
         public IPaymentService Payments => Host.Services.GetService<IPaymentService>();
 
-        internal Task<MessageResponse> HandleAsync(byte[] data) => 
-            ProcessAsync(Context, new MessageContext(data, true));
+        internal Task<MessageContext> HandleAsync(byte[] data) => 
+            ProcessAsync(Context, new PackedMessageContext(data));
 
         /// <inheritdoc />
         protected override void ConfigureHandlers()
@@ -97,16 +97,16 @@ namespace AgentFramework.TestHarness.Mock
                 {
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
-                    services.AddAgentFramework(builder =>
-                        builder.AddIssuerAgent(config =>
-                            {
-                                config.EndpointUri = new Uri("http://test");
-                                config.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
-                                config.WalletCredentials = new WalletCredentials { Key = "test" };
-                                config.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
-                                config.PoolName = "TestPool";
-                            })
-                            .AddSovrinToken());
+                    services.AddAriesFramework(builder => builder
+                        .RegisterAgent(options =>
+                        {
+                            options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
+                            options.PoolName = "TestPool";
+                            options.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
+                            options.WalletCredentials = new WalletCredentials { Key = "test" };
+                            options.EndpointUri = "http://test";
+                        }));
+                        //.AddSovrinToken());
                     services.AddSingleton<IHttpClientFactory>(new InProcFactory(handler));
                 }).Build());
 

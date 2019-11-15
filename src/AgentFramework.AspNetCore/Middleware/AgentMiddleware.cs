@@ -50,14 +50,14 @@ namespace AgentFramework.AspNetCore.Middleware
                 var agent = await contextProvider.GetAgentAsync();
                 var response = await agent.ProcessAsync(
                     context: await contextProvider.GetContextAsync(), //TODO assumes all received messages are packed 
-                    messageContext: new MessageContext(body.GetUTF8Bytes(), true));
+                    messageContext: new PackedMessageContext(body.GetUTF8Bytes()));
 
                 context.Response.StatusCode = 200;
 
                 if (response != null)
                 {
                     context.Response.ContentType = DefaultMessageService.AgentWireMessageMimeType;
-					await context.Response.WriteAsync(response.GetData().GetUTF8String());
+					await context.Response.WriteAsync(response.Payload.GetUTF8String());
 				}
                 else
                     await context.Response.WriteAsync(string.Empty);

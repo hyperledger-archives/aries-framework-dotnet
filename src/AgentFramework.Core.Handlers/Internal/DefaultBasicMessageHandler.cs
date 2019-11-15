@@ -31,7 +31,7 @@ namespace AgentFramework.Core.Handlers.Internal
         /// <param name="agentContext">The message agentContext.</param>
         /// <param name="messageContext">The message context.</param>
         /// <returns></returns>
-        protected override async Task<AgentMessage> ProcessAsync(BasicMessage message, IAgentContext agentContext, MessageContext messageContext)
+        protected override async Task<AgentMessage> ProcessAsync(BasicMessage message, IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             var record = new BasicMessageRecord
             {

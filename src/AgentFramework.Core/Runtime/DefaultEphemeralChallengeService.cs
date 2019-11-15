@@ -148,7 +148,7 @@ namespace AgentFramework.Core.Runtime
             if (config.Type == ChallengeType.Proof)
             {
                 var proofRequestConfig = config.Contents.ToObject<ProofRequestConfiguration>();
-                (var proofRequest, var _) = await ProofService.CreateProofRequestAsync(agentContext, new ProofRequest
+                (var proofRequest, var _) = await ProofService.CreateRequestAsync(agentContext, new ProofRequest
                 {
                     Name = config.Name,
                     Version = "1.0",
@@ -160,7 +160,7 @@ namespace AgentFramework.Core.Runtime
                 challengeRecord.Challenge = new EphemeralChallengeContents
                 {
                     Type = ChallengeType.Proof,
-                    Contents = JsonConvert.DeserializeObject<JObject>(proofRequest.ProofRequestJson)
+                    Contents = JsonConvert.DeserializeObject<JObject>(proofRequest.Requests.First().Data.Base64.GetBytesFromBase64().GetUTF8String())
                 };
                 challengeMessage.Challenge = challengeRecord.Challenge;
             }
@@ -245,7 +245,7 @@ namespace AgentFramework.Core.Runtime
 
             var proofRequest = message.Challenge.Contents.ToObject<ProofRequest>();
 
-            var proof = await ProofService.CreateProofAsync(agentContext, proofRequest, credentials);
+            var proof = await ProofService.CreatePresentationAsync(agentContext, proofRequest, credentials);
             challengeResponse.Response = new EphemeralChallengeContents
             {
                 Type = ChallengeType.Proof,

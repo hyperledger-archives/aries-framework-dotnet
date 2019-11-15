@@ -8,6 +8,7 @@ using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Handlers.Internal;
 using AgentFramework.Core.Messages;
+using AgentFramework.Core.Models.Records;
 using AgentFramework.Core.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -99,7 +100,7 @@ namespace AgentFramework.Core.Handlers.Agents
         /// <exception cref="Exception">Expected inner message to be of type 'ForwardMessage'</exception>
         /// <exception cref="AgentFrameworkException">Couldn't locate a message handler for type {messageType}</exception>
         /// TODO should recieve a message context and return a message context.
-        public async Task<MessageResponse> ProcessAsync(IAgentContext context, MessageContext messageContext)
+        public async Task<MessageContext> ProcessAsync(IAgentContext context, MessageContext messageContext)
         {
             EnsureConfigured();
 
@@ -112,17 +113,16 @@ namespace AgentFramework.Core.Handlers.Agents
                 outgoingMessageContext = await ProcessMessage(agentContext, message);
             }
 
-            var response = new MessageResponse();
-            response.Write(outgoingMessageContext?.Payload);
-
-            return response;
+            return outgoingMessageContext;
         }
 
-        private async Task<MessageContext> ProcessMessage(IAgentContext agentContext, MessageContext inboundMessageContext)
+        private async Task<MessageContext> ProcessMessage(IAgentContext agentContext, MessageContext messageContext)
         {
-            if (inboundMessageContext.Packed)
+            UnpackResult unpacked = null;
+            UnpackedMessageContext inboundMessageContext = null;
+            if (messageContext is PackedMessageContext packedMessageContext)
             {
-                inboundMessageContext = await UnpackAsync(agentContext, inboundMessageContext);
+                (inboundMessageContext, unpacked) = await UnpackAsync(agentContext, packedMessageContext);
                 Logger.LogInformation($"Agent Message Received : {inboundMessageContext.ToJson()}");
             }
 
@@ -148,8 +148,10 @@ namespace AgentFramework.Core.Handlers.Agents
                 {
                     if (inboundMessageContext.ReturnRoutingRequested())
                     {
-                        var result = await MessageService.PrepareAsync(agentContext.Wallet, response, inboundMessageContext.Connection, null, false);
-                        return new MessageContext(result, true, inboundMessageContext.Connection);
+                        var result = inboundMessageContext.Connection != null
+                            ? await MessageService.PrepareAsync(agentContext.Wallet, response, inboundMessageContext.Connection, null, false)
+                            : await MessageService.PrepareAsync(agentContext.Wallet, response, unpacked.SenderVerkey);
+                        return new PackedMessageContext(result);
                     }
                     await MessageService.SendAsync(agentContext.Wallet, response, inboundMessageContext.Connection);
                 }
@@ -160,7 +162,7 @@ namespace AgentFramework.Core.Handlers.Agents
                 $"Couldn't locate a message handler for type {inboundMessageContext.GetMessageType()}");
         }
 
-        private async Task<MessageContext> UnpackAsync(IAgentContext agentContext, MessageContext message)
+        private async Task<(UnpackedMessageContext, UnpackResult)> UnpackAsync(IAgentContext agentContext, PackedMessageContext message)
         {
             UnpackResult unpacked;
 
@@ -174,12 +176,19 @@ namespace AgentFramework.Core.Handlers.Agents
                 throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Failed to un-pack message", e);
             }
 
+            UnpackedMessageContext result = null;
             if (unpacked.SenderVerkey != null && message.Connection == null)
             {
                 try
                 {
-                    var connection = await ConnectionService.ResolveByMyKeyAsync(agentContext, unpacked.RecipientVerkey);
-                    message = new MessageContext(unpacked.Message, false, connection);
+                    if (await ConnectionService.ResolveByMyKeyAsync(agentContext, unpacked.RecipientVerkey) is ConnectionRecord connection)
+                    {
+                        result = new UnpackedMessageContext(unpacked.Message, connection);
+                    }
+                    else
+                    {
+                        result = new UnpackedMessageContext(unpacked.Message, unpacked.SenderVerkey);
+                    }
                 }
                 catch (AgentFrameworkException ex) when (ex.ErrorCode == ErrorCode.RecordNotFound)
                 {
@@ -189,10 +198,18 @@ namespace AgentFramework.Core.Handlers.Agents
             }
             else
             {
-                message = new MessageContext(unpacked.Message, false, message.Connection);
+                if (message.Connection != null)
+                {
+                    result = new UnpackedMessageContext(unpacked.Message, message.Connection);
+                }
+                else
+                {
+                    result = new UnpackedMessageContext(unpacked.Message, unpacked.SenderVerkey);
+                }
+                
             }
 
-            return message;
+            return (result, unpacked);
         }
 
         private void EnsureConfigured()

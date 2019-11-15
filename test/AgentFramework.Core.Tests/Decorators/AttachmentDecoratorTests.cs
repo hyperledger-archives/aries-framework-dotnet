@@ -1,4 +1,5 @@
 ﻿using AgentFramework.Core.Decorators.Attachments;
+using AgentFramework.Core.Decorators;
 using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Messages;
 using AgentFramework.Core.Messages.Connections;

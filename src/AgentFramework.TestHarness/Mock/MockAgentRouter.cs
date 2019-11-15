@@ -11,16 +11,16 @@ namespace AgentFramework.TestHarness.Mock
     {
         public void RegisterAgent(MockAgent agent)
         {
-            Func<(string name, byte[] data), Task<MessageResponse>> function = async (cb) => await agent.HandleInboundAsync(new MessageContext(cb.data, true));
+            Func<(string name, byte[] data), Task<MessageContext>> function = async (cb) => await agent.HandleInboundAsync(new PackedMessageContext(cb.data));
             _agentInBoundCallBacks.Add((agent.Name, function));
         }
 
-        public Task<MessageResponse> RouteMessage(string name, byte[] data)
+        public Task<MessageContext> RouteMessage(string name, byte[] data)
         {
             var result = _agentInBoundCallBacks.FirstOrDefault(_ => _.name == name);
             return result.callback.Invoke((name,data));
         }
 
-        private readonly List<(string name, Func<(string name, byte[] data), Task<MessageResponse>> callback)> _agentInBoundCallBacks = new List<(string name, Func<(string name, byte[] data), Task<MessageResponse>> callback)>();
+        private readonly List<(string name, Func<(string name, byte[] data), Task<MessageContext>> callback)> _agentInBoundCallBacks = new List<(string name, Func<(string name, byte[] data), Task<MessageContext>> callback)>();
     }
 }
