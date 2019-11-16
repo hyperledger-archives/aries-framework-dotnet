@@ -108,11 +108,11 @@ namespace AgentFramework.TestHarness.Mock
                         {
                             options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
                             options.PoolName = "TestPool";
-                            options.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
-                            options.WalletCredentials = new WalletCredentials { Key = "test" };
+                            options.WalletConfiguration.Id = Guid.NewGuid().ToString();
+                            options.WalletCredentials.Key = "test";
                             options.EndpointUri = "http://test";
-                        }));
-                        //.AddSovrinToken());
+                        })
+                        .AddSovrinToken());
                     services.AddSingleton<IHttpClientFactory>(new InProcFactory(handler));
                 }).Build());
 

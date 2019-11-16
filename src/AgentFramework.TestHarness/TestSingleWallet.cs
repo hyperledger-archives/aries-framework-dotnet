@@ -65,8 +65,8 @@ namespace AgentFramework.TestHarness
                             options.PoolName = GetPoolName();
                             options.EndpointUri = "http://test";
                             options.IssuerKeySeed = GetIssuerSeed();
-                        }));
-                        //.AddSovrinToken());
+                        })
+                        .AddSovrinToken());
                 })
                 .Build();
 

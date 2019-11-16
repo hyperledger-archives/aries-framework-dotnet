@@ -20,6 +20,8 @@ using System.Net;
 using AgentFramework.Core.Handlers.Agents;
 using AgentFramework.Core.Messages;
 using AgentFramework.Core.Runtime;
+using AgentFramework.Core.Configuration;
+using Hyperledger.Indy.PoolApi;
 
 namespace AgentFramework.Core.Tests
 {
@@ -107,28 +109,43 @@ namespace AgentFramework.Core.Tests
             var provisioningMock = new Mock<IProvisioningService>();
             provisioningMock
                 .Setup(x => x.ProvisionAgentAsync())
-                .Callback(() => { slim.Release(); provisioned = true; })
+                .Callback(() =>
+                {
+                    provisioned = true;
+                    slim.Release(); 
+                })
                 .Returns(Task.CompletedTask);
 
+            var poolName = $"{Guid.NewGuid()}";
             var hostBuilder = new HostBuilder()
                 .ConfigureServices(services =>
                 {
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
-                    services.AddAriesFramework(b => b.RegisterAgent(c => { }));
+                    services.AddAriesFramework(b => b.RegisterAgent(c =>
+                    {
+                        c.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
+                        c.ProtocolVersion = 2;
+                        c.PoolName = poolName;
+                    }));
                     services.AddSingleton(provisioningMock.Object);
                 })
                 .Build();
 
             // Start the host
             await hostBuilder.StartAsync();
-
-            // Wait for semaphore
             await slim.WaitAsync(TimeSpan.FromSeconds(30));
-            await hostBuilder.StopAsync();
 
             // Assert
+            var pool = await hostBuilder.Services.GetService<IPoolService>().GetPoolAsync(poolName);
+
+            pool.Should().NotBeNull();
             provisioned.Should().BeTrue();
+            
+            // Cleanup
+            await pool.CloseAsync();
+            await Pool.DeletePoolLedgerConfigAsync(poolName);
+            await hostBuilder.StopAsync();
         }
 
         [Fact(DisplayName = "Provisioning completed with issuer configuration")]
@@ -148,6 +165,7 @@ namespace AgentFramework.Core.Tests
                             options.WalletCredentials = walletCredentials;
                             options.WalletConfiguration = walletConfiguration;
                             options.EndpointUri = "http://example.com";
+                            options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
                         }));
                 })
                 .Build();

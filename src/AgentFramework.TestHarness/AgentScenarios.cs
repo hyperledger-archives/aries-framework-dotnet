@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Messages;
+using AgentFramework.Core.Messages.Connections;
 using AgentFramework.Core.Messages.Discovery;
 using AgentFramework.Core.Models.Connections;
 using AgentFramework.Core.Models.Credentials;
@@ -77,10 +78,10 @@ namespace AgentFramework.TestHarness
 
             (var request, var inviteeConnection) =
                 await connectionService.CreateRequestAsync(inviter.Context, invitation);
-            var response = await messsageService.SendReceiveAsync(inviter.Context.Wallet, request, inviteeConnection);
+            var response = await messsageService.SendReceiveAsync<ConnectionResponseMessage>(inviter.Context.Wallet, request, inviteeConnection);
 
             Assert.NotNull(response);
-            await inviter.HandleInboundAsync(response);
+            await connectionService.ProcessResponseAsync(inviter.Context, response, inviteeConnection);
 
             await slim.WaitAsync(TimeSpan.FromSeconds(30));
 
