@@ -1,10 +1,11 @@
-﻿using System;
+using System;
+using AgentFramework.Core.Decorators.Attachments;
 using Newtonsoft.Json;
 
-namespace AgentFramework.Core.Messages.Credentials
+namespace AgentFramework.Core.Messages
 {
     /// <summary>
-    /// A credential offer content message.
+    /// A credential content message.
     /// </summary>
     public class CredentialOfferMessage : AgentMessage
     {
@@ -12,41 +13,28 @@ namespace AgentFramework.Core.Messages.Credentials
         public CredentialOfferMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.CredentialOffer;
+            Type = MessageTypes.IssueCredentialNames.OfferCredential;
         }
 
         /// <summary>
-        /// Gets or sets the comment.
+        /// Gets or sets human readable information about this Credential Proposal
         /// </summary>
-        /// <value>
-        /// The comment.
-        /// </value>
-        [JsonProperty("comment", NullValueHandling = NullValueHandling.Ignore)]
+        /// <value></value>
+        [JsonProperty("comment")]
         public string Comment { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the offer json.
-        /// </summary>
-        /// <value>
-        /// The offer json.
-        /// </value>
-        [JsonProperty("offer_json")]
-        public string OfferJson { get; set; }
 
         /// <summary>
-        /// Gets or sets the credential preview.
+        /// Gets or sets the Credential Preview
         /// </summary>
-        /// <value>
-        /// The preview.
-        /// </value>
+        /// <value></value>
         [JsonProperty("credential_preview")]
-        public CredentialPreviewMessage Preview { get; set; }
+        public CredentialPreviewMessage CredentialPreview { get; set; }
 
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"Id={Id}, " +
-            $"Type={Type}, " +
-            $"OfferJson={(OfferJson?.Length > 0 ? "[hidden]" : null)}";
+        /// <summary>
+        /// Gets or sets the offer attachment
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("offers~attach")]
+        public Attachment[] Offers { get; set; }
     }
 }

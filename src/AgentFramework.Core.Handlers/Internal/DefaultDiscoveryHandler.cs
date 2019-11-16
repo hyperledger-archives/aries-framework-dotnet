@@ -17,7 +17,7 @@ namespace AgentFramework.Core.Handlers.Internal
             _discoveryService = discoveryService;
         }
 
-        protected override Task<AgentMessage> ProcessAsync(DiscoveryQueryMessage message, IAgentContext agentContext, MessageContext messageContext)
+        protected override Task<AgentMessage> ProcessAsync(DiscoveryQueryMessage message, IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             return Task.FromResult<AgentMessage>(_discoveryService.CreateQueryResponse(agentContext, message));
         }

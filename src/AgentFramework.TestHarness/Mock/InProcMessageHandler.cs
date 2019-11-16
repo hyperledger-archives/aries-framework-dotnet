@@ -19,7 +19,7 @@ namespace AgentFramework.TestHarness.Mock
 
             if (response != null)
             {
-                responseMessage.Content = new ByteArrayContent(response.GetData());
+                responseMessage.Content = new ByteArrayContent(response.Payload);
                 responseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(DefaultMessageService.AgentWireMessageMimeType);
             }
 

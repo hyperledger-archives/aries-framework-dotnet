@@ -29,6 +29,7 @@ namespace AgentFramework.Core.Utils
                 switch (item.MimeType)
                 {
                     case CredentialMimeTypes.TextMimeType:
+                    case CredentialMimeTypes.ApplicationJsonMimeType:
                         result.Add(item.Name, FormatStringCredentialAttribute(item));
                         break;
                     default:
@@ -56,6 +57,7 @@ namespace AgentFramework.Core.Utils
             switch (attribute.MimeType)
             {
                 case CredentialMimeTypes.TextMimeType:
+                case CredentialMimeTypes.ApplicationJsonMimeType:
                     break;
                 default:
                     throw new AgentFrameworkException(ErrorCode.InvalidParameterFormat, $"{attribute.Name} mime type of {attribute.MimeType} not supported");
@@ -97,6 +99,7 @@ namespace AgentFramework.Core.Utils
             switch (mimeType)
             {
                 case CredentialMimeTypes.TextMimeType:
+                case CredentialMimeTypes.ApplicationJsonMimeType:
                     return (string) attributeValue;
                 default:
                     throw new AgentFrameworkException(ErrorCode.InvalidParameterFormat, $"Mime type of {mimeType} not supported");
@@ -114,6 +117,7 @@ namespace AgentFramework.Core.Utils
             switch (mimeType)
             {
                 case CredentialMimeTypes.TextMimeType:
+                case CredentialMimeTypes.ApplicationJsonMimeType:
                     return attributeValue.Value<string>();
                 default:
                     throw new AgentFrameworkException(ErrorCode.InvalidParameterFormat, $"Mime type of {mimeType} not supported");

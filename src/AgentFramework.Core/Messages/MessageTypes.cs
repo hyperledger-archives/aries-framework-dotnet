@@ -21,36 +21,6 @@
         public const string ConnectionResponse = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/response";
 
         /// <summary>
-        /// The credential offer.
-        /// </summary>
-        public const string CredentialOffer = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/credential-issuance/0.1/credential-offer";
-
-        /// <summary>
-        /// The credential preview
-        /// </summary>
-        public const string CredentialPreview = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/credential-issuance/0.1/credential-preview";
-
-        /// <summary>
-        /// The credential request.
-        /// </summary>
-        public const string CredentialRequest = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/credential-issuance/0.1/credential-request";
-
-        /// <summary>
-        /// The credential.
-        /// </summary>
-        public const string Credential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/credential-issuance/0.1/credential-issue";
-
-        /// <summary>
-        /// The proof request.
-        /// </summary>
-        public const string ProofRequest = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/credential-presentation/0.1/presentation-request";
-
-        /// <summary>
-        /// The disclosed proof.
-        /// </summary>
-        public const string DisclosedProof = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/credential-presentation/0.1/credential-presentation";
-
-        /// <summary>
         /// Ephemeral Challenge Message
         /// </summary>
         public const string EphemeralChallenge = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/ephemeral_challenge/1.0/challenge";
@@ -121,11 +91,29 @@
             public const string IssueCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/issue-credential";
         }
 
+        /// <summary>
+        /// Type names for Present Proof Protocol
+        /// </summary>
         public class PresentProofNames
         {
+            /// <summary>
+            /// Propose Presentation Message Type Name
+            /// </summary>
             public const string ProposePresentation = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/propose-presentation";
+
+            /// <summary>
+            /// Request Presentation Message Type Name
+            /// </summary>
             public const string RequestPresentation = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/request-presentation";
+
+            /// <summary>
+            /// Presentation Message Type Name
+            /// </summary>
             public const string Presentation = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/presentation";
+
+            /// <summary>
+            /// Presentation Preview Message Type Name
+            /// </summary>
             public const string PresentationPreview = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/presentation-preview";
         }
     }

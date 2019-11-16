@@ -20,6 +20,6 @@ namespace AgentFramework.Core.Contracts
         /// <param name="uri">Uri to dispatch the message to.</param>
         /// <param name="message">Message context to dispatch.</param>
         /// <returns>A message context.</returns>
-        Task<MessageContext> DispatchAsync(Uri uri, MessageContext message);
+        Task<PackedMessageContext> DispatchAsync(Uri uri, PackedMessageContext message);
     }
 }

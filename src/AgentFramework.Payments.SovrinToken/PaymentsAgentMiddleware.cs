@@ -22,7 +22,7 @@ namespace AgentFramework.Payments.SovrinToken
             _recordService = recordService;
         }
 
-        public async Task OnMessageAsync(IAgentContext agentContext, MessageContext messageContext)
+        public async Task OnMessageAsync(IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             var message = messageContext.GetMessage<InternalAgentMessage>();
             var requestDecorator = message.FindDecorator<PaymentRequestDecorator>("payment_request");

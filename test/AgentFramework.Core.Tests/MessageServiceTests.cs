@@ -191,7 +191,7 @@ namespace AgentFramework.Core.Tests
             var recipient = await Did.CreateAndStoreMyDidAsync(_wallet, "{}");
             var sender = await Did.CreateAndStoreMyDidAsync(_wallet, "{}");
 
-            var encrypted = await _messagingService.PrepareAsync(_wallet, message, recipient.VerKey, new string[0], sender.VerKey);
+            var encrypted = await CryptoUtils.PrepareAsync(_wallet, message, recipient.VerKey, new string[0], sender.VerKey);
 
             var unpackRes = await CryptoUtils.UnpackAsync(_wallet, encrypted);
             var unpackMsg = JsonConvert.DeserializeObject<ConnectionInvitationMessage>(unpackRes.Message);
@@ -211,7 +211,7 @@ namespace AgentFramework.Core.Tests
             var sender = await Did.CreateAndStoreMyDidAsync(_wallet, "{}");
             var routingRecipient = await Did.CreateAndStoreMyDidAsync(_wallet, "{}");
 
-            var encrypted = await _messagingService.PrepareAsync(_wallet, message, recipient.VerKey, new[] { routingRecipient.VerKey }, sender.VerKey);
+            var encrypted = await CryptoUtils.PrepareAsync(_wallet, message, recipient.VerKey, new[] { routingRecipient.VerKey }, sender.VerKey);
 
             var unpackRes = await CryptoUtils.UnpackAsync(_wallet, encrypted);
             var unpackMsg = JsonConvert.DeserializeObject<ForwardMessage>(unpackRes.Message);
@@ -237,7 +237,7 @@ namespace AgentFramework.Core.Tests
 
             var recipient = await Did.CreateAndStoreMyDidAsync(_wallet, "{}");
 
-            var encrypted = await _messagingService.PrepareAsync(_wallet, message, recipient.VerKey);
+            var encrypted = await CryptoUtils.PrepareAsync(_wallet, message, recipient.VerKey);
 
             var unpackRes = await CryptoUtils.UnpackAsync(_wallet, encrypted);
             var unpackMsg = JsonConvert.DeserializeObject<ConnectionInvitationMessage>(unpackRes.Message);
@@ -256,7 +256,7 @@ namespace AgentFramework.Core.Tests
             var recipient = await Did.CreateAndStoreMyDidAsync(_wallet, "{}");
             var routingRecipient = await Did.CreateAndStoreMyDidAsync(_wallet, "{}");
 
-            var encrypted = await _messagingService.PrepareAsync(_wallet, message, recipient.VerKey, new []{ routingRecipient.VerKey });
+            var encrypted = await CryptoUtils.PrepareAsync(_wallet, message, recipient.VerKey, new []{ routingRecipient.VerKey });
 
             var unpackRes = await CryptoUtils.UnpackAsync(_wallet, encrypted);
             var unpackMsg = JsonConvert.DeserializeObject<ForwardMessage>(unpackRes.Message);

@@ -1,7 +1,8 @@
 ﻿using System;
+using AgentFramework.Core.Decorators.Attachments;
 using AgentFramework.Core.Messages;
 
-namespace AgentFramework.Core.Decorators.Attachments
+namespace AgentFramework.Core.Decorators
 {
     /// <summary>
     /// Attachment extensions

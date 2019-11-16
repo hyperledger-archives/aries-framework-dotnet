@@ -43,19 +43,11 @@ namespace AgentFramework.Core.Tests.Protocols
 
             // Send offer
             var (offer, record) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
-                .CreateOfferV1Async(pair.Agent1.Context, new OfferConfiguration
+                .CreateOfferAsync(pair.Agent1.Context, new OfferConfiguration
                 {
                     CredentialDefinitionId = definitionId,
                     IssuerDid = issuerConfiguration.IssuerDid,
-                    CredentialAttributeValues = new []
-                    {
-                        new CredentialPreviewAttribute
-                        {
-                            Name = "name",
-                            Value = "random",
-                            MimeType = CredentialMimeTypes.TextMimeType
-                        }
-                    }
+                    CredentialAttributeValues = new [] { new CredentialPreviewAttribute("name", "random") }
                 });
             await pair.Agent1.Provider.GetRequiredService<IMessageService>()
                 .SendAsync(pair.Agent1.Context.Wallet, offer, pair.Connection1);

@@ -3,6 +3,8 @@ using System;
 using System.Threading.Tasks;
 using AgentFramework.Core.Runtime;
 using Xunit;
+using AgentFramework.Core.Configuration.Options;
+using Microsoft.Extensions.Options;
 
 namespace AgentFramework.Core.Tests
 {
@@ -23,7 +25,13 @@ namespace AgentFramework.Core.Tests
         {
             _walletService = new DefaultWalletService();
             _provisioningService = new DefaultProvisioningService(
-                new DefaultWalletRecordService(), _walletService);
+                new DefaultWalletRecordService(), 
+                _walletService,
+                Options.Create(new AgentOptions
+                {
+                    WalletConfiguration = _config,
+                    WalletCredentials = _creds
+                }));
 
             return Task.CompletedTask;
         }
@@ -31,12 +39,13 @@ namespace AgentFramework.Core.Tests
         [Fact]
         public async Task ProvisionNewWalletWithEndpoint()
         {
-            await _provisioningService.ProvisionAgentAsync(new BasicProvisioningConfiguration
-            {
-                WalletConfiguration = _config,
-                WalletCredentials = _creds,
-                EndpointUri = new Uri("http://mock")
-            });
+            await _provisioningService.ProvisionAgentAsync(
+                new AgentOptions
+                { 
+                    EndpointUri = "http://mock",
+                    WalletConfiguration = _config,
+                    WalletCredentials = _creds
+                });
 
             var wallet = await _walletService.GetWalletAsync(_config, _creds);
             Assert.NotNull(wallet);
@@ -54,13 +63,15 @@ namespace AgentFramework.Core.Tests
         {
             var walletService = new DefaultWalletService();
             var provisioningService = new DefaultProvisioningService(
-                new DefaultWalletRecordService(), walletService);
+                new DefaultWalletRecordService(), 
+                walletService,
+                Options.Create(new AgentOptions
+                {
+                    WalletConfiguration = _config,
+                    WalletCredentials = _creds
+                }));
 
-            await provisioningService.ProvisionAgentAsync(new BasicProvisioningConfiguration
-            {
-                WalletConfiguration = _config,
-                WalletCredentials = _creds
-            });
+            await provisioningService.ProvisionAgentAsync();
 
             var wallet = await walletService.GetWalletAsync(_config, _creds);
             Assert.NotNull(wallet);
@@ -76,13 +87,15 @@ namespace AgentFramework.Core.Tests
         {
             var walletService = new DefaultWalletService();
             var provisioningService = new DefaultProvisioningService(
-                new DefaultWalletRecordService(), walletService);
+                new DefaultWalletRecordService(), 
+                walletService,
+                Options.Create(new AgentOptions
+                {
+                    WalletConfiguration = _config,
+                    WalletCredentials = _creds
+                }));
 
-            await provisioningService.ProvisionAgentAsync(new BasicProvisioningConfiguration
-            {
-                WalletConfiguration = _config,
-                WalletCredentials = _creds
-            });
+            await provisioningService.ProvisionAgentAsync();
 
             var wallet = await walletService.GetWalletAsync(_config, _creds);
             Assert.NotNull(wallet);

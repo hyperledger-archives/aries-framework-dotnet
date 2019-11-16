@@ -6,14 +6,14 @@ namespace AgentFramework.Core.Configuration
     /// <summary>
     /// Agent Configuration Builder
     /// </summary>
-    public class AgentFrameworkBuilder
+    public class AriesFrameworkBuilder
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentFrameworkBuilder"/> class.
+        /// Initializes a new instance of the <see cref="AriesFrameworkBuilder"/> class.
         /// </summary>
         /// <param name="services">The services.</param>
         /// <exception cref="System.ArgumentNullException">services</exception>
-        internal AgentFrameworkBuilder(IServiceCollection services)
+        internal AriesFrameworkBuilder(IServiceCollection services)
         {
             Services = services ?? throw new ArgumentNullException(nameof(services));
         }

@@ -1,33 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using AgentFramework.Core.Models.Credentials;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace AgentFramework.Core.Messages.Credentials
+namespace AgentFramework.Core.Messages
 {
     /// <summary>
-    /// Represents credential preview message
+    /// A credential content message.
     /// </summary>
-    /// <seealso cref="AgentFramework.Core.Messages.AgentMessage" />
     public class CredentialPreviewMessage : AgentMessage
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CredentialPreviewMessage"/> class.
-        /// </summary>
+        /// <inheritdoc />
         public CredentialPreviewMessage()
         {
-            Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.CredentialPreview;
+            Id = null;
+            Type = MessageTypes.IssueCredentialNames.PreviewCredential;
         }
 
         /// <summary>
-        /// Gets or sets the attributes.
+        /// Gets or sets the attributes
         /// </summary>
-        /// <value>
-        /// The attributes.
-        /// </value>
+        /// <value></value>
         [JsonProperty("attributes")]
-        public IEnumerable<CredentialPreviewAttribute> Attributes { get; set; }
+        public CredentialPreviewAttribute[] Attributes { get; set; }
     }
 }

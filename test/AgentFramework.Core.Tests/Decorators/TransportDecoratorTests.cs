@@ -13,7 +13,7 @@ namespace AgentFramework.Core.Tests.Decorators
 
             outboundMessage.AddReturnRouting();
 
-            var transportDecorator = outboundMessage.GetDecorator<TransportDecorator>(Core.Decorators.Decorators.TransportDecorator);
+            var transportDecorator = outboundMessage.GetDecorator<TransportDecorator>(Core.Decorators.DecoratorNames.TransportDecorator);
 
             Assert.NotNull(transportDecorator);
             Assert.True(transportDecorator.ReturnRoute == ReturnRouteTypes.all.ToString("G"));

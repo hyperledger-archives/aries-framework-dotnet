@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace AgentFramework.Core.Messages.Credentials.V1
+namespace AgentFramework.Core.Messages
 {
     /// <summary>
     /// A credential content message.

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Messages;
+using AgentFramework.Core.Messages.Connections;
 using AgentFramework.Core.Messages.Discovery;
 using AgentFramework.Core.Models.Connections;
 using AgentFramework.Core.Models.Credentials;
@@ -40,8 +41,7 @@ namespace AgentFramework.TestHarness
 
             (var request, var inviteeConnection) =
                 await connectionService.CreateRequestAsync(inviter.Context, invitation);
-            await messsageService.SendAsync(inviter.Context.Wallet, request,
-                inviteeConnection, invitation.RecipientKeys.First());
+            await messsageService.SendAsync(inviter.Context.Wallet, request, inviteeConnection);
 
             // Wait for connection to be established or continue after 30 sec timeout
             await slim.WaitAsync(TimeSpan.FromSeconds(30));
@@ -78,11 +78,10 @@ namespace AgentFramework.TestHarness
 
             (var request, var inviteeConnection) =
                 await connectionService.CreateRequestAsync(inviter.Context, invitation);
-            var response = await messsageService.SendAsync(inviter.Context.Wallet, request,
-                inviteeConnection, invitation.RecipientKeys.First(), true);
+            var response = await messsageService.SendReceiveAsync<ConnectionResponseMessage>(inviter.Context.Wallet, request, inviteeConnection);
 
             Assert.NotNull(response);
-            await inviter.HandleInboundAsync(response);
+            await connectionService.ProcessResponseAsync(inviter.Context, response, inviteeConnection);
 
             await slim.WaitAsync(TimeSpan.FromSeconds(30));
 
@@ -119,7 +118,7 @@ namespace AgentFramework.TestHarness
             var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(issuer.Context, schemaService,
                 issuerProv.IssuerDid, credentialAttributes.Select(_ => _.Name).ToArray());
 
-            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferV1Async(
+            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferAsync(
                 agentContext: issuer.Context,
                 config: new OfferConfiguration
                 {
@@ -235,15 +234,19 @@ namespace AgentFramework.TestHarness
 
             //Ask for all protocols
             var msg = discoveryService.CreateQuery(requestor.Context, "*");
-            var rsp = await messageService.SendAsync(requestor.Context.Wallet, msg, requestorConnection, null, true);
+            var rsp = await messageService.SendReceiveAsync(requestor.Context.Wallet, msg, requestorConnection);
 
             Assert.NotNull(rsp);
 
-            var discoveryMsg = rsp.GetMessage<DiscoveryDiscloseMessage>();
+            if (rsp is UnpackedMessageContext messageContext)
+            {
+                var discoveryMsg = messageContext.GetMessage<DiscoveryDiscloseMessage>();
 
-            Assert.NotNull(discoveryMsg);
+                Assert.NotNull(discoveryMsg);
 
-            return discoveryMsg;
+                return discoveryMsg;
+            }
+            throw new InvalidOperationException("The response was not of the expected type");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace AgentFramework.TestHarness
         protected virtual string GetIssuerSeed() => null;
         public async Task DisposeAsync()
         {
-            var walletOptions = Host.Services.GetService<IOptions<WalletOptions>>().Value;
+            var walletOptions = Host.Services.GetService<IOptions<AgentOptions>>().Value;
             await Host.StopAsync();
 
             await Context.Wallet.CloseAsync();
@@ -56,15 +56,15 @@ namespace AgentFramework.TestHarness
                 {
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
-                    services.AddAgentFramework(builder => builder
-                        .AddIssuerAgent(config =>
+                    services.AddAriesFramework(builder => builder
+                        .RegisterAgent(options =>
                         {
-                            config.EndpointUri = new Uri("http://test");
-                            config.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
-                            config.WalletCredentials = new WalletCredentials { Key = "test" };
-                            config.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
-                            config.PoolName = GetPoolName();
-                            config.IssuerSeed = GetIssuerSeed();
+                            options.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
+                            options.WalletCredentials = new WalletCredentials { Key = "test" };
+                            options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
+                            options.PoolName = GetPoolName();
+                            options.EndpointUri = "http://test";
+                            options.IssuerKeySeed = GetIssuerSeed();
                         })
                         .AddSovrinToken());
                 })
@@ -98,7 +98,7 @@ namespace AgentFramework.TestHarness
         protected async Task PromoteTrustAnchor(string did, string verkey)
         {
             await Ledger.SignAndSubmitRequestAsync(await Context.Pool, Context.Wallet, Trustee.Did,
-                await Ledger.BuildNymRequestAsync(Trustee.Did, did, verkey, null, "TRUST_ANCHOR"));
+                await Ledger.BuildNymRequestAsync(Trustee.Did, did, verkey, null, "ENDORSER"));
         }
 
         protected async Task PromoteTrustAnchor()
@@ -108,7 +108,7 @@ namespace AgentFramework.TestHarness
                 throw new AgentFrameworkException(ErrorCode.InvalidRecordData, "Agent not set up as issuer");
 
             await Ledger.SignAndSubmitRequestAsync(await Context.Pool, Context.Wallet, Trustee.Did,
-                await Ledger.BuildNymRequestAsync(Trustee.Did, record.IssuerDid, record.IssuerVerkey, null, "TRUST_ANCHOR"));
+                await Ledger.BuildNymRequestAsync(Trustee.Did, record.IssuerDid, record.IssuerVerkey, null, "ENDORSER"));
         }
 
         protected async Task<string> TrusteeMultiSignAndSubmitRequestAsync(string request)

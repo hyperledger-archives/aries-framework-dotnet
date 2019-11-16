@@ -33,8 +33,8 @@ namespace AgentFramework.TestHarness.Mock
         public IMessageService Messages => Host.Services.GetService<IMessageService>();
         public IPaymentService Payments => Host.Services.GetService<IPaymentService>();
 
-        internal Task<MessageResponse> HandleAsync(byte[] data) => 
-            ProcessAsync(Context, new MessageContext(data, true));
+        internal Task<MessageContext> HandleAsync(byte[] data) => 
+            ProcessAsync(Context, new PackedMessageContext(data));
 
         /// <inheritdoc />
         protected override void ConfigureHandlers()
@@ -83,7 +83,13 @@ namespace AgentFramework.TestHarness.Mock
             var (invitation, agent1Connection) = await agent1.Provider.GetService<IConnectionService>().CreateInvitationAsync(agent1.Context, new InviteConfiguration { AutoAcceptConnection = true });
 
             var (request, agent2Connection) = await agent2.Provider.GetService<IConnectionService>().CreateRequestAsync(agent2.Context, invitation);
-            _ = await agent2.Provider.GetService<IMessageService>().SendAsync(agent2.Context.Wallet, request, agent2Connection, invitation.RecipientKeys.First());
+            await agent2.Provider.GetService<IMessageService>().SendAsync(
+                wallet: agent2.Context.Wallet,
+                message: request,
+                recipientKey: invitation.RecipientKeys.First(),
+                endpointUri: agent2Connection.Endpoint.Uri,
+                routingKeys: new [] { agent2Connection.Endpoint.Verkey },
+                senderKey: agent2Connection.MyVk);
 
             agent1Connection = await agent1.Provider.GetService<IWalletRecordService>().GetAsync<ConnectionRecord>(agent1.Context.Wallet, agent1Connection.Id);
             agent2Connection = await agent2.Provider.GetService<IWalletRecordService>().GetAsync<ConnectionRecord>(agent2.Context.Wallet, agent2Connection.Id);
@@ -97,16 +103,16 @@ namespace AgentFramework.TestHarness.Mock
                 {
                     services.Configure<ConsoleLifetimeOptions>(options =>
                         options.SuppressStatusMessages = true);
-                    services.AddAgentFramework(builder =>
-                        builder.AddIssuerAgent(config =>
-                            {
-                                config.EndpointUri = new Uri("http://test");
-                                config.WalletConfiguration = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
-                                config.WalletCredentials = new WalletCredentials { Key = "test" };
-                                config.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
-                                config.PoolName = "TestPool";
-                            })
-                            .AddSovrinToken());
+                    services.AddAriesFramework(builder => builder
+                        .RegisterAgent(options =>
+                        {
+                            options.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
+                            options.PoolName = "TestPool";
+                            options.WalletConfiguration.Id = Guid.NewGuid().ToString();
+                            options.WalletCredentials.Key = "test";
+                            options.EndpointUri = "http://test";
+                        })
+                        .AddSovrinToken());
                     services.AddSingleton<IHttpClientFactory>(new InProcFactory(handler));
                 }).Build());
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Extensions;
 using AgentFramework.Core.Handlers.Agents;
@@ -16,12 +17,12 @@ namespace AgentFramework.Core.Handlers.Internal
             _connectionService = connectionService;
         }
 
-        protected override async Task<AgentMessage> ProcessAsync(ForwardMessage message, IAgentContext agentContext, MessageContext messageContext)
+        protected override async Task<AgentMessage> ProcessAsync(ForwardMessage message, IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             var connectionRecord = await _connectionService.ResolveByMyKeyAsync(agentContext, message.To);
 
             if (agentContext is AgentContext context) 
-                context.AddNext(new MessageContext(message.Message, true, connectionRecord));
+                context.AddNext(new PackedMessageContext(message.Message, connectionRecord));
 
             return null;
         }

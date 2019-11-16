@@ -13,9 +13,10 @@ namespace AgentFramework.Core.Handlers
     {
         /// <summary>Wraps the message in payload.</summary>
         /// <param name="agentMessage">The agent message.</param>
+        /// <param name="senderKey"></param>
         /// <returns></returns>
-        public static MessageContext AsMessageContext(this AgentMessage agentMessage) =>
-            new MessageContext(agentMessage);
+        public static UnpackedMessageContext AsMessageContext(this AgentMessage agentMessage, string senderKey) =>
+            new UnpackedMessageContext(agentMessage, senderKey);
 
         /// <summary>Adds the default message handlers.</summary>
         /// <param name="collection">The collection.</param>

@@ -101,8 +101,9 @@ namespace AgentFramework.Core.Extensions
                 SearchQuery.Equal(TagConstants.ConnectionKey, myKey), 5))
                 .SingleOrDefault();
 
-            if (record == null)
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, $"Connection Record not found for key {myKey}");
+            // Connection can be null if protocol uses connectionless transport
+            //if (record == null)
+            //    throw new AgentFrameworkException(ErrorCode.RecordNotFound, $"Connection Record not found for key {myKey}");
 
             return record;
         }

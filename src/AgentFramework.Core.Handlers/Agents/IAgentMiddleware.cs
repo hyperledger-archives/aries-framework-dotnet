@@ -15,6 +15,6 @@ namespace AgentFramework.Core.Handlers.Agents
         /// <param name="agentContext">The agent context.</param>
         /// <param name="messageContext">The message context.</param>
         /// <returns></returns>
-        Task OnMessageAsync(IAgentContext agentContext, MessageContext messageContext);
+        Task OnMessageAsync(IAgentContext agentContext, UnpackedMessageContext messageContext);
     }
 }

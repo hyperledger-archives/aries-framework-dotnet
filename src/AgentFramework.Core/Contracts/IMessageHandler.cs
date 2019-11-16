@@ -24,6 +24,6 @@ namespace AgentFramework.Core.Handlers
         /// <param name="agentContext">The agent context.</param>
         /// <param name="messageContext">The agent message context.</param>
         /// <returns>Outgoing message context async.</returns>
-        Task<AgentMessage> ProcessAsync(IAgentContext agentContext, MessageContext messageContext);
+        Task<AgentMessage> ProcessAsync(IAgentContext agentContext, UnpackedMessageContext messageContext);
     }
 }

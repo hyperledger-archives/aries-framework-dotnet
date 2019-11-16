@@ -9,8 +9,7 @@ namespace AgentFramework.Core.Handlers.Agents
     /// <inheritdoc />
     public class DefaultAgentProvider : IAgentProvider
     {
-        private readonly WalletOptions _walletOptions;
-        private readonly PoolOptions _poolOptions;
+        private readonly AgentOptions _agentOptions;
         private readonly IAgent _defaultAgent;
         private readonly IWalletService _walletService;
         private readonly IPoolService _poolService;
@@ -18,20 +17,17 @@ namespace AgentFramework.Core.Handlers.Agents
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultAgentProvider"/> class.
         /// </summary>
-        /// <param name="walletOptions">Wallet options.</param>
-        /// <param name="poolOptions">Pool options.</param>
+        /// <param name="agentOptions"></param>
         /// <param name="defaultAgent">Default agent.</param>
         /// <param name="walletService">Wallet service.</param>
         /// <param name="poolService">Pool service.</param>
         public DefaultAgentProvider(
-            IOptions<WalletOptions> walletOptions,
-            IOptions<PoolOptions> poolOptions,
+            IOptions<AgentOptions> agentOptions,
             IAgent defaultAgent,
             IWalletService walletService,
             IPoolService poolService)
         {
-            _walletOptions = walletOptions.Value;
-            _poolOptions = poolOptions.Value;
+            _agentOptions = agentOptions.Value;
             _defaultAgent = defaultAgent;
             _walletService = walletService;
             _poolService = poolService;
@@ -50,11 +46,11 @@ namespace AgentFramework.Core.Handlers.Agents
             return new DefaultAgentContext
             {
                 Wallet = await _walletService.GetWalletAsync(
-                    configuration: _walletOptions.WalletConfiguration,
-                    credentials: _walletOptions.WalletCredentials),
+                    configuration: _agentOptions.WalletConfiguration,
+                    credentials: _agentOptions.WalletCredentials),
                 Pool = new PoolAwaitable(() => _poolService.GetPoolAsync(
-                    poolName: _poolOptions.PoolName,
-                    protocolVersion: _poolOptions.ProtocolVersion)),
+                    poolName: _agentOptions.PoolName,
+                    protocolVersion: _agentOptions.ProtocolVersion)),
                 SupportedMessages = agent.GetSupportedMessageTypes()
             };
         }

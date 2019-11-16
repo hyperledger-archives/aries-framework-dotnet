@@ -3,21 +3,26 @@
     /// <summary>
     /// Decleration of attachment identifiers.
     /// </summary>
-    public static class Decorators
+    public static class DecoratorNames
     {
         /// <summary>
         /// Transport decorator.
         /// </summary>
-        public static string TransportDecorator => "transport";
+        public const string TransportDecorator = "transport";
 
         /// <summary>
         /// Threading decorator.
         /// </summary>
-        public static string ThreadingDecorator => "thread";
+        public const string ThreadingDecorator = "thread";
 
         /// <summary>
         /// Attachement decorator.
         /// </summary>
-        public static string AttachementDecorator => "attachement";
+        public const string AttachementDecorator = "attachement";
+
+        /// <summary>
+        /// Service Decorator
+        /// </summary>
+        public const string ServiceDecorator = "service";
     }
 }
