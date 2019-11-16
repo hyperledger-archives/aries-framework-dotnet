@@ -54,8 +54,8 @@ namespace AgentFramework.Core.Tests.Protocols
 
             var routingMock = new Mock<IMessageService>();
             routingMock.Setup(x =>
-                    x.SendAsync(It.IsAny<Wallet>(), It.IsAny<AgentMessage>(), It.IsAny<ConnectionRecord>(), It.IsAny<string>(), It.IsAny<bool>()))
-                .Callback((Wallet _, AgentMessage content, ConnectionRecord __, string ___, bool ____) =>
+                    x.SendAsync(It.IsAny<Wallet>(), It.IsAny<AgentMessage>(), It.IsAny<ConnectionRecord>()))
+                .Callback((Wallet wallet, AgentMessage content, ConnectionRecord record) =>
                 {
                     if (_routeMessage)
                         _messages.Add(content);

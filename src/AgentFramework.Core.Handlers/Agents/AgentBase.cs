@@ -149,8 +149,8 @@ namespace AgentFramework.Core.Handlers.Agents
                     if (inboundMessageContext.ReturnRoutingRequested())
                     {
                         var result = inboundMessageContext.Connection != null
-                            ? await MessageService.PrepareAsync(agentContext.Wallet, response, inboundMessageContext.Connection, null, false)
-                            : await MessageService.PrepareAsync(agentContext.Wallet, response, unpacked.SenderVerkey);
+                            ? await CryptoUtils.PackAsync(agentContext.Wallet, inboundMessageContext.Connection.TheirVk, response.ToByteArray())
+                            : await CryptoUtils.PackAsync(agentContext.Wallet, unpacked.SenderVerkey, response.ToByteArray());
                         return new PackedMessageContext(result);
                     }
                     await MessageService.SendAsync(agentContext.Wallet, response, inboundMessageContext.Connection);

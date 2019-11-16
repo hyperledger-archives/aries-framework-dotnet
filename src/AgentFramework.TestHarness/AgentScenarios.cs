@@ -40,8 +40,7 @@ namespace AgentFramework.TestHarness
 
             (var request, var inviteeConnection) =
                 await connectionService.CreateRequestAsync(inviter.Context, invitation);
-            await messsageService.SendAsync(inviter.Context.Wallet, request,
-                inviteeConnection, invitation.RecipientKeys.First());
+            await messsageService.SendAsync(inviter.Context.Wallet, request, inviteeConnection);
 
             // Wait for connection to be established or continue after 30 sec timeout
             await slim.WaitAsync(TimeSpan.FromSeconds(30));
@@ -78,8 +77,7 @@ namespace AgentFramework.TestHarness
 
             (var request, var inviteeConnection) =
                 await connectionService.CreateRequestAsync(inviter.Context, invitation);
-            var response = await messsageService.SendAsync(inviter.Context.Wallet, request,
-                inviteeConnection, invitation.RecipientKeys.First(), true);
+            var response = await messsageService.SendReceiveAsync(inviter.Context.Wallet, request, inviteeConnection);
 
             Assert.NotNull(response);
             await inviter.HandleInboundAsync(response);
@@ -235,7 +233,7 @@ namespace AgentFramework.TestHarness
 
             //Ask for all protocols
             var msg = discoveryService.CreateQuery(requestor.Context, "*");
-            var rsp = await messageService.SendAsync(requestor.Context.Wallet, msg, requestorConnection, null, true);
+            var rsp = await messageService.SendReceiveAsync(requestor.Context.Wallet, msg, requestorConnection);
 
             Assert.NotNull(rsp);
 

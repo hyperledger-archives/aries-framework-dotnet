@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AgentFramework.Core.Contracts;
 using AgentFramework.Core.Decorators;
@@ -139,6 +140,7 @@ namespace AgentFramework.Core.Runtime
                 MyVk = my.VerKey,
                 Id = Guid.NewGuid().ToString().ToLowerInvariant()
             };
+            connection.SetTag("InvitationKey", invitation.RecipientKeys.First());
 
             if (!string.IsNullOrEmpty(invitation.Label) || !string.IsNullOrEmpty(invitation.ImageUrl))
             {
@@ -157,7 +159,11 @@ namespace AgentFramework.Core.Runtime
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
             var request = new ConnectionRequestMessage
             {
-                Connection = new Connection {Did = connection.MyDid, DidDoc = connection.MyDidDoc(provisioning)},
+                Connection = new Connection
+                    {
+                        Did = connection.MyDid, 
+                        DidDoc = connection.MyDidDoc(provisioning)
+                    },
                 Label = provisioning.Owner?.Name,
                 ImageUrl = provisioning.Owner?.ImageUrl
             };
@@ -174,8 +180,7 @@ namespace AgentFramework.Core.Runtime
             
             await RecordService.AddAsync(agentContext.Wallet, connection);
 
-            return (request,
-                    connection);
+            return (request, connection);
         }
 
         /// <inheritdoc />

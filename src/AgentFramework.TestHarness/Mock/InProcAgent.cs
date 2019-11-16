@@ -83,7 +83,13 @@ namespace AgentFramework.TestHarness.Mock
             var (invitation, agent1Connection) = await agent1.Provider.GetService<IConnectionService>().CreateInvitationAsync(agent1.Context, new InviteConfiguration { AutoAcceptConnection = true });
 
             var (request, agent2Connection) = await agent2.Provider.GetService<IConnectionService>().CreateRequestAsync(agent2.Context, invitation);
-            _ = await agent2.Provider.GetService<IMessageService>().SendAsync(agent2.Context.Wallet, request, agent2Connection, invitation.RecipientKeys.First());
+            await agent2.Provider.GetService<IMessageService>().SendAsync(
+                wallet: agent2.Context.Wallet,
+                message: request,
+                recipientKey: invitation.RecipientKeys.First(),
+                endpointUri: agent2Connection.Endpoint.Uri,
+                routingKeys: new [] { agent2Connection.Endpoint.Verkey },
+                senderKey: agent2Connection.MyVk);
 
             agent1Connection = await agent1.Provider.GetService<IWalletRecordService>().GetAsync<ConnectionRecord>(agent1.Context.Wallet, agent1Connection.Id);
             agent2Connection = await agent2.Provider.GetService<IWalletRecordService>().GetAsync<ConnectionRecord>(agent2.Context.Wallet, agent2Connection.Id);

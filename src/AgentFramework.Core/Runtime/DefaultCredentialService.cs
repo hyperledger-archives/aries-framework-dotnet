@@ -275,14 +275,13 @@ namespace AgentFramework.Core.Runtime
             //request.AddDecorator(provisioning.ToServiceDecorator(), DecoratorNames.ServiceDecorator);
             //request.AddReturnRouting();
 
-            var response = await MessageService.SendAsync(
+            var response = await MessageService.SendReceiveAsync(
                 wallet: agentContext.Wallet,
                 message: request,
                 recipientKey: service.RecipientKeys.First(),
                 endpointUri: service.ServiceEndpoint,
                 routingKeys: service.RoutingKeys.ToArray(),
-                senderKey: provisioning.Endpoint.Verkey,
-                requestResponse: true);
+                senderKey: provisioning.Endpoint.Verkey);
 
             if (response is PackedMessageContext responseContext)
             {

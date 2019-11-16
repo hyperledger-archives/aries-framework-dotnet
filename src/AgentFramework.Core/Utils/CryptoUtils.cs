@@ -1,7 +1,12 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using AgentFramework.Core.Exceptions;
 using AgentFramework.Core.Extensions;
+using AgentFramework.Core.Messages;
+using AgentFramework.Core.Messages.Routing;
+using AgentFramework.Core.Models.Records;
 using Hyperledger.Indy.CryptoApi;
 using Hyperledger.Indy.WalletApi;
 using Newtonsoft.Json;
@@ -94,6 +99,61 @@ namespace AgentFramework.Core.Utils
                 result.Append(chars[b % (chars.Length)]);
             }
             return result.ToString();
+        }
+
+
+        /// <summary>
+        /// Prepares a wire level message from the application level agent message asynchronously 
+        /// this includes packing the message and wrapping it in required forward messages
+        /// if the message requires it.
+        /// </summary>
+        /// <param name="wallet">The wallet.</param>
+        /// <param name="message">The message context.</param>
+        /// <param name="recipientKey">The key to encrypt the message for.</param>
+        /// <param name="routingKeys">The routing keys to pack the message for.</param>
+        /// <param name="senderKey">The sender key to encrypt the message from.</param>
+        /// <returns>The response async.</returns>
+        public static async Task<byte[]> PrepareAsync(Wallet wallet, AgentMessage message, string recipientKey, string[] routingKeys = null, string senderKey = null)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (recipientKey == null) throw new ArgumentNullException(nameof(recipientKey));
+
+            // Pack application level message
+            var msg = await CryptoUtils.PackAsync(wallet, recipientKey, message.ToByteArray(), senderKey);
+
+            var previousKey = recipientKey;
+
+            if (routingKeys != null)
+            {
+                // TODO: In case of multiple key, should they each wrap a forward message
+                // or pass all keys to the PackAsync function as array?
+                foreach (var routingKey in routingKeys)
+                {
+                    // Anonpack
+                    msg = await CryptoUtils.PackAsync(wallet, routingKey, new ForwardMessage { Message = msg.GetUTF8String(), To = previousKey });
+                    previousKey = routingKey;
+                }
+            }
+
+            return msg;
+        }
+
+        /// <summary>
+        /// Prepares a wire level message from the application level agent message for a connection asynchronously 
+        /// this includes packing the message and wrapping it in required forward messages
+        /// if the message requires it.
+        /// </summary>
+        /// <param name="wallet">The wallet.</param>
+        /// <param name="message">The message context.</param>
+        /// <param name="connection">The connection to prepare the message for.</param>
+        /// <returns>The response async.</returns>
+        public static Task<byte[]> PrepareAsync(Wallet wallet, AgentMessage message, ConnectionRecord connection)
+        {
+            var recipientKey = connection.TheirVk
+                ?? throw new AgentFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot find encryption key");
+
+            var routingKeys = connection.Endpoint?.Verkey != null ? new[] { connection.Endpoint.Verkey } : new string[0];
+            return PrepareAsync(wallet, message, recipientKey, routingKeys, connection.MyVk);
         }
     }
 

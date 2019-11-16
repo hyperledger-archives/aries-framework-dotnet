@@ -9,6 +9,8 @@ using AgentFramework.Core.Models.Payments;
 using AgentFramework.Core.Decorators.Payments;
 using System.Collections.Generic;
 using AgentFramework.Core.Models.Records.Search;
+using AgentFramework.Core.Contracts;
+using System;
 
 namespace AgentFramework.Core.Tests.Payments
 {
@@ -67,7 +69,7 @@ namespace AgentFramework.Core.Tests.Payments
             Assert.NotNull(decorator);
 
             // Send the message to agent 2
-            _ = await agents.Agent1.Messages.SendAsync(agents.Agent1.Context.Wallet, basicMessage, agents.Connection1);
+            await agents.Agent1.Messages.SendAsync(agents.Agent1.Context.Wallet, basicMessage, agents.Connection1);
 
             // Find the payment record in the context of agent 2
             var search = await agents.Agent2.Records.SearchAsync<PaymentRecord>(
