@@ -275,7 +275,7 @@ namespace AgentFramework.Core.Runtime
             //request.AddDecorator(provisioning.ToServiceDecorator(), DecoratorNames.ServiceDecorator);
             //request.AddReturnRouting();
 
-            var response = await MessageService.SendReceiveAsync(
+            var credentialIssueMessage = await MessageService.SendReceiveAsync<CredentialIssueMessage>(
                 wallet: agentContext.Wallet,
                 message: request,
                 recipientKey: service.RecipientKeys.First(),
@@ -283,16 +283,8 @@ namespace AgentFramework.Core.Runtime
                 routingKeys: service.RoutingKeys.ToArray(),
                 senderKey: provisioning.Endpoint.Verkey);
 
-            if (response is PackedMessageContext responseContext)
-            {
-                var unpacked = await CryptoUtils.UnpackAsync(agentContext.Wallet, responseContext.Payload);
-                var unpackedContext = new UnpackedMessageContext(unpacked.Message, provisioning.Endpoint.Verkey);
-                var credentialIssueMessage = unpackedContext.GetMessage<CredentialIssueMessage>();
-                var recordId = await ProcessCredentialAsync(agentContext, credentialIssueMessage, null);
-
-                return await RecordService.GetAsync<CredentialRecord>(agentContext.Wallet, recordId);
-            }
-            throw new ArgumentNullException(nameof(response), "The received response did not contain credential data");
+            var recordId = await ProcessCredentialAsync(agentContext, credentialIssueMessage, null);
+            return await RecordService.GetAsync<CredentialRecord>(agentContext.Wallet, recordId);
         }
 
         /// <inheritdoc />

@@ -130,7 +130,7 @@ namespace AgentFramework.Core.Tests.Protocols
                 new[] {"test-attr"});
 
             var (msg, credentialRecord) = await _credentialService.CreateOfferAsync(_issuerWallet,
-                new OfferConfiguration { CredentialDefinitionId = result.Item1 });
+                new OfferConfiguration { CredentialDefinitionId = result.Item1 }, null);
 
             Assert.Equal(CredentialState.Offered, credentialRecord.State);
             Assert.NotNull(msg);
