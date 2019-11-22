@@ -19,18 +19,25 @@ steps:
   inputs:
     packageType: 'sdk'
     useGlobalJson: true
-- script: dotnet restore
-  displayName: 'dotnet restore'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: '**/*.sln'
+    feedsToUse: 'config'
+    nugetConfigPath: 'nuget.config'
+
 - task: projectversionasvariable@1
   inputs:
     path: 'Directory.Build.props'
+    
 - task: MSBuild@1
   inputs:
-    solution: 'AgentFramework.sln'
+    solution: 'src/Hyperledger.Aries.sln'
     msbuildArguments: '/t:pack /p:Version=$(Version.MajorMinorPatch)-preview.$(Build.BuildId) /p:Configuration=Release /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/pre'
 - task: MSBuild@1
   inputs:
-    solution: 'AgentFramework.sln'
+    solution: 'src/Hyperledger.Aries.sln'
     msbuildArguments: '/t:pack /p:Version=$(Version.MajorMinorPatch) /p:Configuration=Release /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/release'
 - task: PublishPipelineArtifact@0
   inputs:

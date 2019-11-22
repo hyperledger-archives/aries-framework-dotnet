@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <Description>A Test Harness for testing AgentFramework</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.10.1" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
+    <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
+    <ProjectReference Include="..\Hyperledger.Aries.Payments.SovrinToken\Hyperledger.Aries.Payments.SovrinToken.csproj" />
+  </ItemGroup>
+
+</Project>
