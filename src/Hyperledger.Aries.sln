@@ -1,0 +1,83 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02ADBA96-A50C-44F0-A9D9-FA0629AA2DF4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{73FF6DBD-5847-4F2D-94BE-196AE9A80228}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.Tests", "..\test\Hyperledger.Aries.Tests\Hyperledger.Aries.Tests.csproj", "{A930D0EF-8D15-447B-B8BC-32D29F06CF18}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries", "Hyperledger.Aries\Hyperledger.Aries.csproj", "{CC5370E0-290A-424B-8AB1-E022AC303479}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.TestHarness", "Hyperledger.Aries.TestHarness\Hyperledger.Aries.TestHarness.csproj", "{F758A7A6-F048-4B68-AA6A-35851F3048AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.AspNetCore", "Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj", "{8E275FAC-8513-4027-A271-6EDD8404E800}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Payments.SovrinToken", "Hyperledger.Aries.Payments.SovrinToken\Hyperledger.Aries.Payments.SovrinToken.csproj", "{78AACB12-E8C1-4B09-A547-DE60AA74D4CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Routing", "Routing", "{50CA144B-F3EE-4FFC-B07C-C0E5959DAA82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Routing", "Routing\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj", "{B0011A32-1E84-49F8-8DE9-4A985D308463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeConsoleClient", "Routing\EdgeConsoleClient\EdgeConsoleClient.csproj", "{988A79D2-FDF3-4B22-A116-1826BEADDAB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatorAgentService", "Routing\MediatorAgentService\MediatorAgentService.csproj", "{66622057-7649-4F8C-BB23-426C277D335F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A930D0EF-8D15-447B-B8BC-32D29F06CF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A930D0EF-8D15-447B-B8BC-32D29F06CF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A930D0EF-8D15-447B-B8BC-32D29F06CF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A930D0EF-8D15-447B-B8BC-32D29F06CF18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC5370E0-290A-424B-8AB1-E022AC303479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5370E0-290A-424B-8AB1-E022AC303479}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5370E0-290A-424B-8AB1-E022AC303479}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5370E0-290A-424B-8AB1-E022AC303479}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F758A7A6-F048-4B68-AA6A-35851F3048AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F758A7A6-F048-4B68-AA6A-35851F3048AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F758A7A6-F048-4B68-AA6A-35851F3048AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F758A7A6-F048-4B68-AA6A-35851F3048AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E275FAC-8513-4027-A271-6EDD8404E800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E275FAC-8513-4027-A271-6EDD8404E800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E275FAC-8513-4027-A271-6EDD8404E800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E275FAC-8513-4027-A271-6EDD8404E800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78AACB12-E8C1-4B09-A547-DE60AA74D4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78AACB12-E8C1-4B09-A547-DE60AA74D4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78AACB12-E8C1-4B09-A547-DE60AA74D4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78AACB12-E8C1-4B09-A547-DE60AA74D4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0011A32-1E84-49F8-8DE9-4A985D308463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0011A32-1E84-49F8-8DE9-4A985D308463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0011A32-1E84-49F8-8DE9-4A985D308463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0011A32-1E84-49F8-8DE9-4A985D308463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{988A79D2-FDF3-4B22-A116-1826BEADDAB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{988A79D2-FDF3-4B22-A116-1826BEADDAB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{988A79D2-FDF3-4B22-A116-1826BEADDAB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{988A79D2-FDF3-4B22-A116-1826BEADDAB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66622057-7649-4F8C-BB23-426C277D335F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66622057-7649-4F8C-BB23-426C277D335F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66622057-7649-4F8C-BB23-426C277D335F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66622057-7649-4F8C-BB23-426C277D335F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A930D0EF-8D15-447B-B8BC-32D29F06CF18} = {02ADBA96-A50C-44F0-A9D9-FA0629AA2DF4}
+		{CC5370E0-290A-424B-8AB1-E022AC303479} = {73FF6DBD-5847-4F2D-94BE-196AE9A80228}
+		{F758A7A6-F048-4B68-AA6A-35851F3048AE} = {02ADBA96-A50C-44F0-A9D9-FA0629AA2DF4}
+		{8E275FAC-8513-4027-A271-6EDD8404E800} = {73FF6DBD-5847-4F2D-94BE-196AE9A80228}
+		{78AACB12-E8C1-4B09-A547-DE60AA74D4CF} = {73FF6DBD-5847-4F2D-94BE-196AE9A80228}
+		{B0011A32-1E84-49F8-8DE9-4A985D308463} = {50CA144B-F3EE-4FFC-B07C-C0E5959DAA82}
+		{988A79D2-FDF3-4B22-A116-1826BEADDAB9} = {50CA144B-F3EE-4FFC-B07C-C0E5959DAA82}
+		{66622057-7649-4F8C-BB23-426C277D335F} = {50CA144B-F3EE-4FFC-B07C-C0E5959DAA82}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4FFA80F9-ADC6-40DB-BBD1-A522B8A68560}
+	EndGlobalSection
+EndGlobal
