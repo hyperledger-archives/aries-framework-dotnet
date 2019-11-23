@@ -27,6 +27,10 @@ namespace Hyperledger.Aries.Configuration
             {
                 // OK
             }
+            catch(WalletStorageException)
+            {
+                // OK
+            }
         }
 
         /// <inheritdoc />
