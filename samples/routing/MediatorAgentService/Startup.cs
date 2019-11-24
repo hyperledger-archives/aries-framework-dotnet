@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -20,9 +21,20 @@ namespace MediatorAgentService
             {
                 builder.RegisterMediatorAgent(options =>
                 {
+                    #region Required configuration parameters
+
+                    // Agent endpoint. Use fully qualified endpoint.
                     options.EndpointUri = "http://localhost:5000/";
-                    options.WalletConfiguration.Id = "MediatorAgentWallet";
-                    options.WalletCredentials.Key = "MediatorAgentWallet";
+                    // The path to the genesis transaction file.
+                    options.GenesisFilename = Path.GetFullPath("genesis_txn");
+                    #endregion
+
+                    #region Optional configuration parameters
+                    // The identifier of the wallet
+                    options.WalletConfiguration.Id = "MyAgentWallet";
+                    // Secret key used to open the wallet.
+                    options.WalletCredentials.Key = "MySecretKey";
+                    #endregion
                 });
             });
         }

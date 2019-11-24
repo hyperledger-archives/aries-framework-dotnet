@@ -1,0 +1,48 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edge.Console", "EdgeConsoleClient\Edge.Console.csproj", "{2CE5A640-AA4E-47EA-906A-6B34A934B091}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mediator.Web", "MediatorAgentService\Mediator.Web.csproj", "{D56991C9-7B99-493C-886F-AEC5F05182BA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{56212526-0CA6-4EC7-A69E-E7EA30C803B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries", "..\..\src\Hyperledger.Aries\Hyperledger.Aries.csproj", "{6CEF34D6-F135-4080-B9FD-BF56DFB2AC4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.AspNetCore", "..\..\src\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj", "{74E87D53-EA07-4145-87DA-EB26D8060972}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Routing", "..\..\src\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj", "{060CA404-A07B-4EEE-9932-F49DA194AA24}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2CE5A640-AA4E-47EA-906A-6B34A934B091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CE5A640-AA4E-47EA-906A-6B34A934B091}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CE5A640-AA4E-47EA-906A-6B34A934B091}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CE5A640-AA4E-47EA-906A-6B34A934B091}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D56991C9-7B99-493C-886F-AEC5F05182BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D56991C9-7B99-493C-886F-AEC5F05182BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D56991C9-7B99-493C-886F-AEC5F05182BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D56991C9-7B99-493C-886F-AEC5F05182BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CEF34D6-F135-4080-B9FD-BF56DFB2AC4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CEF34D6-F135-4080-B9FD-BF56DFB2AC4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CEF34D6-F135-4080-B9FD-BF56DFB2AC4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CEF34D6-F135-4080-B9FD-BF56DFB2AC4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74E87D53-EA07-4145-87DA-EB26D8060972}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74E87D53-EA07-4145-87DA-EB26D8060972}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74E87D53-EA07-4145-87DA-EB26D8060972}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74E87D53-EA07-4145-87DA-EB26D8060972}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060CA404-A07B-4EEE-9932-F49DA194AA24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060CA404-A07B-4EEE-9932-F49DA194AA24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060CA404-A07B-4EEE-9932-F49DA194AA24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060CA404-A07B-4EEE-9932-F49DA194AA24}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6CEF34D6-F135-4080-B9FD-BF56DFB2AC4D} = {56212526-0CA6-4EC7-A69E-E7EA30C803B9}
+		{74E87D53-EA07-4145-87DA-EB26D8060972} = {56212526-0CA6-4EC7-A69E-E7EA30C803B9}
+		{060CA404-A07B-4EEE-9932-F49DA194AA24} = {56212526-0CA6-4EC7-A69E-E7EA30C803B9}
+	EndGlobalSection
+EndGlobal

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 namespace Hyperledger.Aries.AspNetCore
 {
     /// <summary>
-    /// A middleware that serves tails data for revocation registries
+///     /// A middleware that serves tails data for revocation registries
     /// </summary>
     public class TailsMiddleware
     {
