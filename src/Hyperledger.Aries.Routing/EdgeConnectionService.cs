@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Hyperledger.Aries.Routing
 {
-    public class EdgeConnectionService : DefaultConnectionService
+    internal class EdgeConnectionService : DefaultConnectionService
     {
         private readonly IEdgeClientService edgeClientService;
 

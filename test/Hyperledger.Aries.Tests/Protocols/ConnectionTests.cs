@@ -94,7 +94,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                 provisioningService,
                 new Mock<ILogger<DefaultConnectionService>>().Object);
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await connectionService.CreateInvitationAsync(_issuerWallet,
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await connectionService.CreateInvitationAsync(_issuerWallet,
                 new InviteConfiguration()));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
@@ -146,7 +146,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task AcceptRequestThrowsExceptionConnectionNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _connectionService.CreateResponseAsync(_issuerWallet, "bad-connection-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _connectionService.CreateResponseAsync(_issuerWallet, "bad-connection-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -177,7 +177,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             await _connectionService.CreateResponseAsync(_issuerWallet, connectionId);
 
             //Now try and accept it again
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _connectionService.CreateResponseAsync(_issuerWallet, connectionId));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _connectionService.CreateResponseAsync(_issuerWallet, connectionId));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
@@ -185,7 +185,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task RevokeInvitationThrowsConnectionNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _connectionService.RevokeInvitationAsync(_issuerWallet, "bad-connection-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _connectionService.RevokeInvitationAsync(_issuerWallet, "bad-connection-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -216,7 +216,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             await _connectionService.CreateResponseAsync(_issuerWallet, connectionId);
 
             //Now try and revoke invitation
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _connectionService.RevokeInvitationAsync(_issuerWallet, connectionId));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _connectionService.RevokeInvitationAsync(_issuerWallet, connectionId));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
@@ -237,7 +237,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             await _connectionService.RevokeInvitationAsync(_issuerWallet, connectionId);
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _connectionService.CreateResponseAsync(_issuerWallet, connectionId));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _connectionService.CreateResponseAsync(_issuerWallet, connectionId));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 

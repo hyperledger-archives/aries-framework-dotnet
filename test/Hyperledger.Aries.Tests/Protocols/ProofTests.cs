@@ -151,7 +151,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task SendProofRequestThrowsConnectionNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
             {
                 Name = "Test",
                 Nonce = await AnonCreds.GenerateNonceAsync()
@@ -168,7 +168,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             await _connectionService.CreateInvitationAsync(_issuerWallet,
                 new InviteConfiguration { ConnectionId = connectionId });
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
             {
                 Name = "Test",
                 Nonce = await AnonCreds.GenerateNonceAsync()
@@ -180,7 +180,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task CreateProofRequestConnectionNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
             {
                 Name = "Test",
                 Nonce = await AnonCreds.GenerateNonceAsync()
@@ -197,7 +197,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             await _connectionService.CreateInvitationAsync(_issuerWallet,
                 new InviteConfiguration { ConnectionId = connectionId });
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
             {
                 Name = "Test",
                 Nonce = await AnonCreds.GenerateNonceAsync()
@@ -212,7 +212,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             var (issuerConnection, _) = await Scenarios.EstablishConnectionAsync(
                 _connectionService, _messages, _issuerWallet, _holderWallet);
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () =>
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () =>
                 await _proofService.ProcessPresentationAsync(_issuerWallet, new PresentationMessage()));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
@@ -311,7 +311,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             //Requestor stores proof
             await _proofService.ProcessPresentationAsync(_requestorWallet, proof);
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.ProcessPresentationAsync(_requestorWallet, proof));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.ProcessPresentationAsync(_requestorWallet, proof));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
@@ -319,7 +319,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task AcceptProofRequestCredentialNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreatePresentationAsync(_issuerWallet, "bad-proof-id", null));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreatePresentationAsync(_issuerWallet, "bad-proof-id", null));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -404,7 +404,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             //Holder accepts the proof request and sends a proof
             await _proofService.CreatePresentationAsync(_holderWallet, holderProofRequestId.Id, requestedCredentials);
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.CreatePresentationAsync(_holderWallet, holderProofRequestId.Id,
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreatePresentationAsync(_holderWallet, holderProofRequestId.Id,
                 requestedCredentials));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
@@ -413,7 +413,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task RejectProofRequestCredentialNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.RejectProofRequestAsync(_issuerWallet, "bad-proof-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.RejectProofRequestAsync(_issuerWallet, "bad-proof-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -466,7 +466,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             //Holder accepts the proof request and sends a proof
             await _proofService.RejectProofRequestAsync(_holderWallet, holderProofRequestId.Id);
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _proofService.RejectProofRequestAsync(_holderWallet, holderProofRequestId.Id));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.RejectProofRequestAsync(_holderWallet, holderProofRequestId.Id));
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 

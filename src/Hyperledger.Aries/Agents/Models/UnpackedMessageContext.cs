@@ -66,7 +66,7 @@ namespace Hyperledger.Aries.Agents
         /// </summary>
         public string GetMessageId() =>
             Packed
-                ? throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Cannot deserialize packed message.")
+                ? throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Cannot deserialize packed message.")
                 : MessageJson["@id"].Value<string>();
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Hyperledger.Aries.Agents
         /// </summary>
         public string GetMessageType() =>
             Packed
-                ? throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Cannot deserialize packed message.")
+                ? throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Cannot deserialize packed message.")
                 : MessageJson["@type"].Value<string>();
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Hyperledger.Aries.Agents
         /// <returns>The agent message.</returns>
         public T GetMessage<T>() where T : AgentMessage, new() =>
             Packed
-                ? throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Cannot deserialize packed message.")
+                ? throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Cannot deserialize packed message.")
                 : JsonConvert.DeserializeObject<T>(MessageJson.ToString(), new AgentMessageReader<T>());
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Hyperledger.Aries.Agents
         /// <returns>The agent message.</returns>
         public string GetMessageJson() =>
             Packed
-                ? throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Cannot deserialize packed message.")
+                ? throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Cannot deserialize packed message.")
                 : MessageJson.ToJson();
     }
 }

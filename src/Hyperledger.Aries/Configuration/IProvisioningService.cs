@@ -15,7 +15,7 @@ namespace Hyperledger.Aries.Configuration
         /// agent configuration parameters.
         /// </summary>
         /// <param name="wallet">The wallet.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
         /// <returns>The provisioning record.</returns>
         Task<ProvisioningRecord> GetProvisioningAsync(Wallet wallet);
 

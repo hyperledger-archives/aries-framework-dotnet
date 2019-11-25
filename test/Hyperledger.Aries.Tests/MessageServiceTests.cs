@@ -284,7 +284,7 @@ namespace Hyperledger.Aries.Tests
                 TheirVk = Guid.NewGuid().ToString()
             };
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () =>
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () =>
                 await _messagingService.SendAsync(_wallet, new MockAgentMessage(), connection));
             Assert.True(ex.ErrorCode == ErrorCode.InvalidMessage);
         }
@@ -305,7 +305,7 @@ namespace Hyperledger.Aries.Tests
                 TheirVk = Guid.NewGuid().ToString()
             };
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () =>
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () =>
                 await _messagingService.SendAsync(_wallet, new MockAgentMessage { Id = Guid.NewGuid().ToString() }, connection));
             Assert.True(ex.ErrorCode == ErrorCode.InvalidMessage);
         }

@@ -16,7 +16,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialId">The credential identifier.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
         /// <returns>The stored credential record</returns>
         Task<CredentialRecord> GetAsync(IAgentContext agentContext, string credentialId);
 
@@ -45,9 +45,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialId">The offer identifier.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.A2AMessageTransmissionError.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.A2AMessageTransmissionError.</exception>
         /// <returns>The response async.</returns>
         Task<(CredentialRequestMessage, CredentialRecord)> CreateRequestAsync(IAgentContext agentContext, string credentialId);
 
@@ -67,8 +67,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="offerId">The offer identifier.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
         /// <returns>The response async.</returns>
         Task RejectOfferAsync(IAgentContext agentContext, string offerId);
 
@@ -78,8 +78,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credential">The credential.</param>
         /// <param name="connection">The connection.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
         /// <returns>The identifier for the credential record.</returns>
         Task<string> ProcessCredentialAsync(IAgentContext agentContext, CredentialIssueMessage credential,
             ConnectionRecord connection);
@@ -93,7 +93,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="config">A configuration object used to configure the resulting offers presentation.</param>
         /// <param name="connectionId">The connection id.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
         /// <returns>The offer message and the identifier. </returns>
         Task<(CredentialOfferMessage, CredentialRecord)> CreateOfferAsync(
             IAgentContext agentContext, OfferConfiguration config, string connectionId);
@@ -106,7 +106,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="config">A configuration object used to configure the resulting offers presentation.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
         /// <returns>The offer message and the identifier. </returns>
         Task<(CredentialOfferMessage, CredentialRecord)> CreateOfferAsync(
             IAgentContext agentContext, OfferConfiguration config);
@@ -116,8 +116,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="offerId">Id of the credential offer.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
         /// <returns>The response async.</returns>
         Task RevokeCredentialOfferAsync(IAgentContext agentContext, string offerId);
 
@@ -127,7 +127,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialRequest">The credential request.</param>
         /// <param name="connection">The connection.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
         /// <returns>The credential identifier of the stored credential record.</returns>
         Task<string> ProcessCredentialRequestAsync(IAgentContext agentContext,
             CredentialRequestMessage credentialRequest, ConnectionRecord connection);
@@ -156,7 +156,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialId">The credential identifier.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
         /// <returns>The response async.</returns>
         Task RejectCredentialRequestAsync(IAgentContext agentContext, string credentialId);
 

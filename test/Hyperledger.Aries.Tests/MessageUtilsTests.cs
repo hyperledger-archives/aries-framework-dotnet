@@ -57,7 +57,7 @@ namespace Hyperledger.Aries.Tests
         [Fact]
         public void DecodeMessageTypeUriThrowsInvalidParameterException()
         {
-            var ex = Assert.Throws<AgentFrameworkException>(() => MessageUtils.DecodeMessageTypeUri("did:sov:123456789abcdefghi1234;spec"));
+            var ex = Assert.Throws<AriesFrameworkException>(() => MessageUtils.DecodeMessageTypeUri("did:sov:123456789abcdefghi1234;spec"));
             Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
         }
 

@@ -54,7 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static AriesFrameworkBuilder RegisterEdgeAgent(
             this AriesFrameworkBuilder builder,
-            Action<AgentOptions> options)
+            Action<EdgeAgentOptions> options)
             => RegisterEdgeAgent<DefaultAgent>(builder, options);
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static AriesFrameworkBuilder RegisterEdgeAgent<T>(
             this AriesFrameworkBuilder builder,
-            Action<AgentOptions> options)
+            Action<EdgeAgentOptions> options)
             where T : class, IAgent
         {
             builder.AddAgentProvider();
@@ -73,6 +73,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddSingleton<IAgent, T>();
             builder.Services.Configure(options);
             builder.Services.AddSingleton<IEdgeClientService, EdgeClientService>();
+            builder.Services.AddSingleton<IEdgeProvsioningService, EdgeProvisioningService>();
             builder.Services.AddExtendedConnectionService<EdgeConnectionService>();
             builder.Services.AddHostedService<EdgeProvisioningService>();
 

@@ -43,10 +43,10 @@ namespace Hyperledger.Aries.Features.PresentProof
             var search = await proofService.ListAsync(context, SearchQuery.Equal(TagConstants.LastThreadId, threadId), 1);
 
             if (search.Count == 0)
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, $"Proof record not found by thread id : {threadId}");
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, $"Proof record not found by thread id : {threadId}");
 
             if (search.Count > 1)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState, $"Multiple proof records found by thread id : {threadId}");
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState, $"Multiple proof records found by thread id : {threadId}");
 
             return search.Single();
         }

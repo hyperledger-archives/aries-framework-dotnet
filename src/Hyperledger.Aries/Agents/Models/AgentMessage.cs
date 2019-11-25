@@ -55,7 +55,7 @@ namespace Hyperledger.Aries.Agents
         /// <typeparam name="T"></typeparam>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        /// <exception cref="AgentFrameworkException">ErrorCode.InvalidMessage Cannot deserialize packed message or unable to find decorator on message.</exception>
+        /// <exception cref="AriesFrameworkException">ErrorCode.InvalidMessage Cannot deserialize packed message or unable to find decorator on message.</exception>
         public T GetDecorator<T>(string name) where T : class
         {
             try
@@ -65,7 +65,7 @@ namespace Hyperledger.Aries.Agents
             }
             catch (Exception e)
             {
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Failed to extract decorator from message", e);
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Failed to extract decorator from message", e);
             }
         }
 
