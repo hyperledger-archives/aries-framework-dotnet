@@ -53,6 +53,10 @@ namespace Hyperledger.Aries.Agents.Edge
 
                 await provisioningService.ProvisionAgentAsync(options);
             }
+            catch(WalletStorageException)
+            {
+                // OK
+            }
             catch (WalletExistsException)
             {
                 // OK
