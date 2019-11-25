@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.AspNetCor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Routing", "..\..\src\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj", "{060CA404-A07B-4EEE-9932-F49DA194AA24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Routing.Mediator", "..\..\src\Hyperledger.Aries.Routing.Mediator\Hyperledger.Aries.Routing.Mediator.csproj", "{2A3B2BB9-4DE2-4CEE-AA5C-C5209112390D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Routing.Edge", "..\..\src\Hyperledger.Aries.Routing.Edge\Hyperledger.Aries.Routing.Edge.csproj", "{80CE2184-442B-4101-93AE-477541897C2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,10 +43,20 @@ Global
 		{060CA404-A07B-4EEE-9932-F49DA194AA24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{060CA404-A07B-4EEE-9932-F49DA194AA24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{060CA404-A07B-4EEE-9932-F49DA194AA24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A3B2BB9-4DE2-4CEE-AA5C-C5209112390D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A3B2BB9-4DE2-4CEE-AA5C-C5209112390D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A3B2BB9-4DE2-4CEE-AA5C-C5209112390D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A3B2BB9-4DE2-4CEE-AA5C-C5209112390D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80CE2184-442B-4101-93AE-477541897C2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80CE2184-442B-4101-93AE-477541897C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80CE2184-442B-4101-93AE-477541897C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80CE2184-442B-4101-93AE-477541897C2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6CEF34D6-F135-4080-B9FD-BF56DFB2AC4D} = {56212526-0CA6-4EC7-A69E-E7EA30C803B9}
 		{74E87D53-EA07-4145-87DA-EB26D8060972} = {56212526-0CA6-4EC7-A69E-E7EA30C803B9}
 		{060CA404-A07B-4EEE-9932-F49DA194AA24} = {56212526-0CA6-4EC7-A69E-E7EA30C803B9}
+		{2A3B2BB9-4DE2-4CEE-AA5C-C5209112390D} = {56212526-0CA6-4EC7-A69E-E7EA30C803B9}
+		{80CE2184-442B-4101-93AE-477541897C2D} = {56212526-0CA6-4EC7-A69E-E7EA30C803B9}
 	EndGlobalSection
 EndGlobal
