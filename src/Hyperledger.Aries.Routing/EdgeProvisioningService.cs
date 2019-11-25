@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace Hyperledger.Aries.Agents.Edge
 {
-    internal class EdgeProvisioningService : IHostedService, IEdgeProvsioningService
+    internal class EdgeProvisioningService : IHostedService, IEdgeProvisoningService
     {
         private const string MediatorConnectionIdTagName = "MediatorConnectionId";
         private const string MediatorInboxIdTagName = "MediatorInboxId";
@@ -22,7 +22,7 @@ namespace Hyperledger.Aries.Agents.Edge
         private readonly IEdgeClientService edgeClientService;
         private readonly IWalletRecordService recordService;
         private readonly IAgentProvider agentProvider;
-        private readonly EdgeAgentOptions options;
+        private readonly AgentOptions options;
 
         public EdgeProvisioningService(
             IProvisioningService provisioningService,
@@ -31,7 +31,7 @@ namespace Hyperledger.Aries.Agents.Edge
             IEdgeClientService edgeClientService,
             IWalletRecordService recordService,
             IAgentProvider agentProvider,
-            IOptions<EdgeAgentOptions> options)
+            IOptions<AgentOptions> options)
         {
             this.provisioningService = provisioningService;
             this.connectionService = connectionService;
@@ -42,12 +42,10 @@ namespace Hyperledger.Aries.Agents.Edge
             this.options = options.Value;
         }
 
-        public async Task ProvisionAsync(CancellationToken cancellationToken = default)
+        public async Task ProvisionAsync(AgentOptions options, CancellationToken cancellationToken = default)
         {
-            if (options.DelayProvisioning) return;
-
             var discovery = await edgeClientService.DiscoverConfigurationAsync(options.EndpointUri);
-            
+
             try
             {
                 options.AgentKey = discovery.RoutingKey;
@@ -67,9 +65,9 @@ namespace Hyperledger.Aries.Agents.Edge
             {
                 var (request, record) = await connectionService.CreateRequestAsync(agentContext, discovery.Invitation);
                 var response = await messageService.SendReceiveAsync<ConnectionResponseMessage>(agentContext.Wallet, request, record);
-               
+
                 await connectionService.ProcessResponseAsync(agentContext, response, record);
-                
+
                 // Remove the routing key explicitly as it won't ever be needed.
                 // Messages will always be sent directly with return routing enabled
                 record = await connectionService.GetAsync(agentContext, record.Id);
@@ -83,14 +81,10 @@ namespace Hyperledger.Aries.Agents.Edge
             await edgeClientService.CreateInboxAsync(agentContext);
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            return ProvisionAsync(cancellationToken);
-        }
+        public Task ProvisionAsync(CancellationToken cancellationToken = default) => ProvisionAsync(options, cancellationToken);
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
+        public Task StartAsync(CancellationToken cancellationToken) => ProvisionAsync(cancellationToken);
+
+        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

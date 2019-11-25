@@ -54,8 +54,9 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static AriesFrameworkBuilder RegisterEdgeAgent(
             this AriesFrameworkBuilder builder,
-            Action<EdgeAgentOptions> options)
-            => RegisterEdgeAgent<DefaultAgent>(builder, options);
+            Action<AgentOptions> options,
+            bool delayProvisioning)
+            => RegisterEdgeAgent<DefaultAgent>(builder, options, delayProvisioning);
 
         /// <summary>
         /// Registers and provisions an agent with custom implementation
@@ -65,7 +66,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static AriesFrameworkBuilder RegisterEdgeAgent<T>(
             this AriesFrameworkBuilder builder,
-            Action<EdgeAgentOptions> options)
+            Action<AgentOptions> options,
+            bool delayProvisioning)
             where T : class, IAgent
         {
             builder.AddAgentProvider();
@@ -73,9 +75,12 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddSingleton<IAgent, T>();
             builder.Services.Configure(options);
             builder.Services.AddSingleton<IEdgeClientService, EdgeClientService>();
-            builder.Services.AddSingleton<IEdgeProvsioningService, EdgeProvisioningService>();
+            builder.Services.AddSingleton<IEdgeProvisoningService, EdgeProvisioningService>();
             builder.Services.AddExtendedConnectionService<EdgeConnectionService>();
-            builder.Services.AddHostedService<EdgeProvisioningService>();
+            if (!delayProvisioning)
+            {
+                builder.Services.AddHostedService<EdgeProvisioningService>();
+            }
 
             return builder;
         }
