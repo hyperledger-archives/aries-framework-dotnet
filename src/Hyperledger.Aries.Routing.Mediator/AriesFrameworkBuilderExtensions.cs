@@ -46,45 +46,6 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        /// <summary>
-        /// Registers and provisions an agent.
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static AriesFrameworkBuilder RegisterEdgeAgent(
-            this AriesFrameworkBuilder builder,
-            Action<AgentOptions> options,
-            bool delayProvisioning)
-            => RegisterEdgeAgent<DefaultAgent>(builder, options, delayProvisioning);
-
-        /// <summary>
-        /// Registers and provisions an agent with custom implementation
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public static AriesFrameworkBuilder RegisterEdgeAgent<T>(
-            this AriesFrameworkBuilder builder,
-            Action<AgentOptions> options,
-            bool delayProvisioning)
-            where T : class, IAgent
-        {
-            builder.AddAgentProvider();
-            builder.Services.AddDefaultMessageHandlers();
-            builder.Services.AddSingleton<IAgent, T>();
-            builder.Services.Configure(options);
-            builder.Services.AddSingleton<IEdgeClientService, EdgeClientService>();
-            builder.Services.AddSingleton<IEdgeProvisoningService, EdgeProvisioningService>();
-            builder.Services.AddExtendedConnectionService<EdgeConnectionService>();
-            if (!delayProvisioning)
-            {
-                builder.Services.AddHostedService<EdgeProvisioningService>();
-            }
-
-            return builder;
-        }
-
         public static void UseMediatorDiscovery(this IApplicationBuilder builder)
         {
             builder.Map(

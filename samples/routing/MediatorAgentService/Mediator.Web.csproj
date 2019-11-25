@@ -14,8 +14,8 @@
     <ApplicationURL>http://localhost:5000</ApplicationURL>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Hyperledger.Aries\Hyperledger.Aries.csproj" />
-    <ProjectReference Include="..\..\..\src\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
-    <ProjectReference Include="..\..\..\src\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\src\Hyperledger.Aries.Routing.Mediator\Hyperledger.Aries.Routing.Mediator.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>

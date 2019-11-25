@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Routing", "Routing", "{50CA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Routing", "Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj", "{B730DE35-80ED-4372-9D9F-23B14353150C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Routing.Mediator", "Hyperledger.Aries.Routing.Mediator\Hyperledger.Aries.Routing.Mediator.csproj", "{D963131D-96EC-4DF5-8147-D77E75DCAE67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.Routing.Edge", "Hyperledger.Aries.Routing.Edge\Hyperledger.Aries.Routing.Edge.csproj", "{B76E800A-C3C1-4E42-AC60-24F70AF304BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{B730DE35-80ED-4372-9D9F-23B14353150C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B730DE35-80ED-4372-9D9F-23B14353150C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B730DE35-80ED-4372-9D9F-23B14353150C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D963131D-96EC-4DF5-8147-D77E75DCAE67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D963131D-96EC-4DF5-8147-D77E75DCAE67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D963131D-96EC-4DF5-8147-D77E75DCAE67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D963131D-96EC-4DF5-8147-D77E75DCAE67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B76E800A-C3C1-4E42-AC60-24F70AF304BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B76E800A-C3C1-4E42-AC60-24F70AF304BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B76E800A-C3C1-4E42-AC60-24F70AF304BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B76E800A-C3C1-4E42-AC60-24F70AF304BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +74,8 @@ Global
 		{8E275FAC-8513-4027-A271-6EDD8404E800} = {73FF6DBD-5847-4F2D-94BE-196AE9A80228}
 		{78AACB12-E8C1-4B09-A547-DE60AA74D4CF} = {73FF6DBD-5847-4F2D-94BE-196AE9A80228}
 		{B730DE35-80ED-4372-9D9F-23B14353150C} = {50CA144B-F3EE-4FFC-B07C-C0E5959DAA82}
+		{D963131D-96EC-4DF5-8147-D77E75DCAE67} = {50CA144B-F3EE-4FFC-B07C-C0E5959DAA82}
+		{B76E800A-C3C1-4E42-AC60-24F70AF304BE} = {50CA144B-F3EE-4FFC-B07C-C0E5959DAA82}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4FFA80F9-ADC6-40DB-BBD1-A522B8A68560}

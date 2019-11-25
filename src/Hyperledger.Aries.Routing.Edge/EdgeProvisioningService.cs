@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace Hyperledger.Aries.Agents.Edge
 {
-    internal class EdgeProvisioningService : IHostedService, IEdgeProvisoningService
+    internal class EdgeProvisioningService : IHostedService, IEdgeProvisioningService
     {
         private const string MediatorConnectionIdTagName = "MediatorConnectionId";
         private const string MediatorInboxIdTagName = "MediatorInboxId";
