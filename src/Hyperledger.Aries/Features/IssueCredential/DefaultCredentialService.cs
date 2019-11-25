@@ -115,7 +115,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var record = await RecordService.GetAsync<CredentialRecord>(agentContext.Wallet, credentialId);
 
             if (record == null)
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, "Credential record not found");
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Credential record not found");
 
             return record;
         }
@@ -130,7 +130,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var credential = await GetAsync(agentContext, credentialId);
 
             if (credential.State != CredentialState.Offered)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Offered}', found '{credential.State}'");
 
             await credential.TriggerAsync(CredentialTrigger.Reject);
@@ -143,7 +143,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var credentialRecord = await GetAsync(agentContext, offerId);
 
             if (credentialRecord.State != CredentialState.Offered)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Offered}', found '{credentialRecord.State}'");
 
             await RecordService.DeleteAsync<ConnectionRecord>(agentContext.Wallet, offerId);
@@ -155,7 +155,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var credential = await GetAsync(agentContext, credentialId);
 
             if (credential.State != CredentialState.Requested)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credential.State}'");
 
             await credential.TriggerAsync(CredentialTrigger.Reject);
@@ -168,7 +168,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var credential = await GetAsync(agentContext, credentialId);
 
             if (credential.State != CredentialState.Issued)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credential.State}'");
 
             var definition = await SchemaService.GetCredentialDefinitionAsync(agentContext.Wallet, credential.CredentialDefinitionId);
@@ -290,7 +290,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var credential = await GetAsync(agentContext, credentialId);
 
             if (credential.State != CredentialState.Offered)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Offered}', found '{credential.State}'");
 
             string proverDid = null;
@@ -359,7 +359,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var credentialRecord = await this.GetByThreadIdAsync(agentContext, credential.GetThreadId());
 
             if (credentialRecord.State != CredentialState.Requested)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credentialRecord.State}'");
 
             var credentialDefinition = await LedgerService.LookupDefinitionAsync(await agentContext.Pool, definitionId);
@@ -412,7 +412,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
                 if (connection.State != ConnectionState.Connected)
                 {
-                    throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                    throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                         $"Connection state was invalid. Expected '{ConnectionState.Connected}', found '{connection.State}'");
                 }
             }
@@ -517,7 +517,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 ?? throw new ArgumentException("Credential request attachment not found.");
 
             if (credential.State != CredentialState.Offered)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Offered}', found '{credential.State}'");
 
             credential.RequestJson = credentialAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
@@ -548,7 +548,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var credential = await GetAsync(agentContext, credentialId);
 
             if (credential.State != CredentialState.Requested)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credential.State}'");
 
             if (values != null && values.Any())
@@ -561,7 +561,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             {
                 var connection = await ConnectionService.GetAsync(agentContext, credential.ConnectionId);
                 if (connection.State != ConnectionState.Connected)
-                    throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                    throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                         $"Connection state was invalid. Expected '{ConnectionState.Connected}', found '{connection.State}'");
             }
 

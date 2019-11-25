@@ -44,7 +44,7 @@ namespace Hyperledger.Aries.Agents
             catch (Exception e)
             {
                 Logger.LogError("Failed to un-pack message", e);
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Failed to un-pack message", e);
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Failed to un-pack message", e);
             }
             return new UnpackedMessageContext(unpacked.Message, senderKey);
         }
@@ -57,10 +57,10 @@ namespace Hyperledger.Aries.Agents
                 endpointUri);
 
             if (string.IsNullOrEmpty(message.Id))
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "@id field on message must be populated");
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "@id field on message must be populated");
 
             if (string.IsNullOrEmpty(message.Type))
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "@type field on message must be populated");
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "@type field on message must be populated");
 
             if (string.IsNullOrEmpty(endpointUri))
                 throw new ArgumentNullException(nameof(endpointUri));
@@ -70,7 +70,7 @@ namespace Hyperledger.Aries.Agents
             var dispatcher = GetDispatcher(uri.Scheme);
 
             if (dispatcher == null)
-                throw new AgentFrameworkException(ErrorCode.A2AMessageTransmissionError, $"No registered dispatcher for transport scheme : {uri.Scheme}");
+                throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, $"No registered dispatcher for transport scheme : {uri.Scheme}");
 
             var wireMsg = await CryptoUtils.PrepareAsync(wallet, message, recipientKey, routingKeys, senderKey);
 
@@ -85,10 +85,10 @@ namespace Hyperledger.Aries.Agents
                 endpointUri);
 
             if (string.IsNullOrEmpty(message.Id))
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "@id field on message must be populated");
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "@id field on message must be populated");
 
             if (string.IsNullOrEmpty(message.Type))
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "@type field on message must be populated");
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "@type field on message must be populated");
 
             if (string.IsNullOrEmpty(endpointUri))
                 throw new ArgumentNullException(nameof(endpointUri));
@@ -98,7 +98,7 @@ namespace Hyperledger.Aries.Agents
             var dispatcher = GetDispatcher(uri.Scheme);
 
             if (dispatcher == null)
-                throw new AgentFrameworkException(ErrorCode.A2AMessageTransmissionError, $"No registered dispatcher for transport scheme : {uri.Scheme}");
+                throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, $"No registered dispatcher for transport scheme : {uri.Scheme}");
 
             message.AddReturnRouting();
             var wireMsg = await CryptoUtils.PrepareAsync(wallet, message, recipientKey, routingKeys, senderKey);

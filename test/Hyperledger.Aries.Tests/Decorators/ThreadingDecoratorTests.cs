@@ -54,7 +54,7 @@ namespace Hyperledger.Aries.Tests.Decorators
 
             var inboundMessage = new ConnectionInvitationMessage();
 
-            var ex = Assert.Throws<AgentFrameworkException>(() => message.ThreadFrom(inboundMessage));
+            var ex = Assert.Throws<AriesFrameworkException>(() => message.ThreadFrom(inboundMessage));
             Assert.True(ex.ErrorCode == ErrorCode.InvalidMessage);
         }
     }

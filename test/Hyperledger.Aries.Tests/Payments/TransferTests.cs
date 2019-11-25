@@ -136,7 +136,7 @@ namespace Hyperledger.Aries.Tests.Payments
             };
 
             // transfer tokens between two agents
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () =>
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () =>
                 await paymentService.MakePaymentAsync(Context, paymentRecord3, address[0]));
 
             Assert.Equal(ErrorCode.PaymentInsufficientFunds, ex.ErrorCode);

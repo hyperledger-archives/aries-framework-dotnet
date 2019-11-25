@@ -40,7 +40,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="agentContext"></param>
         /// <param name="messageContext">The agent message.</param>
         /// <returns></returns>
-        /// <exception cref="AgentFrameworkException">Unsupported message type {messageType}</exception>
+        /// <exception cref="AriesFrameworkException">Unsupported message type {messageType}</exception>
         public async Task<AgentMessage> ProcessAsync(IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             switch (messageContext.GetMessageType())
@@ -88,7 +88,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         return null;
                     }
                 default:
-                    throw new AgentFrameworkException(ErrorCode.InvalidMessage,
+                    throw new AriesFrameworkException(ErrorCode.InvalidMessage,
                         $"Unsupported message type {messageContext.GetMessageType()}");
             }
         }

@@ -21,7 +21,7 @@ namespace System
         public static T FindDecorator<T>(this UnpackedMessageContext messageContext, string name) where T : class
         {
             if (messageContext.Packed)
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Cannot fetch decorator from packed message.");
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Cannot fetch decorator from packed message.");
 
             var jObject = JsonConvert.DeserializeObject<JObject>(messageContext.GetMessageJson());
 

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace Hyperledger.Aries.Agents.Edge
 {
-    public class EdgeProvisioningService : IHostedService
+    internal class EdgeProvisioningService : IHostedService, IEdgeProvsioningService
     {
         private const string MediatorConnectionIdTagName = "MediatorConnectionId";
         private const string MediatorInboxIdTagName = "MediatorInboxId";
@@ -22,7 +22,7 @@ namespace Hyperledger.Aries.Agents.Edge
         private readonly IEdgeClientService edgeClientService;
         private readonly IWalletRecordService recordService;
         private readonly IAgentProvider agentProvider;
-        private readonly AgentOptions options;
+        private readonly EdgeAgentOptions options;
 
         public EdgeProvisioningService(
             IProvisioningService provisioningService,
@@ -31,7 +31,7 @@ namespace Hyperledger.Aries.Agents.Edge
             IEdgeClientService edgeClientService,
             IWalletRecordService recordService,
             IAgentProvider agentProvider,
-            IOptions<AgentOptions> options)
+            IOptions<EdgeAgentOptions> options)
         {
             this.provisioningService = provisioningService;
             this.connectionService = connectionService;
@@ -42,8 +42,10 @@ namespace Hyperledger.Aries.Agents.Edge
             this.options = options.Value;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task ProvisionAsync(CancellationToken cancellationToken = default)
         {
+            if (options.DelayProvisioning) return;
+
             var discovery = await edgeClientService.DiscoverConfigurationAsync(options.EndpointUri);
             
             try
@@ -79,6 +81,11 @@ namespace Hyperledger.Aries.Agents.Edge
             }
 
             await edgeClientService.CreateInboxAsync(agentContext);
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return ProvisionAsync(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

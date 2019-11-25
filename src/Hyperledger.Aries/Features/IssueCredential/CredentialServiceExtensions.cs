@@ -74,10 +74,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var search = await credentialService.ListAsync(context, SearchQuery.Equal(TagConstants.LastThreadId, threadId), 100);
 
             if (search.Count == 0)
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, $"Credential record not found by thread id : {threadId}");
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, $"Credential record not found by thread id : {threadId}");
 
             if (search.Count > 1)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState, $"Multiple credential records found by thread id : {threadId}");
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState, $"Multiple credential records found by thread id : {threadId}");
 
             return search.Single();
         }

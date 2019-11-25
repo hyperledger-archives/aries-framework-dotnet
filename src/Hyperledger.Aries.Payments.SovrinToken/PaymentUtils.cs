@@ -17,7 +17,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
             if (address == null) throw new ArgumentNullException(nameof(address), "Address must be specified");
 
 
-            if (!inputs.Any()) throw new AgentFrameworkException(ErrorCode.PaymentInsufficientFunds, "Insufficient funds");
+            if (!inputs.Any()) throw new AriesFrameworkException(ErrorCode.PaymentInsufficientFunds, "Insufficient funds");
 
             return (inputs.Select(x => x.Source), new[]
                 {

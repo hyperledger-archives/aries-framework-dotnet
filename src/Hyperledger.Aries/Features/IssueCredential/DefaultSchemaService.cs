@@ -89,7 +89,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var provisioning = await ProvisioningService.GetProvisioningAsync(context.Wallet);
             if (provisioning?.IssuerDid == null)
             {
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, "This wallet is not provisioned with issuer");
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "This wallet is not provisioned with issuer");
             }
 
             return await CreateSchemaAsync(context, provisioning.IssuerDid, name, version, attributeNames);
@@ -229,7 +229,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var provisioning = await ProvisioningService.GetProvisioningAsync(context.Wallet);
             if (provisioning?.IssuerDid == null)
             {
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound,
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound,
                     "This wallet is not provisioned with issuer");
             }
 

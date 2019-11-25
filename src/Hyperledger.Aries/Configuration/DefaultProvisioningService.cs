@@ -74,7 +74,7 @@ namespace Hyperledger.Aries.Configuration
             var record = await RecordService.GetAsync<ProvisioningRecord>(wallet, ProvisioningRecord.UniqueRecordId);
 
             if (record == null)
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, "Provisioning record not found");
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Provisioning record not found");
 
             return record;
         }

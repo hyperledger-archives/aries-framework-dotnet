@@ -37,10 +37,10 @@ namespace Hyperledger.Aries.Decorators.Threading
                 message.GetDecorator<ThreadDecorator>(DecoratorIdentifier);
                 hasThreadBlock = true;
             }
-            catch (AgentFrameworkException) { }
+            catch (AriesFrameworkException) { }
 
             if (hasThreadBlock)
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Cannot thread message when it already has a valid thread decorator");
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Cannot thread message when it already has a valid thread decorator");
 
             message.ThreadMessage(previousMessage);
         }
@@ -90,7 +90,7 @@ namespace Hyperledger.Aries.Decorators.Threading
             {
                 previousMessageThreadContext = messageToThreadFrom.GetDecorator<ThreadDecorator>(DecoratorIdentifier);
             }
-            catch (AgentFrameworkException) { }
+            catch (AriesFrameworkException) { }
 
             ThreadDecorator currentThreadContext;
             if (previousMessageThreadContext != null)

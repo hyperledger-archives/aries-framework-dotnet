@@ -74,7 +74,7 @@ namespace Hyperledger.TestHarness
             Context = await Host.Services.GetService<IAgentProvider>().GetContextAsync();
 
             Trustee = await Did.CreateAndStoreMyDidAsync(Context.Wallet,
-                new {seed = "000000000000000000000000Trustee1"}.ToJson());
+                new { seed = "000000000000000000000000Trustee1" }.ToJson());
             Trustee2 = await PromoteTrustee("000000000000000000000000Trustee2");
             Trustee3 = await PromoteTrustee("000000000000000000000000Trustee3");
 
@@ -103,7 +103,7 @@ namespace Hyperledger.TestHarness
         {
             var record = await Host.Services.GetService<IProvisioningService>().GetProvisioningAsync(Context.Wallet);
             if (record.IssuerDid == null || record.IssuerVerkey == null)
-                throw new AgentFrameworkException(ErrorCode.InvalidRecordData, "Agent not set up as issuer");
+                throw new AriesFrameworkException(ErrorCode.InvalidRecordData, "Agent not set up as issuer");
 
             await Ledger.SignAndSubmitRequestAsync(await Context.Pool, Context.Wallet, Trustee.Did,
                 await Ledger.BuildNymRequestAsync(Trustee.Did, record.IssuerDid, record.IssuerVerkey, null, "ENDORSER"));

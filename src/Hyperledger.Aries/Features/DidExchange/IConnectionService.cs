@@ -16,7 +16,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <returns>The async.</returns>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="connectionId">Connection identifier.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
         /// <returns>The connection record.</returns>
         Task<ConnectionRecord> GetAsync(IAgentContext agentContext, string connectionId);
 
@@ -42,8 +42,8 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="invitationId">Id of the invitation.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
         /// <returns>The async.</returns>
         Task RevokeInvitationAsync(IAgentContext agentContext, string invitationId);
 
@@ -52,7 +52,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="offer">Offer.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.A2AMessageTransmissionError.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.A2AMessageTransmissionError.</exception>
         /// <returns>Connection identifier unique for this connection.</returns>
         Task<(ConnectionRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionInvitationMessage offer);
 
@@ -62,7 +62,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="request">Request.</param>
         /// <param name="connection">Connection.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.A2AMessageTransmissionError.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.A2AMessageTransmissionError.</exception>
         /// <returns>Connection identifier this request is related to.</returns>
         Task<string> ProcessRequestAsync(IAgentContext agentContext, ConnectionRequestMessage request, ConnectionRecord connection);
 
@@ -71,9 +71,9 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="connectionId">Connection identifier.</param>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.A2AMessageTransmissionError</exception>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
-        /// <exception cref="AgentFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.A2AMessageTransmissionError</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordNotFound.</exception>
+        /// <exception cref="AriesFrameworkException">Throws with ErrorCode.RecordInInvalidState.</exception>
         /// <returns>The response async.</returns>
         Task<(ConnectionResponseMessage, ConnectionRecord)> CreateResponseAsync(IAgentContext agentContext, string connectionId);
 

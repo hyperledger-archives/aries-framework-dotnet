@@ -93,7 +93,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
 
             if (string.IsNullOrEmpty(provisioning.Endpoint.Uri))
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState, "Provision record has no endpoint information specified");
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState, "Provision record has no endpoint information specified");
 
             await RecordService.AddAsync(agentContext.Wallet, connection);
 
@@ -113,7 +113,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             var connection = await GetAsync(agentContext, invitationId);
 
             if (connection.State != ConnectionState.Invited)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Connection state was invalid. Expected '{ConnectionState.Invited}', found '{connection.State}'");
 
             await RecordService.DeleteAsync<ConnectionRecord>(agentContext.Wallet, invitationId);
@@ -286,7 +286,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             var connection = await GetAsync(agentContext, connectionId);
 
             if (connection.State != ConnectionState.Negotiating)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Connection state was invalid. Expected '{ConnectionState.Negotiating}', found '{connection.State}'");
 
             await Pairwise.CreateAsync(agentContext.Wallet, connection.TheirDid, connection.MyDid, connection.Endpoint.ToJson());
@@ -320,7 +320,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             var record = await RecordService.GetAsync<ConnectionRecord>(agentContext.Wallet, connectionId);
 
             if (record == null)
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, "Connection record not found");
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Connection record not found");
 
             return record;
         }

@@ -25,7 +25,7 @@ namespace Hyperledger.Aries.Agents
             var recipientKey = connection.TheirVk ?? connection.GetTag("InvitationKey") ?? throw new InvalidOperationException("Cannot locate a recipient key");
 
             if (connection.Endpoint?.Uri == null)
-                throw new AgentFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot send to connection that does not have endpoint information specified");
+                throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot send to connection that does not have endpoint information specified");
 
             await service.SendAsync(wallet, message, recipientKey, connection.Endpoint.Uri, routingKeys, connection.MyVk);
         }
@@ -45,7 +45,7 @@ namespace Hyperledger.Aries.Agents
             var recipientKey = connection.TheirVk ?? connection.GetTag("InvitationKey") ?? throw new InvalidOperationException("Cannot locate a recipient key");
 
             if (connection.Endpoint?.Uri == null)
-                throw new AgentFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot send to connection that does not have endpoint information specified");
+                throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot send to connection that does not have endpoint information specified");
 
             return await service.SendReceiveAsync(wallet, message, recipientKey, connection.Endpoint.Uri, routingKeys, connection.MyVk);
         }

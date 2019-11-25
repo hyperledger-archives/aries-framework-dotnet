@@ -65,8 +65,8 @@ namespace Hyperledger.Aries.Routing
                 return null;
             }
             var connection = await recordService.GetAsync<ConnectionRecord>(agentContext.Wallet, provisioning.GetTag(MediatorConnectionIdTagName));
-            if (connection == null) throw new AgentFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
-            if (connection.State != ConnectionState.Connected) throw new AgentFrameworkException(ErrorCode.RecordInInvalidState, $"You must be connected to the mediator agent. Current state is {connection.State}");
+            if (connection == null) throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
+            if (connection.State != ConnectionState.Connected) throw new AriesFrameworkException(ErrorCode.RecordInInvalidState, $"You must be connected to the mediator agent. Current state is {connection.State}");
 
             return connection;
         }
@@ -99,7 +99,7 @@ namespace Hyperledger.Aries.Routing
                     await agentContext.Agent.ProcessAsync(agentContext, new PackedMessageContext(item.Data));
                     processedItems.Add(item.Id);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine($"Error processing message {e}");
                 }

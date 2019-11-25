@@ -96,7 +96,7 @@ namespace Hyperledger.Aries.Agents
         /// <param name="messageContext">The message context.</param>
         /// <returns></returns>
         /// <exception cref="Exception">Expected inner message to be of type 'ForwardMessage'</exception>
-        /// <exception cref="AgentFrameworkException">Couldn't locate a message handler for type {messageType}</exception>
+        /// <exception cref="AriesFrameworkException">Couldn't locate a message handler for type {messageType}</exception>
         /// TODO should recieve a message context and return a message context.
         public async Task<MessageContext> ProcessAsync(IAgentContext context, MessageContext messageContext)
         {
@@ -157,7 +157,7 @@ namespace Hyperledger.Aries.Agents
                 return null;
             }
 
-            throw new AgentFrameworkException(ErrorCode.InvalidMessage,
+            throw new AriesFrameworkException(ErrorCode.InvalidMessage,
                 $"Couldn't locate a message handler for type {inboundMessageContext.GetMessageType()}");
         }
 
@@ -172,7 +172,7 @@ namespace Hyperledger.Aries.Agents
             catch (Exception e)
             {
                 Logger.LogError("Failed to un-pack message", e);
-                throw new AgentFrameworkException(ErrorCode.InvalidMessage, "Failed to un-pack message", e);
+                throw new AriesFrameworkException(ErrorCode.InvalidMessage, "Failed to un-pack message", e);
             }
 
             UnpackedMessageContext result = null;
@@ -189,7 +189,7 @@ namespace Hyperledger.Aries.Agents
                         result = new UnpackedMessageContext(unpacked.Message, unpacked.SenderVerkey);
                     }
                 }
-                catch (AgentFrameworkException ex) when (ex.ErrorCode == ErrorCode.RecordNotFound)
+                catch (AriesFrameworkException ex) when (ex.ErrorCode == ErrorCode.RecordNotFound)
                 {
                     // OK if not resolved. Example: authpacked forward message in routing agent.
                     // Downstream consumers should throw if Connection is required

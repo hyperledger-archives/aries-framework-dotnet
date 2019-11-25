@@ -81,7 +81,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
                     var provisioning = await provisioningService.GetProvisioningAsync(context.Wallet);
                     if (provisioning.DefaultPaymentAddressId == null)
                     {
-                        throw new AgentFrameworkException(ErrorCode.RecordNotFound, "Default PaymentAddressRecord not found");
+                        throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Default PaymentAddressRecord not found");
                     }
                     addressRecord = await recordService.GetAsync<PaymentAddressRecord>(context.Wallet, provisioning.DefaultPaymentAddressId);
                 }
@@ -104,7 +104,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
                 var provisioning = await provisioningService.GetProvisioningAsync(agentContext.Wallet);
                 if (provisioning.DefaultPaymentAddressId == null)
                 {
-                    throw new AgentFrameworkException(ErrorCode.RecordNotFound, "Default PaymentAddressRecord not found");
+                    throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Default PaymentAddressRecord not found");
                 }
 
                 paymentAddress = await recordService.GetAsync<PaymentAddressRecord>(agentContext.Wallet, provisioning.DefaultPaymentAddressId);
@@ -128,13 +128,13 @@ namespace Hyperledger.Aries.Payments.SovrinToken
         {
             if (paymentRecord.Amount == 0)
             {
-                throw new AgentFrameworkException(ErrorCode.InvalidRecordData, "Cannot make a payment with 0 amount");
+                throw new AriesFrameworkException(ErrorCode.InvalidRecordData, "Cannot make a payment with 0 amount");
             }
 
             await paymentRecord.TriggerAsync(PaymentTrigger.ProcessPayment);
             if (paymentRecord.Address == null)
             {
-                throw new AgentFrameworkException(ErrorCode.InvalidRecordData, "Payment record is missing an address");
+                throw new AriesFrameworkException(ErrorCode.InvalidRecordData, "Payment record is missing an address");
             }
 
             var provisioning = await provisioningService.GetProvisioningAsync(agentContext.Wallet);
@@ -146,7 +146,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
             await RefreshBalanceAsync(agentContext, addressFromRecord);
             if (addressFromRecord.Balance < paymentRecord.Amount)
             {
-                throw new AgentFrameworkException(ErrorCode.PaymentInsufficientFunds,
+                throw new AriesFrameworkException(ErrorCode.PaymentInsufficientFunds,
                     "Address doesn't have enough funds to make this payment");
             }
             var txnFee = await GetTransactionFeeAsync(agentContext, TransactionTypes.XFER_PUBLIC);
@@ -261,7 +261,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
             var response = JObject.Parse(res);
 
             if (!response["op"].ToObject<string>().Equals("reply", StringComparison.OrdinalIgnoreCase))
-                throw new AgentFrameworkException(ErrorCode.LedgerOperationRejected, "Ledger operation rejected");
+                throw new AriesFrameworkException(ErrorCode.LedgerOperationRejected, "Ledger operation rejected");
         }
 
         private async Task<IDictionary<string, ulong>> GetTransactionFeesAsync(IAgentContext agentContext)
@@ -319,7 +319,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
         {
             if (paymentRecord.State != PaymentState.Paid)
             {
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState, "Payment record must be in state Paid to attach receipts");
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState, "Payment record must be in state Paid to attach receipts");
             }
 
             agentMessage.AddDecorator(new PaymentReceiptDecorator
@@ -338,7 +338,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
             var provisioning = await provisioningService.GetProvisioningAsync(agentContext.Wallet);
             if (provisioning.DefaultPaymentAddressId == null)
             {
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, "Default PaymentAddressRecord not found");
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Default PaymentAddressRecord not found");
             }
             var paymentAddress = await recordService.GetAsync<PaymentAddressRecord>(agentContext.Wallet, provisioning.DefaultPaymentAddressId);
             return paymentAddress;
@@ -349,7 +349,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
         {
             if (paymentRecord.State != PaymentState.Paid && paymentRecord.State != PaymentState.ReceiptReceived)
             {
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState,
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     "Payment record must be in state Paid or ReceiptReceived to verify it");
             }
 

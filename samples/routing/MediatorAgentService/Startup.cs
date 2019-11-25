@@ -22,7 +22,6 @@ namespace MediatorAgentService
                 builder.RegisterMediatorAgent(options =>
                 {
                     #region Required configuration parameters
-
                     // Agent endpoint. Use fully qualified endpoint.
                     options.EndpointUri = "http://localhost:5000/";
                     // The path to the genesis transaction file.

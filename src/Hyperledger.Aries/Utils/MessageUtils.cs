@@ -117,7 +117,7 @@ namespace Hyperledger.Aries.Utils
             var regExMatches = Regex.Matches(messageType, MessageTypeRegex);
 
             if (regExMatches.Count != 1 || regExMatches[0].Groups.Count != 5)
-                throw new AgentFrameworkException(ErrorCode.InvalidParameterFormat, $"{messageType} is an invalid message type");
+                throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, $"{messageType} is an invalid message type");
 
             return (regExMatches[0].Groups[1].Value, regExMatches[0].Groups[2].Value, regExMatches[0].Groups[3].Value, regExMatches[0].Groups[4].Value);
         }

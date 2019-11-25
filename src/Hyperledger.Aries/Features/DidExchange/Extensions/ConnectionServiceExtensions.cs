@@ -72,7 +72,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="myKey">My key.</param>
         /// <exception cref="ArgumentNullException"/>
-        /// <exception cref="AgentFrameworkException">Throw with error code 'RecordNotFound' if a connection record for the key was not found</exception>
+        /// <exception cref="AriesFrameworkException">Throw with error code 'RecordNotFound' if a connection record for the key was not found</exception>
         public static async Task<ConnectionRecord> ResolveByMyKeyAsync(
             this IConnectionService connectionService, IAgentContext agentContext, string myKey)
         {
@@ -120,10 +120,10 @@ namespace Hyperledger.Aries.Features.DidExchange
             var search = await connectionService.ListAsync(context, SearchQuery.Equal(TagConstants.LastThreadId, threadId), 1);
 
             if (search.Count == 0)
-                throw new AgentFrameworkException(ErrorCode.RecordNotFound, $"Connection record not found by thread id : {threadId}");
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, $"Connection record not found by thread id : {threadId}");
 
             if (search.Count > 1)
-                throw new AgentFrameworkException(ErrorCode.RecordInInvalidState, $"Multiple connection records found by thread id : {threadId}");
+                throw new AriesFrameworkException(ErrorCode.RecordInInvalidState, $"Multiple connection records found by thread id : {threadId}");
 
             return search.Single();
         }

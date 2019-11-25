@@ -43,7 +43,7 @@ namespace Hyperledger.Aries.Agents
             if (!response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
-                throw new AgentFrameworkException(
+                throw new AriesFrameworkException(
                     ErrorCode.A2AMessageTransmissionError, $"Failed to send A2A message with an HTTP status code of {response.StatusCode} and content {responseBody}");
             }
 

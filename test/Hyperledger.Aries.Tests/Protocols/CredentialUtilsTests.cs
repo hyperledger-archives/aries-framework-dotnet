@@ -50,7 +50,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             attributeValue.MimeType = "bad-mime-type";
 
-            var ex = Assert.Throws<AgentFrameworkException>(() => CredentialUtils.ValidateCredentialPreviewAttribute(attributeValue));
+            var ex = Assert.Throws<AriesFrameworkException>(() => CredentialUtils.ValidateCredentialPreviewAttribute(attributeValue));
             Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
         }
 
@@ -61,7 +61,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             attributeValue.MimeType = null;
 
-            var ex = Assert.Throws<AgentFrameworkException>(() => CredentialUtils.ValidateCredentialPreviewAttribute(attributeValue));
+            var ex = Assert.Throws<AriesFrameworkException>(() => CredentialUtils.ValidateCredentialPreviewAttribute(attributeValue));
             Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
         }
 

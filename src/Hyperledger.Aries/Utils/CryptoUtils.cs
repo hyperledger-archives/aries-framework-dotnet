@@ -149,7 +149,7 @@ namespace Hyperledger.Aries.Utils
         public static Task<byte[]> PrepareAsync(Wallet wallet, AgentMessage message, ConnectionRecord connection)
         {
             var recipientKey = connection.TheirVk
-                ?? throw new AgentFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot find encryption key");
+                ?? throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot find encryption key");
 
             var routingKeys = connection.Endpoint?.Verkey != null ? new[] { connection.Endpoint.Verkey } : new string[0];
             return PrepareAsync(wallet, message, recipientKey, routingKeys, connection.MyVk);

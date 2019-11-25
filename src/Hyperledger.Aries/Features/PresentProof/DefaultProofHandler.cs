@@ -31,7 +31,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <param name="agentContext"></param>
         /// <param name="messageContext">The agent message agentContext.</param>
         /// <returns></returns>
-        /// <exception cref="AgentFrameworkException">Unsupported message type {messageType}</exception>
+        /// <exception cref="AriesFrameworkException">Unsupported message type {messageType}</exception>
         public async Task<AgentMessage> ProcessAsync(IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             switch (messageContext.GetMessageType())
@@ -54,7 +54,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                     break;
                 }
                 default:
-                    throw new AgentFrameworkException(ErrorCode.InvalidMessage,
+                    throw new AriesFrameworkException(ErrorCode.InvalidMessage,
                         $"Unsupported message type {messageContext.GetMessageType()}");
             }
             return null;

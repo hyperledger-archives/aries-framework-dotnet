@@ -172,7 +172,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task CreateCredentialOfferWithBadAttributeValuesThrowsException()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
                 new OfferConfiguration
                 {
                     CredentialAttributeValues = new List<CredentialPreviewAttribute>
@@ -190,7 +190,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task CreateCredentialOfferWithMultipleBadAttributeValuesThrowsException()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
                 new OfferConfiguration
                 {
                     CredentialAttributeValues = new List<CredentialPreviewAttribute>
@@ -214,7 +214,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task RevokeCredentialOfferThrowsCredentialNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.RejectOfferAsync(_issuerWallet, "bad-connection-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.RejectOfferAsync(_issuerWallet, "bad-connection-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -265,14 +265,14 @@ namespace Hyperledger.Aries.Tests.Protocols
             var issuerCredentialId =
                 await _credentialService.ProcessCredentialRequestAsync(_issuerWallet, credentialRequest, issuerConnection);
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.RejectOfferAsync(_issuerWallet, issuerCredentialId));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.RejectOfferAsync(_issuerWallet, issuerCredentialId));
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 
         [Fact]
         public async Task CreateOfferV1AsyncThrowsExceptionConnectionNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet, new OfferConfiguration(), "bad-connection-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet, new OfferConfiguration(), "bad-connection-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -284,14 +284,14 @@ namespace Hyperledger.Aries.Tests.Protocols
             await _connectionService.CreateInvitationAsync(_issuerWallet,
                 new InviteConfiguration { ConnectionId = connectionId, AutoAcceptConnection = false });
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet, new OfferConfiguration(), connectionId));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet, new OfferConfiguration(), connectionId));
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 
         [Fact]
         public async Task SendOfferAsyncThrowsExceptionConnectionNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet, new OfferConfiguration(), "bad-connection-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet, new OfferConfiguration(), "bad-connection-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -303,7 +303,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             await _connectionService.CreateInvitationAsync(_issuerWallet,
                 new InviteConfiguration { ConnectionId = connectionId, AutoAcceptConnection = false });
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () =>
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () =>
                 await _credentialService.CreateOfferAsync(_issuerWallet, new OfferConfiguration(), connectionId));
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
@@ -314,7 +314,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             var (issuerConnection, _) = await Scenarios.EstablishConnectionAsync(
                 _connectionService, _messages, _issuerWallet, _holderWallet);
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.ProcessCredentialRequestAsync(_issuerWallet,
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.ProcessCredentialRequestAsync(_issuerWallet,
                 new CredentialRequestMessage(), issuerConnection));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
@@ -323,7 +323,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         [Fact]
         public async Task RejectCredentialRequestThrowsExceptionCredentialNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.RejectCredentialRequestAsync(_holderWallet, "bad-credential-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.RejectCredentialRequestAsync(_holderWallet, "bad-credential-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -377,7 +377,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             await _credentialService.RejectCredentialRequestAsync(_issuerWallet, issuerCredentialId);
 
             //Try reject the credential request again
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.RejectCredentialRequestAsync(_issuerWallet, issuerCredentialId));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.RejectCredentialRequestAsync(_issuerWallet, issuerCredentialId));
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 
@@ -388,7 +388,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
                 new { seed = TestConstants.StewartDid }.ToJson());
 
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, "bad-credential-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, "bad-credential-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
@@ -445,14 +445,14 @@ namespace Hyperledger.Aries.Tests.Protocols
             _messages.Add(credential);
 
             //Try issue the credential again
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, issuerCredentialId));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, issuerCredentialId));
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 
         [Fact]
         public async Task RejectOfferAsyncThrowsExceptionCredentialOfferNotFound()
         {
-            var ex = await Assert.ThrowsAsync<AgentFrameworkException>(async () => await _credentialService.RejectOfferAsync(_issuerWallet, "bad-credential-id"));
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.RejectOfferAsync(_issuerWallet, "bad-credential-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
