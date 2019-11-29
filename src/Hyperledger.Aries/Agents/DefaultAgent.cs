@@ -21,7 +21,12 @@ namespace Hyperledger.Aries.Agents
         protected override void ConfigureHandlers()
         {
             AddConnectionHandler();
+            AddCredentialHandler();
+            AddProofHandler();
+            AddDiscoveryHandler();
+            AddBasicMessageHandler();
             AddForwardHandler();
+            AddTrustPingHandler();
         }
     }
 }

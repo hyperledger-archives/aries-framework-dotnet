@@ -23,7 +23,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
             var obj = new CredentialPreviewAttribute();
             obj.Name = name.Value<string>();
-            obj.MimeType = mimeType.HasValues ? mimeType.Value<string>() : CredentialMimeTypes.TextMimeType;
+            obj.MimeType = mimeType?.Value<string>();
             obj.Value = CredentialUtils.CastAttribute(value, obj.MimeType);
             return obj;
         }
