@@ -40,7 +40,7 @@ namespace Hyperledger.Aries.Tests
             Assert.Equal("123", decorator.Prop1);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Decode credential preview attribute with null mime-type")]
         public void DecodeCredentialPreviewAttribute()
         {
             var json = new { name = "some name", value = "some value" }.ToJson();
@@ -48,6 +48,9 @@ namespace Hyperledger.Aries.Tests
             var attr = JsonConvert.DeserializeObject<CredentialPreviewAttribute>(json);
 
             Assert.NotNull(attr);
+            Assert.Equal("some name", attr.Name);
+            Assert.Equal("some value", attr.Value);
+            Assert.Null(attr.MimeType);
         }
     }
 
