@@ -61,8 +61,8 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             attributeValue.MimeType = null;
 
-            var ex = Assert.Throws<AriesFrameworkException>(() => CredentialUtils.ValidateCredentialPreviewAttribute(attributeValue));
-            Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
+            CredentialUtils.ValidateCredentialPreviewAttribute(attributeValue);
+            Assert.True(true);
         }
 
         [Fact]

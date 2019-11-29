@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.IssueCredential;
 
 namespace Hyperledger.Aries.Tests
 {
@@ -37,6 +38,16 @@ namespace Hyperledger.Aries.Tests
             Assert.NotNull(decorator);
             Assert.IsType<SampleDecorator>(decorator);
             Assert.Equal("123", decorator.Prop1);
+        }
+
+        [Fact]
+        public void DecodeCredentialPreviewAttribute()
+        {
+            var json = new { name = "some name", value = "some value" }.ToJson();
+
+            var attr = JsonConvert.DeserializeObject<CredentialPreviewAttribute>(json);
+
+            Assert.NotNull(attr);
         }
     }
 

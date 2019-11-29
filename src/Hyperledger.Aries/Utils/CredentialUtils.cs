@@ -55,6 +55,7 @@ namespace Hyperledger.Aries.Utils
         {
             switch (attribute.MimeType)
             {
+                case null:
                 case CredentialMimeTypes.TextMimeType:
                 case CredentialMimeTypes.ApplicationJsonMimeType:
                     break;
@@ -115,6 +116,8 @@ namespace Hyperledger.Aries.Utils
         {
             switch (mimeType)
             {
+                case null:
+                    return attributeValue.Value<string>();
                 case CredentialMimeTypes.TextMimeType:
                 case CredentialMimeTypes.ApplicationJsonMimeType:
                     return attributeValue.Value<string>();
