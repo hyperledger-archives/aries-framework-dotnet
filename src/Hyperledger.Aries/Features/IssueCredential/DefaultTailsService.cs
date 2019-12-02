@@ -80,8 +80,14 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var revocationRegistry =
                 await LedgerService.LookupRevocationRegistryDefinitionAsync(pool, revocationRegistryId);
             var tailsUri = JObject.Parse(revocationRegistry.ObjectJson)["value"]["tailsLocation"].ToObject<string>();
+            var tailsFileName = JObject.Parse(revocationRegistry.ObjectJson)["value"]["tailsHash"].ToObject<string>();
 
-            var tailsfile = Path.Combine(EnvironmentUtils.GetTailsPath(), new Uri(tailsUri).Segments.Last());
+            var tailsfile = Path.Combine(EnvironmentUtils.GetTailsPath(), tailsFileName);
+
+            if (!Directory.Exists(EnvironmentUtils.GetTailsPath()))
+            {
+                Directory.CreateDirectory(EnvironmentUtils.GetTailsPath());
+            }
 
             if (!File.Exists(tailsfile))
             {
