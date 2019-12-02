@@ -160,7 +160,9 @@ namespace Hyperledger.Aries.Configuration
             record.IssuerSeed = agentOptions.IssuerKeySeed;
             record.IssuerDid = issuer.Did;
             record.IssuerVerkey = issuer.VerKey;
-            record.TailsBaseUri = new Uri(new Uri(agentOptions.EndpointUri), "tails/").ToString();
+            record.TailsBaseUri = agentOptions.EndpointUri != null
+                ? new Uri(new Uri(agentOptions.EndpointUri), "tails/").ToString()
+                : null;
 
             record.SetTag("AgentKeySeed", agentOptions.AgentKeySeed);
             record.SetTag("IssuerKeySeed", agentOptions.IssuerKeySeed);
