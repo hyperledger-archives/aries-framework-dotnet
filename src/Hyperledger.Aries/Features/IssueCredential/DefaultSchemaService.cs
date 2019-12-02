@@ -187,10 +187,20 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 var revocationRegistry = await AnonCreds.IssuerCreateAndStoreRevocRegAsync(context.Wallet, issuerDid, null,
                     "Tag2", credentialDefinition.CredDefId, revRegDefConfig, tailsHandle);
 
+                var revocationRecord = new RevocationRegistryRecord
+                {
+                    Id = revocationRegistry.RevRegId,
+                    CredentialDefinitionId = credentialDefinition.CredDefId
+                };
+
                 // Update tails location URI
                 var revocationDefinition = JObject.Parse(revocationRegistry.RevRegDefJson);
-                var tailsfile = Path.GetFileName(revocationDefinition["value"]["tailsLocation"].ToObject<string>());
-                revocationDefinition["value"]["tailsLocation"] = new Uri(tailsBaseUri, tailsfile).ToString();
+                if (tailsBaseUri != null)
+                {
+                    var tailsfile = Path.GetFileName(revocationDefinition["value"]["tailsLocation"].ToObject<string>());
+                    revocationDefinition["value"]["tailsLocation"] = new Uri(tailsBaseUri, tailsfile).ToString();
+                    revocationRecord.TailsFile = tailsfile;
+                }
 
                 paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_DEF);
                 await LedgerService.RegisterRevocationRegistryDefinitionAsync(context: context,
@@ -208,12 +218,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
                                                                      paymentInfo: paymentInfo);
                 if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
 
-                var revocationRecord = new RevocationRegistryRecord
-                {
-                    Id = revocationRegistry.RevRegId,
-                    TailsFile = tailsfile,
-                    CredentialDefinitionId = credentialDefinition.CredDefId
-                };
                 await RecordService.AddAsync(context.Wallet, revocationRecord);
             }
 
@@ -233,8 +237,14 @@ namespace Hyperledger.Aries.Features.IssueCredential
                     "This wallet is not provisioned with issuer");
             }
 
-            return await CreateCredentialDefinitionAsync(context, schemaId, provisioning.IssuerDid, tag,
-                supportsRevocation, maxCredentialCount, new Uri(provisioning.TailsBaseUri));
+            return await CreateCredentialDefinitionAsync(
+                context: context,
+                schemaId: schemaId,
+                issuerDid: provisioning.IssuerDid,
+                tag: tag,
+                supportsRevocation: supportsRevocation,
+                maxCredentialCount: maxCredentialCount,
+                tailsBaseUri: provisioning.TailsBaseUri != null ? new Uri(provisioning.TailsBaseUri) : null);
         }
 
         /// TODO this should return a definition object
