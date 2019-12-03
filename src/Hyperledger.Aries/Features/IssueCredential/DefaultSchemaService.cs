@@ -198,7 +198,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 if (tailsBaseUri != null)
                 {
                     var tailsfile = Path.GetFileName(revocationDefinition["value"]["tailsLocation"].ToObject<string>());
-                    revocationDefinition["value"]["tailsLocation"] = new Uri(tailsBaseUri, tailsfile).ToString();
+                    revocationDefinition["value"]["tailsLocation"] = new Uri(tailsBaseUri + tailsfile).ToString();
                     revocationRecord.TailsFile = tailsfile;
                 }
 
