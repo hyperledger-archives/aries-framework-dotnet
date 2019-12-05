@@ -148,7 +148,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 message: presentationMessage,
                 recipientKey: service.RecipientKeys.First(),
                 endpointUri: service.ServiceEndpoint,
-                routingKeys: service.RoutingKeys.ToArray());
+                routingKeys: service.RoutingKeys?.ToArray());
 
             return proofRecord;
         }
