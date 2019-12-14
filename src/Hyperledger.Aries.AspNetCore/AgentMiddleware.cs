@@ -10,55 +10,54 @@ namespace Hyperledger.Aries.AspNetCore
     /// <summary>
     /// An agent middleware
     /// </summary>
-    public class AgentMiddleware : IMiddleware
+    public class AgentMiddleware
     {
-        private readonly IAgentProvider _contextProvider;
+        private readonly RequestDelegate _next;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentMiddleware"/> class.
         /// </summary>
-        /// <param name="contextProvider">Context provider.</param>
-        public AgentMiddleware(IAgentProvider contextProvider)
+        /// <param name="next">Context provider.</param>
+        public AgentMiddleware(RequestDelegate next)
         {
-            _contextProvider = contextProvider;
+            _next = next;
         }
 
         /// <summary>
         /// Invokes the agent processing pipeline
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="next"></param>
+        /// <param name="httpContext"></param>
+        /// <param name="httpContext"></param>
         /// <returns></returns>
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task Invoke(HttpContext httpContext, IAgentProvider agentProvider)
         {
-            if (!HttpMethods.IsPost(context.Request.Method)
-                || !context.Request.ContentType.Equals(DefaultMessageService.AgentWireMessageMimeType))
+            if (!HttpMethods.IsPost(httpContext.Request.Method)
+                || !httpContext.Request.ContentType.Equals(DefaultMessageService.AgentWireMessageMimeType))
             {
-                await next(context);
+                await _next(httpContext);
                 return;
             }
 
-            if (context.Request.ContentLength == null) throw new Exception("Empty content length");
+            if (httpContext.Request.ContentLength == null) throw new Exception("Empty content length");
 
-            using (var stream = new StreamReader(context.Request.Body))
+            using var stream = new StreamReader(httpContext.Request.Body);
+            var body = await stream.ReadToEndAsync();
+
+            var agent = await agentProvider.GetAgentAsync();
+
+            var response = await agent.ProcessAsync(
+                context: await agentProvider.GetContextAsync(), //TODO assumes all received messages are packed 
+                messageContext: new PackedMessageContext(body.GetUTF8Bytes()));
+
+            httpContext.Response.StatusCode = 200;
+
+            if (response != null)
             {
-                var body = await stream.ReadToEndAsync();
-
-                var agent = await _contextProvider.GetAgentAsync();
-                var response = await agent.ProcessAsync(
-                    context: await _contextProvider.GetContextAsync(), //TODO assumes all received messages are packed 
-                    messageContext: new PackedMessageContext(body.GetUTF8Bytes()));
-
-                context.Response.StatusCode = 200;
-
-                if (response != null)
-                {
-                    context.Response.ContentType = DefaultMessageService.AgentWireMessageMimeType;
-					await context.Response.WriteAsync(response.Payload.GetUTF8String());
-				}
-                else
-                    await context.Response.WriteAsync(string.Empty);
+                httpContext.Response.ContentType = DefaultMessageService.AgentWireMessageMimeType;
+                await httpContext.Response.WriteAsync(response.Payload.GetUTF8String());
             }
+            else
+                await httpContext.Response.WriteAsync(string.Empty);
         }
     }
 }
