@@ -24,6 +24,6 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// The revealed attributes.
         /// </value>
         [JsonProperty("self_attested_attrs")]
-        public Dictionary<string, ProofAttribute> SelfAttestedAttributes { get; set; }
+        public Dictionary<string, string> SelfAttestedAttributes { get; set; }
     }
 }
