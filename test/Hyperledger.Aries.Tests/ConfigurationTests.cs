@@ -203,7 +203,7 @@ namespace Hyperledger.Aries.Tests
                 .Returns(Task.FromResult<MessageContext>(null));
 
             // Arrange
-            var middleware = new AgentMiddleware(mockedContext.Object);
+            var middleware = new AgentMiddleware(next => Task.CompletedTask);
 
             var context = new DefaultHttpContext();
             context.Request.Body = new MemoryStream();
@@ -215,7 +215,7 @@ namespace Hyperledger.Aries.Tests
             context.Request.Body.Seek(0, SeekOrigin.Begin);
 
             //Act
-            await middleware.InvokeAsync(context, next => Task.CompletedTask);
+            await middleware.Invoke(context, mockedContext.Object);
 
             //Assert
             context.Response.StatusCode
@@ -230,7 +230,11 @@ namespace Hyperledger.Aries.Tests
             var nextInvoked = false;
 
             // Arrange
-            var middleware = new AgentMiddleware(mockedContext.Object);
+            var middleware = new AgentMiddleware(next =>
+            {
+                nextInvoked = true;
+                return Task.CompletedTask;
+            });
 
             var context = new DefaultHttpContext();
             context.Request.Body = new MemoryStream();
@@ -239,11 +243,7 @@ namespace Hyperledger.Aries.Tests
             await context.Response.Body.WriteAsync(new ReadOnlyMemory<byte>(new { dummy = "dummy" }.ToJson().GetUTF8Bytes()));
 
             //Act
-            Func<Task> act = async () => await middleware.InvokeAsync(context, next =>
-            {
-                nextInvoked = true;
-                return Task.CompletedTask;
-            });
+            Func<Task> act = async () => await middleware.Invoke(context, mockedContext.Object);
 
             await act.Should().NotThrowAsync();
             nextInvoked.Should().BeTrue();
