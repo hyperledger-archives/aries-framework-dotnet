@@ -10,15 +10,15 @@ services:
       agent_net:
         ipv4_address: 10.0.0.10
 
-  test-agent:
-    build:
-      context: .
-      dockerfile: docker/test-agent.dockerfile
-    depends_on:
-      - "indy-pool"
-    networks:
-      agent_net:
-        ipv4_address: 10.0.0.14
+#  test-agent:
+#    build:
+#      context: .
+#      dockerfile: docker/test-agent.dockerfile
+#    depends_on:
+#      - "indy-pool"
+#    networks:
+#      agent_net:
+#        ipv4_address: 10.0.0.14
 
 networks:
   agent_net:
