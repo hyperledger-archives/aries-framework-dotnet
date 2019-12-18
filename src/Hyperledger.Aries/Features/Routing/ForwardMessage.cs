@@ -1,7 +1,6 @@
 ﻿using System;
 using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Features.Routing
 {
@@ -33,6 +32,14 @@ namespace Hyperledger.Aries.Features.Routing
         /// The content.
         /// </value>
         [JsonProperty("msg")]
-        public JObject Message { get; set; }
+        public string Message { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString() =>
+            $"{GetType().Name}: " +
+            $"Id={Id}, " +
+            $"Type={Type}, " +
+            $"To={To}, " +
+            $"Message={(Message?.Length > 0 ? "[hidden]" : null)}";
     }
 }

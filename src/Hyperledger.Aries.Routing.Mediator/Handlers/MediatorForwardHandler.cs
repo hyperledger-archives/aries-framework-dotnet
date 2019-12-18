@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Contracts;
-using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.Routing;
 using Hyperledger.Aries.Routing;
 using Hyperledger.Aries.Storage;
@@ -46,7 +45,7 @@ namespace Hyperledger.Aries.Routing
 
             var edgeWallet = await walletService.GetWalletAsync(inboxRecord.WalletConfiguration, inboxRecord.WalletCredentials);
 
-            var inboxItemRecord = new InboxItemRecord { ItemData = message.Message.ToJson() };
+            var inboxItemRecord = new InboxItemRecord { ItemData = message.Message };
             await recordService.AddAsync(edgeWallet, inboxItemRecord);
 
             eventAggregator.Publish(new InboxItemEvent
