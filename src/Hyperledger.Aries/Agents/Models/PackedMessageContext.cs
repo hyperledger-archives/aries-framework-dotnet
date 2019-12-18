@@ -1,4 +1,6 @@
+using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange;
+using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Agents
 {
@@ -22,6 +24,14 @@ namespace Hyperledger.Aries.Agents
         /// <param name="message"></param>
         /// <returns></returns>
         public PackedMessageContext(string message) : base(message, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PackedMessageContext" /> class.
+        /// </summary>
+        /// <param name="message"></param>
+        public PackedMessageContext(JObject message) : base(message.ToJson(), true)
         {
         }
 
