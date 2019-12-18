@@ -9,6 +9,7 @@ using Hyperledger.Aries.Features.Routing;
 using Hyperledger.Indy.CryptoApi;
 using Hyperledger.Indy.WalletApi;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Utils
 {
@@ -129,7 +130,7 @@ namespace Hyperledger.Aries.Utils
                 foreach (var routingKey in routingKeys)
                 {
                     // Anonpack
-                    msg = await CryptoUtils.PackAsync(wallet, routingKey, new ForwardMessage { Message = msg.GetUTF8String(), To = previousKey });
+                    msg = await CryptoUtils.PackAsync(wallet, routingKey, new ForwardMessage { Message = JObject.Parse(msg.GetUTF8String()), To = previousKey });
                     previousKey = routingKey;
                 }
             }

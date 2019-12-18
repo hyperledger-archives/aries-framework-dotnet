@@ -40,7 +40,6 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddSingleton<IAgent, T>();
             builder.Services.Configure(options);
             builder.Services.AddHostedService<MediatorProvisioningService>();
-            builder.Services.AddSingleton<AgentMiddleware>();
             builder.Services.AddSingleton<MediatorDiscoveryMiddleware>();
 
             return builder;
