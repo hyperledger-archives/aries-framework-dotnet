@@ -1,11 +1,8 @@
-﻿using System;
-using System.Net.Http;
-using AgentFramework.Core.Contracts;
-using AgentFramework.Core.Runtime;
+﻿using System.Net.Http;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Hyperledger.Aries.Features.DidExchange;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

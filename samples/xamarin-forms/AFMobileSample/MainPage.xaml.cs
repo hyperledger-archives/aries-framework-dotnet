@@ -1,12 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
-using AgentFramework.Core.Contracts;
-using AgentFramework.Core.Exceptions;
-using AgentFramework.Core.Extensions;
-using AgentFramework.Core.Handlers.Internal;
-using AgentFramework.Core.Models.Wallets;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Storage;
+using Hyperledger.Aries;
 using Autofac;
-using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.WalletApi;
 using Xamarin.Forms;
 
@@ -35,17 +33,17 @@ namespace AFMobileSample
 
             try
             {
-                var configuration = new ProvisioningConfiguration
+                var configuration = new AgentOptions
                 {
                     WalletCredentials = _creds,
                     WalletConfiguration = _config,
-                    EndpointUri = new Uri("http://example.com/agent")
+                    EndpointUri = "http://example.com/agent",
                 };
 
                 await _provisioningService.ProvisionAgentAsync(configuration);
             }
             catch (Exception ex)
-            when ((ex is AgentFrameworkException) || (ex is WalletExistsException))
+            when ((ex is AriesFrameworkException) || (ex is WalletExistsException))
             {
                 await DisplayAlert("Error", "An agent has already been provisioned.", "OK");
             }
@@ -61,9 +59,9 @@ namespace AFMobileSample
         async void OnMakeInvitation(object sender, EventArgs e)
         {
             var wallet = await _walletService.GetWalletAsync(_config, _creds);
-            var invitation = await _connectionService.CreateInvitationAsync(new AgentContext { Wallet = wallet });
+            var (invitation, rec) = await _connectionService.CreateInvitationAsync(new AgentContext { Wallet = wallet });
 
-            InvitationDetails.Text = invitation.Invitation.ToJson();
+            InvitationDetails.Text = invitation.Label;
         }
     }
 }
