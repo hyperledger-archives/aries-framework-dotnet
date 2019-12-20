@@ -14,7 +14,7 @@
     <PackageReference Include="System.Buffers" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
-    <PackageReference Include="AgentFramework.Core.Handlers" Version="2.1.0-preview.491" />
+    <PackageReference Include="Hyperledger.Aries" Version="1.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="MainPageViewModel.cs" />

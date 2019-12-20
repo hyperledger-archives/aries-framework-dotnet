@@ -2,7 +2,6 @@
 using System.Linq;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.IssueCredential;
-using Hyperledger.Indy.AnonCredsApi;
 using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Utils
