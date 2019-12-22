@@ -1,6 +1,6 @@
 # Aries Framework for .NET
 
-[![Build Status](https://dev.azure.com/streetcred/Agent%20Framework/_apis/build/status/Agent%20Framework%20-%20Build?branchName=master)](https://dev.azure.com/streetcred/Agent%20Framework/_build/latest?definitionId=10?branchName=master)
+[![Build Status](https://dev.azure.com/Hyperledger/Aries/_apis/build/status/hyperledger.aries-framework-dotnet?branchName=master)](https://dev.azure.com/Hyperledger/Aries/_build/latest?definitionId=80&branchName=master)
 [![Build Status](https://travis-ci.com/hyperledger/aries-framework-dotnet.svg?branch=master)](https://travis-ci.com/hyperledger/aries-framework-dotnet.svg?branch=master)
 [![MyGet](https://img.shields.io/nuget/v/Hyperledger.Aries.svg)](https://www.nuget.org/packages/Hyperledger.Aries/)
 
