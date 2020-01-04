@@ -1,23 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Storage;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
     internal class DefaultCredentialHandler : IMessageHandler
     {
         private readonly ICredentialService _credentialService;
+        private readonly IWalletRecordService _recordService;
         private readonly IMessageService _messageService;
 
         /// <summary>Initializes a new instance of the <see cref="DefaultCredentialHandler"/> class.</summary>
         /// <param name="credentialService">The credential service.</param>
+        /// <param name="recordService">The wallet record service.</param>
         /// <param name="messageService">The message service.</param>
         public DefaultCredentialHandler(
             ICredentialService credentialService,
+            IWalletRecordService recordService,
             IMessageService messageService)
         {
             _credentialService = credentialService;
+            _recordService = recordService;
             _messageService = messageService;
         }
 
@@ -83,7 +92,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         var recordId = await _credentialService.ProcessCredentialAsync(
                             agentContext, credential, messageContext.Connection);
 
-                        messageContext.ContextRecord = await _credentialService.GetAsync(agentContext, recordId);
+                        messageContext.ContextRecord = await UpdateValuesAsync(
+                            credentialId: recordId,
+                            credentialIssue: messageContext.GetMessage<CredentialIssueMessage>(),
+                            agentContext: agentContext);
 
                         return null;
                     }
@@ -91,6 +103,35 @@ namespace Hyperledger.Aries.Features.IssueCredential
                     throw new AriesFrameworkException(ErrorCode.InvalidMessage,
                         $"Unsupported message type {messageContext.GetMessageType()}");
             }
+        }
+
+        private async Task<CredentialRecord> UpdateValuesAsync(string credentialId, CredentialIssueMessage credentialIssue, IAgentContext agentContext)
+        {
+
+            await Task.Yield();
+
+            var credentialAttachment = credentialIssue.Credentials.FirstOrDefault(x => x.Id == "libindy-cred-0")
+                ?? throw new ArgumentException("Credential attachment not found");
+
+            var credentialJson = credentialAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
+
+            var jcred = JObject.Parse(credentialJson);
+            var values = jcred["values"].ToObject<Dictionary<string, AttributeValue>>();
+
+            var credential = await _credentialService.GetAsync(agentContext, credentialId);
+            credential.CredentialAttributesValues = values.Select(x => new CredentialPreviewAttribute { Name = x.Key, Value = x.Value.Raw, MimeType = CredentialMimeTypes.TextMimeType }).ToList();
+            await _recordService.UpdateAsync(agentContext.Wallet, credential);
+
+            return credential;
+        }
+
+        private class AttributeValue
+        {
+            [JsonProperty("raw")]
+            public string Raw { get; set; }
+
+            [JsonProperty("encoded")]
+            public string Encoded { get; set; }
         }
     }
 }
