@@ -107,9 +107,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         private async Task<CredentialRecord> UpdateValuesAsync(string credentialId, CredentialIssueMessage credentialIssue, IAgentContext agentContext)
         {
-
-            await Task.Yield();
-
             var credentialAttachment = credentialIssue.Credentials.FirstOrDefault(x => x.Id == "libindy-cred-0")
                 ?? throw new ArgumentException("Credential attachment not found");
 
