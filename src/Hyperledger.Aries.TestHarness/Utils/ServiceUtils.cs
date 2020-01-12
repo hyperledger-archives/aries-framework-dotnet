@@ -18,7 +18,7 @@ namespace Hyperledger.TestHarness.Utils
                 Name = "Tester"
             });
 
-            provisionRecord.SetupGet(x => x.Endpoint).Returns(new AgentEndpoint(endpointUri, "", verkey));
+            provisionRecord.SetupGet(x => x.Endpoint).Returns(new AgentEndpoint(endpointUri, "", new[] { verkey }));
             provisionRecord.SetupGet(x => x.MasterSecretId).Returns(masterSecret);
 
             var provisionServiceMock = new Mock<IProvisioningService>();

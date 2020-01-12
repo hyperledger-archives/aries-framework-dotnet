@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AgentFramework.Core.Contracts;
-using AgentFramework.Core.Handlers;
-using AgentFramework.Core.Messages;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Storage;
 
 namespace WebAgent.Protocols.BasicMessage
 {
@@ -15,7 +14,7 @@ namespace WebAgent.Protocols.BasicMessage
             _recordService = recordService;
         }
 
-        protected override async Task<AgentMessage> ProcessAsync(BasicMessage message, IAgentContext agentContext, MessageContext messageContext)
+        protected override async Task<AgentMessage> ProcessAsync(BasicMessage message, IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             Console.WriteLine($"Processing message by {messageContext.Connection.Id}");
 

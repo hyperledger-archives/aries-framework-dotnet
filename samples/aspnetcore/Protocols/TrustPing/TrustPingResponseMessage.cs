@@ -1,5 +1,5 @@
 ﻿using System;
-using AgentFramework.Core.Messages;
+using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
 
 namespace WebAgent.Messages

@@ -27,7 +27,7 @@ namespace Hyperledger.Aries.AspNetCore
         /// Invokes the agent processing pipeline
         /// </summary>
         /// <param name="httpContext"></param>
-        /// <param name="httpContext"></param>
+        /// <param name="agentProvider"></param>
         /// <returns></returns>
         public async Task Invoke(HttpContext httpContext, IAgentProvider agentProvider)
         {

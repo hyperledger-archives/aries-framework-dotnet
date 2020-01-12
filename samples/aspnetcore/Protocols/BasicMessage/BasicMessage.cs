@@ -1,7 +1,7 @@
 ﻿using System;
-using AgentFramework.Core.Messages;
 using WebAgent.Messages;
 using Newtonsoft.Json;
+using Hyperledger.Aries.Agents;
 
 namespace WebAgent.Protocols.BasicMessage
 {
