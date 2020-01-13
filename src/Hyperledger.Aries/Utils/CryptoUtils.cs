@@ -9,6 +9,7 @@ using Hyperledger.Aries.Features.Routing;
 using Hyperledger.Indy.CryptoApi;
 using Hyperledger.Indy.WalletApi;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Utils
 {
@@ -118,7 +119,7 @@ namespace Hyperledger.Aries.Utils
             if (recipientKey == null) throw new ArgumentNullException(nameof(recipientKey));
 
             // Pack application level message
-            var msg = await CryptoUtils.PackAsync(wallet, recipientKey, message.ToByteArray(), senderKey);
+            var msg = await PackAsync(wallet, recipientKey, message.ToByteArray(), senderKey);
 
             var previousKey = recipientKey;
 
@@ -129,7 +130,7 @@ namespace Hyperledger.Aries.Utils
                 foreach (var routingKey in routingKeys)
                 {
                     // Anonpack
-                    msg = await CryptoUtils.PackAsync(wallet, routingKey, new ForwardMessage { Message = msg.GetUTF8String(), To = previousKey });
+                    msg = await PackAsync(wallet, routingKey, new ForwardMessage { Message = JObject.Parse(msg.GetUTF8String()), To = previousKey });
                     previousKey = routingKey;
                 }
             }
@@ -151,7 +152,7 @@ namespace Hyperledger.Aries.Utils
             var recipientKey = connection.TheirVk
                 ?? throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot find encryption key");
 
-            var routingKeys = connection.Endpoint?.Verkey != null ? new[] { connection.Endpoint.Verkey } : new string[0];
+            var routingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0];
             return PrepareAsync(wallet, message, recipientKey, routingKeys, connection.MyVk);
         }
     }

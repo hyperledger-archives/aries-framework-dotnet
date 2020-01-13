@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
@@ -45,7 +46,7 @@ namespace Hyperledger.Aries.Routing
             var agentConfiguration = new AgentPublicConfiguration
             {
                 ServiceEndpoint = provisioningRecord.Endpoint.Uri,
-                RoutingKey = provisioningRecord.Endpoint.Verkey,
+                RoutingKey = provisioningRecord.Endpoint.Verkey.First(),
                 Invitation = inviation.GetTag(MediatorProvisioningService.InvitationTagName)
                     .ToObject<ConnectionInvitationMessage>()
             };

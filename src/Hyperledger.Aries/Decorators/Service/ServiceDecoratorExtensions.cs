@@ -18,7 +18,7 @@ namespace System
             return new ServiceDecorator
             {
                 ServiceEndpoint = record.Endpoint.Uri,
-                RoutingKeys = new [] { record.Endpoint.Verkey },
+                RoutingKeys = record.Endpoint.Verkey,
                 RecipientKeys = new [] { record.IssuerVerkey }
             };
         }

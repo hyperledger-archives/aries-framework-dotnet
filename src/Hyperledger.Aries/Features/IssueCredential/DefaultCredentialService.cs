@@ -278,7 +278,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 recipientKey: service.RecipientKeys.First(),
                 endpointUri: service.ServiceEndpoint,
                 routingKeys: service.RoutingKeys.ToArray(),
-                senderKey: provisioning.Endpoint.Verkey);
+                senderKey: provisioning.IssuerVerkey);
 
             var recordId = await ProcessCredentialAsync(agentContext, credentialIssueMessage, null);
             return await RecordService.GetAsync<CredentialRecord>(agentContext.Wallet, recordId);
