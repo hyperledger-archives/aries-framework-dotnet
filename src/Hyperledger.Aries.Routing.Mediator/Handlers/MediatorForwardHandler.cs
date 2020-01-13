@@ -52,7 +52,7 @@ namespace Hyperledger.Aries.Routing
             eventAggregator.Publish(new InboxItemEvent
             {
                 InboxId = inboxId,
-                ItemId = inboxRecord.Id
+                ItemId = inboxItemRecord.Id
             });
 
             return null;
