@@ -32,7 +32,7 @@ namespace Hyperledger.Aries.AspNetCore
         public async Task Invoke(HttpContext httpContext, IAgentProvider agentProvider)
         {
             if (!HttpMethods.IsPost(httpContext.Request.Method)
-                || !httpContext.Request.ContentType.Equals(DefaultMessageService.AgentWireMessageMimeType))
+                || !(httpContext.Request.ContentType?.Equals(DefaultMessageService.AgentWireMessageMimeType) ?? false))
             {
                 await _next(httpContext);
                 return;
