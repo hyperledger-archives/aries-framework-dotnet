@@ -50,3 +50,15 @@ jobs:
         inputs:
           artifactName: "drop"
           targetPath: "$(Build.ArtifactStagingDirectory)"
+
+  - job: buildDockerUbu
+
+    pool:
+      vmImage: "ubuntu-latest"
+
+    steps:
+      - task: Bash@3
+        displayName: docker compose
+        inputs:
+          targetType: 'filePath'
+          filePath: ci/docker-compose-test.sh
