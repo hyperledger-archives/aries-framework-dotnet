@@ -126,3 +126,15 @@ RUN generate_indy_pool_transactions --nodes 4 --clients 5 --nodeNum 1 2 3 4 --ip
 EXPOSE 9701 9702 9703 9704 9705 9706 9707 9708
 
 CMD ["/usr/bin/supervisord"]
+
+FROM streetcred/dotnet-indy:1.12.1
+WORKDIR /app
+
+COPY . .
+RUN dotnet restore "test/Hyperledger.Aries.Tests/Hyperledger.Aries.Tests.csproj"
+
+COPY docker/docker_pool_genesis.txn test/Hyperledger.Aries.Tests/pool_genesis.txn
+
+WORKDIR /app/test/Hyperledger.Aries.Tests
+
+ENTRYPOINT ["dotnet", "test", "--verbosity", "normal"]
