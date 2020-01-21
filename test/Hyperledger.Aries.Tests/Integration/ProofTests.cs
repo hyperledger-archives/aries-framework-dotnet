@@ -13,6 +13,11 @@ namespace Hyperledger.Aries.Tests.Integration
 {
     public class ProofTests : IAsyncLifetime
     {
+        static ProofTests()
+        {
+            global::Hyperledger.Aries.Utils.Runtime.SetFlags(Hyperledger.Aries.Utils.Runtime.LedgerLookupRetryFlag);
+        }
+
         WalletConfiguration config1 = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
         WalletConfiguration config2 = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
         WalletConfiguration config3 = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
