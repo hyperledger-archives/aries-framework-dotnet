@@ -4,6 +4,7 @@ using Hyperledger.Aries.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Hyperledger.Aries.Extensions;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -74,8 +75,19 @@ namespace Hyperledger.Aries.Tests.Protocols
                 new CredentialPreviewAttribute("last_name","holder")
             };
 
-            var expectedResult =
-                "{\n  \"first_name\" : {\n    \"raw\" : \"Test\",\n    \"encoded\" : \"1234567890\"\n  },\n  \"last_name\" : {\n    \"raw\" : \"holder\",\n    \"encoded\" : \"1234567890\"\n  }\n}";
+            var expectedResult = new
+            {
+                first_name = new
+                {
+                    raw = "Test",
+                    encoded = CredentialUtils.GetEncoded("Test")
+                },
+                last_name = new
+                {
+                    raw = "holder",
+                    encoded = CredentialUtils.GetEncoded("holder")
+                }
+            }.ToJson();
 
             var formatedCredentialUtils = CredentialUtils.FormatCredentialValues(attributeValues);
 

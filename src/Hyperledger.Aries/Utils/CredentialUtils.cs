@@ -51,7 +51,7 @@ namespace Hyperledger.Aries.Utils
             };
         }
 
-        private static string GetEncoded(string value)
+        internal static string GetEncoded(string value)
         {
             if (string.IsNullOrWhiteSpace(value)) return string.Empty;
             if (long.TryParse(value, out var result)) return result.ToString();
