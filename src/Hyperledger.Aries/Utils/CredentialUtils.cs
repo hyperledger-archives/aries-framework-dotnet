@@ -54,8 +54,14 @@ namespace Hyperledger.Aries.Utils
         internal static string GetEncoded(string value)
         {
             if (string.IsNullOrWhiteSpace(value)) return string.Empty;
-            if (long.TryParse(value, out var result)) return result.ToString();
-            return new BigInteger(sha256.ComputeHash(value.GetUTF8Bytes())).ToString();
+            if (int.TryParse(value, out var result)) return result.ToString();
+
+            var data = sha256.ComputeHash(value.GetUTF8Bytes());
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(data);
+            }
+            return BitConverter.ToInt32(data, 0).ToString("D");
         }
 
         /// <summary>
