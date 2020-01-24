@@ -4,6 +4,9 @@ using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.IssueCredential;
 using Newtonsoft.Json.Linq;
 using Hyperledger.Indy.AnonCredsApi;
+using System.Security.Cryptography;
+using System;
+using System.Numerics;
 
 namespace Hyperledger.Aries.Utils
 {
@@ -38,13 +41,40 @@ namespace Hyperledger.Aries.Utils
             return result.ToJson();
         }
 
+        static SHA256 sha256 = SHA256.Create();
         private static Dictionary<string, string> FormatStringCredentialAttribute(CredentialPreviewAttribute attribute)
         {
             return new Dictionary<string, string>()
             {
                 {"raw", (string) attribute.Value},
-                {"encoded", "1234567890"} //TODO Add value encoding
+                {"encoded", GetEncoded((string) attribute.Value)}
             };
+        }
+
+        internal static string GetEncoded(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+            if (int.TryParse(value, out var result)) return result.ToString();
+
+            var data = sha256.ComputeHash(value.GetUTF8Bytes());
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(data);
+            }
+            return BitConverter.ToInt32(data, 0).ToString("D");
+        }
+
+        /// <summary>
+        /// Checks if the value is encoded correctly
+        /// </summary>
+        /// <param name="raw"></param>
+        /// <param name="encoded"></param>
+        /// <returns></returns>
+        public static bool CheckValidEncoding(string raw, string encoded)
+        {
+            if (string.IsNullOrWhiteSpace(raw) && string.IsNullOrWhiteSpace(encoded)) return true;
+            if (long.TryParse(raw, out var _)) return string.CompareOrdinal(raw, encoded) == 0;
+            return string.CompareOrdinal(encoded, GetEncoded(raw)) == 0;
         }
 
         /// <summary>
