@@ -181,7 +181,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                         throw new AriesFrameworkException(ErrorCode.InvalidProofEncoding, 
                             $"The encoded value for '{attribute.Key}' is invalid. " +
                             $"Expected '{CredentialUtils.GetEncoded(attribute.Value.Raw)}'. " +
-                            $"Actual '{attribute.Value.Raw}'");
+                            $"Actual '{attribute.Value.Encoded}'");
                     }
                 }
 
