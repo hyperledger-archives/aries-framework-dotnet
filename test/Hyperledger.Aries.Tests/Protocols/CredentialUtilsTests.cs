@@ -5,6 +5,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Hyperledger.Aries.Extensions;
+using System.Security.Cryptography;
+using System;
+using System.Numerics;
+using System.Linq;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -112,6 +116,61 @@ namespace Hyperledger.Aries.Tests.Protocols
             var attributeValues = CredentialUtils.GetAttributes(attributesJson);
 
             Assert.Equal(expectedResult, attributeValues);
+        }
+
+        [Fact(DisplayName = "Encode random string values into big integer representation")]
+        public void EncodeRawValue()
+        {
+            var value = "SLC";
+            var expected = "101327353979588246869873249766058188995681113722618593621043638294296500696424";
+
+            var actual = CredentialUtils.GetEncoded(value);
+            Assert.Equal(expected, actual);
+
+            value = "101 Wilson Lane";
+            expected = "68086943237164982734333428280784300550565381723532936263016368251445461241953";
+            actual = CredentialUtils.GetEncoded(value);
+            Assert.Equal(expected, actual);
+
+            // null value
+            value = null;
+            expected = "102987336249554097029535212322581322789799900648198034993379397001115665086549";
+            actual = CredentialUtils.GetEncoded(value);
+            Assert.Equal(expected, actual);
+
+            // empty string value
+            value = string.Empty;
+            expected = "102987336249554097029535212322581322789799900648198034993379397001115665086549";
+            actual = CredentialUtils.GetEncoded(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact(DisplayName = "Encode random integer values into big integer representation")]
+        public void EncodeIntegerValues()
+        {
+            // int max
+            var value = "2147483647";
+            var expected = "2147483647";
+            var actual = CredentialUtils.GetEncoded(value);
+            Assert.Equal(expected, actual);
+
+            // int min
+            value = "-2147483648";
+            expected = "-2147483648";
+            actual = CredentialUtils.GetEncoded(value);
+            Assert.Equal(expected, actual);
+
+            // int max + 1
+            value = "2147483648";
+            expected = "26221484005389514539852548961319751347124425277437769688639924217837557266135";
+            actual = CredentialUtils.GetEncoded(value);
+            Assert.Equal(expected, actual);
+
+            // int min - 1
+            value = "-2147483649";
+            expected = "68956915425095939579909400566452872085353864667122112803508671228696852865689";
+            actual = CredentialUtils.GetEncoded(value);
+            Assert.Equal(expected, actual);
         }
     }
 }
