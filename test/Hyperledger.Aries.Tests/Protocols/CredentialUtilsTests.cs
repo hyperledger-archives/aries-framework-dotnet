@@ -5,10 +5,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Hyperledger.Aries.Extensions;
-using System.Security.Cryptography;
-using System;
-using System.Numerics;
-using System.Linq;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -171,6 +167,25 @@ namespace Hyperledger.Aries.Tests.Protocols
             expected = "68956915425095939579909400566452872085353864667122112803508671228696852865689";
             actual = CredentialUtils.GetEncoded(value);
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ValidateEncoding()
+        {
+            var raw = "SLC";
+            var encoded = "101327353979588246869873249766058188995681113722618593621043638294296500696424";
+            var valid = CredentialUtils.CheckValidEncoding(raw, encoded);
+            Assert.True(valid);
+
+            raw = "SLC";
+            encoded = "invalid";
+            valid = CredentialUtils.CheckValidEncoding(raw, encoded);
+            Assert.False(valid);
+
+            raw = "2147483648";
+            encoded = "26221484005389514539852548961319751347124425277437769688639924217837557266135";
+            valid = CredentialUtils.CheckValidEncoding(raw, encoded);
+            Assert.False(valid);
         }
     }
 }

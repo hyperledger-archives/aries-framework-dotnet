@@ -167,9 +167,23 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
-        public virtual async Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRequestJson, string proofJson)
+        public virtual async Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRequestJson, string proofJson, bool validateEncoding = true)
         {
             var proof = JsonConvert.DeserializeObject<PartialProof>(proofJson);
+
+            // If any values are revealed, validate encoding
+            // against expected values
+            if (validateEncoding && proof.RequestedProof.RevealedAttributes != null)
+                foreach (var attribute in proof.RequestedProof.RevealedAttributes)
+                {
+                    if (CredentialUtils.CheckValidEncoding(attribute.Value.Raw, attribute.Value.Encoded))
+                    {
+                        throw new AriesFrameworkException(ErrorCode.InvalidProofEncoding, 
+                            $"The encoded value for '{attribute.Key}' is invalid. " +
+                            $"Expected '{CredentialUtils.GetEncoded(attribute.Value.Raw)}'. " +
+                            $"Actual '{attribute.Value.Raw}'");
+                    }
+                }
 
             var schemas = await BuildSchemasAsync(await agentContext.Pool,
                 proof.Identifiers
