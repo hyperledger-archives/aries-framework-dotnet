@@ -176,7 +176,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             if (validateEncoding && proof.RequestedProof.RevealedAttributes != null)
                 foreach (var attribute in proof.RequestedProof.RevealedAttributes)
                 {
-                    if (CredentialUtils.CheckValidEncoding(attribute.Value.Raw, attribute.Value.Encoded))
+                    if (!CredentialUtils.CheckValidEncoding(attribute.Value.Raw, attribute.Value.Encoded))
                     {
                         throw new AriesFrameworkException(ErrorCode.InvalidProofEncoding, 
                             $"The encoded value for '{attribute.Key}' is invalid. " +
