@@ -185,7 +185,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             raw = "2147483648";
             encoded = "26221484005389514539852548961319751347124425277437769688639924217837557266135";
             valid = CredentialUtils.CheckValidEncoding(raw, encoded);
-            Assert.False(valid);
+            Assert.True(valid);
         }
     }
 }
