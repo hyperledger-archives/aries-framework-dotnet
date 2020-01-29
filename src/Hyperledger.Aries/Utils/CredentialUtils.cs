@@ -53,15 +53,26 @@ namespace Hyperledger.Aries.Utils
 
         internal static string GetEncoded(string value)
         {
-            if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+            if (string.IsNullOrWhiteSpace(value)) value = string.Empty;
             if (int.TryParse(value, out var result)) return result.ToString();
 
-            var data = sha256.ComputeHash(value.GetUTF8Bytes());
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(data);
-            }
-            return BitConverter.ToInt32(data, 0).ToString("D");
+            var data = new byte[] { 0 }
+                .Concat(sha256.ComputeHash(value.GetUTF8Bytes()))
+                .ToArray();
+
+            Array.Reverse(data);
+            return new BigInteger(value: data).ToString();
+
+            /*
+                netstandard2.1 includes the ctor below,
+                which allows to specify expected sign
+                and endianess
+
+            return new BigInteger(
+                value: data,
+                isUnsigned: true,
+                isBigEndian: true).ToString();
+            */
         }
 
         /// <summary>
@@ -72,7 +83,7 @@ namespace Hyperledger.Aries.Utils
         /// <returns></returns>
         public static bool CheckValidEncoding(string raw, string encoded)
         {
-            if (string.IsNullOrWhiteSpace(raw) && string.IsNullOrWhiteSpace(encoded)) return true;
+            if (string.IsNullOrWhiteSpace(raw)) raw = string.Empty;
             if (long.TryParse(raw, out var _)) return string.CompareOrdinal(raw, encoded) == 0;
             return string.CompareOrdinal(encoded, GetEncoded(raw)) == 0;
         }
