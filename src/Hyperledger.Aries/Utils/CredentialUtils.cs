@@ -84,7 +84,7 @@ namespace Hyperledger.Aries.Utils
         public static bool CheckValidEncoding(string raw, string encoded)
         {
             if (string.IsNullOrWhiteSpace(raw)) raw = string.Empty;
-            if (long.TryParse(raw, out var _)) return string.CompareOrdinal(raw, encoded) == 0;
+            if (int.TryParse(raw, out var _)) return string.CompareOrdinal(raw, encoded) == 0;
             return string.CompareOrdinal(encoded, GetEncoded(raw)) == 0;
         }
 
