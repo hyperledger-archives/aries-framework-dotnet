@@ -17,7 +17,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The predicate value.</value>
         [JsonProperty("p_value")]
-        public string PredicateValue { get; set; }
+        public int PredicateValue { get; set; }
         
         /// <inheritdoc />
         public override string ToString() =>
