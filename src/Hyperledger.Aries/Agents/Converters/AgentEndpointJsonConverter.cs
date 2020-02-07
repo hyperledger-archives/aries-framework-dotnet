@@ -8,17 +8,18 @@ namespace Hyperledger.Aries.Agents
     {
         public override AgentEndpoint ReadJson(JsonReader reader, Type objectType, AgentEndpoint existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            existingValue ??= new AgentEndpoint();
-
             var items = JObject.Load(reader);
+
+            existingValue ??= new AgentEndpoint();
+            existingValue.Did = items["did"]?.ToString();
+            existingValue.Uri = items["uri"]?.ToString();
+
             if (items["verkey"] is JArray)
             {
                 serializer.Populate(items.CreateReader(), existingValue);
                 return existingValue;
             }
 
-            existingValue.Did = items["did"]?.ToString();
-            existingValue.Uri = items["uri"]?.ToString();
             existingValue.Verkey = items["verkey"] is null ? null : new[] { items["verkey"]?.ToString() };
             return existingValue;
         }
