@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Features.IssueCredential;
+using System.Linq;
 
 namespace Hyperledger.Aries.Tests
 {
@@ -51,6 +52,37 @@ namespace Hyperledger.Aries.Tests
             Assert.Equal("some name", attr.Name);
             Assert.Equal("some value", attr.Value);
             Assert.Null(attr.MimeType);
+        }
+
+        [Fact(DisplayName = "Deserialize agent endpoint stored as string")]
+        public void DeserializeAgentEndpointFromString()
+        {
+            var json = new { verkey = "1" }.ToJson();
+
+            var endpoint = json.ToObject<AgentEndpoint>();
+            Assert.NotNull(endpoint.Verkey);
+            Assert.NotEmpty(endpoint.Verkey);
+            Assert.Equal("1", endpoint.Verkey.First());
+        }
+
+        [Fact(DisplayName = "Deserialize agent endpoint stored as string array")]
+        public void DeserializeAgentEndpointFromStringArray()
+        {
+            var json = new { verkey = new[] { "1" } }.ToJson();
+
+            var endpoint = json.ToObject<AgentEndpoint>();
+            Assert.NotNull(endpoint.Verkey);
+            Assert.NotEmpty(endpoint.Verkey);
+            Assert.Equal("1", endpoint.Verkey.First());
+        }
+
+        [Fact(DisplayName = "Deserialize agent endpoint DID")]
+        public void DeserializeAgentEndpointDidFromString()
+        {
+            var json = new { did = "1" }.ToJson();
+
+            var endpoint = json.ToObject<AgentEndpoint>();
+            Assert.Equal("1", endpoint.Did);
         }
     }
 
