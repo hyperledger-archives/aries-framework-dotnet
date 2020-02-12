@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -37,11 +38,48 @@ namespace Hyperledger.Aries.Features.PresentProof
     public class ProofAttributeInfo
     {
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets or sets the name of the attribute
+        /// <remarks>
+        /// You can only specify value for 'name' or 'names', but not both.
+        /// </remarks>
         /// </summary>
         /// <value>The name.</value>
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name
+        { 
+            get => _name; 
+            set
+            {
+                if (value != null)
+                {
+                    _names = null;
+                }
+                _name = value;
+            }
+        }
+        private string _name;
+
+        /// <summary>
+        /// Gets or sets a collection of attribute names.
+        /// <remarks>
+        /// You can only specify value for 'name' or 'names', but not both.
+        /// </remarks>
+        /// </summary>
+        /// <value>The name.</value>
+        [JsonProperty("names")]
+        public string[] Names
+        { 
+            get => _names; 
+            set
+            {
+                if (value != null && value.Any())
+                {
+                    _name = null;
+                }
+                _names = value;
+            }
+        }
+        private string[] _names;
 
         /// <summary>
         /// Gets or sets the restrictions.
@@ -69,12 +107,5 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </value>
         [JsonProperty("non_revoked", NullValueHandling = NullValueHandling.Ignore)]
         public RevocationInterval NonRevoked { get; set; }
-        
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"Name={Name}, " +
-            $"Restrictions={string.Join(",", Restrictions ?? new List<AttributeFilter>())}, " +
-            $"NonRevoked={NonRevoked}";
     }
 }
