@@ -43,12 +43,12 @@
         /// <summary>
         /// Discovery Query Message Type.
         /// </summary>
-        public const string DiscoveryQueryMessageType = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/protocol-discovery/1.0/query";
+        public const string DiscoveryQueryMessageType = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/discover-features/1.0/query";
 
         /// <summary>
         /// Discovery Disclose Message Type.
         /// </summary>
-        public const string DiscoveryDiscloseMessageType = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/protocol-discovery/1.0/disclose";
+        public const string DiscoveryDiscloseMessageType = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/discover-features/1.0/disclose";
 
         /// <summary>
         /// Issue Credential
