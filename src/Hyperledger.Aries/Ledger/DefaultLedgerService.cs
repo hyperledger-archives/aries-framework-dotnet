@@ -13,6 +13,8 @@ using Newtonsoft.Json.Linq;
 using IndyPayments = Hyperledger.Indy.PaymentsApi.Payments;
 using IndyLedger = Hyperledger.Indy.LedgerApi.Ledger;
 using Hyperledger.Aries.Payments;
+using Polly;
+using Hyperledger.Indy;
 
 namespace Hyperledger.Aries.Ledger
 {
@@ -34,10 +36,17 @@ namespace Hyperledger.Aries.Ledger
         public virtual async Task<ParseResponseResult> LookupDefinitionAsync(Pool pool,
             string definitionId)
         {
-            var req = await IndyLedger.BuildGetCredDefRequestAsync(null, definitionId);
-            var res = await IndyLedger.SubmitRequestAsync(pool, req);
+            async Task<ParseResponseResult> LookupDefinition()
+            {
+                var req = await IndyLedger.BuildGetCredDefRequestAsync(null, definitionId);
+                var res = await IndyLedger.SubmitRequestAsync(pool, req);
 
-            return await IndyLedger.ParseGetCredDefResponseAsync(res);
+                return await IndyLedger.ParseGetCredDefResponseAsync(res);
+            }
+
+            return await ResilienceUtils.RetryPolicyAsync(
+                action: LookupDefinition,
+                exceptionPredicate: (IndyException e) => e.SdkErrorCode == 309);
         }
 
         /// <inheritdoc />
@@ -53,12 +62,19 @@ namespace Hyperledger.Aries.Ledger
         /// <inheritdoc />
         public virtual async Task<ParseResponseResult> LookupSchemaAsync(Pool pool, string schemaId)
         {
-            var req = await IndyLedger.BuildGetSchemaRequestAsync(null, schemaId);
-            var res = await IndyLedger.SubmitRequestAsync(pool, req);
+            async Task<ParseResponseResult> LookupSchema()
+            {
+                var req = await IndyLedger.BuildGetSchemaRequestAsync(null, schemaId);
+                var res = await IndyLedger.SubmitRequestAsync(pool, req);
 
-            EnsureSuccessResponse(res);
+                EnsureSuccessResponse(res);
 
-            return await IndyLedger.ParseGetSchemaResponseAsync(res);
+                return await IndyLedger.ParseGetSchemaResponseAsync(res);
+            };
+
+            return await ResilienceUtils.RetryPolicyAsync(
+                action: LookupSchema,
+                exceptionPredicate: (IndyException e) => e.SdkErrorCode == 309);
         }
 
         /// <inheritdoc />

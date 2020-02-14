@@ -3,6 +3,10 @@ using System.Linq;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.IssueCredential;
 using Newtonsoft.Json.Linq;
+using Hyperledger.Indy.AnonCredsApi;
+using System.Security.Cryptography;
+using System;
+using System.Numerics;
 
 namespace Hyperledger.Aries.Utils
 {
@@ -37,13 +41,51 @@ namespace Hyperledger.Aries.Utils
             return result.ToJson();
         }
 
+        static SHA256 sha256 = SHA256.Create();
         private static Dictionary<string, string> FormatStringCredentialAttribute(CredentialPreviewAttribute attribute)
         {
             return new Dictionary<string, string>()
             {
                 {"raw", (string) attribute.Value},
-                {"encoded", "1234567890"} //TODO Add value encoding
+                {"encoded", GetEncoded((string) attribute.Value)}
             };
+        }
+
+        internal static string GetEncoded(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) value = string.Empty;
+            if (int.TryParse(value, out var result)) return result.ToString();
+
+            var data = new byte[] { 0 }
+                .Concat(sha256.ComputeHash(value.GetUTF8Bytes()))
+                .ToArray();
+
+            Array.Reverse(data);
+            return new BigInteger(value: data).ToString();
+
+            /*
+                netstandard2.1 includes the ctor below,
+                which allows to specify expected sign
+                and endianess
+
+            return new BigInteger(
+                value: data,
+                isUnsigned: true,
+                isBigEndian: true).ToString();
+            */
+        }
+
+        /// <summary>
+        /// Checks if the value is encoded correctly
+        /// </summary>
+        /// <param name="raw"></param>
+        /// <param name="encoded"></param>
+        /// <returns></returns>
+        public static bool CheckValidEncoding(string raw, string encoded)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) raw = string.Empty;
+            if (int.TryParse(raw, out var _)) return string.CompareOrdinal(raw, encoded) == 0;
+            return string.CompareOrdinal(encoded, GetEncoded(raw)) == 0;
         }
 
         /// <summary>

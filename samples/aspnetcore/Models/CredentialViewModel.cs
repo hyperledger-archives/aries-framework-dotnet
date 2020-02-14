@@ -1,5 +1,5 @@
 ﻿using System;
-using AgentFramework.Core.Models.Records;
+using Hyperledger.Aries.Features.IssueCredential;
 
 namespace WebAgent.Models
 {

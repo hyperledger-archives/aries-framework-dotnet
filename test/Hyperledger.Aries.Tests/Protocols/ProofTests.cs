@@ -28,6 +28,11 @@ namespace Hyperledger.Aries.Tests.Protocols
 {
     public class ProofTests : IAsyncLifetime
     {
+        static ProofTests()
+        {
+            global::Hyperledger.Aries.Utils.Runtime.SetFlags(Hyperledger.Aries.Utils.Runtime.LedgerLookupRetryFlag);
+        }
+
         private readonly string IssuerConfig = $"{{\"id\":\"{Guid.NewGuid()}\"}}";
         private readonly string HolderConfig = $"{{\"id\":\"{Guid.NewGuid()}\"}}";
         private readonly string RequestorConfig = $"{{\"id\":\"{Guid.NewGuid()}\"}}";

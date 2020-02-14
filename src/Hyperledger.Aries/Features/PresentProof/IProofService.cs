@@ -117,8 +117,12 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="proofRequestJson">The proof request.</param>
         /// <param name="proofJson">The proof.</param>
+        /// <param name="validateEncoding">
+        /// If <c>true</c>, validate the encoded raw values against standard encoding.
+        /// It is recommended to enable encoding validation to detect raw value tampering.
+        /// </param>
         /// <returns>Status indiciating the validity of proof.</returns>
-        Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRequestJson, string proofJson);
+        Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRequestJson, string proofJson, bool validateEncoding = true);
 
         /// <summary>
         /// Gets an enumeration of proofs stored in the wallet.

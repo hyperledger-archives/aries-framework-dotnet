@@ -77,17 +77,17 @@
     <AndroidNativeLibrary Include="..\libs-android\x86_64\libindy.so">
       <Link>libs\x86_64\libindy.so</Link>
     </AndroidNativeLibrary>
-    <AndroidNativeLibrary Include="..\libs-android\arm64-v8a\libgnustl_shared.so">
-      <Link>libs\arm64-v8a\libgnustl_shared.so</Link>
+    <AndroidNativeLibrary Include="..\libs-android\arm64-v8a\libc++_shared.so">
+      <Link>libs\arm64-v8a\libc++_shared.so</Link>
     </AndroidNativeLibrary>
-    <AndroidNativeLibrary Include="..\libs-android\armeabi-v7a\libgnustl_shared.so">
-      <Link>libs\armeabi-v7a\libgnustl_shared.so</Link>
+    <AndroidNativeLibrary Include="..\libs-android\armeabi-v7a\libc++_shared.so">
+      <Link>libs\armeabi-v7a\libc++_shared.so</Link>
     </AndroidNativeLibrary>
-    <AndroidNativeLibrary Include="..\libs-android\x86\libgnustl_shared.so">
-      <Link>libs\x86\libgnustl_shared.so</Link>
+    <AndroidNativeLibrary Include="..\libs-android\x86\libc++_shared.so">
+      <Link>libs\x86\libc++_shared.so</Link>
     </AndroidNativeLibrary>
-    <AndroidNativeLibrary Include="..\libs-android\x86_64\libgnustl_shared.so">
-      <Link>libs\x86_64\libgnustl_shared.so</Link>
+    <AndroidNativeLibrary Include="..\libs-android\x86_64\libc++_shared.so">
+      <Link>libs\x86_64\libc++_shared.so</Link>
     </AndroidNativeLibrary>
   </ItemGroup>
   <ItemGroup>

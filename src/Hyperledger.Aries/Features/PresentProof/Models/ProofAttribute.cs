@@ -33,11 +33,5 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </value>
         [JsonProperty("encoded")]
         public string Encoded { get; set; }
-
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"Raw={(Raw?.Length > 0 ? "[hidden]" : null)}, " +
-            $"Encoded={(Encoded?.Length > 0 ? "[hidden]" : null)}";
     }
 }

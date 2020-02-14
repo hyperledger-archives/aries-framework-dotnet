@@ -44,7 +44,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                         Id = $"{connection.MyDid};indy",
                         ServiceEndpoint = provisioningRecord.Endpoint.Uri,
                         RecipientKeys = connection.MyVk != null ? new[] { connection.MyVk } : new string[0],
-                        RoutingKeys = provisioningRecord.Endpoint?.Verkey != null ? new[] { provisioningRecord.Endpoint.Verkey } : new string[0]
+                        RoutingKeys = provisioningRecord.Endpoint?.Verkey != null ? provisioningRecord.Endpoint.Verkey : new string[0]
                     }
                 };
             }
@@ -76,9 +76,9 @@ namespace Hyperledger.Aries.Features.DidExchange
                     new IndyAgentDidDocService
                     {
                         Id = $"{connection.MyDid};indy",
-                        ServiceEndpoint = connection.Endpoint.Verkey,
+                        ServiceEndpoint = connection.Endpoint.Uri,
                         RecipientKeys = connection.TheirVk != null ? new[] { connection.TheirVk } : new string[0],
-                        RoutingKeys = connection.Endpoint?.Verkey != null ? new[] { connection.Endpoint.Verkey } : new string[0]
+                        RoutingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0]
                     }
                 }
             };
