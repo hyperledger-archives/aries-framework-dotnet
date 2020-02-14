@@ -4,23 +4,20 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using AgentFramework.Core.Contracts;
-using AgentFramework.Core.Extensions;
-using AgentFramework.Core.Handlers;
-using AgentFramework.Core.Handlers.Agents;
-using AgentFramework.Core.Messages.Connections;
-using AgentFramework.Core.Models;
-using AgentFramework.Core.Models.Connections;
-using AgentFramework.Core.Models.Events;
-using AgentFramework.Core.Models.Records.Search;
-using AgentFramework.Core.Utils;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using WebAgent.Messages;
 using WebAgent.Models;
 using WebAgent.Protocols.BasicMessage;
+using Hyperledger.Aries.Extensions;
 
 namespace WebAgent.Controllers
 {
@@ -33,7 +30,7 @@ namespace WebAgent.Controllers
         private readonly IProvisioningService _provisioningService;
         private readonly IAgentProvider _agentContextProvider;
         private readonly IMessageService _messageService;
-        private readonly WalletOptions _walletOptions;
+        private readonly AgentOptions _walletOptions;
 
         public ConnectionsController(
             IEventAggregator eventAggregator,
@@ -43,7 +40,7 @@ namespace WebAgent.Controllers
             IProvisioningService provisioningService,
             IAgentProvider agentContextProvider,
             IMessageService messageService,
-            IOptions<WalletOptions> walletOptions)
+            IOptions<AgentOptions> walletOptions)
         {
             _eventAggregator = eventAggregator;
             _connectionService = connectionService;
@@ -83,7 +80,7 @@ namespace WebAgent.Controllers
 
             var invite = MessageUtils.DecodeMessageFromUrlFormat<ConnectionInvitationMessage>(model.InvitationDetails);
             var (request, record) = await _connectionService.CreateRequestAsync(context, invite);
-            await _messageService.SendAsync(context.Wallet, request, record, invite.RecipientKeys[0]);
+            await _messageService.SendAsync(context.Wallet, request, record);
 
             return RedirectToAction("Index");
         }

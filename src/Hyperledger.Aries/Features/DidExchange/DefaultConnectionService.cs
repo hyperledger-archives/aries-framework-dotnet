@@ -100,7 +100,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             return (new ConnectionInvitationMessage
             {
                 ServiceEndpoint = provisioning.Endpoint.Uri,
-                RoutingKeys = provisioning.Endpoint.Verkey != null ? new[] { provisioning.Endpoint.Verkey } : null,
+                RoutingKeys = provisioning.Endpoint.Verkey != null ? provisioning.Endpoint.Verkey : null,
                 RecipientKeys = new[] { connectionKey },
                 Label = config.MyAlias.Name ?? provisioning.Owner.Name,
                 ImageUrl = config.MyAlias.ImageUrl ?? provisioning.Owner.ImageUrl
@@ -129,7 +129,7 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             var connection = new ConnectionRecord
             {
-                Endpoint = new AgentEndpoint(invitation.ServiceEndpoint, null, invitation.RoutingKeys != null && invitation.RoutingKeys.Count != 0 ? invitation.RoutingKeys[0] : null),
+                Endpoint = new AgentEndpoint(invitation.ServiceEndpoint, null, invitation.RoutingKeys != null && invitation.RoutingKeys.Count != 0 ? invitation.RoutingKeys.ToArray() : null),
                 MyDid = my.Did,
                 MyVk = my.VerKey,
                 Id = Guid.NewGuid().ToString().ToLowerInvariant()
@@ -192,7 +192,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                 request.Connection.DidDoc.Services.Count > 0 &&
                 request.Connection.DidDoc.Services[0] is IndyAgentDidDocService service)
             {
-                connection.Endpoint = new AgentEndpoint(service.ServiceEndpoint, null, service.RoutingKeys != null && service.RoutingKeys.Count > 0 ? service.RoutingKeys[0] : null);
+                connection.Endpoint = new AgentEndpoint(service.ServiceEndpoint, null, service.RoutingKeys != null && service.RoutingKeys.Count > 0 ? service.RoutingKeys.ToArray() : null);
             }
 
             connection.TheirDid = request.Connection.Did;
@@ -263,7 +263,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             connection.SetTag(TagConstants.LastThreadId, response.GetThreadId());
 
             if (connectionObj.DidDoc.Services[0] is IndyAgentDidDocService service)
-                connection.Endpoint = new AgentEndpoint(service.ServiceEndpoint, null, service.RoutingKeys != null && service.RoutingKeys.Count > 0 ? service.RoutingKeys[0] : null);
+                connection.Endpoint = new AgentEndpoint(service.ServiceEndpoint, null, service.RoutingKeys != null && service.RoutingKeys.Count > 0 ? service.RoutingKeys.ToArray() : null);
 
             await connection.TriggerAsync(ConnectionTrigger.Response);
             await RecordService.UpdateAsync(agentContext.Wallet, connection);

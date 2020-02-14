@@ -27,12 +27,12 @@ namespace Hyperledger.Aries.AspNetCore
         /// Invokes the agent processing pipeline
         /// </summary>
         /// <param name="httpContext"></param>
-        /// <param name="httpContext"></param>
+        /// <param name="agentProvider"></param>
         /// <returns></returns>
         public async Task Invoke(HttpContext httpContext, IAgentProvider agentProvider)
         {
             if (!HttpMethods.IsPost(httpContext.Request.Method)
-                || !httpContext.Request.ContentType.Equals(DefaultMessageService.AgentWireMessageMimeType))
+                || !(httpContext.Request.ContentType?.Equals(DefaultMessageService.AgentWireMessageMimeType) ?? false))
             {
                 await _next(httpContext);
                 return;

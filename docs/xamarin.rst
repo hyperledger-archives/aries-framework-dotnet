@@ -22,14 +22,13 @@ Below are a few additional things that are not covered by the documentation that
 Download static libraries
 -------------------------
 
-- Our repo (includes `libgnustl_shared.so`) - `samples/xamarin/libs-android`_ 
 - Sovrin repo - https://repo.sovrin.org/android/libindy/
 
-.. _`samples/xamarin/libs-android`: https://github.com/hyperledger/aries-framework-dotnet/tree/master/samples/xamarin/libs-android>
+For Android the entire library and its dependencies are compiled into a single shared object (libindy.so). In order for ``libindy.so`` to be executable we must also include ``libc++_shared.so``.
 
-For Android the entire library and its dependencies are compiled into a single shared object (libindy.so). In order for ``libindy.so`` to be executable we must also include ``libgnustl_shared.so``.
+.. note:: You can find ``libc++_shared.so`` in your ``android-ndk`` installation directory under ``\sources\cxx-stl\llvm-libc++\libs``.
 
-.. note:: You can find ``libgnustl_shared.so`` in your ``android-ndk`` installation directory under ``\sources\cxx-stl\gnu-libstdc++\4.9\libs``.
+.. note:: libindy versions < 1.12.0 were compiled using GCC and require ``libgnustl_shared.so`` instead of ``libc++_shared.so```. This is available in Android NDK versions < 18.
 
 Depending on the target abi(s) for the resulting app, not all of the artifacts need to be included, for ease of use below we document including all abi(s).
 
@@ -50,11 +49,11 @@ If you are adding all the target ABI's to you android project add the following 
       <AndroidNativeLibrary Include="..\libs-android\armeabi-v7a\libindy.so" />
       <AndroidNativeLibrary Include="..\libs-android\x86\libindy.so" />
       <AndroidNativeLibrary Include="..\libs-android\x86_64\libindy.so" />
-      <AndroidNativeLibrary Include="..\libs-android\armeabi\libgnustl_shared.so" />
-      <AndroidNativeLibrary Include="..\libs-android\arm64-v8a\libgnustl_shared.so" />
-      <AndroidNativeLibrary Include="..\libs-android\armeabi-v7a\libgnustl_shared.so" />
-      <AndroidNativeLibrary Include="..\libs-android\x86\libgnustl_shared.so" />
-      <AndroidNativeLibrary Include="..\libs-android\x86_64\libgnustl_shared.so" />
+      <AndroidNativeLibrary Include="..\libs-android\armeabi\libc++_shared.so" />
+      <AndroidNativeLibrary Include="..\libs-android\arm64-v8a\libc++_shared.so" />
+      <AndroidNativeLibrary Include="..\libs-android\armeabi-v7a\libc++_shared.so" />
+      <AndroidNativeLibrary Include="..\libs-android\x86\libc++_shared.so" />
+      <AndroidNativeLibrary Include="..\libs-android\x86_64\libc++_shared.so" />
     </ItemGroup>
 
 .. note:: Paths listed above will vary project to project.
@@ -66,7 +65,7 @@ Load these dependencies at runtime. To do this add the following to your MainAct
 
 .. code-block:: csharp
 
-    JavaSystem.LoadLibrary("gnustl_shared");
+    JavaSystem.LoadLibrary("c++_shared");
     JavaSystem.LoadLibrary("indy");
 
 Setup Android permissions

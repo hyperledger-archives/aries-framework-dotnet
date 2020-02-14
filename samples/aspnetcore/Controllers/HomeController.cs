@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
-using AgentFramework.Core.Contracts;
-using AgentFramework.Core.Models;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Storage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebAgent.Models;
@@ -12,12 +12,12 @@ namespace WebAgent.Controllers
     {
         private readonly IWalletService _walletService;
         private readonly IProvisioningService _provisioningService;
-        private readonly WalletOptions _walletOptions;
+        private readonly AgentOptions _walletOptions;
 
         public HomeController(
             IWalletService walletService,
             IProvisioningService provisioningService,
-            IOptions<WalletOptions> walletOptions)
+            IOptions<AgentOptions> walletOptions)
         {
             _walletService = walletService;
             _provisioningService = provisioningService;

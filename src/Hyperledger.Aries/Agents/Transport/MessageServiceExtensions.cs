@@ -21,7 +21,7 @@ namespace Hyperledger.Aries.Agents
         /// <returns></returns>
         public static async Task SendAsync(this IMessageService service, Wallet wallet, AgentMessage message, ConnectionRecord connection)
         {
-            var routingKeys = connection.Endpoint?.Verkey != null ? new[] { connection.Endpoint.Verkey } : new string[0];
+            var routingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0];
             var recipientKey = connection.TheirVk ?? connection.GetTag("InvitationKey") ?? throw new InvalidOperationException("Cannot locate a recipient key");
 
             if (connection.Endpoint?.Uri == null)
@@ -41,7 +41,7 @@ namespace Hyperledger.Aries.Agents
         /// <returns></returns>
         public static async Task<MessageContext> SendReceiveAsync(this IMessageService service, Wallet wallet, AgentMessage message, ConnectionRecord connection)
         {
-            var routingKeys = connection.Endpoint?.Verkey != null ? new[] { connection.Endpoint.Verkey } : new string[0];
+            var routingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0];
             var recipientKey = connection.TheirVk ?? connection.GetTag("InvitationKey") ?? throw new InvalidOperationException("Cannot locate a recipient key");
 
             if (connection.Endpoint?.Uri == null)

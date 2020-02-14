@@ -19,6 +19,8 @@ using Xunit;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Features.Routing;
+using Hyperledger.Indy.CryptoApi;
+using System.Linq;
 
 namespace Hyperledger.Aries.Tests
 {
@@ -214,7 +216,7 @@ namespace Hyperledger.Aries.Tests
             Assert.True(unpackRes.RecipientVerkey == routingRecipient.VerKey);
             Assert.Equal(recipient.VerKey, unpackMsg.To);
 
-            var unpackRes1 = await CryptoUtils.UnpackAsync(_wallet, unpackMsg.Message.GetUTF8Bytes());
+            var unpackRes1 = await CryptoUtils.UnpackAsync(_wallet, unpackMsg.Message.ToJson().GetUTF8Bytes());
             var unpackMsg1 = JsonConvert.DeserializeObject<ConnectionInvitationMessage>(unpackRes1.Message);
 
             Assert.NotNull(unpackMsg1);
@@ -241,6 +243,60 @@ namespace Hyperledger.Aries.Tests
             Assert.Equal("123", unpackMsg.RecipientKeys[0]);
         }
 
+        [Fact(DisplayName = "Forward message to recipient with multiple routing keys")]
+        public async Task PrepareMessageForMultipleRoutingHops()
+        {
+            var message = new ConnectionInvitationMessage { RecipientKeys = new[] { "123" } };
+
+            var json = message.ToJson();
+            var messageBack = json.ToObject<ConnectionInvitationMessage>();
+
+            var keys = new
+            {
+                Sender = await Did.CreateAndStoreMyDidAsync(_wallet, "{}"),
+                Recipient = await Did.CreateAndStoreMyDidAsync(_wallet, "{}"),
+                RoutingOne = await Did.CreateAndStoreMyDidAsync(_wallet, "{}"),
+                RoutingTwo = await Did.CreateAndStoreMyDidAsync(_wallet, "{}")
+            };
+
+            // Prepare the message for transport by packing the agent message with multiple forward messages
+            var transportMessage = await CryptoUtils.PrepareAsync(
+                wallet: _wallet,
+                message: message,
+                recipientKey: keys.Recipient.VerKey,
+                routingKeys: new[] { keys.RoutingOne.VerKey, keys.RoutingTwo.VerKey },
+                senderKey: keys.Sender.VerKey);
+
+            // Unpack and assert outter forward message
+            var outterResult = await CryptoUtils.UnpackAsync(_wallet, transportMessage);
+            var outterMessage = outterResult.Message.ToObject<ForwardMessage>();
+
+            Assert.Equal(keys.RoutingTwo.VerKey, outterResult.RecipientVerkey);
+            Assert.Null(outterResult.SenderVerkey);
+            Assert.NotNull(outterMessage);
+            Assert.Equal(outterMessage.To, keys.RoutingOne.VerKey);
+
+            // Unpack and test inner forward message
+            var innerResult = await CryptoUtils.UnpackAsync(_wallet, outterMessage.Message.ToJson().GetUTF8Bytes());
+            var innerMessage = innerResult.Message.ToObject<ForwardMessage>();
+
+            Assert.Equal(keys.RoutingOne.VerKey, innerResult.RecipientVerkey);
+            Assert.Null(innerResult.SenderVerkey);
+            Assert.NotNull(innerMessage);
+            Assert.Equal(innerMessage.To, keys.Recipient.VerKey);
+
+            // Unpack and test inner content message
+            var contentResult = await CryptoUtils.UnpackAsync(_wallet, innerMessage.Message.ToJson().GetUTF8Bytes());
+            var contentMessage = contentResult.Message.ToObject<ConnectionInvitationMessage>();
+
+            Assert.Equal(keys.Recipient.VerKey, contentResult.RecipientVerkey);
+            Assert.Equal(keys.Sender.VerKey, contentResult.SenderVerkey);
+            Assert.NotNull(contentMessage);
+            Assert.NotEmpty(contentMessage.RecipientKeys);
+            Assert.Single(contentMessage.RecipientKeys);
+            Assert.Equal("123", contentMessage.RecipientKeys.First());
+        }
+
         [Fact]
         public async Task AnonPrepareMessageRoutingAsync()
         {
@@ -259,7 +315,7 @@ namespace Hyperledger.Aries.Tests
             Assert.True(unpackRes.RecipientVerkey == routingRecipient.VerKey);
             Assert.Equal(recipient.VerKey, unpackMsg.To);
 
-            var unpackRes1 = await CryptoUtils.UnpackAsync(_wallet, unpackMsg.Message.GetUTF8Bytes());
+            var unpackRes1 = await CryptoUtils.UnpackAsync(_wallet, unpackMsg.Message.ToJson().GetUTF8Bytes());
             var unpackMsg1 = JsonConvert.DeserializeObject<ConnectionInvitationMessage>(unpackRes1.Message);
 
             Assert.NotNull(unpackMsg1);
