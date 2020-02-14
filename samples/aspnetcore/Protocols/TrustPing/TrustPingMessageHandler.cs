@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using AgentFramework.Core.Contracts;
-using AgentFramework.Core.Handlers;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AgentFramework.Core.Decorators.Threading;
-using AgentFramework.Core.Messages;
-using AgentFramework.Core.Models.Events;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Decorators.Threading;
+using Hyperledger.Aries.Models.Events;
 
 namespace WebAgent.Messages
 {
@@ -44,7 +42,7 @@ namespace WebAgent.Messages
         /// </summary>
         /// <param name="agentContext">The agent context.</param>
         /// <param name="messageContext">The agent message context.</param>
-        public async Task<AgentMessage> ProcessAsync(IAgentContext agentContext, MessageContext messageContext)
+        public async Task<AgentMessage> ProcessAsync(IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             await Task.Yield();
 

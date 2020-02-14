@@ -83,7 +83,7 @@ namespace Hyperledger.TestHarness.Mock
                 message: request,
                 recipientKey: invitation.RecipientKeys.First(),
                 endpointUri: agent2Connection.Endpoint.Uri,
-                routingKeys: new [] { agent2Connection.Endpoint.Verkey },
+                routingKeys: agent2Connection.Endpoint.Verkey,
                 senderKey: agent2Connection.MyVk);
 
             agent1Connection = await agent1.Provider.GetService<IWalletRecordService>().GetAsync<ConnectionRecord>(agent1.Context.Wallet, agent1Connection.Id);

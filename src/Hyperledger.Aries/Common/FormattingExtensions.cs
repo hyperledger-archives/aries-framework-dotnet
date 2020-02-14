@@ -24,7 +24,7 @@ namespace Hyperledger.Aries.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="array">The array.</param>
         /// <returns></returns>
-        public static T ToObject<T>(this byte[] array) => JsonConvert.DeserializeObject<T>(GetUTF8String(array));
+        public static T ToObject<T>(this byte[] array) => JsonConvert.DeserializeObject<T>(GetUTF8String(array), SerializerSettings);
 
         /// <summary>
         /// Deserializes a JSON string to object
@@ -32,7 +32,7 @@ namespace Hyperledger.Aries.Extensions
         /// <returns>The json.</returns>
         /// <param name="value">Value.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public static T ToObject<T>(this string value) => JsonConvert.DeserializeObject<T>(value);
+        public static T ToObject<T>(this string value) => JsonConvert.DeserializeObject<T>(value, SerializerSettings);
 
         /// <summary>Encode the string into a byte array using UTF8 byte mark.</summary>
         /// <param name="value">The value.</param>
@@ -73,7 +73,11 @@ namespace Hyperledger.Aries.Extensions
 
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
-            Converters = new List<JsonConverter> { new AgentMessageWriter() },
+            Converters = new List<JsonConverter>
+            {
+                new AgentMessageWriter(),
+                new AgentEndpointJsonConverter()
+            },
             NullValueHandling = NullValueHandling.Ignore
         };
 

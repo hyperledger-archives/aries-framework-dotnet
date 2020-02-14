@@ -28,6 +28,11 @@ namespace Hyperledger.Aries.Tests.Protocols
 {
     public class CredentialTests : IAsyncLifetime
     {
+        static CredentialTests()
+        {
+            global::Hyperledger.Aries.Utils.Runtime.SetFlags(Hyperledger.Aries.Utils.Runtime.LedgerLookupRetryFlag);
+        }
+
         private readonly string _issuerConfig = $"{{\"id\":\"{Guid.NewGuid()}\"}}";
         private readonly string _holderConfig = $"{{\"id\":\"{Guid.NewGuid()}\"}}";
         private const string Credentials = "{\"key\":\"test_wallet_key\"}";

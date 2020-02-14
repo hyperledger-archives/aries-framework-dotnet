@@ -27,12 +27,5 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <value>The revealed.</value>
         [JsonProperty("revealed", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Revealed { get; set; }
-
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"CredentialId={CredentialId}, " +
-            $"Timestamp={Timestamp}, " +
-            $"Revealed={Revealed}";
     }
 }

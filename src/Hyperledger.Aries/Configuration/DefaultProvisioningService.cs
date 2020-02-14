@@ -116,18 +116,18 @@ namespace Hyperledger.Aries.Configuration
                 {
                     var agent = await Did.CreateAndStoreMyDidAsync(wallet, new { seed = agentOptions.AgentKeySeed }.ToJson());
                     endpoint.Did = agent.Did;
-                    endpoint.Verkey = agent.VerKey;
+                    endpoint.Verkey = new[] { agent.VerKey };
                 }
                 else if (agentOptions.AgentKey != null)
                 {
                     endpoint.Did = agentOptions.AgentDid;
-                    endpoint.Verkey = agentOptions.AgentKey;
+                    endpoint.Verkey = new[] { agentOptions.AgentKey };
                 }
                 else
                 {
                     var agent = await Did.CreateAndStoreMyDidAsync(wallet, "{}");
                     endpoint.Did = agent.Did;
-                    endpoint.Verkey = agent.VerKey;
+                    endpoint.Verkey = new[] { agent.VerKey };
                 }
             }
             var masterSecretId = await AnonCreds.ProverCreateMasterSecretAsync(wallet, null);

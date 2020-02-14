@@ -76,7 +76,7 @@ namespace Hyperledger.Aries.Utils
             }
 
             string s = Convert.ToBase64String(inArray, offset, length);
-            s = s.Split(base64PadCharacter)[0]; // Remove any trailing padding
+            //s = s.Split(base64PadCharacter)[0]; // Remove any trailing padding
             s = s.Replace(base64Character62, base64UrlCharacter62);  // 62nd char of encoding
             s = s.Replace(base64Character63, _base64UrlCharacter63);  // 63rd char of encoding
             return s;
@@ -101,6 +101,8 @@ namespace Hyperledger.Aries.Utils
             s = s.Split(base64PadCharacter)[0]; // Remove any trailing padding
             s = s.Replace(base64Character62, base64UrlCharacter62);  // 62nd char of encoding
             s = s.Replace(base64Character63, _base64UrlCharacter63);  // 63rd char of encoding
+
+            s = s.PadRight(s.Length + (4 - s.Length % 4) % 4, '=');
 
             return s;
         }

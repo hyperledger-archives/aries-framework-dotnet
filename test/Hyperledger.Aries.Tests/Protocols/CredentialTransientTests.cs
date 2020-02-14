@@ -13,6 +13,11 @@ namespace Hyperledger.Aries.Tests.Protocols
 {
     public class CredentialTransientTests : TestSingleWallet
     {
+        static CredentialTransientTests()
+        {
+            global::Hyperledger.Aries.Utils.Runtime.SetFlags(Hyperledger.Aries.Utils.Runtime.LedgerLookupRetryFlag);
+        }
+
         [Fact(DisplayName = "Issue credential over connectionless transport using protocol v1")]
         public async Task IssueCredentialOverConnectionlessTransport()
         {

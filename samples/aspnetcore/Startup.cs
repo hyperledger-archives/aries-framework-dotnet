@@ -1,11 +1,11 @@
 using System;
-using AgentFramework.AspNetCore;
-using AgentFramework.Core.Models.Wallets;
+using Hyperledger.Aries.Storage;
 using Jdenticon.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using WebAgent.Messages;
 using WebAgent.Protocols.BasicMessage;
 using WebAgent.Utils;
@@ -29,12 +29,12 @@ namespace WebAgent
             services.AddLogging();
 
             // Register agent framework dependency services and handlers
-            services.AddAgentFramework(builder =>
+            services.AddAriesFramework(builder =>
             {
-                builder.AddBasicAgent<SimpleWebAgent>(c =>
+                builder.RegisterAgent<SimpleWebAgent>(c =>
                 {
-                    c.OwnerName = Environment.GetEnvironmentVariable("AGENT_NAME") ?? NameGenerator.GetRandomName();
-                    c.EndpointUri = new Uri(Environment.GetEnvironmentVariable("ENDPOINT_HOST") ?? Environment.GetEnvironmentVariable("ASPNETCORE_URLS"));
+                    c.AgentName = Environment.GetEnvironmentVariable("AGENT_NAME") ?? NameGenerator.GetRandomName();
+                    c.EndpointUri = Environment.GetEnvironmentVariable("ENDPOINT_HOST") ?? Environment.GetEnvironmentVariable("ASPNETCORE_URLS");
                     c.WalletConfiguration = new WalletConfiguration { Id = "WebAgentWallet" };
                     c.WalletCredentials = new WalletCredentials { Key = "MyWalletKey" };
                 });
@@ -46,11 +46,10 @@ namespace WebAgent
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -61,15 +60,17 @@ namespace WebAgent
             app.UseStaticFiles();
 
             // Register agent middleware
-            app.UseAgentFramework();
+            app.UseAriesFramework();
 
             // fun identicons
             app.UseJdenticon();
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

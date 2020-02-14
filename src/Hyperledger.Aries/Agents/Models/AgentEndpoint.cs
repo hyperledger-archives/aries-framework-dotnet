@@ -10,7 +10,7 @@ namespace Hyperledger.Aries.Agents
         [JsonProperty("did")]
         private string _did;
         [JsonProperty("verkey")]
-        private string _verkey;
+        private string[] _verkey;
         [JsonProperty("uri")]
         private string _uri;
 
@@ -33,7 +33,7 @@ namespace Hyperledger.Aries.Agents
         /// <param name="uri">The URI.</param>
         /// <param name="did">The did.</param>
         /// <param name="verkey">The verkey.</param>
-        public AgentEndpoint(string uri, string did, string verkey)
+        public AgentEndpoint(string uri, string did, string[] verkey)
         {
             Uri = uri;
             Did = did;
@@ -60,7 +60,7 @@ namespace Hyperledger.Aries.Agents
         /// The verkey of the agent.
         /// </value>
         [JsonIgnore]
-        public string Verkey
+        public string[] Verkey
         {
             get => _verkey;
             internal set => _verkey = value;

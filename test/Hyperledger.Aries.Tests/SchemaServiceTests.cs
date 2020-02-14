@@ -27,6 +27,9 @@ namespace Hyperledger.Aries.Tests
             var schemaId = await schemaService.CreateSchemaAsync(Context, record.IssuerDid,
                 schemaName, schemaVersion, schemaAttrNames);
 
+            // Delay to allow ledger in container to catch up
+            await Task.Delay(TimeSpan.FromSeconds(5));
+
             //Resolve it from the ledger with its identifier
             var resultSchema = await schemaService.LookupSchemaAsync(await Context.Pool, schemaId);
 
@@ -65,8 +68,14 @@ namespace Hyperledger.Aries.Tests
             var schemaId = await schemaService.CreateSchemaAsync(Context, record.IssuerDid,
                 schemaName, schemaVersion, schemaAttrNames);
 
+            // Ledger catch up
+            await Task.Delay(TimeSpan.FromSeconds(2));
+
             var credId = await schemaService.CreateCredentialDefinitionAsync(Context, schemaId,
                 record.IssuerDid, "Tag", false, 100, new Uri("http://mock/tails"));
+
+            // Ledger catch up
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             var credDef =
                 await schemaService.LookupCredentialDefinitionAsync(await Context.Pool, credId);

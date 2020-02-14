@@ -12,7 +12,7 @@ namespace AFMobileSample.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            JavaSystem.LoadLibrary("gnustl_shared");
+            JavaSystem.LoadLibrary("c++_shared");
             JavaSystem.LoadLibrary("indy");
 
             TabLayoutResource = Resource.Layout.Tabbar;
