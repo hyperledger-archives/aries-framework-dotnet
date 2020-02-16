@@ -54,13 +54,13 @@ RUN echo "deb https://repo.sovrin.org/deb xenial $indy_stream" >> /etc/apt/sourc
 
 RUN useradd -ms /bin/bash -u $uid indy
 
-ARG indy_plenum_ver=1.11.0
-ARG indy_node_ver=1.11.0
+ARG indy_plenum_ver=1.12.0
+ARG indy_node_ver=1.12.0
 ARG python3_indy_crypto_ver=0.4.5
 ARG indy_crypto_ver=0.4.5
 ARG python3_pyzmq_ver=18.1.0
-ARG sovtoken_ver=1.0.4
-ARG sovtokenfees_ver=1.0.4
+ARG sovtoken_ver=1.0.5
+ARG sovtokenfees_ver=1.0.5
 
 RUN apt-get update -y && apt-get install -y \
 	python3-pyzmq=${python3_pyzmq_ver} \
