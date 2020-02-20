@@ -5,6 +5,7 @@ using Hyperledger.Aries.AspNetCore;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Routing;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -45,11 +46,8 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        public static void UseMediatorDiscovery(this IApplicationBuilder builder)
-        {
-            builder.Map(
-                pathMatch: "/.well-known/agent-configuration",
-                configuration: c => c.UseMiddleware<MediatorDiscoveryMiddleware>());
-        }
+        public static void UseMediatorDiscovery(this IApplicationBuilder applicationBuilder) => applicationBuilder.MapWhen(
+                context => context.Request.Path.ToString().Contains(".well-known/agent-configuration"),
+                builder => builder.UseMiddleware<MediatorDiscoveryMiddleware>());
     }
 }
