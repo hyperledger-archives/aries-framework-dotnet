@@ -102,45 +102,48 @@ namespace Hyperledger.Aries.Ledger
         }
 
         /// <inheritdoc />
-        public virtual async Task RegisterSchemaAsync(IAgentContext context, string issuerDid, string schemaJson, TransactionCost paymentInfo = null)
+        public virtual async Task RegisterSchemaAsync(IAgentContext context, string issuerDid, string schemaJson, TransactionCost paymentInfo = null,
+            IndyTaaAcceptance taaAcceptance = null)
         {
             var req = await IndyLedger.BuildSchemaRequestAsync(issuerDid, schemaJson);
-            var res = await SignAndSubmitAsync(context, issuerDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, issuerDid, req, paymentInfo, taaAcceptance);
         }
 
         /// <inheritdoc />
-        public virtual async Task RegisterCredentialDefinitionAsync(IAgentContext context, string submitterDid, string data, TransactionCost paymentInfo = null)
+        public virtual async Task RegisterCredentialDefinitionAsync(IAgentContext context, string submitterDid, string data, TransactionCost paymentInfo = null,
+            IndyTaaAcceptance taaAcceptance = null)
         {
             var req = await IndyLedger.BuildCredDefRequestAsync(submitterDid, data);
-            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo, taaAcceptance);
         }
 
         /// <inheritdoc />
         public virtual async Task RegisterRevocationRegistryDefinitionAsync(IAgentContext context, string submitterDid,
-            string data, TransactionCost paymentInfo = null)
+            string data, TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null)
         {
             var req = await IndyLedger.BuildRevocRegDefRequestAsync(submitterDid, data);
-            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo, taaAcceptance);
         }
 
         /// <inheritdoc />
         public virtual async Task SendRevocationRegistryEntryAsync(IAgentContext context, string issuerDid,
-            string revocationRegistryDefinitionId, string revocationDefinitionType, string value, TransactionCost paymentInfo = null)
+            string revocationRegistryDefinitionId, string revocationDefinitionType, string value, TransactionCost paymentInfo = null, 
+            IndyTaaAcceptance taaAcceptance = null)
         {
             var req = await IndyLedger.BuildRevocRegEntryRequestAsync(issuerDid, revocationRegistryDefinitionId,
                 revocationDefinitionType, value);
-            var res = await SignAndSubmitAsync(context, issuerDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, issuerDid, req, paymentInfo, taaAcceptance);
         }
 
         /// <inheritdoc />
         public virtual async Task RegisterNymAsync(IAgentContext context, string submitterDid, string theirDid,
-            string theirVerkey, string role, TransactionCost paymentInfo = null)
+            string theirVerkey, string role, TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null)
         {
             if (DidUtils.IsFullVerkey(theirVerkey))
                 theirVerkey = await Did.AbbreviateVerkeyAsync(theirDid, theirVerkey);
 
             var req = await IndyLedger.BuildNymRequestAsync(submitterDid, theirDid, theirVerkey, null, role);
-            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, submitterDid, req, paymentInfo, taaAcceptance);
         }
 
         /// <inheritdoc />
@@ -163,12 +166,12 @@ namespace Hyperledger.Aries.Ledger
 
         /// <inheritdoc />
         public virtual async Task RegisterAttributeAsync(IAgentContext context, string submittedDid, string targetDid,
-            string attributeName, object value, TransactionCost paymentInfo = null)
+            string attributeName, object value, TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null)
         {
             var data = $"{{\"{attributeName}\": {value.ToJson()}}}";
 
             var req = await IndyLedger.BuildAttribRequestAsync(submittedDid, targetDid, null, data, null);
-            var res = await SignAndSubmitAsync(context, submittedDid, req, paymentInfo);
+            var res = await SignAndSubmitAsync(context, submittedDid, req, paymentInfo, taaAcceptance);
         }
 
         /// <inheritdoc />
@@ -194,7 +197,7 @@ namespace Hyperledger.Aries.Ledger
             return jobj["result"]["data"].ToObject<IList<AuthorizationRule>>();
         }
 
-        private async Task<string> SignAndSubmitAsync(IAgentContext context, string submitterDid, string request, TransactionCost paymentInfo)
+        private async Task<string> SignAndSubmitAsync(IAgentContext context, string submitterDid, string request, TransactionCost paymentInfo, IndyTaaAcceptance taaAcceptance)
         {
             if (paymentInfo != null)
             {
@@ -213,6 +216,17 @@ namespace Hyperledger.Aries.Ledger
                     }.ToJson(),
                     extra: null);
                 request = requestWithFees.Result;
+            }
+            if(taaAcceptance != null)
+            {
+                var requestWithTaa = await IndyLedger.AppendTxnAuthorAgreementAcceptanceToRequestAsync(
+                    request_json: request, 
+                    text: null, 
+                    version: null, 
+                    taa_digest: taaAcceptance.Digest, 
+                    mechanism: taaAcceptance.Mechanism, 
+                    time: taaAcceptance.AcceptanceDate);
+                request = requestWithTaa;
             }
             var signedRequest = await _signingService.SignRequestAsync(context, submitterDid, request);
             var response = await IndyLedger.SubmitRequestAsync(await context.Pool, signedRequest);

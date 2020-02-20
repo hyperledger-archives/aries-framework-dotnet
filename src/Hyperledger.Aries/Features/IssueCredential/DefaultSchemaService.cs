@@ -57,7 +57,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// <inheritdoc />
         public virtual async Task<string> CreateSchemaAsync(IAgentContext context, string issuerDid, string name,
-            string version, string[] attributeNames)
+            string version, string[] attributeNames, IndyTaaAcceptance taaAcceptance = null)
         {
             var schema = await AnonCreds.IssuerCreateSchemaAsync(issuerDid, name, version, attributeNames.ToJson());
 
@@ -70,7 +70,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             };
 
             var paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.SCHEMA);
-            await LedgerService.RegisterSchemaAsync(context, issuerDid, schema.SchemaJson, paymentInfo);
+            await LedgerService.RegisterSchemaAsync(context, issuerDid, schema.SchemaJson, paymentInfo, taaAcceptance);
 
             await RecordService.AddAsync(context.Wallet, schemaRecord);
 
@@ -84,7 +84,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// <inheritdoc />
         public virtual async Task<string> CreateSchemaAsync(IAgentContext context, string name,
-            string version, string[] attributeNames)
+            string version, string[] attributeNames, IndyTaaAcceptance taaAcceptance = null)
         {
             var provisioning = await ProvisioningService.GetProvisioningAsync(context.Wallet);
             if (provisioning?.IssuerDid == null)
@@ -92,7 +92,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 throw new AriesFrameworkException(ErrorCode.RecordNotFound, "This wallet is not provisioned with issuer");
             }
 
-            return await CreateSchemaAsync(context, provisioning.IssuerDid, name, version, attributeNames);
+            return await CreateSchemaAsync(context, provisioning.IssuerDid, name, version, attributeNames, taaAcceptance ?? provisioning.TaaAcceptance);
         }
 
         /// <inheritdoc />
@@ -157,7 +157,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// <inheritdoc />
         public virtual async Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId,
-            string issuerDid, string tag, bool supportsRevocation, int maxCredentialCount, Uri tailsBaseUri)
+            string issuerDid, string tag, bool supportsRevocation, int maxCredentialCount, Uri tailsBaseUri,
+            IndyTaaAcceptance taaAcceptance = null)
         {
             var definitionRecord = new DefinitionRecord();
             var schema = await LedgerService.LookupSchemaAsync(await context.Pool, schemaId);
@@ -170,7 +171,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
             await LedgerService.RegisterCredentialDefinitionAsync(context: context,
                                                                   submitterDid: issuerDid,
                                                                   data: credentialDefinition.CredDefJson,
-                                                                  paymentInfo: paymentInfo);
+                                                                  paymentInfo: paymentInfo,
+                                                                  taaAcceptance: taaAcceptance);
             if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
 
             definitionRecord.SupportsRevocation = supportsRevocation;
@@ -206,7 +208,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 await LedgerService.RegisterRevocationRegistryDefinitionAsync(context: context,
                                                                               submitterDid: issuerDid,
                                                                               data: revocationDefinition.ToString(),
-                                                                              paymentInfo: paymentInfo);
+                                                                              paymentInfo: paymentInfo,
+                                                                              taaAcceptance: taaAcceptance);
                 if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
 
                 paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_ENTRY);
@@ -215,7 +218,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
                                                                      revocationRegistryDefinitionId: revocationRegistry.RevRegId,
                                                                      revocationDefinitionType: "CL_ACCUM",
                                                                      value: revocationRegistry.RevRegEntryJson,
-                                                                     paymentInfo: paymentInfo);
+                                                                     paymentInfo: paymentInfo,
+                                                                     taaAcceptance: taaAcceptance);
                 if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
 
                 await RecordService.AddAsync(context.Wallet, revocationRecord);
@@ -228,7 +232,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// <inheritdoc />
         public virtual async Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId,
-            string tag, bool supportsRevocation, int maxCredentialCount)
+            string tag, bool supportsRevocation, int maxCredentialCount, IndyTaaAcceptance taaAcceptance = null)
         {
             var provisioning = await ProvisioningService.GetProvisioningAsync(context.Wallet);
             if (provisioning?.IssuerDid == null)
@@ -244,7 +248,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 tag: tag,
                 supportsRevocation: supportsRevocation,
                 maxCredentialCount: maxCredentialCount,
-                tailsBaseUri: provisioning.TailsBaseUri != null ? new Uri(provisioning.TailsBaseUri) : null);
+                tailsBaseUri: provisioning.TailsBaseUri != null ? new Uri(provisioning.TailsBaseUri) : null,
+                taaAcceptance: taaAcceptance ?? provisioning.TaaAcceptance);
         }
 
         /// TODO this should return a definition object

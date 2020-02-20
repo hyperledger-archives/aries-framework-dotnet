@@ -163,7 +163,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public virtual async Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId)
+        public virtual async Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId, IndyTaaAcceptance taaAcceptance = null)
         {
             var credential = await GetAsync(agentContext, credentialId);
 
@@ -194,7 +194,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
                                                                  revocationRegistryDefinitionId: revocationRecord.Id,
                                                                  revocationDefinitionType: "CL_ACCUM",
                                                                  value: revocRegistryDeltaJson,
-                                                                 paymentInfo: paymentInfo);
+                                                                 paymentInfo: paymentInfo,
+                                                                 taaAcceptance: taaAcceptance ?? provisioning.TaaAcceptance);
 
             if (paymentInfo != null)
             {
@@ -543,7 +544,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public async Task<(CredentialIssueMessage, CredentialRecord)> CreateCredentialAsync(IAgentContext agentContext, string credentialId, IEnumerable<CredentialPreviewAttribute> values)
+        public async Task<(CredentialIssueMessage, CredentialRecord)> CreateCredentialAsync(IAgentContext agentContext, string credentialId, 
+            IEnumerable<CredentialPreviewAttribute> values, IndyTaaAcceptance taaAcceptance = null)
         {
             var credential = await GetAsync(agentContext, credentialId);
 
@@ -592,7 +594,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
                     revocationRegistryDefinitionId: revocationRegistryId,
                     revocationDefinitionType: "CL_ACCUM",
                     value: issuedCredential.RevocRegDeltaJson,
-                    paymentInfo: paymentInfo);
+                    paymentInfo: paymentInfo,
+                    taaAcceptance: taaAcceptance ?? provisioning.TaaAcceptance);
                 credential.CredentialRevocationId = issuedCredential.RevocId;
 
                 if (paymentInfo != null)

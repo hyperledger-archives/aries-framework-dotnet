@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.IssueCredential
@@ -147,9 +148,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialId">The credential request identifier.</param>
         /// <param name="values">Values.</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information. If null, <see cref="Hyperledger.Aries.Configuration.ProvisioningRecord.TaaAcceptance"/> will be used. </param>
         /// <returns>The response async.</returns>
         Task<(CredentialIssueMessage, CredentialRecord)> CreateCredentialAsync(IAgentContext agentContext, string credentialId,
-            IEnumerable<CredentialPreviewAttribute> values);
+            IEnumerable<CredentialPreviewAttribute> values, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Rejects a credential request asynchronous.
@@ -165,8 +167,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialId">Identifier of the credential to be revoked.</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information. If null, <see cref="Hyperledger.Aries.Configuration.ProvisioningRecord.TaaAcceptance"/> will be used. </param>
         /// <returns>The response async.</returns>
-        Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId);
+        Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Deletes the credential and it's associated record

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
@@ -48,24 +47,9 @@ namespace Hyperledger.Aries.Configuration
         {
             var provisioning = await GetProvisioningAsync(wallet);
 
-            provisioning.TaaAcceptance = new IndyTaaAcceptance
-            {
-                Digest = GetDigest(txnAuthorAgreement),
-                Text = txnAuthorAgreement.Text,
-                Version = txnAuthorAgreement.Version,
-                AcceptanceDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            };
+            provisioning.TaaAcceptance = IndyTaaAcceptance.CreateAcceptance(txnAuthorAgreement, "wallet_agreement");
 
             await RecordService.UpdateAsync(wallet, provisioning);
-        }
-
-        private string GetDigest(IndyTaa taa)
-        {
-            using (var shaAlgorithm = SHA256.Create())
-                return shaAlgorithm.ComputeHash(
-                    $"{taa.Version}{taa.Text}"
-                    .GetUTF8Bytes())
-                .ToHexString();
         }
 
         /// <inheritdoc />

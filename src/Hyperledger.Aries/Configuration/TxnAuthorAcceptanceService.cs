@@ -55,10 +55,9 @@ namespace Hyperledger.Aries.Configuration
             var taa = await _poolService.GetTaaAsync(agentOptions.PoolName);
             if (taa != null)
             {
-                var digest = GetDigest(taa);
                 var provisioning = await provisioningService.GetProvisioningAsync(context.Wallet);
 
-                if (provisioning.TaaAcceptance == null || provisioning.TaaAcceptance.Digest != digest)
+                if (provisioning.TaaAcceptance == null || provisioning.TaaAcceptance.IsAcceptanceOf(taa) == false)
                 {
                     await provisioningService.AcceptTxnAuthorAgreementAsync(context.Wallet, taa);
                 }
@@ -75,15 +74,6 @@ namespace Hyperledger.Aries.Configuration
         public Task StopAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
-        }
-
-        private string GetDigest(IndyTaa taa)
-        {
-            using(var shaAlgorithm = SHA256.Create())
-            return shaAlgorithm.ComputeHash(
-                $"{taa.Version}{taa.Text}"
-                .GetUTF8Bytes())
-            .ToHexString();
         }
     }
 }

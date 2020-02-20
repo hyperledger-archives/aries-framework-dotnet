@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Models.Records;
 using Hyperledger.Indy.PoolApi;
 using Hyperledger.Indy.WalletApi;
@@ -22,10 +23,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="name">The name.</param>
         /// <param name="version">The version.</param>
         /// <param name="attributeNames">The attribute names.</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information</param>
         /// <returns>The schema identifier of the stored schema object.
         /// This identifier can be used for ledger schema lookup.</returns>
         Task<string> CreateSchemaAsync(IAgentContext context, string issuerDid, string name, string version,
-            string[] attributeNames);
+            string[] attributeNames, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Creates and registers schema on the ledger
@@ -34,8 +36,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="name">The name.</param>
         /// <param name="version">The version.</param>
         /// <param name="attributeNames">The attribute names.</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information. If null, <see cref="Hyperledger.Aries.Configuration.ProvisioningRecord.TaaAcceptance"/> will be used. </param>
         /// <returns></returns>
-        Task<string> CreateSchemaAsync(IAgentContext context, string name, string version, string[] attributeNames);
+        Task<string> CreateSchemaAsync(IAgentContext context, string name, string version, string[] attributeNames, 
+            IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>Creates the credential definition and registers it on the ledger.</summary>
         /// <param name="context">The agent context</param>
@@ -47,10 +51,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// This parameter is only used if <paramref name="supportsRevocation" /> is <c>true</c>.</param>
         /// <param name="tailsBaseUri">The public URI of the tails file for the revocation definition.
         /// his parameter is only used if <paramref name="supportsRevocation" /> is <c>true</c>.</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information</param>
         /// <returns>The credential definition identifier of the stored definition record.
         /// This identifier can be used for ledger definition lookup.</returns>
         Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId, string issuerDid,
-            string tag, bool supportsRevocation, int maxCredentialCount, Uri tailsBaseUri);
+            string tag, bool supportsRevocation, int maxCredentialCount, Uri tailsBaseUri, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>Creates the credential definition and registers it on the ledger.</summary>
         /// <param name="context">The agent context</param>
@@ -58,9 +63,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="tag">The tag.</param>
         /// <param name="supportsRevocation">if set to <c>true</c> [supports revocation].</param>
         /// <param name="maxCredentialCount">The maximum credential count.</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information. If null, <see cref="Hyperledger.Aries.Configuration.ProvisioningRecord.TaaAcceptance"/> will be used. </param>
         /// <returns></returns>
         Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId,
-            string tag, bool supportsRevocation, int maxCredentialCount);
+            string tag, bool supportsRevocation, int maxCredentialCount, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Gets the schemas asynchronous.

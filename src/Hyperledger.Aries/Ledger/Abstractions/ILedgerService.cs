@@ -39,8 +39,9 @@ namespace Hyperledger.Aries.Contracts
         /// <param name="attributeName">Attribute name.</param>
         /// <param name="value">The attribute value.</param>
         /// <param name="paymentInfo">Payment information</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information</param>
         Task RegisterAttributeAsync(IAgentContext context, string submittedDid, string targetDid,
-            string attributeName, object value, TransactionCost paymentInfo = null);
+            string attributeName, object value, TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Lookup the schema async.
@@ -119,11 +120,12 @@ namespace Hyperledger.Aries.Contracts
         /// <param name="theirVerkey">Their verkey.</param>
         /// <param name="role">Role the new nym will assume.</param>
         /// <param name="paymentInfo">Payment information</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information</param>
         /// <returns>
         /// Registration async.
         /// </returns>
         Task RegisterNymAsync(IAgentContext context, string submitterDid, string theirDid,
-            string theirVerkey, string role, TransactionCost paymentInfo = null);
+            string theirVerkey, string role, TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Registers the credential definition async.
@@ -132,11 +134,12 @@ namespace Hyperledger.Aries.Contracts
         /// <param name="submitterDid">The submitter did.</param>
         /// <param name="data">Data.</param>
         /// <param name="paymentInfo">Payment information</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information</param>
         /// <returns>
         /// The credential definition async.
         /// </returns>
         Task RegisterCredentialDefinitionAsync(IAgentContext context, string submitterDid,
-            string data, TransactionCost paymentInfo = null);
+            string data, TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Registers the revocation registry definition asynchronous.
@@ -145,9 +148,10 @@ namespace Hyperledger.Aries.Contracts
         /// <param name="submitterDid">The submitter did.</param>
         /// <param name="data">The data.</param>
         /// <param name="paymentInfo">Payment information</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information</param>
         /// <returns></returns>
         Task RegisterRevocationRegistryDefinitionAsync(IAgentContext context, string submitterDid,
-            string data, TransactionCost paymentInfo = null);
+            string data, TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Sends the revocation registry entry asynchronous.
@@ -158,10 +162,11 @@ namespace Hyperledger.Aries.Contracts
         /// <param name="revocationDefinitionType">Type of the revocation definition.</param>
         /// <param name="value">The value.</param>
         /// <param name="paymentInfo">Payment information</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information</param>
         /// <returns></returns>
         Task SendRevocationRegistryEntryAsync(IAgentContext context, string issuerDid,
             string revocationRegistryDefinitionId, string revocationDefinitionType, string value,
-            TransactionCost paymentInfo = null);
+            TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null);
 
         /// <summary>
         /// Registers the schema asynchronous.
@@ -170,8 +175,9 @@ namespace Hyperledger.Aries.Contracts
         /// <param name="issuerDid">The issuer did.</param>
         /// <param name="schemaJson">The schema json.</param>
         /// <param name="paymentInfo">Payment information</param>
+        /// <param name="taaAcceptance">Transaction Author Agreement Acceptance information</param>
         /// <returns></returns>
         Task RegisterSchemaAsync(IAgentContext context, string issuerDid, string schemaJson,
-            TransactionCost paymentInfo = null);
+            TransactionCost paymentInfo = null, IndyTaaAcceptance taaAcceptance = null);
     }
 }
