@@ -6,6 +6,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -92,7 +93,17 @@ namespace Hyperledger.Aries.Routing
                 DeviceId = addDeviceInfoMessage.DeviceId,
                 DeviceVendor = addDeviceInfoMessage.DeviceVendor
             };
-            await recordService.AddAsync(agentContext.Wallet, deviceRecord);
+            try
+            {
+                await recordService.AddAsync(agentContext.Wallet, deviceRecord);
+            }
+            catch (WalletItemAlreadyExistsException)
+            {
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Unable to register device", addDeviceInfoMessage);
+            }
         }
 
         private async Task DeleteInboxItemsAsync(IAgentContext agentContext, ConnectionRecord connection, DeleteInboxItemsMessage deleteInboxItemsMessage)
