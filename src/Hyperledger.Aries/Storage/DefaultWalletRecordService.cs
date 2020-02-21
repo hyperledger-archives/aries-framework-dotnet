@@ -55,7 +55,7 @@ namespace Hyperledger.Aries.Storage
                 return result.Records?
                            .Select(x =>
                            {
-                               var record = JsonConvert.DeserializeObject<T>(x.Value);
+                               var record = JsonConvert.DeserializeObject<T>(x.Value, _jsonSettings);
                                foreach (var tag in x.Tags)
                                    record.Tags[tag.Key] = tag.Value;
                                return record;
