@@ -48,7 +48,7 @@ namespace Hyperledger.Aries.Tests.Decorators
 
             var key = await Crypto.CreateKeyAsync(_agent.Wallet, "{}");
 
-            var sigData = await SignatureUtils.SignData(_agent, data, key);
+            var sigData = await SignatureUtils.SignDataAsync(_agent, data, key);
             
             Assert.True(sigData.SignatureType == SignatureUtils.DefaultSignatureType);
             Assert.NotNull(sigData.Signature);
@@ -66,9 +66,9 @@ namespace Hyperledger.Aries.Tests.Decorators
 
             var key = await Crypto.CreateKeyAsync(_agent.Wallet, "{}");
 
-            var sigData = await SignatureUtils.SignData(_agent, data, key);
+            var sigData = await SignatureUtils.SignDataAsync(_agent, data, key);
             
-            var result = SignatureUtils.UnpackAndVerifyData<Connection>(sigData);
+            var result = await SignatureUtils.UnpackAndVerifyAsync<Connection>(sigData);
 
             Assert.True(data.Did == result.Did);
         }
