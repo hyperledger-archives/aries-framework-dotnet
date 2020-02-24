@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
@@ -26,12 +27,12 @@ namespace Hyperledger.Aries.Decorators.Signature
         /// <param name="data">Data to sign.</param>
         /// <param name="signerKey">Signers verkey.</param>
         /// <returns>Async signature decorator.</returns>
-        public static async Task<SignatureDecorator> SignData<T>(IAgentContext agentContext, T data, string signerKey)
+        public static async Task<SignatureDecorator> SignDataAsync<T>(IAgentContext agentContext, T data, string signerKey)
         {
-            var dataJson = JsonConvert.SerializeObject(data);
-            var epocData = new byte[8]; //TODO actually put the epoc representation in here
+            var dataJson = data.ToJson();
+            var epochData = BitConverter.GetBytes(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
 
-            var sigData = epocData.Concat(dataJson.GetUTF8Bytes()).ToArray();
+            var sigData = epochData.Concat(dataJson.GetUTF8Bytes()).ToArray();
 
             var sig = await Crypto.SignAsync(agentContext.Wallet, signerKey, sigData);
 
@@ -52,11 +53,18 @@ namespace Hyperledger.Aries.Decorators.Signature
         /// <typeparam name="T">Type in which to cast the result to.</typeparam>
         /// <param name="decorator">Signature decorator to unpack and verify</param>
         /// <returns>Resulting data cast to type T.</returns>
-        public static T UnpackAndVerifyData<T>(SignatureDecorator decorator)
+        public static async Task<T> UnpackAndVerifyAsync<T>(SignatureDecorator decorator)
         {
-            var sigDataBytes = decorator.SignatureData.GetBytesFromBase64();
-            var sigDataString = sigDataBytes.Skip(8).ToArray().GetUTF8String();
-            return JsonConvert.DeserializeObject<T>(sigDataString);
+            if (await Crypto.VerifyAsync(
+                theirVk: decorator.Signer,
+                message: decorator.SignatureData.GetBytesFromBase64(),
+                signature: decorator.Signature.GetBytesFromBase64()))
+            {
+                var sigDataBytes = decorator.SignatureData.GetBytesFromBase64();
+                var sigDataString = sigDataBytes.Skip(8).ToArray().GetUTF8String();
+                return sigDataString.ToObject<T>();
+            }
+            throw new AriesFrameworkException(ErrorCode.InvalidMessage, "The signed payload was invalid");
         }
     }
 }

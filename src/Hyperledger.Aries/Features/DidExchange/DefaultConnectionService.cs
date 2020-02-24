@@ -249,7 +249,7 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             //TODO throw exception or a problem report if the connection request features a did doc that has no indy agent did doc convention featured
             //i.e there is no way for this agent to respond to messages. And or no keys specified
-            var connectionObj = SignatureUtils.UnpackAndVerifyData<Connection>(response.ConnectionSig);
+            var connectionObj = await SignatureUtils.UnpackAndVerifyAsync<Connection>(response.ConnectionSig);
 
             await Did.StoreTheirDidAsync(agentContext.Wallet,
                 new { did = connectionObj.Did, verkey = connectionObj.DidDoc.Keys[0].PublicKeyBase58 }.ToJson());
@@ -303,7 +303,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                 DidDoc = connection.MyDidDoc(provisioning)
             };
 
-            var sigData = await SignatureUtils.SignData(agentContext, connectionData, connection.GetTag(TagConstants.ConnectionKey));
+            var sigData = await SignatureUtils.SignDataAsync(agentContext, connectionData, connection.GetTag(TagConstants.ConnectionKey));
             var threadId = connection.GetTag(TagConstants.LastThreadId);
 
             var response = new ConnectionResponseMessage { ConnectionSig = sigData };
