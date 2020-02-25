@@ -46,7 +46,7 @@ namespace Hyperledger.Aries.Routing
 
             var edgeWallet = await walletService.GetWalletAsync(inboxRecord.WalletConfiguration, inboxRecord.WalletCredentials);
 
-            var inboxItemRecord = new InboxItemRecord { ItemData = message.Message.ToJson() };
+            var inboxItemRecord = new InboxItemRecord { ItemData = message.Message.ToJson(), Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds() };
             await recordService.AddAsync(edgeWallet, inboxItemRecord);
 
             eventAggregator.Publish(new InboxItemEvent
