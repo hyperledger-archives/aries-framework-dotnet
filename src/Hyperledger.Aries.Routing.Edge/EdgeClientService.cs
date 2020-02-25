@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Routing.BackupRestore;
 using Hyperledger.Aries.Storage;
+using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing
 {
@@ -106,6 +111,53 @@ namespace Hyperledger.Aries.Routing
             }
 
             await messageService.SendAsync(agentContext.Wallet, new DeleteInboxItemsMessage { InboxItemIds = processedItems }, connection);
+        }
+
+        public async Task CreateBackup(IAgentContext context, string key)
+        {
+            var backupMessage = new StoreBackupAgentMessage();
+            var path = Path.Combine(Path.GetTempPath(), key);
+            var json = JsonConvert.SerializeObject(new { path, key });
+
+            await context.Wallet.ExportAsync(json);
+            
+            var bytesArray = await Task.Run(() => File.ReadAllBytes(path));
+            var payload = bytesArray.ToBase64String();
+
+            backupMessage.Payload = new[]
+            {
+                new Attachment
+                {
+                    Id = "libindy-backup-request-0",
+                    MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
+                    Data = new AttachmentContent
+                    {
+                        Base64 = payload
+                    }
+                }
+            };
+            
+            backupMessage.BackupId = key;
+            
+            var connection = await GetMediatorConnectionAsync(context).ConfigureAwait(false);
+            
+            if (connection == null) 
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
+            
+            await messageService.SendAsync(context.Wallet, backupMessage, connection).ConfigureAwait(false);
+
+            File.Delete(path);
+        }
+
+        public async Task RetrieveBackup(IAgentContext context, string id)
+        {
+            var retrieveBackupResponseMessage = new RetreiveBackupAgentMessage(id);
+
+            var connection = await GetMediatorConnectionAsync(context).ConfigureAwait(false);
+            if (connection == null) 
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
+        
+            await messageService.SendReceiveAsync<StoreBackupAgentMessage>(context.Wallet, retrieveBackupResponseMessage, connection).ConfigureAwait(false);
         }
 
         public async Task AddDeviceAsync(IAgentContext agentContext, AddDeviceInfoMessage message)
