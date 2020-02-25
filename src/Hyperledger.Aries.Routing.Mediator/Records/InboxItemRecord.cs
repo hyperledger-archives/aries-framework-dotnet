@@ -13,6 +13,11 @@ namespace Hyperledger.Aries.Routing
         /// <value></value>
         public string ItemData { get; set; }
 
+        /// <summary>
+        /// Timestamp when this message was received
+        /// </summary>
+        public long Timestamp { get; set; }
+
         public override string TypeName => "Hyperledger.Aries.Routing.InboxItemRecord";
     }
 }
