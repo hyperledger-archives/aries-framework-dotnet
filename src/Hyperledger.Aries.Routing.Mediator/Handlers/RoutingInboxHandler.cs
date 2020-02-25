@@ -137,7 +137,8 @@ namespace Hyperledger.Aries.Routing
             return new GetInboxItemsResponseMessage
             {
                 Items = items
-                    .Select(x => new InboxItemMessage { Id = x.Id, Data = x.ItemData })
+                    .OrderBy(x => x.Timestamp)
+                    .Select(x => new InboxItemMessage { Id = x.Id, Data = x.ItemData, Timestamp = x.Timestamp })
                     .ToList()
             };
         }

@@ -9,5 +9,10 @@ namespace Hyperledger.Aries.Routing
         /// </summary>
         /// <value></value>
         public string Data { get; set; }
+
+        /// <summary>
+        /// Timestamp when this message was received
+        /// </summary>
+        public long Timestamp { get; set; }
     }
 }
