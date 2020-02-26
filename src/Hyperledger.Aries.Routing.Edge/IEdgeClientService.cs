@@ -16,5 +16,9 @@ namespace Hyperledger.Aries.Routing
         Task AddDeviceAsync(IAgentContext agentContext, AddDeviceInfoMessage message);
 
         Task FetchInboxAsync(IAgentContext agentContext);
+        
+        Task CreateBackup(IAgentContext context, string key);
+        
+        Task RetrieveBackup(IAgentContext context, string id);
     }
 }
