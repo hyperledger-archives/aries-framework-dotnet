@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
@@ -32,6 +33,8 @@ namespace Hyperledger.Aries.Storage
         public virtual Task AddAsync<T>(Wallet wallet, T record)
             where T : RecordBase, new()
         {
+            Debug.WriteLine($"Adding record of type {record.TypeName} with Id {record.Id}");
+
             record.CreatedAtUtc = DateTime.UtcNow;
 
             return NonSecrets.AddRecordAsync(wallet,
@@ -113,14 +116,24 @@ namespace Hyperledger.Aries.Storage
         {
             try
             {
-                await NonSecrets.DeleteRecordAsync(wallet,
-                     new T().TypeName,
-                     id);
+                var record = await GetAsync<T>(wallet, id);
+                var typeName = new T().TypeName;
+
+                await NonSecrets.DeleteRecordTagsAsync(
+                    wallet: wallet,
+                    type: typeName,
+                    id: id,
+                    tagsJson: record.Tags.Select(x => x.Key).ToArray().ToJson());
+                await NonSecrets.DeleteRecordAsync(
+                    wallet: wallet,
+                    type: typeName,
+                    id: id);
 
                 return true;
             }
-            catch (WalletItemNotFoundException)
+            catch (Exception e)
             {
+                Debug.WriteLine($"Couldn't delete record: {e}");
                 return false;
             }
         }
