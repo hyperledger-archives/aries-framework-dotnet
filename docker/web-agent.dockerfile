@@ -1,7 +1,7 @@
-FROM streetcred/dotnet-indy:1.12.2 AS base
+FROM streetcred/dotnet-indy:1.14.2 AS base
 WORKDIR /app
 
-FROM streetcred/dotnet-indy:1.12.2 AS build
+FROM streetcred/dotnet-indy:1.14.2 AS build
 WORKDIR /src
 COPY [".", "."]
 
