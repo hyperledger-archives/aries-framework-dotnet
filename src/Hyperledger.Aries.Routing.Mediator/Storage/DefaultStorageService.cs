@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,9 +27,19 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
             }
         }
 
-        public async Task<string> SaveWallet(string key, Attachment[] payload)
+        public async Task<string> StoreBackupAsync(string backupId, Attachment[] payload)
         {
-            var path = Path.Combine(StorageDirectory, key);
+            var backupDir = Path.Combine(StorageDirectory, backupId);
+
+            if (!Directory.Exists(backupDir))
+            {
+                Directory.CreateDirectory(backupDir);
+            }
+
+            var numBackup = Directory.GetFiles(backupDir).Length;
+
+            var path = Path.Combine(backupDir, $"{numBackup+1}");
+            
             if (payload is null || payload.Length == 0 || payload.Length > 1)
             {
                 throw new ArgumentException("Invalid payload", nameof(payload));
@@ -40,17 +51,41 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
             await Task.Run(() =>
                 File.WriteAllBytes(path, payloadInBytes)).ConfigureAwait(false);
             
-            return key;
+            return new DateTimeOffset(DateTime.UtcNow).ToString();
         }
 
-        public async Task<byte[]> RetrieveWallet(string key)
+        public Task<byte[]> RetrieveBackupAsync(string backupId)
         {
-            var path = GetWalletPath(key);
+            var backupDir = GetWalletPath(backupId);
             
-            if (!File.Exists(path))
-                throw new FileNotFoundException($"Wallet with key {key} was not found.");
+            if (!Directory.Exists(backupDir))
+                throw new FileNotFoundException($"Wallet for key {backupId} was not found.");
 
-            var json = JsonConvert.SerializeObject(new { path, key });
+            var path = Directory.GetFiles(backupDir).Last();
+
+            return RetrieveWallet(backupId, path);
+        }
+
+        public Task<IEnumerable<string>> ListBackupsAsync(string backupId)
+        {
+            return Task.FromResult(Directory.GetFiles(GetWalletPath(backupId)).AsEnumerable());
+        }
+
+        public Task<byte[]> RetrieveBackupAsync(string backupId, DateTimeOffset dateTimeOffset)
+        {
+            if (dateTimeOffset == default)
+                return RetrieveBackupAsync(backupId);
+
+            var backupDir = GetWalletPath(backupId);
+
+            var path = Directory.GetFiles(backupDir).Last(x => File.GetCreationTimeUtc(x) > dateTimeOffset.ToUniversalTime());
+
+            return RetrieveWallet(backupId, path);
+        }
+
+        private async Task<byte[]> RetrieveWallet(string backupId, string path)
+        {
+            var json = JsonConvert.SerializeObject(new { path, key = backupId });
             var conf = JsonConvert.SerializeObject(_agentOptions.WalletConfiguration);
             var cred = JsonConvert.SerializeObject(_agentOptions.WalletCredentials);
 
@@ -58,7 +93,7 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
             await Wallet.ImportAsync(conf, cred, json);
             return await Task.Run(() => File.ReadAllBytes(path));
         }
-
+        
         private string GetWalletPath(string key) => Path.Combine(StorageDirectory, key);
     }
 }

@@ -7,4 +7,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Multiformats.Base" Version="2.0.2" />
+  </ItemGroup>
 </Project>

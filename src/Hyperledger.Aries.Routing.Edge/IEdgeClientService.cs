@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
@@ -17,8 +18,10 @@ namespace Hyperledger.Aries.Routing
 
         Task FetchInboxAsync(IAgentContext agentContext);
         
-        Task CreateBackup(IAgentContext context, string key);
+        Task CreateBackup(IAgentContext context, string seed);
         
-        Task RetrieveBackup(IAgentContext context, string id);
+        Task RetrieveBackup(IAgentContext context, string seed, DateTimeOffset offset = default);
+        
+        Task ListBackupsAsync(IAgentContext context, string seed);
     }
 }

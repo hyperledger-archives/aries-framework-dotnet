@@ -11,6 +11,8 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Routing.BackupRestore;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Indy.CryptoApi;
+using Multiformats.Base;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing
@@ -113,51 +115,89 @@ namespace Hyperledger.Aries.Routing
             await messageService.SendAsync(agentContext.Wallet, new DeleteInboxItemsMessage { InboxItemIds = processedItems }, connection);
         }
 
-        public async Task CreateBackup(IAgentContext context, string key)
+        public async Task CreateBackup(IAgentContext context, string seed)
         {
-            var backupMessage = new StoreBackupAgentMessage();
-            var path = Path.Combine(Path.GetTempPath(), key);
-            var json = JsonConvert.SerializeObject(new { path, key });
+            if (seed.Length != 32)
+            {
+                throw new ArgumentException($"{nameof(seed)} should be 32 characters");
+            }
+
+            var publicKey = await Crypto.CreateKeyAsync(context.Wallet, JsonConvert.SerializeObject(new { seed }));
+
+            var path = Path.Combine(Path.GetTempPath(), seed);
+            var json = JsonConvert.SerializeObject(new {path, seedPhrase = seed});
 
             await context.Wallet.ExportAsync(json);
-            
+
             var bytesArray = await Task.Run(() => File.ReadAllBytes(path));
+            var signedBytesArray = await Crypto.SignAsync(context.Wallet, publicKey, bytesArray);
+            
             var payload = bytesArray.ToBase64String();
 
-            backupMessage.Payload = new[]
+            var backupMessage = new StoreBackupAgentMessage
             {
-                new Attachment
+                BackupId = publicKey,
+                PayloadSignature = signedBytesArray.ToBase64String(),
+                Payload = new[]
                 {
-                    Id = "libindy-backup-request-0",
-                    MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
-                    Data = new AttachmentContent
+                    new Attachment
                     {
-                        Base64 = payload
+                        Id = "libindy-backup-request-0",
+                        MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
+                        Data = new AttachmentContent
+                        {
+                            Base64 = payload
+                        }
                     }
                 }
             };
-            
-            backupMessage.BackupId = key;
-            
+
             var connection = await GetMediatorConnectionAsync(context).ConfigureAwait(false);
-            
-            if (connection == null) 
-                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
-            
+
+            if (connection == null)
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound,
+                    "Couldn't locate a connection to mediator agent");
+
             await messageService.SendAsync(context.Wallet, backupMessage, connection).ConfigureAwait(false);
 
             File.Delete(path);
         }
 
-        public async Task RetrieveBackup(IAgentContext context, string id)
+        public async Task RetrieveBackup(IAgentContext context, string seed, DateTimeOffset offset = default)
         {
-            var retrieveBackupResponseMessage = new RetreiveBackupAgentMessage(id);
+            var publicKey = await Crypto.CreateKeyAsync(context.Wallet, JsonConvert.SerializeObject(new { seed }));
+            
+            var decodedKey = Multibase.Base58.Decode(publicKey);
+            var publicKeySigned = await Crypto.SignAsync(context.Wallet, publicKey, decodedKey);
+            
+            var retrieveBackupResponseMessage = new RetreiveBackupAgentMessage()
+            {
+                BackupId = publicKey,
+                Signature = publicKeySigned.ToBase64String(),
+                DateTimeOffset = offset
+            };
 
             var connection = await GetMediatorConnectionAsync(context).ConfigureAwait(false);
             if (connection == null) 
                 throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
         
             await messageService.SendReceiveAsync<StoreBackupAgentMessage>(context.Wallet, retrieveBackupResponseMessage, connection).ConfigureAwait(false);
+        }
+
+        public async Task ListBackupsAsync(IAgentContext context, string seed)
+        {
+            var publicKey = await Crypto.CreateKeyAsync(context.Wallet, JsonConvert.SerializeObject(new { seed }));
+            
+            var listBackupsMessage = new ListBackupsAgentMessage()
+            {
+                BackupId = publicKey,
+            };
+            
+            var connection = await GetMediatorConnectionAsync(context).ConfigureAwait(false);
+            if (connection == null) 
+                throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
+        
+            await messageService.SendReceiveAsync<ListBackupsAgentMessage>(context.Wallet, listBackupsMessage, connection).ConfigureAwait(false);
         }
 
         public async Task AddDeviceAsync(IAgentContext agentContext, AddDeviceInfoMessage message)
