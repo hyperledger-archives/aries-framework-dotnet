@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Configuration;
@@ -9,11 +10,13 @@ using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
+[assembly: InternalsVisibleTo("Hyperledger.Aries.Tests")]
+
 namespace Hyperledger.Aries.Agents.Edge
 {
     internal class EdgeProvisioningService : IHostedService, IEdgeProvisioningService
     {
-        private const string MediatorConnectionIdTagName = "MediatorConnectionId";
+        internal const string MediatorConnectionIdTagName = "MediatorConnectionId";
         private const string MediatorInboxIdTagName = "MediatorInboxId";
 
         private readonly IProvisioningService provisioningService;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Agents.Edge;
+using Hyperledger.Aries.Decorators.Attachments;
 
 namespace Hyperledger.Aries.Routing
 {
@@ -17,11 +18,39 @@ namespace Hyperledger.Aries.Routing
         Task AddDeviceAsync(IAgentContext agentContext, AddDeviceInfoMessage message);
 
         Task FetchInboxAsync(IAgentContext agentContext);
-        
-        Task CreateBackup(IAgentContext context, string seed);
-        
-        Task RetrieveBackup(IAgentContext context, string seed, DateTimeOffset offset = default);
-        
-        Task ListBackupsAsync(IAgentContext context, string seed);
+
+        /// <summary>
+        /// Creates a backup for the current edge agent.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="seed">The seed.</param>
+        /// <returns></returns>
+        Task<DateTimeOffset> CreateBackupAsync(IAgentContext context, string seed);
+
+        /// <summary>
+        /// Retrieves the latest available backup.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="seed">The seed.</param>
+        /// <param name="offset">The offset.</param>
+        /// <returns></returns>
+        Task<List<Attachment>> RetrieveBackupAsync(IAgentContext context, string seed, DateTimeOffset offset = default);
+
+        /// <summary>
+        /// Get a list of available backup dates
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="seed">The seed.</param>
+        /// <returns></returns>
+        Task<List<DateTimeOffset>> ListBackupsAsync(IAgentContext context, string seed);
+
+        /// <summary>
+        /// Restores the agent and wallet from backup.
+        /// </summary>
+        /// <param name="edgeContext">The edge context.</param>
+        /// <param name="seed">The seed.</param>
+        /// <param name="backupData">The backup data.</param>
+        /// <returns></returns>
+        Task RestoreFromBackupAsync(IAgentContext edgeContext, string seed, List<Attachment> backupData);
     }
 }

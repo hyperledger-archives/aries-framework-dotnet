@@ -50,6 +50,7 @@
         /// <summary>
         /// Encoding values in the supplied proof are invalid
         /// </summary>
-        InvalidProofEncoding
+        InvalidProofEncoding,
+        RevocationRegistryUnavailable
     }
 }

@@ -3,6 +3,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Agents.Edge;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Routing;
+using Hyperledger.Aries.Routing.Edge;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

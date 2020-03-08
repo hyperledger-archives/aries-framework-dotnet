@@ -27,73 +27,79 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
             }
         }
 
-        public async Task<string> StoreBackupAsync(string backupId, Attachment[] payload)
+
+        /// <summary>Stores the backup and all attachments.</summary>
+        /// <param name="backupId">The backup identifier.</param>
+        /// <param name="attachments">The attachments.</param>
+        /// <returns>The datetime offset used for this backup</returns>
+        /// <exception cref="ArgumentException">Invalid payload - attachments</exception>
+        public Task<DateTimeOffset> StoreBackupAsync(string backupId, IEnumerable<Attachment> attachments)
         {
-            var backupDir = Path.Combine(StorageDirectory, backupId);
+            if (attachments is null || !attachments.Any())
+            {
+                throw new ArgumentException("Invalid payload", nameof(attachments));
+            }
+
+            var nowUnix = DateTimeOffset.Now;
+            var backupDir = Path.Combine(StorageDirectory, backupId, nowUnix.ToUnixTimeSeconds().ToString());
 
             if (!Directory.Exists(backupDir))
             {
                 Directory.CreateDirectory(backupDir);
             }
 
-            var numBackup = Directory.GetFiles(backupDir).Length;
-
-            var path = Path.Combine(backupDir, $"{numBackup+1}");
-            
-            if (payload is null || payload.Length == 0 || payload.Length > 1)
+            foreach (var attachment in attachments)
             {
-                throw new ArgumentException("Invalid payload", nameof(payload));
+                var payloadInBytes = attachment.Data.Base64.GetBytesFromBase64();
+                File.WriteAllBytes(Path.Combine(backupDir, attachment.Id), payloadInBytes);
             }
             
-            // ReSharper disable once PossibleNullReferenceException
-            var payloadInBytes = payload.FirstOrDefault().Data.Base64.GetBytesFromBase64();
-
-            await Task.Run(() =>
-                File.WriteAllBytes(path, payloadInBytes)).ConfigureAwait(false);
-            
-            return new DateTimeOffset(DateTime.UtcNow).ToString();
+            return Task.FromResult(nowUnix);
         }
 
-        public Task<byte[]> RetrieveBackupAsync(string backupId)
+        /// <summary>
+        /// Retrieves the latest backup.
+        /// </summary>
+        /// <param name="backupId">The backup identifier.</param>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException">Wallet for key {backupId} was not found.</exception>
+        public async Task<List<Attachment>> RetrieveBackupAsync(string backupId)
         {
-            var backupDir = GetWalletPath(backupId);
-            
-            if (!Directory.Exists(backupDir))
-                throw new FileNotFoundException($"Wallet for key {backupId} was not found.");
+            var backupDirectory = GetBackupPath(backupId);
+            var backupList = await ListBackupsAsync(backupId);
 
-            var path = Directory.GetFiles(backupDir).Last();
-
-            return RetrieveWallet(backupId, path);
+            return await RetrieveBackupAsync(
+                backupId: backupId,
+                backupDate: DateTimeOffset.FromUnixTimeSeconds(long.Parse(backupList.OrderBy(x => x).Last())));
         }
 
+        /// <summary>
+        /// Lists the available backups for the given <c>backupId</c>.
+        /// </summary>
+        /// <param name="backupId">The backup identifier.</param>
+        /// <returns></returns>
         public Task<IEnumerable<string>> ListBackupsAsync(string backupId)
         {
-            return Task.FromResult(Directory.GetFiles(GetWalletPath(backupId)).AsEnumerable());
+            return Task.FromResult(Directory.EnumerateDirectories(GetBackupPath(backupId)));
         }
 
-        public Task<byte[]> RetrieveBackupAsync(string backupId, DateTimeOffset dateTimeOffset)
+        public Task<List<Attachment>> RetrieveBackupAsync(string backupId, DateTimeOffset backupDate)
         {
-            if (dateTimeOffset == default)
-                return RetrieveBackupAsync(backupId);
+            var path = Path.Combine(GetBackupPath(backupId), backupDate.ToUnixTimeSeconds().ToString());
 
-            var backupDir = GetWalletPath(backupId);
-
-            var path = Directory.GetFiles(backupDir).Last(x => File.GetCreationTimeUtc(x) > dateTimeOffset.ToUniversalTime());
-
-            return RetrieveWallet(backupId, path);
-        }
-
-        private async Task<byte[]> RetrieveWallet(string backupId, string path)
-        {
-            var json = JsonConvert.SerializeObject(new { path, key = backupId });
-            var conf = JsonConvert.SerializeObject(_agentOptions.WalletConfiguration);
-            var cred = JsonConvert.SerializeObject(_agentOptions.WalletCredentials);
-
-            // should be done on client side()
-            await Wallet.ImportAsync(conf, cred, json);
-            return await Task.Run(() => File.ReadAllBytes(path));
+            return Task.FromResult(
+                Directory.EnumerateFiles(path, "*", SearchOption.TopDirectoryOnly)
+                .Select(x => new Attachment
+                {
+                    Id = Path.GetFileName(x),
+                    Data = new AttachmentContent
+                    {
+                        Base64 = File.ReadAllBytes(x).ToBase64String()
+                    }
+                })
+                .ToList());
         }
         
-        private string GetWalletPath(string key) => Path.Combine(StorageDirectory, key);
+        private string GetBackupPath(string backupId) => Path.Combine(StorageDirectory, backupId);
     }
 }
