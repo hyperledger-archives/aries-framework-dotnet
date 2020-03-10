@@ -38,6 +38,8 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddDefaultMessageHandlers();
             builder.Services.AddMessageHandler<MediatorForwardHandler>();
             builder.Services.AddMessageHandler<RoutingInboxHandler>();
+            builder.Services.AddMessageHandler<DefaultStoreBackupHandler>();
+            builder.Services.AddMessageHandler<RetrieveBackupHandler>();
             builder.Services.AddSingleton<IRoutingStore, DefaultRoutingStore>();
             builder.Services.AddSingleton<IStorageService, DefaultStorageService>();
             builder.Services.AddSingleton<IAgent, T>();
