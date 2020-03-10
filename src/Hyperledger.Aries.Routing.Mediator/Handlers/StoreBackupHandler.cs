@@ -26,7 +26,7 @@ namespace Hyperledger.Aries.Routing
         protected override async Task<AgentMessage> ProcessAsync(StoreBackupAgentMessage message, IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
             var result = await Crypto.VerifyAsync(
-                message.BackupId,
+                message.BackupId, 
                 message.Payload.FirstOrDefault().Data.Base64.GetBytesFromBase64(),
                 message.PayloadSignature.GetBytesFromBase64());
 

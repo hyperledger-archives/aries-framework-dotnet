@@ -9,6 +9,7 @@ using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Routing.Mediator.Storage;
 using Hyperledger.Indy.CryptoApi;
+using Multiformats.Base;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing
@@ -41,10 +42,18 @@ namespace Hyperledger.Aries.Routing
                     {
                         var message = messageContext.GetMessage<RetrieveBackupAgentMessage>();
 
+                        var signature = message.Signature.GetBytesFromBase64();
+                        
+
+                        // message.BackupId = public key
+                        // message.BackupId.GetBytesFromBase64() => decoded as bytes
+                        // message.Signature.GetBytesFromBase64() => decoded as bytes
+                        
                         var result = await Crypto.VerifyAsync(
-                            theirVk: message.BackupId,
-                            message: message.BackupId.GetBytesFromBase64(),
-                            signature: message.Signature.GetBytesFromBase64());
+                            message.BackupId,
+                            message.BackupId.GetBytesFromBase64(),
+                            signature);
+
 
                         if (!result)
                         {

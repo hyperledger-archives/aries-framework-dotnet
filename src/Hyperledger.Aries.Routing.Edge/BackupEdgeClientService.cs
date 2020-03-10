@@ -23,10 +23,11 @@ namespace Hyperledger.Aries.Routing.Edge
                 throw new ArgumentException($"{nameof(seed)} should be 32 characters");
             }
 
-            var publicKey = await Crypto.CreateKeyAsync(context.Wallet, new { seed }.ToJson());
-
             var path = Path.Combine(Path.GetTempPath(), seed);
-            var json = new { path, seedPhrase = seed }.ToJson();
+
+            var publicKey = await Crypto.CreateKeyAsync(context.Wallet, new {seed}.ToJson());
+
+            var json = JsonConvert.SerializeObject(new {path, key = seed});
 
             await context.Wallet.ExportAsync(json);
 
@@ -59,10 +60,9 @@ namespace Hyperledger.Aries.Routing.Edge
                 throw new AriesFrameworkException(ErrorCode.RecordNotFound,
                     "Couldn't locate a connection to mediator agent");
 
-            var response = await messageService.SendReceiveAsync<StoreBackupResponseAgentMessage>(context.Wallet, backupMessage, connection).ConfigureAwait(false);
-
-            File.Delete(path);
-
+            var response = await messageService
+                .SendReceiveAsync<StoreBackupResponseAgentMessage>(context.Wallet, backupMessage, connection)
+                .ConfigureAwait(false);
             return response.BackupTimestamp;
         }
 

@@ -13,6 +13,8 @@ namespace Hyperledger.Aries.Routing
         {
             AddConnectionHandler();
             AddHandler<MediatorForwardHandler>();
+            AddHandler<DefaultStoreBackupHandler>();
+            AddHandler<RetrieveBackupHandler>();
             AddHandler<RoutingInboxHandler>();
         }
     }
