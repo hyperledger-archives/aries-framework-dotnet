@@ -4,6 +4,8 @@ using Hyperledger.TestHarness.Mock;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -38,9 +40,56 @@ namespace Hyperledger.Aries.Tests.Routing
         {
             var seed = "00000000000000000000000000000000";
 
-            await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            var edgeWallet = Path.Combine(Path.GetTempPath(), seed);
 
-            // TODO: Add assertsions
+            if (File.Exists(edgeWallet))
+            {
+                File.Delete(edgeWallet);
+            }
+            
+            var path = Path.Combine(Path.GetTempPath(), "AriesWallets");
+
+            var walletDirExists = Directory.Exists(path);
+
+            if (walletDirExists)
+            {
+                Directory.Delete(path, true);
+            }
+            
+            var r = await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            var numDirsAfterBackup = Directory.GetDirectories(path).Length;
+            var walletDir = Directory.GetDirectories(path).First();
+            var backupDir = Directory.GetDirectories(walletDir).First();
+            var backedUpWallet = Directory.GetFiles(backupDir).First();
+            
+            Assert.True(Directory.Exists(path));
+            Assert.True(numDirsAfterBackup > 0);
+            Assert.True(File.Exists(backedUpWallet));
+        }
+        
+        [Fact(DisplayName = "Create backup with shorter seed")]
+        public async Task CreateBackupWithShortSeed()
+        {
+            var seed = "11112222";
+
+            var edgeWallet = Path.Combine(Path.GetTempPath(), seed);
+
+            if (File.Exists(edgeWallet))
+            {
+                File.Delete(edgeWallet);
+            }
+            
+            var path = Path.Combine(Path.GetTempPath(), "AriesWallets");
+
+            var walletDirExists = Directory.Exists(path);
+
+            if (walletDirExists)
+            {
+                Directory.Delete(path, true);
+            }
+            
+            var ex = await Assert.ThrowsAsync<ArgumentException>(() => EdgeClient.CreateBackupAsync(EdgeContext, seed));
+            Assert.Equal(ex.Message, $"{nameof(seed)} should be 32 characters");
         }
 
         [Fact(DisplayName = "Get a list of available backups")]
@@ -55,8 +104,9 @@ namespace Hyperledger.Aries.Tests.Routing
 
             await EdgeClient.CreateBackupAsync(EdgeContext, seed);
 
-            await EdgeClient.ListBackupsAsync(EdgeContext, seed);
+            var result = await EdgeClient.ListBackupsAsync(EdgeContext, seed);
 
+            Assert.NotEmpty(result);
             // TODO: Add response to ListBackups
 
             // TODO: Add assertsions

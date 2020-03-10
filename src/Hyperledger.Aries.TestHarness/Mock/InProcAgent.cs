@@ -25,6 +25,8 @@ namespace Hyperledger.TestHarness.Mock
             AddConnectionHandler();
             AddHandler<MediatorForwardHandler>();
             AddHandler<RoutingInboxHandler>();
+            AddHandler<DefaultStoreBackupHandler>();
+            AddHandler<RetrieveBackupHandler>();
         }
 
         internal Task<AgentPublicConfiguration> HandleDiscoveryAsync() =>
@@ -60,6 +62,8 @@ namespace Hyperledger.TestHarness.Mock
             AddForwardHandler();
             AddProofHandler();
             AddBasicMessageHandler();
+            AddHandler<RetrieveBackupHandler>();
+            AddHandler<DefaultStoreBackupHandler>();
         }
 
         #region Factory methods
