@@ -43,15 +43,11 @@ namespace Hyperledger.Aries.Routing
                         var message = messageContext.GetMessage<RetrieveBackupAgentMessage>();
 
                         var signature = message.Signature.GetBytesFromBase64();
-                        
+                        var backupId = Multibase.Base58.Decode(message.BackupId);
 
-                        // message.BackupId = public key
-                        // message.BackupId.GetBytesFromBase64() => decoded as bytes
-                        // message.Signature.GetBytesFromBase64() => decoded as bytes
-                        
                         var result = await Crypto.VerifyAsync(
                             message.BackupId,
-                            message.BackupId.GetBytesFromBase64(),
+                            backupId,
                             signature);
 
 
