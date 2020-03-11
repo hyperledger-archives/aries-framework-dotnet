@@ -11,6 +11,7 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.CryptoApi;
+using Microsoft.Extensions.Options;
 using Multiformats.Base;
 using Newtonsoft.Json;
 
@@ -25,17 +26,20 @@ namespace Hyperledger.Aries.Routing.Edge
         private readonly IProvisioningService provisioningService;
         private readonly IWalletRecordService recordService;
         private readonly IMessageService messageService;
+        private readonly AgentOptions _agentOptions;
 
         public EdgeClientService(
             IHttpClientFactory httpClientFactory,
             IProvisioningService provisioningService,
             IWalletRecordService recordService,
-            IMessageService messageService)
+            IMessageService messageService,
+            IOptions<AgentOptions> agentOptions)
         {
             this.httpClientFactory = httpClientFactory;
             this.provisioningService = provisioningService;
             this.recordService = recordService;
             this.messageService = messageService;
+            _agentOptions = agentOptions.Value;
         }
 
         public async Task AddRouteAsync(IAgentContext agentContext, string routeDestination)
