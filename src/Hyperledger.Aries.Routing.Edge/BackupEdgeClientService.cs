@@ -8,8 +8,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hyperledger.Indy.WalletApi;
 
 namespace Hyperledger.Aries.Routing.Edge
 {
@@ -27,7 +29,7 @@ namespace Hyperledger.Aries.Routing.Edge
 
             var publicKey = await Crypto.CreateKeyAsync(context.Wallet, new {seed}.ToJson());
 
-            var json = JsonConvert.SerializeObject(new {path, key = seed});
+            var json = new { path, seedPhrase = seed }.ToJson();
 
             await context.Wallet.ExportAsync(json);
 
@@ -87,6 +89,22 @@ namespace Hyperledger.Aries.Routing.Edge
             var response = await messageService.SendReceiveAsync<RetrieveBackupResponseAgentMessage>(context.Wallet, retrieveBackupResponseMessage, connection).ConfigureAwait(false);
             return response.Payload;
         }
+        
+        /// <inheritdoc />
+        public async Task RestoreFromBackupAsync(IAgentContext edgeContext, string seed, List<Attachment> backupData)
+        {
+            var tempWalletPath = Path.Combine(Path.GetTempPath(), seed);
+            var walletBase64 = backupData.First().Data.Base64;
+            var walletToRestoreInBytes = walletBase64.GetBytesFromBase64();
+            
+            await Task.Run(() => File.WriteAllBytes(tempWalletPath, walletToRestoreInBytes));
+            
+            var json = new { tempWalletPath, seedPhrase = seed }.ToJson();
+            var conf = JsonConvert.SerializeObject(_agentOptions.WalletConfiguration);
+            var cred = JsonConvert.SerializeObject(_agentOptions.WalletCredentials);
+            
+            await Wallet.ImportAsync(conf, cred, json);
+        }
 
         /// <inheritdoc />
         public async Task<List<DateTimeOffset>> ListBackupsAsync(IAgentContext context, string seed)
@@ -104,12 +122,6 @@ namespace Hyperledger.Aries.Routing.Edge
 
             var response = await messageService.SendReceiveAsync<ListBackupsResponseAgentMessage>(context.Wallet, listBackupsMessage, connection).ConfigureAwait(false);
             return response.BackupList;
-        }
-
-        /// <inheritdoc />
-        public Task RestoreFromBackupAsync(IAgentContext edgeContext, string seed, List<Attachment> backupData)
-        {
-            throw new NotImplementedException();
         }
     }
 }
