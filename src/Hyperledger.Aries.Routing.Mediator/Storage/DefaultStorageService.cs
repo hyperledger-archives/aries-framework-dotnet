@@ -3,23 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
-using Hyperledger.Indy.WalletApi;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing.Mediator.Storage
 {
     public class DefaultStorageService : IStorageService
     {
-        private readonly AgentOptions _agentOptions;
         private string StorageDirectory { get; set; }
 
-        public DefaultStorageService(IOptions<AgentOptions> agentOptions)
+        public DefaultStorageService()
         {
-            _agentOptions = agentOptions.Value;
             StorageDirectory = Path.Combine(Path.GetTempPath(), "AriesWallets");
             if (!Directory.Exists(StorageDirectory))
             {
@@ -65,12 +59,17 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
         /// <exception cref="FileNotFoundException">Wallet for key {backupId} was not found.</exception>
         public async Task<List<Attachment>> RetrieveBackupAsync(string backupId)
         {
-            var backupDirectory = GetBackupPath(backupId);
-            var backupList = await ListBackupsAsync(backupId);
+            var backupDirectoryPath = GetBackupPath(backupId);
+            var rootBackupDirectory = new DirectoryInfo(backupDirectoryPath);
+            var backupDirectory = rootBackupDirectory.GetDirectories().OrderByDescending(d => d.CreationTimeUtc)
+                .First();
+            var myFile = backupDirectory.GetFiles()
+                .OrderByDescending(f => f.CreationTimeUtc)
+                .First();
 
             return await RetrieveBackupAsync(
                 backupId: backupId,
-                backupDate: DateTimeOffset.FromUnixTimeSeconds(long.Parse(backupList.OrderBy(x => x).Last())));
+                backupDate:  myFile.CreationTimeUtc);
         }
 
         /// <summary>
