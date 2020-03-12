@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Utils;
 using Newtonsoft.Json;
 
@@ -76,7 +77,8 @@ namespace Hyperledger.Aries.Extensions
             Converters = new List<JsonConverter>
             {
                 new AgentMessageWriter(),
-                new AgentEndpointJsonConverter()
+                new AgentEndpointJsonConverter(),
+                new AttributeFilterConverter()
             },
             NullValueHandling = NullValueHandling.Ignore
         };
