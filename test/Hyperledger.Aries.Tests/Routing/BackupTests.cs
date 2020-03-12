@@ -67,7 +67,7 @@ namespace Hyperledger.Aries.Tests.Routing
             Assert.True(File.Exists(backedUpWallet));
         }
         
-        [Fact(DisplayName = "Create backup with shorter seed")]
+        [Fact(DisplayName = "Create backup with shorter seed throws ArgumentException")]
         public async Task CreateBackupWithShortSeed()
         {
             var seed = "11112222";
@@ -95,20 +95,28 @@ namespace Hyperledger.Aries.Tests.Routing
         [Fact(DisplayName = "Get a list of available backups")]
         public async Task ListBackups()
         {
-            var seed = "00000000000000000000000000000000";
-
-            await EdgeClient.CreateBackupAsync(EdgeContext, seed);
-
             // Wait one second
             await Task.Delay(TimeSpan.FromSeconds(1));
+            
+            var seed = "00000000000000000000000000000000";
+            var edgeWallet = Path.Combine(Path.GetTempPath(), seed);
+            if (File.Exists(edgeWallet))
+            {
+                File.Delete(edgeWallet);
+            }
+            
+            var path = Path.Combine(Path.GetTempPath(), "AriesWallets");
 
-            await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            var walletDirExists = Directory.Exists(path);
+            if (walletDirExists)
+            {
+                Directory.Delete(path, true);
+            }
 
-            var result = await EdgeClient.ListBackupsAsync(EdgeContext, seed);
+            var backupId = await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            var result = await EdgeClient.ListBackupsAsync(EdgeContext, backupId);
 
             Assert.NotEmpty(result);
-            // TODO: Add response to ListBackups
-
             // TODO: Add assertsions
         }
 
@@ -131,7 +139,7 @@ namespace Hyperledger.Aries.Tests.Routing
 
             var backupData = await EdgeClient.RetrieveBackupAsync(EdgeContext, seed);
 
-            await EdgeClient.RestoreFromBackupAsync(EdgeContext, seed, backupData);
+            await EdgeClient.RestoreFromBackupAsync(EdgeContext, seed, backupData, "newWalletconfig", "newKey");
 
             // TODO: Add response
 

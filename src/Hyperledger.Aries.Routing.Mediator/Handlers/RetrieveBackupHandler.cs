@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
@@ -66,13 +67,12 @@ namespace Hyperledger.Aries.Routing
                     {
                         var message = messageContext.GetMessage<ListBackupsAgentMessage>();
                         var backupList = await _storageService.ListBackupsAsync(message.BackupId);
+                        var timestampList = backupList.Select(p => new DirectoryInfo(p).Name);
 
                         return new ListBackupsResponseAgentMessage
                         {
-                            BackupList = backupList
-                                .Select(x => long.Parse(x))
-                                .Select(x => DateTimeOffset.FromUnixTimeSeconds(x))
-                                .ToList()
+                            BackupList = timestampList
+                                .OrderByDescending(x => long.Parse(x))
                         };
                     }
             }

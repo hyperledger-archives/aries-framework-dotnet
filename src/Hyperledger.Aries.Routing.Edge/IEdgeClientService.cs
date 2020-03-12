@@ -25,7 +25,7 @@ namespace Hyperledger.Aries.Routing
         /// <param name="context">The context.</param>
         /// <param name="seed">The seed.</param>
         /// <returns></returns>
-        Task<DateTimeOffset> CreateBackupAsync(IAgentContext context, string seed);
+        Task<string> CreateBackupAsync(IAgentContext context, string seed);
 
         /// <summary>
         /// Retrieves the latest available backup.
@@ -40,9 +40,9 @@ namespace Hyperledger.Aries.Routing
         /// Get a list of available backup dates
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <param name="seed">The seed.</param>
+        /// <param name="backupId">The public key.</param>
         /// <returns></returns>
-        Task<List<DateTimeOffset>> ListBackupsAsync(IAgentContext context, string seed);
+        Task<List<string>> ListBackupsAsync(IAgentContext context, string backupId);
 
         /// <summary>
         /// Restores the agent and wallet from backup.

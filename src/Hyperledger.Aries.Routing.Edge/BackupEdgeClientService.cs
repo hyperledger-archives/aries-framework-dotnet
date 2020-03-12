@@ -16,7 +16,7 @@ namespace Hyperledger.Aries.Routing.Edge
     public partial class EdgeClientService : IEdgeClientService
     {
         /// <inheritdoc />
-        public async Task<DateTimeOffset> CreateBackupAsync(IAgentContext context, string seed)
+        public async Task<string> CreateBackupAsync(IAgentContext context, string seed)
         {
             if (seed.Length != 32)
             {
@@ -63,7 +63,7 @@ namespace Hyperledger.Aries.Routing.Edge
             var response = await messageService
                 .SendReceiveAsync<StoreBackupResponseAgentMessage>(context.Wallet, backupMessage, connection)
                 .ConfigureAwait(false);
-            return response.BackupTimestamp;
+            return publicKey;
         }
 
         /// <inheritdoc />
@@ -114,13 +114,11 @@ namespace Hyperledger.Aries.Routing.Edge
         }
 
         /// <inheritdoc />
-        public async Task<List<DateTimeOffset>> ListBackupsAsync(IAgentContext context, string seed)
+        public async Task<List<string>> ListBackupsAsync(IAgentContext context, string backupId)
         {
-            var publicKey = await Crypto.CreateKeyAsync(context.Wallet, new { seed }.ToJson());
-
             var listBackupsMessage = new ListBackupsAgentMessage()
             {
-                BackupId = publicKey,
+                BackupId = backupId,
             };
 
             var connection = await GetMediatorConnectionAsync(context).ConfigureAwait(false);
@@ -128,7 +126,7 @@ namespace Hyperledger.Aries.Routing.Edge
                 throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
 
             var response = await messageService.SendReceiveAsync<ListBackupsResponseAgentMessage>(context.Wallet, listBackupsMessage, connection).ConfigureAwait(false);
-            return response.BackupList;
+            return response.BackupList.ToList();
         }
     }
 }
