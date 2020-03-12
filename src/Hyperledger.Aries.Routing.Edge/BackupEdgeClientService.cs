@@ -4,12 +4,10 @@ using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Indy.CryptoApi;
 using Multiformats.Base;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Hyperledger.Indy.WalletApi;
 
@@ -29,7 +27,7 @@ namespace Hyperledger.Aries.Routing.Edge
 
             var publicKey = await Crypto.CreateKeyAsync(context.Wallet, new {seed}.ToJson());
 
-            var json = new { path, seedPhrase = seed }.ToJson();
+            var json = new { path, key = seed }.ToJson();
 
             await context.Wallet.ExportAsync(json);
 
@@ -91,7 +89,11 @@ namespace Hyperledger.Aries.Routing.Edge
         }
         
         /// <inheritdoc />
-        public async Task RestoreFromBackupAsync(IAgentContext edgeContext, string seed, List<Attachment> backupData)
+        public async Task RestoreFromBackupAsync(IAgentContext edgeContext,
+            string seed, 
+            List<Attachment> backupData,
+            string newWalletConfiguration,
+            string newKey)
         {
             var tempWalletPath = Path.Combine(Path.GetTempPath(), seed);
             var walletBase64 = backupData.First().Data.Base64;
@@ -99,11 +101,16 @@ namespace Hyperledger.Aries.Routing.Edge
             
             await Task.Run(() => File.WriteAllBytes(tempWalletPath, walletToRestoreInBytes));
             
-            var json = new { tempWalletPath, seedPhrase = seed }.ToJson();
-            var conf = JsonConvert.SerializeObject(_agentOptions.WalletConfiguration);
-            var cred = JsonConvert.SerializeObject(_agentOptions.WalletCredentials);
+            var json = new { path = tempWalletPath, key = seed }.ToJson();
+
+            var conf = new { id = newWalletConfiguration }.ToJson();
+            var key = new { key = newKey }.ToJson();
             
-            await Wallet.ImportAsync(conf, cred, json);
+//            var oldConf = JsonConvert.SerializeObject(_agentOptions.WalletConfiguration);
+//            var oldCred = JsonConvert.SerializeObject(_agentOptions.WalletCredentials);
+
+            await Wallet.ImportAsync(conf, key, json);
+//            await Wallet.DeleteWalletAsync(oldConf, oldCred); //TODO: throws Hyperledger.Indy.InvalidStateException: The SDK library experienced an unexpected internal error.
         }
 
         /// <inheritdoc />
