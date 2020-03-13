@@ -125,11 +125,11 @@ namespace Hyperledger.TestHarness.Mock
 
             var agent1 = CreateMediator(handler1);
             var agent2 = CreateEdge(handler2);
-            var agent3 = CreateEdge(handler2);
+            var agent3 = CreateEdge(handler3);
 
             handler1.TargetAgent = agent2;
             handler2.TargetAgent = agent1;
-            handler3.TargetAgent = agent3;
+            handler3.TargetAgent = agent1;
 
             await agent1.InitializeAsync();
             await agent2.InitializeAsync();

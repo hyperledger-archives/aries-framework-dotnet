@@ -21,13 +21,16 @@ namespace Hyperledger.Aries.Tests.Routing
     public class BackupTests : IAsyncLifetime
     {
         public InProcAgent.PairedAgents Pair { get; private set; }
+        
         public IEdgeClientService EdgeClient { get; private set; }
         public IEdgeClientService RetrieveEdgeClient { get; private set; }
+        
         public IAgentContext EdgeContext { get; private set; }
         public IAgentContext RetrieverEdgeContext { get; private set; }
         
         public AgentOptions AgentOptions { get; private set; }
         public AgentOptions RetrieverAgentOptions { get; private set; }
+        
         public IAgentContext MediatorContext { get; private set; }
 
         public async Task DisposeAsync()
@@ -61,21 +64,7 @@ namespace Hyperledger.Aries.Tests.Routing
         {
             var seed = "00000000000000000000000000000000";
 
-            var edgeWallet = Path.Combine(Path.GetTempPath(), seed);
-
-            if (File.Exists(edgeWallet))
-            {
-                File.Delete(edgeWallet);
-            }
-            
-            var path = Path.Combine(Path.GetTempPath(), "AriesWallets");
-
-            var walletDirExists = Directory.Exists(path);
-
-            if (walletDirExists)
-            {
-                Directory.Delete(path, true);
-            }
+            var path = SetupDirectoriesAndReturnPath(seed);
             
             var r = await EdgeClient.CreateBackupAsync(EdgeContext, seed);
             var numDirsAfterBackup = Directory.GetDirectories(path).Length;
@@ -92,22 +81,7 @@ namespace Hyperledger.Aries.Tests.Routing
         public async Task CreateBackupWithShortSeed()
         {
             var seed = "11112222";
-
-            var edgeWallet = Path.Combine(Path.GetTempPath(), seed);
-
-            if (File.Exists(edgeWallet))
-            {
-                File.Delete(edgeWallet);
-            }
-            
-            var path = Path.Combine(Path.GetTempPath(), "AriesWallets");
-
-            var walletDirExists = Directory.Exists(path);
-
-            if (walletDirExists)
-            {
-                Directory.Delete(path, true);
-            }
+            SetupDirectoriesAndReturnPath(seed);
             
             var ex = await Assert.ThrowsAsync<ArgumentException>(() => EdgeClient.CreateBackupAsync(EdgeContext, seed));
             Assert.Equal(ex.Message, $"{nameof(seed)} should be 32 characters");
@@ -120,19 +94,7 @@ namespace Hyperledger.Aries.Tests.Routing
             await Task.Delay(TimeSpan.FromSeconds(1));
             
             var seed = "00000000000000000000000000000000";
-            var edgeWallet = Path.Combine(Path.GetTempPath(), seed);
-            if (File.Exists(edgeWallet))
-            {
-                File.Delete(edgeWallet);
-            }
-            
-            var path = Path.Combine(Path.GetTempPath(), "AriesWallets");
-
-            var walletDirExists = Directory.Exists(path);
-            if (walletDirExists)
-            {
-                Directory.Delete(path, true);
-            }
+            SetupDirectoriesAndReturnPath(seed);
 
             var backupId = await EdgeClient.CreateBackupAsync(EdgeContext, seed);
             var result = await EdgeClient.ListBackupsAsync(EdgeContext, backupId);
@@ -145,7 +107,10 @@ namespace Hyperledger.Aries.Tests.Routing
         {
             var seed = "00000000000000000000000000000000";
 
-            var result = await EdgeClient.RetrieveBackupAsync(EdgeContext, seed);
+            SetupDirectoriesAndReturnPath(seed);
+            await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            
+            var result = await RetrieveEdgeClient.RetrieveBackupAsync(RetrieverEdgeContext, seed);
             
             Assert.NotEmpty(result);
             Assert.IsType<Attachment>(result.First());
@@ -155,19 +120,42 @@ namespace Hyperledger.Aries.Tests.Routing
         public async Task RestoreAgentFromBackup()
         {
             var seed = "00000000000000000000000000000000";
+            var path = SetupDirectoriesAndReturnPath(seed);
             
-            var backupId = await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            await EdgeClient.CreateBackupAsync(EdgeContext, seed);
             // Create a DID that we will retrieve and compare from imported wallet
             var myDid = await Did.CreateAndStoreMyDidAsync(EdgeContext.Wallet, "{}");
             
-            var r = await EdgeClient.RetrieveBackupAsync(RetrieverEdgeContext, seed);
-            await EdgeClient.RestoreFromBackupAsync(EdgeContext, seed, r, RetrieverAgentOptions.WalletConfiguration.ToJson(), RetrieverAgentOptions.WalletCredentials.ToJson());
+            var attachments = await EdgeClient.RetrieveBackupAsync(RetrieverEdgeContext, seed);
+            await EdgeClient.RestoreFromBackupAsync(RetrieverEdgeContext, seed, attachments,
+                RetrieverAgentOptions.WalletConfiguration.ToJson(), RetrieverAgentOptions.WalletCredentials.ToJson());
             
             var myKey = await Did.KeyForLocalDidAsync(RetrieverEdgeContext.Wallet, myDid.Did);
             Assert.Equal(myKey, myDid.VerKey);
             
             // TODO: Add response
             // TODO: Add assertsions
+        }
+
+        private string SetupDirectoriesAndReturnPath(string seed)
+        {
+            var edgeWallet = Path.Combine(Path.GetTempPath(), seed);
+
+            if (File.Exists(edgeWallet))
+            {
+                File.Delete(edgeWallet);
+            }
+            
+            var path = Path.Combine(Path.GetTempPath(), "AriesWallets");
+
+            var walletDirExists = Directory.Exists(path);
+
+            if (walletDirExists)
+            {
+                Directory.Delete(path, true);
+            }
+
+            return path;
         }
     }
 }
