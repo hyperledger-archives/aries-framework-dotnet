@@ -30,6 +30,33 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <summary>The credential definition identifier</summary>
         [JsonProperty("cred_def_id", NullValueHandling = NullValueHandling.Ignore)]
         public string CredentialDefinitionId { get; set; }
+
+        /// <summary>
+        /// The attribute name and value to add as restriction.
+        /// </summary>
+        public AttributeValue AttributeValue { get; set; }
+    }
+
+    /// <summary>
+    /// Attribute Value as restriction
+    /// </summary>
+    public class AttributeValue
+    {
+        /// <summary>
+        /// The name of the attribute
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The expected attribute value
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
+        public string Value { get; set; }
     }
 
     /// <summary>

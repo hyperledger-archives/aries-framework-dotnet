@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Indy.NonSecretsApi;
 using Hyperledger.Indy.WalletApi;
 using Newtonsoft.Json;
@@ -24,7 +25,8 @@ namespace Hyperledger.Aries.Storage
                 NullValueHandling = NullValueHandling.Ignore,
                 Converters = new List<JsonConverter>
                 {
-                    new AgentEndpointJsonConverter()
+                    new AgentEndpointJsonConverter(),
+                    new AttributeFilterConverter()
                 }
             };
         }

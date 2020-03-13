@@ -6,6 +6,7 @@ using Xunit;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Features.IssueCredential;
 using System.Linq;
+using Hyperledger.Aries.Features.PresentProof;
 
 namespace Hyperledger.Aries.Tests
 {
@@ -83,6 +84,39 @@ namespace Hyperledger.Aries.Tests
 
             var endpoint = json.ToObject<AgentEndpoint>();
             Assert.Equal("1", endpoint.Did);
+        }
+
+        [Fact(DisplayName = "Convert attribute filter to correct JSON")]
+        public void ConvertAttributeValueToJson()
+        {
+            var filter = new AttributeFilter
+            {
+                SchemaId = "1",
+                AttributeValue = new AttributeValue
+                {
+                    Name = "full-name",
+                    Value = "alice"
+                }
+            };
+
+            var json = filter.ToJson();
+
+            Assert.NotNull(json);
+            Assert.Equal("{\"schema_id\":\"1\",\"attr::full-name::value\":\"alice\"}", json);
+        }
+
+        [Fact(DisplayName = "Convert JSON to attribute filter")]
+        public void ConvertJsonToAttributeFilter()
+        {
+            var json = "{\"schema_id\":\"1\",\"attr::full name::value\":\"alice\"}";
+            var filter = json.ToObject<AttributeFilter>();
+
+            Assert.NotNull(filter);
+            Assert.NotNull(filter.AttributeValue);
+            Assert.Equal("full name", filter.AttributeValue.Name);
+            Assert.Equal("alice", filter.AttributeValue.Value);
+            Assert.Equal("1", filter.SchemaId);
+            Assert.Null(filter.CredentialDefinitionId);
         }
     }
 
