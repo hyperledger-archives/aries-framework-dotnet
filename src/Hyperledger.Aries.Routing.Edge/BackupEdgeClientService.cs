@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Indy.WalletApi;
+using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing.Edge
 {
@@ -106,11 +107,12 @@ namespace Hyperledger.Aries.Routing.Edge
             var conf = new { id = newWalletConfiguration }.ToJson();
             var key = new { key = newKey }.ToJson();
             
-//            var oldConf = JsonConvert.SerializeObject(_agentOptions.WalletConfiguration);
-//            var oldCred = JsonConvert.SerializeObject(_agentOptions.WalletCredentials);
+            var oldConf = JsonConvert.SerializeObject(_agentOptions.WalletConfiguration);
+            var oldCred = JsonConvert.SerializeObject(_agentOptions.WalletCredentials);
 
             await Wallet.ImportAsync(conf, key, json);
-//            await Wallet.DeleteWalletAsync(oldConf, oldCred); //TODO: throws Hyperledger.Indy.InvalidStateException: The SDK library experienced an unexpected internal error.
+            await edgeContext.Wallet.CloseAsync();
+            await Wallet.DeleteWalletAsync(oldConf, oldCred); //TODO: throws Hyperledger.Indy.InvalidStateException: The SDK library experienced an unexpected internal error.
         }
 
         /// <inheritdoc />

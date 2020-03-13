@@ -116,6 +116,33 @@ namespace Hyperledger.TestHarness.Mock
             };
             return result;
         }
+        
+        public static async Task<PairedAgents> CreateTwoWalletsPairedWithRoutingAsync()
+        {
+            var handler1 = new InProcMessageHandler();
+            var handler2 = new InProcMessageHandler();
+            var handler3 = new InProcMessageHandler();
+
+            var agent1 = CreateMediator(handler1);
+            var agent2 = CreateEdge(handler2);
+            var agent3 = CreateEdge(handler2);
+
+            handler1.TargetAgent = agent2;
+            handler2.TargetAgent = agent1;
+            handler3.TargetAgent = agent3;
+
+            await agent1.InitializeAsync();
+            await agent2.InitializeAsync();
+            await agent3.InitializeAsync();
+
+            var result = new PairedAgents
+            {
+                Agent1 = agent1,
+                Agent2 = agent2,
+                Agent3 = agent3
+            };
+            return result;
+        }
 
         private static async Task<(ConnectionRecord agent1Connection, ConnectionRecord agent2Connection)> ConnectAsync(InProcAgent agent1, InProcAgent agent2)
         {
@@ -208,6 +235,7 @@ namespace Hyperledger.TestHarness.Mock
             public InProcAgent Agent1 { get; set; }
 
             public InProcAgent Agent2 { get; set; }
+            public InProcAgent Agent3 { get; set; }
 
             public ConnectionRecord Connection1 { get; set; }
 

@@ -12,6 +12,6 @@ namespace Hyperledger.Aries.Routing
             Type = BackupTypeNames.ListBackupsResponseAgentMessage;
         }
 
-        public List<DateTimeOffset> BackupList { get; set; }
+        public IEnumerable<string> BackupList { get; set; }
     }
 }
