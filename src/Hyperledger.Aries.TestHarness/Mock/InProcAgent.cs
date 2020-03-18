@@ -7,6 +7,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Routing;
+using Hyperledger.Aries.Routing.Mediator.Storage;
 using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -180,6 +181,9 @@ namespace Hyperledger.TestHarness.Mock
                         })
                         .AddSovrinToken());
                     services.AddSingleton<IHttpClientFactory>(new InProcFactory(handler));
+                    services.AddSingleton<IStorageService, DefaultStorageService>();
+                    services.AddMessageHandler<DefaultStoreBackupHandler>();
+                    services.AddMessageHandler<RetrieveBackupHandler>();
                 }).Build());
 
         private static InProcAgent CreateEdge(HttpMessageHandler handler) =>
