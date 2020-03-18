@@ -25,21 +25,24 @@ namespace Hyperledger.Aries.Routing.Edge
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IProvisioningService provisioningService;
         private readonly IWalletRecordService recordService;
+        private readonly IWalletRecordService walletRecordService;
         private readonly IMessageService messageService;
-        private readonly AgentOptions _agentOptions;
+
+        private readonly AgentOptions agentoptions;
 
         public EdgeClientService(
             IHttpClientFactory httpClientFactory,
             IProvisioningService provisioningService,
             IWalletRecordService recordService,
             IMessageService messageService,
+            IWalletRecordService walletRecordService,
             IOptions<AgentOptions> agentOptions)
         {
             this.httpClientFactory = httpClientFactory;
             this.provisioningService = provisioningService;
             this.recordService = recordService;
-            this.messageService = messageService;
-            _agentOptions = agentOptions.Value;
+            this.walletRecordService = walletRecordService;
+            this.agentoptions = agentOptions.Value;
         }
 
         public async Task AddRouteAsync(IAgentContext agentContext, string routeDestination)

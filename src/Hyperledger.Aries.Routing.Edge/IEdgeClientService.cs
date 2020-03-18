@@ -53,6 +53,8 @@ namespace Hyperledger.Aries.Routing
         /// <param name="newWalletConfiguration">The configuration for the new wallet.</param>
         /// <param name="newKey">The key for the new wallet.</param>
         /// <returns></returns>
-        Task RestoreFromBackupAsync(IAgentContext edgeContext, string seed, List<Attachment> backupData, string newWalletConfiguration, string newKey);
+        Task RestoreFromBackupAsync(IAgentContext sourceContext,
+            string seed, 
+            List<Attachment> backupData);
     }
 }

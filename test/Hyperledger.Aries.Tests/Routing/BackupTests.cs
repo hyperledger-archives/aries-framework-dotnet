@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Options;
@@ -32,6 +33,8 @@ namespace Hyperledger.Aries.Tests.Routing
         public AgentOptions RetrieverAgentOptions { get; private set; }
         
         public IAgentContext MediatorContext { get; private set; }
+        
+        public IWalletService WalletService { get; private set; }
 
         public async Task DisposeAsync()
         {
@@ -45,16 +48,18 @@ namespace Hyperledger.Aries.Tests.Routing
             // Agent1 - Mediator
             // Agent2 - Edge
             // Agent3 - RetrieveEdge
-            Pair = await InProcAgent.CreateTwoWalletsPairedWithRoutingAsync();
+            Pair = await InProcAgent.CreatePairedWithRoutingAsync();
+
+            WalletService = Pair.Agent2.Host.Services.GetRequiredService<IWalletService>();
             
             EdgeClient = Pair.Agent2.Host.Services.GetRequiredService<IEdgeClientService>();
-            RetrieveEdgeClient = Pair.Agent3.Host.Services.GetRequiredService<IEdgeClientService>();
+//            RetrieveEdgeClient = Pair.Agent3.Host.Services.GetRequiredService<IEdgeClientService>();
             
             AgentOptions = Pair.Agent2.Host.Services.GetRequiredService<IOptions<AgentOptions>>().Value;
-            RetrieverAgentOptions = Pair.Agent3.Host.Services.GetRequiredService<IOptions<AgentOptions>>().Value;
+//            RetrieverAgentOptions = Pair.Agent3.Host.Services.GetRequiredService<IOptions<AgentOptions>>().Value;
             
             EdgeContext = Pair.Agent2.Context;
-            RetrieverEdgeContext = Pair.Agent3.Context;
+//            RetrieverEdgeContext = Pair.Agent3.Context;
             
             MediatorContext = Pair.Agent1.Context;
         }
@@ -90,6 +95,7 @@ namespace Hyperledger.Aries.Tests.Routing
         [Fact(DisplayName = "Get a list of available backups")]
         public async Task ListBackups()
         {
+            // change backupId to be retrieved from provisioning service
             // Wait one second
             await Task.Delay(TimeSpan.FromSeconds(1));
             
@@ -108,7 +114,7 @@ namespace Hyperledger.Aries.Tests.Routing
             var seed = "00000000000000000000000000000000";
 
             SetupDirectoriesAndReturnPath(seed);
-            await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            var backupId = await EdgeClient.CreateBackupAsync(EdgeContext, seed);
             
             var result = await RetrieveEdgeClient.RetrieveBackupAsync(RetrieverEdgeContext, seed);
             
@@ -122,19 +128,25 @@ namespace Hyperledger.Aries.Tests.Routing
             var seed = "00000000000000000000000000000000";
             var path = SetupDirectoriesAndReturnPath(seed);
             
-            await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            var backupId = await EdgeClient.CreateBackupAsync(EdgeContext, seed);
             // Create a DID that we will retrieve and compare from imported wallet
             var myDid = await Did.CreateAndStoreMyDidAsync(EdgeContext.Wallet, "{}");
             
-            var attachments = await EdgeClient.RetrieveBackupAsync(RetrieverEdgeContext, seed);
-            await EdgeClient.RestoreFromBackupAsync(RetrieverEdgeContext, seed, attachments,
-                RetrieverAgentOptions.WalletConfiguration.ToJson(), RetrieverAgentOptions.WalletCredentials.ToJson());
+            var attachments = await EdgeClient.RetrieveBackupAsync(EdgeContext, seed);
+            await EdgeClient.RestoreFromBackupAsync(EdgeContext, seed, attachments);
+
+            var newWallet = await WalletService.GetWalletAsync(
+                new WalletConfiguration
+                {
+                    Id = "their_wallet"
+                },
+                new WalletCredentials
+                {
+                    Key = "their_wallet_key"
+                });
             
-            var myKey = await Did.KeyForLocalDidAsync(RetrieverEdgeContext.Wallet, myDid.Did);
+            var myKey = await Did.KeyForLocalDidAsync(newWallet, myDid.Did);
             Assert.Equal(myKey, myDid.VerKey);
-            
-            // TODO: Add response
-            // TODO: Add assertsions
         }
 
         private string SetupDirectoriesAndReturnPath(string seed)

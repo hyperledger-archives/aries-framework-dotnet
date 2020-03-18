@@ -23,10 +23,18 @@ namespace Hyperledger.Aries.Routing.Edge
             {
                 throw new ArgumentException($"{nameof(seed)} should be 32 characters");
             }
-
+            
             var path = Path.Combine(Path.GetTempPath(), seed);
-
-            var publicKey = await Crypto.CreateKeyAsync(context.Wallet, new {seed}.ToJson());
+            
+            var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
+            
+            var publicKey = provRecord.GetTag("backup_key"); 
+            if (string.IsNullOrEmpty(publicKey))
+            {
+                publicKey = await Crypto.CreateKeyAsync(context.Wallet, new {seed}.ToJson());
+                provRecord.SetTag("backup_key", publicKey);
+                await walletRecordService.UpdateAsync(context.Wallet, provRecord);
+            }
 
             var json = new { path, key = seed }.ToJson();
 
@@ -70,9 +78,14 @@ namespace Hyperledger.Aries.Routing.Edge
         /// <inheritdoc />
         public async Task<List<Attachment>> RetrieveBackupAsync(IAgentContext context, string seed, DateTimeOffset offset = default)
         {
-            var publicKey = await Crypto.CreateKeyAsync(context.Wallet, new { seed }.ToJson());
+            var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
+            var publicKey = provRecord.GetTag("backup_key");
+            if (string.IsNullOrEmpty(publicKey))
+            {
+                throw new ArgumentException("No such key"); //TODO:
+            }
 
-            var decodedKey = Multibase.Base58.Decode(publicKey);
+            var decodedKey = Multibase.Base58.Decode(publicKey); //TODO ask why we use it only here
             var publicKeySigned = await Crypto.SignAsync(context.Wallet, publicKey, decodedKey);
 
             var retrieveBackupResponseMessage = new RetrieveBackupAgentMessage()
@@ -90,11 +103,9 @@ namespace Hyperledger.Aries.Routing.Edge
         }
         
         /// <inheritdoc />
-        public async Task RestoreFromBackupAsync(IAgentContext edgeContext,
+        public async Task RestoreFromBackupAsync(IAgentContext sourceContext,
             string seed, 
-            List<Attachment> backupData,
-            string newWalletConfiguration,
-            string newKey)
+            List<Attachment> backupData)
         {
             var tempWalletPath = Path.Combine(Path.GetTempPath(), seed);
             var walletBase64 = backupData.First().Data.Base64;
@@ -103,16 +114,11 @@ namespace Hyperledger.Aries.Routing.Edge
             await Task.Run(() => File.WriteAllBytes(tempWalletPath, walletToRestoreInBytes));
             
             var json = new { path = tempWalletPath, key = seed }.ToJson();
-
-            var conf = new { id = newWalletConfiguration }.ToJson();
-            var key = new { key = newKey }.ToJson();
             
-            var oldConf = JsonConvert.SerializeObject(_agentOptions.WalletConfiguration);
-            var oldCred = JsonConvert.SerializeObject(_agentOptions.WalletCredentials);
-
-            await Wallet.ImportAsync(conf, key, json);
-            await edgeContext.Wallet.CloseAsync();
-            await Wallet.DeleteWalletAsync(oldConf, oldCred); //TODO: throws Hyperledger.Indy.InvalidStateException: The SDK library experienced an unexpected internal error.
+            await sourceContext.Wallet.CloseAsync();
+            
+            await Wallet.DeleteWalletAsync(agentoptions.WalletConfiguration.ToJson(), agentoptions.WalletCredentials.ToJson());
+            await Wallet.ImportAsync(agentoptions.WalletConfiguration.ToJson(), agentoptions.WalletCredentials.ToJson(), json);
         }
 
         /// <inheritdoc />
