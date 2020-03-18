@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.DidApi;
 using Microsoft.Extensions.Options;
@@ -37,8 +37,9 @@ namespace Hyperledger.Aries.Tests.Routing
             // Agent2 - Edge
             Pair = await InProcAgent.CreatePairedWithRoutingAsync();
 
-            WalletService = Pair.Agent2.Host.Services.GetRequiredService<IWalletService>();
+            // WalletService = Pair.Agent2.Host.Services.GetRequiredService<IWalletService>();
             EdgeClient = Pair.Agent2.Host.Services.GetRequiredService<IEdgeClientService>();
+            WalletService = Pair.Agent2.Host.Services.GetRequiredService<IWalletService>();
             AgentOptions = Pair.Agent2.Host.Services.GetRequiredService<IOptions<AgentOptions>>().Value;
             EdgeContext = Pair.Agent2.Context;
             MediatorContext = Pair.Agent1.Context;
@@ -106,23 +107,15 @@ namespace Hyperledger.Aries.Tests.Routing
         public async Task RestoreAgentFromBackup()
         {
             var seed = "00000000000000000000000000000000";
-            
+            var path = SetupDirectoriesAndReturnPath(seed);
+            var myDid = await Did.CreateAndStoreMyDidAsync(EdgeContext.Wallet, "{}");
             await EdgeClient.CreateBackupAsync(EdgeContext, seed);
             // Create a DID that we will retrieve and compare from imported wallet
-            var myDid = await Did.CreateAndStoreMyDidAsync(EdgeContext.Wallet, "{}");
             
             var attachments = await EdgeClient.RetrieveBackupAsync(EdgeContext, seed);
             await EdgeClient.RestoreFromBackupAsync(EdgeContext, seed, attachments);
 
-            var newWallet = await WalletService.GetWalletAsync(
-                new WalletConfiguration
-                {
-                    Id = "their_wallet"
-                },
-                new WalletCredentials
-                {
-                    Key = "their_wallet_key"
-                });
+            var newWallet = await WalletService.GetWalletAsync(AgentOptions.WalletConfiguration, AgentOptions.WalletCredentials);
             
             var myKey = await Did.KeyForLocalDidAsync(newWallet, myDid.Did);
             Assert.Equal(myKey, myDid.VerKey);

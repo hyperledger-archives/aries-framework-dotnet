@@ -42,6 +42,7 @@ namespace Hyperledger.Aries.Routing.Edge
             this.provisioningService = provisioningService;
             this.recordService = recordService;
             this.walletRecordService = walletRecordService;
+            this.messageService = messageService;
             this.agentoptions = agentOptions.Value;
         }
 
