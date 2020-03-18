@@ -10,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Indy.WalletApi;
-using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing.Edge
 {
@@ -69,7 +68,7 @@ namespace Hyperledger.Aries.Routing.Edge
                 throw new AriesFrameworkException(ErrorCode.RecordNotFound,
                     "Couldn't locate a connection to mediator agent");
 
-            var response = await messageService
+            await messageService
                 .SendReceiveAsync<StoreBackupResponseAgentMessage>(context.Wallet, backupMessage, connection)
                 .ConfigureAwait(false);
             return publicKey;
@@ -82,10 +81,10 @@ namespace Hyperledger.Aries.Routing.Edge
             var publicKey = provRecord.GetTag("backup_key");
             if (string.IsNullOrEmpty(publicKey))
             {
-                throw new ArgumentException("No such key"); //TODO:
+                throw new ArgumentException("No such key exists");
             }
 
-            var decodedKey = Multibase.Base58.Decode(publicKey); //TODO ask why we use it only here
+            var decodedKey = Multibase.Base58.Decode(publicKey);
             var publicKeySigned = await Crypto.SignAsync(context.Wallet, publicKey, decodedKey);
 
             var retrieveBackupResponseMessage = new RetrieveBackupAgentMessage()
@@ -122,11 +121,18 @@ namespace Hyperledger.Aries.Routing.Edge
         }
 
         /// <inheritdoc />
-        public async Task<List<string>> ListBackupsAsync(IAgentContext context, string backupId)
+        public async Task<List<string>> ListBackupsAsync(IAgentContext context)
         {
+            var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
+            var publicKey = provRecord.GetTag("backup_key");
+            if (string.IsNullOrEmpty(publicKey))
+            {
+                throw new ArgumentException("No such key exists");
+            }
+            
             var listBackupsMessage = new ListBackupsAgentMessage()
             {
-                BackupId = backupId,
+                BackupId = publicKey,
             };
 
             var connection = await GetMediatorConnectionAsync(context).ConfigureAwait(false);

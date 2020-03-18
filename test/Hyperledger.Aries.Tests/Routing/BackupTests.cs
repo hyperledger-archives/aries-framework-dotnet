@@ -83,8 +83,8 @@ namespace Hyperledger.Aries.Tests.Routing
             var seed = "00000000000000000000000000000000";
             SetupDirectoriesAndReturnPath(seed);
 
-            var backupId = await EdgeClient.CreateBackupAsync(EdgeContext, seed);
-            var result = await EdgeClient.ListBackupsAsync(EdgeContext, backupId);
+            await EdgeClient.CreateBackupAsync(EdgeContext, seed);
+            var result = await EdgeClient.ListBackupsAsync(EdgeContext);
 
             Assert.NotEmpty(result);
         }
