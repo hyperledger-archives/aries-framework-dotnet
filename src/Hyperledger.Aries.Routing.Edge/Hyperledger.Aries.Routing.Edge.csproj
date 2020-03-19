@@ -7,4 +7,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="EdgeClientService.Backup.cs">
+      <DependentUpon>EdgeClientService.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

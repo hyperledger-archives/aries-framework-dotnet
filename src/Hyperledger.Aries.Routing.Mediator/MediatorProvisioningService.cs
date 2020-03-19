@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Configuration;
@@ -8,6 +9,8 @@ using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Hosting;
+
+[assembly:InternalsVisibleTo("Hyperledger.Aries.Tests")]
 
 namespace Hyperledger.Aries.Agents.Edge
 {
@@ -70,7 +73,7 @@ namespace Hyperledger.Aries.Agents.Edge
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

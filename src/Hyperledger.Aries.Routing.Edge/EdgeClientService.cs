@@ -1,33 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Indy.CryptoApi;
+using Microsoft.Extensions.Options;
+using Multiformats.Base;
+using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Routing
+namespace Hyperledger.Aries.Routing.Edge
 {
-    public class EdgeClientService : IEdgeClientService
+    public partial class EdgeClientService : IEdgeClientService
     {
         private const string MediatorInboxIdTagName = "MediatorInboxId";
         private const string MediatorInboxKeyTagName = "MediatorInboxKey";
         private const string MediatorConnectionIdTagName = "MediatorConnectionId";
-
+        private readonly IHttpClientFactory httpClientFactory;
         private readonly IProvisioningService provisioningService;
         private readonly IWalletRecordService recordService;
+        private readonly IWalletRecordService walletRecordService;
         private readonly IMessageService messageService;
 
+        private readonly AgentOptions agentoptions;
+
         public EdgeClientService(
+            IHttpClientFactory httpClientFactory,
             IProvisioningService provisioningService,
             IWalletRecordService recordService,
-            IMessageService messageService)
+            IMessageService messageService,
+            IWalletRecordService walletRecordService,
+            IOptions<AgentOptions> agentOptions)
         {
+            this.httpClientFactory = httpClientFactory;
             this.provisioningService = provisioningService;
             this.recordService = recordService;
+            this.walletRecordService = walletRecordService;
             this.messageService = messageService;
+            this.agentoptions = agentOptions.Value;
         }
 
         public async Task AddRouteAsync(IAgentContext agentContext, string routeDestination)
@@ -57,7 +73,7 @@ namespace Hyperledger.Aries.Routing
             await recordService.UpdateAsync(agentContext.Wallet, provisioning);
         }
 
-        private async Task<ConnectionRecord> GetMediatorConnectionAsync(IAgentContext agentContext)
+        internal async Task<ConnectionRecord> GetMediatorConnectionAsync(IAgentContext agentContext)
         {
             var provisioning = await provisioningService.GetProvisioningAsync(agentContext.Wallet);
             if (provisioning.GetTag(MediatorConnectionIdTagName) == null)
@@ -73,7 +89,7 @@ namespace Hyperledger.Aries.Routing
 
         public async Task<AgentPublicConfiguration> DiscoverConfigurationAsync(string agentEndpoint)
         {
-            var httpClient = new HttpClient();
+            var httpClient = httpClientFactory.CreateClient();
             var response = await httpClient.GetAsync($"{agentEndpoint}/.well-known/agent-configuration").ConfigureAwait(false);
             var responseJson = await response.Content.ReadAsStringAsync();
 

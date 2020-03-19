@@ -4,6 +4,7 @@ using Hyperledger.Aries.Agents.Edge;
 using Hyperledger.Aries.AspNetCore;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Routing;
+using Hyperledger.Aries.Routing.Mediator.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
@@ -37,7 +38,10 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddDefaultMessageHandlers();
             builder.Services.AddMessageHandler<MediatorForwardHandler>();
             builder.Services.AddMessageHandler<RoutingInboxHandler>();
+            builder.Services.AddMessageHandler<DefaultStoreBackupHandler>();
+            builder.Services.AddMessageHandler<RetrieveBackupHandler>();
             builder.Services.AddSingleton<IRoutingStore, DefaultRoutingStore>();
+            builder.Services.AddSingleton<IStorageService, DefaultStorageService>();
             builder.Services.AddSingleton<IAgent, T>();
             builder.Services.Configure(options);
             builder.Services.AddHostedService<MediatorProvisioningService>();

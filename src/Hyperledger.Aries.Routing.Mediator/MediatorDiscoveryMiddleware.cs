@@ -33,6 +33,14 @@ namespace Hyperledger.Aries.Routing
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
+            var agentConfiguration = await GetConfigurationAsync();
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
+            await context.Response.WriteAsync(agentConfiguration.ToJson());
+        }
+
+        public async Task<AgentPublicConfiguration> GetConfigurationAsync()
+        {
             var agentContext = await agentProvider.GetContextAsync();
             var provisioningRecord = await provisioningService.GetProvisioningAsync(agentContext.Wallet);
             var connectionId = provisioningRecord.GetTag(MediatorProvisioningService.EdgeInvitationTagName);
@@ -50,10 +58,7 @@ namespace Hyperledger.Aries.Routing
                 Invitation = inviation.GetTag(MediatorProvisioningService.InvitationTagName)
                     .ToObject<ConnectionInvitationMessage>()
             };
-
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.OK;
-            await context.Response.WriteAsync(agentConfiguration.ToJson());
+            return agentConfiguration;
         }
     }
 }
