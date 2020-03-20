@@ -63,6 +63,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.NotNull(holderRecord);
             Assert.Equal(expected: CredentialState.Issued, actual: holderRecord.State);
             Assert.Equal(expected: CredentialState.Issued, actual: issuerRecord.State);
+            Assert.NotNull(holderRecord.CredentialAttributesValues);
             Assert.Null(holderRecord.ConnectionId);
         }
     }
