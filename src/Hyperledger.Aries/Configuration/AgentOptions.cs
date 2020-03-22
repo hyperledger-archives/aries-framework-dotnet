@@ -117,12 +117,15 @@ namespace Hyperledger.Aries.Configuration
         } = 2;
 
         /// <summary>
-        /// Gets or sets the revocation registry base URI.
+        /// Gets or sets the revocation registry URI path e.g. "/tails".
+        /// This path will be appended to the EndpointUri value.
+        /// This is used to optimize the ASP.NET Core middleware pipeline.
+        /// Default value is "/tails". The value must start with a slash '/'.
         /// </summary>
         /// <value>
-        /// The revocation registry base URI.
+        /// The revocation registry base URI path.
         /// </value>
-        public string RevocationRegistryBaseUri { get; set; }
+        public string RevocationRegistryUriPath { get; set; } = "/tails";
 
         /// <summary>
         /// Gets or sets the revocation registry directory where

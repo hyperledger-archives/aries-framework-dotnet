@@ -189,7 +189,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             if (configuration.SchemaId == null) throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "SchemaId must be specified.");
             if (configuration.EnableRevocation &&
                 configuration.RevocationRegistryBaseUri == null &&
-                AgentOptions.RevocationRegistryBaseUri == null) throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "RevocationRegistryBaseUri must be specified either in the configuration or the AgentOptions");
+                AgentOptions.RevocationRegistryUriPath == null) throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "RevocationRegistryBaseUri must be specified either in the configuration or the AgentOptions");
 
             var schema = await LedgerService.LookupSchemaAsync(await context.Pool, configuration.SchemaId);
 
@@ -223,19 +223,12 @@ namespace Hyperledger.Aries.Features.IssueCredential
             {
                 definitionRecord.MaxCredentialCount = configuration.RevocationRegistrySize;
                 definitionRecord.RevocationAutoScale = configuration.RevocationRegistryAutoScale;
-                definitionRecord.RevocationRegistryBaseUri = configuration.RevocationRegistryBaseUri ?? AgentOptions.RevocationRegistryBaseUri;
 
-                var (revocationRegistry, revocationRecord) = await CreateRevocationRegistryAsync(
+                var (_, revocationRecord) = await CreateRevocationRegistryAsync(
                     context: context,
                     tag: $"1-{configuration.RevocationRegistrySize}",
                     definitionRecord: definitionRecord);
                 definitionRecord.CurrentRevocationRegistryId = revocationRecord.Id;
-
-                //if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
-
-                //paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_ENTRY);
-
-                //if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
             }
 
             await RecordService.AddAsync(context.Wallet, definitionRecord);
@@ -274,8 +267,13 @@ namespace Hyperledger.Aries.Features.IssueCredential
             // Update tails location URI
             var revocationDefinition = JObject.Parse(revocationRegistry.RevRegDefJson);
             var tailsfile = Path.GetFileName(revocationDefinition["value"]["tailsLocation"].ToObject<string>());
-            revocationDefinition["value"]["tailsLocation"] = Url.Combine(definitionRecord.RevocationRegistryBaseUri, tailsfile);
+            var tailsLocation = Url.Combine(
+                AgentOptions.EndpointUri,
+                AgentOptions.RevocationRegistryUriPath,
+                tailsfile);
+            revocationDefinition["value"]["tailsLocation"] = tailsLocation;
             revocationRecord.TailsFile = tailsfile;
+            revocationRecord.TailsLocation = tailsLocation;
 
             //paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_DEF);
             await LedgerService.RegisterRevocationRegistryDefinitionAsync(

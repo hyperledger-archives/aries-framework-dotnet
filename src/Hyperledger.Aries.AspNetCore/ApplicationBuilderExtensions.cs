@@ -1,6 +1,8 @@
 ﻿using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.AspNetCore;
+using Hyperledger.Aries.Configuration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -21,8 +23,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="app">App.</param>
         public static void UseAriesFramework<T>(this IApplicationBuilder app)
         {
+            var options = app.ApplicationServices.GetRequiredService<IOptions<AgentOptions>>().Value;
+
             app.UseMiddleware<T>();
-            app.UseMiddleware<TailsMiddleware>();
+            app.MapWhen(
+                context => context.Request.Path.ToUriComponent().Contains(options.RevocationRegistryUriPath), 
+                app => app.UseMiddleware<TailsMiddleware>());
         }
     }
 }

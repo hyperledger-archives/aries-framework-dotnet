@@ -33,11 +33,12 @@ namespace Hyperledger.Aries.Models.Records
         /// <returns>The type name.</returns>
         public override string TypeName => "AF.RevocationRegistryRecord";
 
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"CredentialDefinitionId={CredentialDefinitionId}, " +
-            $"TailsFile={TailsFile}, " +
-            base.ToString();
+        /// <summary>
+        /// Gets or sets the public URI tails location.
+        /// </summary>
+        /// <value>
+        /// The tails location.
+        /// </value>
+        public string TailsLocation { get; set; }
     }
 }

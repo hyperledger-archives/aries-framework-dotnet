@@ -76,22 +76,5 @@ namespace Hyperledger.Aries.Models.Records
         /// The issuer did.
         /// </value>
         public string IssuerDid { get; set; }
-
-        /// <summary>
-        /// Gets or sets the revocation registry base URI.
-        /// </summary>
-        /// <value>
-        /// The revocation registry base URI.
-        /// </value>
-        public string RevocationRegistryBaseUri { get; set; }
-
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"SchemaId={SchemaId}, " +
-            $"SupportsRevocation={SupportsRevocation}, " +
-            $"RequireApproval={RequireApproval}, " +
-            $"MaxCredentialCount={MaxCredentialCount}, " +
-            base.ToString(); 
     }
 }
