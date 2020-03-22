@@ -370,9 +370,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
             if (!string.IsNullOrEmpty(revRegId))
             {
                 // If credential supports revocation, lookup registry definition
-                var revocationRegistry =
-                    await LedgerService.LookupRevocationRegistryDefinitionAsync(await agentContext.Pool, revRegId);
+                var revocationRegistry = await LedgerService.LookupRevocationRegistryDefinitionAsync(await agentContext.Pool, revRegId);
                 revocationRegistryDefinitionJson = revocationRegistry.ObjectJson;
+                credentialRecord.RevocationRegistryId = revRegId;
             }
 
             var credentialId = await AnonCreds.ProverStoreCredentialAsync(
@@ -659,10 +659,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
             }
 
             var (_, nextRevocationRecord) = await SchemaService.CreateRevocationRegistryAsync(agentContext, registryTag, definitionRecord);
-            definitionRecord.CurrentRevocationRegistryId = revocationRecord.Id;
+            definitionRecord.CurrentRevocationRegistryId = nextRevocationRecord.Id;
             await RecordService.UpdateAsync(agentContext.Wallet, definitionRecord);
 
-            tailsReader = await TailsService.OpenTailsAsync(revocationRecord.TailsFile);
+            tailsReader = await TailsService.OpenTailsAsync(nextRevocationRecord.TailsFile);
             return (await AnonCreds.IssuerCreateCredentialAsync(
                                 agentContext.Wallet,
                                 credentialRecord.OfferJson,

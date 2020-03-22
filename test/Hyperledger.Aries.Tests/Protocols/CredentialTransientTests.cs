@@ -111,12 +111,15 @@ namespace Hyperledger.Aries.Tests.Protocols
 
                 var holderRecord = await holderCredentialService.CreateCredentialAsync(agents.Agent2.Context, offerMessage);
                 issuerRecord = await issuerCredentialService.GetAsync(agents.Agent1.Context, issuerRecord.Id);
+                var definitionRecord = await agents.Agent1.Host.Services.GetService<ISchemaService>().GetCredentialDefinitionAsync(agents.Agent1.Context.Wallet, credentialDefinitionId);
 
                 Assert.NotNull(holderRecord);
                 Assert.Equal(expected: CredentialState.Issued, actual: holderRecord.State);
                 Assert.Equal(expected: CredentialState.Issued, actual: issuerRecord.State);
                 Assert.NotNull(holderRecord.CredentialAttributesValues);
                 Assert.Null(holderRecord.ConnectionId);
+                Assert.Equal(definitionRecord.CurrentRevocationRegistryId, issuerRecord.RevocationRegistryId);
+                Assert.Equal(definitionRecord.CurrentRevocationRegistryId, holderRecord.RevocationRegistryId);
             }
 
             // Second credential, will auto scale registry
@@ -135,12 +138,42 @@ namespace Hyperledger.Aries.Tests.Protocols
 
                 var holderRecord = await holderCredentialService.CreateCredentialAsync(agents.Agent2.Context, offerMessage);
                 issuerRecord = await issuerCredentialService.GetAsync(agents.Agent1.Context, issuerRecord.Id);
+                var definitionRecord = await agents.Agent1.Host.Services.GetService<ISchemaService>().GetCredentialDefinitionAsync(agents.Agent1.Context.Wallet, credentialDefinitionId);
 
                 Assert.NotNull(holderRecord);
                 Assert.Equal(expected: CredentialState.Issued, actual: holderRecord.State);
                 Assert.Equal(expected: CredentialState.Issued, actual: issuerRecord.State);
                 Assert.NotNull(holderRecord.CredentialAttributesValues);
                 Assert.Null(holderRecord.ConnectionId);
+                Assert.Equal(definitionRecord.CurrentRevocationRegistryId, issuerRecord.RevocationRegistryId);
+                Assert.Equal(definitionRecord.CurrentRevocationRegistryId, holderRecord.RevocationRegistryId);
+            }
+
+            // Third credential, will auto scale registry
+            {
+                var (offerMessage, issuerRecord) = await issuerCredentialService.CreateOfferAsync(agents.Agent1.Context, new OfferConfiguration
+                {
+                    CredentialDefinitionId = credentialDefinitionId,
+                    CredentialAttributeValues = new[] { new CredentialPreviewAttribute("test-attr", "test-value") }
+                });
+
+                Assert.NotNull(offerMessage.FindDecorator<ServiceDecorator>(DecoratorNames.ServiceDecorator));
+                Assert.Equal(CredentialState.Offered, issuerRecord.State);
+                Assert.Null(issuerRecord.ConnectionId);
+
+                var holderCredentialService = agents.Agent2.Host.Services.GetService<ICredentialService>();
+
+                var holderRecord = await holderCredentialService.CreateCredentialAsync(agents.Agent2.Context, offerMessage);
+                issuerRecord = await issuerCredentialService.GetAsync(agents.Agent1.Context, issuerRecord.Id);
+                var definitionRecord = await agents.Agent1.Host.Services.GetService<ISchemaService>().GetCredentialDefinitionAsync(agents.Agent1.Context.Wallet, credentialDefinitionId);
+
+                Assert.NotNull(holderRecord);
+                Assert.Equal(expected: CredentialState.Issued, actual: holderRecord.State);
+                Assert.Equal(expected: CredentialState.Issued, actual: issuerRecord.State);
+                Assert.NotNull(holderRecord.CredentialAttributesValues);
+                Assert.Null(holderRecord.ConnectionId);
+                Assert.Equal(definitionRecord.CurrentRevocationRegistryId, issuerRecord.RevocationRegistryId);
+                Assert.Equal(definitionRecord.CurrentRevocationRegistryId, holderRecord.RevocationRegistryId);
             }
         }
     }
