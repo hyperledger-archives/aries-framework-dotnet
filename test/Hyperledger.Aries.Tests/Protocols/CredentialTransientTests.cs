@@ -66,5 +66,82 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.NotNull(holderRecord.CredentialAttributesValues);
             Assert.Null(holderRecord.ConnectionId);
         }
+
+        [Fact(DisplayName = "Create a credential and automatically scale revocation registry")]
+        public async Task CreateCredentialAndAutoScaleRevocationRegistry()
+        {
+            var agents = await InProcAgent.CreatePairedAsync(false);
+            var issuerProvisioningService = agents.Agent1.Host.Services.GetService<IProvisioningService>();
+            var issuerSchemaService = agents.Agent1.Host.Services.GetService<ISchemaService>();
+            var issuerCredentialService = agents.Agent1.Host.Services.GetService<ICredentialService>();
+
+            var issuerProvisioning = await issuerProvisioningService.GetProvisioningAsync(agents.Agent1.Context.Wallet);
+            await PromoteTrustAnchor(issuerProvisioning.IssuerDid, issuerProvisioning.IssuerVerkey);
+
+            var schemaId = await issuerSchemaService.CreateSchemaAsync(
+                context: agents.Agent1.Context,
+                issuerDid: issuerProvisioning.IssuerDid,
+                name: $"test-schema-{Guid.NewGuid()}",
+                version: "1.0",
+                attributeNames: new[] { "test-attr" });
+
+            var credentialDefinitionId = await issuerSchemaService.CreateCredentialDefinitionAsync(
+                context: agents.Agent1.Context,
+                new CredentialDefinitionConfiguration
+                {
+                    SchemaId = schemaId,
+                    EnableRevocation = true,
+                    RevocationRegistrySize = 1,
+                    RevocationRegistryBaseUri = "https://test"
+                });
+
+            // First credential - will max out the registry
+            {
+                var (offerMessage, issuerRecord) = await issuerCredentialService.CreateOfferAsync(agents.Agent1.Context, new OfferConfiguration
+                {
+                    CredentialDefinitionId = credentialDefinitionId,
+                    CredentialAttributeValues = new[] { new CredentialPreviewAttribute("test-attr", "test-value") }
+                });
+
+                Assert.NotNull(offerMessage.FindDecorator<ServiceDecorator>(DecoratorNames.ServiceDecorator));
+                Assert.Equal(CredentialState.Offered, issuerRecord.State);
+                Assert.Null(issuerRecord.ConnectionId);
+
+                var holderCredentialService = agents.Agent2.Host.Services.GetService<ICredentialService>();
+
+                var holderRecord = await holderCredentialService.CreateCredentialAsync(agents.Agent2.Context, offerMessage);
+                issuerRecord = await issuerCredentialService.GetAsync(agents.Agent1.Context, issuerRecord.Id);
+
+                Assert.NotNull(holderRecord);
+                Assert.Equal(expected: CredentialState.Issued, actual: holderRecord.State);
+                Assert.Equal(expected: CredentialState.Issued, actual: issuerRecord.State);
+                Assert.NotNull(holderRecord.CredentialAttributesValues);
+                Assert.Null(holderRecord.ConnectionId);
+            }
+
+            // Second credential, will auto scale registry
+            {
+                var (offerMessage, issuerRecord) = await issuerCredentialService.CreateOfferAsync(agents.Agent1.Context, new OfferConfiguration
+                {
+                    CredentialDefinitionId = credentialDefinitionId,
+                    CredentialAttributeValues = new[] { new CredentialPreviewAttribute("test-attr", "test-value") }
+                });
+
+                Assert.NotNull(offerMessage.FindDecorator<ServiceDecorator>(DecoratorNames.ServiceDecorator));
+                Assert.Equal(CredentialState.Offered, issuerRecord.State);
+                Assert.Null(issuerRecord.ConnectionId);
+
+                var holderCredentialService = agents.Agent2.Host.Services.GetService<ICredentialService>();
+
+                var holderRecord = await holderCredentialService.CreateCredentialAsync(agents.Agent2.Context, offerMessage);
+                issuerRecord = await issuerCredentialService.GetAsync(agents.Agent1.Context, issuerRecord.Id);
+
+                Assert.NotNull(holderRecord);
+                Assert.Equal(expected: CredentialState.Issued, actual: holderRecord.State);
+                Assert.Equal(expected: CredentialState.Issued, actual: issuerRecord.State);
+                Assert.NotNull(holderRecord.CredentialAttributesValues);
+                Assert.Null(holderRecord.ConnectionId);
+            }
+        }
     }
 }
