@@ -234,12 +234,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 //if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
 
                 //paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_ENTRY);
-                await LedgerService.SendRevocationRegistryEntryAsync(context: context,
-                                                                     issuerDid: configuration.IssuerDid,
-                                                                     revocationRegistryDefinitionId: revocationRegistry.RevRegId,
-                                                                     revocationDefinitionType: "CL_ACCUM",
-                                                                     value: revocationRegistry.RevRegEntryJson,
-                                                                     paymentInfo: null);
+
                 //if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
             }
 
@@ -283,12 +278,21 @@ namespace Hyperledger.Aries.Features.IssueCredential
             revocationRecord.TailsFile = tailsfile;
 
             //paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_DEF);
-            await LedgerService.RegisterRevocationRegistryDefinitionAsync(context: context,
-                                                                          submitterDid: definitionRecord.IssuerDid,
-                                                                          data: revocationDefinition.ToString(),
-                                                                          paymentInfo: null);
+            await LedgerService.RegisterRevocationRegistryDefinitionAsync(
+                context: context,
+                submitterDid: definitionRecord.IssuerDid,
+                data: revocationDefinition.ToString(),
+                paymentInfo: null);
 
             await RecordService.AddAsync(context.Wallet, revocationRecord);
+
+            await LedgerService.SendRevocationRegistryEntryAsync(
+                context: context,
+                issuerDid: definitionRecord.IssuerDid,
+                revocationRegistryDefinitionId: revocationRegistry.RevRegId,
+                revocationDefinitionType: "CL_ACCUM",
+                value: revocationRegistry.RevRegEntryJson,
+                paymentInfo: null);
 
             return (revocationRegistry, revocationRecord);
         }

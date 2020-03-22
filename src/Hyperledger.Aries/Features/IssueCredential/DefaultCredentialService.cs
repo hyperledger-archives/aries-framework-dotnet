@@ -564,20 +564,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         $"Connection state was invalid. Expected '{ConnectionState.Connected}', found '{connection.State}'");
             }
 
-            string revocationRegistryId = null;
-            BlobStorageReader tailsReader = null;
-            if (definitionRecord.SupportsRevocation)
-            {
-                var revocationRecordSearch = await RecordService.SearchAsync<RevocationRegistryRecord>(
-                    agentContext.Wallet, SearchQuery.Equal(nameof(RevocationRegistryRecord.CredentialDefinitionId), definitionRecord.Id), null, 5);
-
-                var revocationRecord = revocationRecordSearch.Single(); // TODO: Credential definition can have multiple revocation registries
-
-                revocationRegistryId = revocationRecord.Id;
-                tailsReader = await TailsService.OpenTailsAsync(revocationRecord.TailsFile);
-            }
-
-            var issuedCredential = await IssueCredentialSafeAsync(agentContext, definitionRecord, credentialRecord, revocationRegistryId, tailsReader);
+            var (issuedCredential, revocationRecord) = await IssueCredentialSafeAsync(agentContext, definitionRecord, credentialRecord);
 
             if (definitionRecord.SupportsRevocation)
             {
@@ -587,7 +574,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 await LedgerService.SendRevocationRegistryEntryAsync(
                     context: agentContext,
                     issuerDid: provisioning.IssuerDid,
-                    revocationRegistryDefinitionId: revocationRegistryId,
+                    revocationRegistryDefinitionId: revocationRecord.Id,
                     revocationDefinitionType: "CL_ACCUM",
                     value: issuedCredential.RevocRegDeltaJson,
                     paymentInfo: paymentInfo);
@@ -626,22 +613,29 @@ namespace Hyperledger.Aries.Features.IssueCredential
             return (credentialMsg, credentialRecord);
         }
 
-        private async Task<IssuerCreateCredentialResult> IssueCredentialSafeAsync(
+        private async Task<(IssuerCreateCredentialResult, RevocationRegistryRecord)> IssueCredentialSafeAsync(
             IAgentContext agentContext, 
             DefinitionRecord definitionRecord, 
-            CredentialRecord credentialRecord, 
-            string revocationRegistryId, 
-            BlobStorageReader tailsReader)
+            CredentialRecord credentialRecord)
         {
+            BlobStorageReader tailsReader = null;
+            RevocationRegistryRecord revocationRecord = null;
+            if (definitionRecord.SupportsRevocation)
+            {
+
+                revocationRecord = await RecordService.GetAsync<RevocationRegistryRecord>(agentContext.Wallet, definitionRecord.CurrentRevocationRegistryId);
+                tailsReader = await TailsService.OpenTailsAsync(revocationRecord.TailsFile);
+            }
+
             try
             {
-                return await AnonCreds.IssuerCreateCredentialAsync(
+                return (await AnonCreds.IssuerCreateCredentialAsync(
                                 agentContext.Wallet,
                                 credentialRecord.OfferJson,
                                 credentialRecord.RequestJson,
                                 CredentialUtils.FormatCredentialValues(credentialRecord.CredentialAttributesValues),
-                                revocationRegistryId,
-                                tailsReader);
+                                definitionRecord.CurrentRevocationRegistryId,
+                                tailsReader), revocationRecord);
             }
             catch (RevocationRegistryFullException)
             {
@@ -659,18 +653,18 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 registryTag = $"1-{definitionRecord.MaxCredentialCount}";
             }
 
-            var (_, revocationRecord) = await SchemaService.CreateRevocationRegistryAsync(agentContext, registryTag, definitionRecord);
+            var (_, nextRevocationRecord) = await SchemaService.CreateRevocationRegistryAsync(agentContext, registryTag, definitionRecord);
             definitionRecord.CurrentRevocationRegistryId = revocationRecord.Id;
             await RecordService.UpdateAsync(agentContext.Wallet, definitionRecord);
 
             tailsReader = await TailsService.OpenTailsAsync(revocationRecord.TailsFile);
-            return await AnonCreds.IssuerCreateCredentialAsync(
+            return (await AnonCreds.IssuerCreateCredentialAsync(
                                 agentContext.Wallet,
                                 credentialRecord.OfferJson,
                                 credentialRecord.RequestJson,
                                 CredentialUtils.FormatCredentialValues(credentialRecord.CredentialAttributesValues),
-                                revocationRecord.Id,
-                                tailsReader);
+                                nextRevocationRecord.Id,
+                                tailsReader), nextRevocationRecord);
         }
     }
 }
