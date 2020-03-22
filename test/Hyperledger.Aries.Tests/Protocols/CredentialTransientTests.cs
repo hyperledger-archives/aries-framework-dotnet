@@ -85,6 +85,10 @@ namespace Hyperledger.Aries.Tests.Protocols
                 version: "1.0",
                 attributeNames: new[] { "test-attr" });
 
+            string revocationRegistryId1 = null;
+            string revocationRegistryId2 = null;
+            string revocationRegistryId3 = null;
+
             var credentialDefinitionId = await issuerSchemaService.CreateCredentialDefinitionAsync(
                 context: agents.Agent1.Context,
                 new CredentialDefinitionConfiguration
@@ -120,6 +124,8 @@ namespace Hyperledger.Aries.Tests.Protocols
                 Assert.Null(holderRecord.ConnectionId);
                 Assert.Equal(definitionRecord.CurrentRevocationRegistryId, issuerRecord.RevocationRegistryId);
                 Assert.Equal(definitionRecord.CurrentRevocationRegistryId, holderRecord.RevocationRegistryId);
+
+                revocationRegistryId1 = definitionRecord.CurrentRevocationRegistryId;
             }
 
             // Second credential, will auto scale registry
@@ -147,6 +153,8 @@ namespace Hyperledger.Aries.Tests.Protocols
                 Assert.Null(holderRecord.ConnectionId);
                 Assert.Equal(definitionRecord.CurrentRevocationRegistryId, issuerRecord.RevocationRegistryId);
                 Assert.Equal(definitionRecord.CurrentRevocationRegistryId, holderRecord.RevocationRegistryId);
+
+                revocationRegistryId2 = definitionRecord.CurrentRevocationRegistryId;
             }
 
             // Third credential, will auto scale registry
@@ -174,7 +182,13 @@ namespace Hyperledger.Aries.Tests.Protocols
                 Assert.Null(holderRecord.ConnectionId);
                 Assert.Equal(definitionRecord.CurrentRevocationRegistryId, issuerRecord.RevocationRegistryId);
                 Assert.Equal(definitionRecord.CurrentRevocationRegistryId, holderRecord.RevocationRegistryId);
+
+                revocationRegistryId3 = definitionRecord.CurrentRevocationRegistryId;
             }
+
+            Assert.NotEqual(revocationRegistryId1, revocationRegistryId2);
+            Assert.NotEqual(revocationRegistryId2, revocationRegistryId3);
+            Assert.NotEqual(revocationRegistryId1, revocationRegistryId3);
         }
     }
 }
