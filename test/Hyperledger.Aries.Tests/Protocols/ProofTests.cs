@@ -68,7 +68,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             clientFactory.Setup(x => x.CreateClient(It.IsAny<string>()))
                 .Returns(new HttpClient());
 
-            var tailsService = new DefaultTailsService(ledgerService, clientFactory.Object);
+            var tailsService = new DefaultTailsService(ledgerService, Options.Create(new Configuration.AgentOptions()), clientFactory.Object);
             _schemaService = new DefaultSchemaService(provisioning, recordService, ledgerService, paymentService, tailsService, Options.Create(new Configuration.AgentOptions()));
 
             _connectionService = new DefaultConnectionService(

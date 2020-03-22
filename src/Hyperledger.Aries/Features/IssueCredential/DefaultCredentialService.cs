@@ -165,36 +165,38 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <inheritdoc />
         public virtual async Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId)
         {
-            var credential = await GetAsync(agentContext, credentialId);
+            var credentialRecord = await GetAsync(agentContext, credentialId);
 
-            if (credential.State != CredentialState.Issued)
+            if (credentialRecord.State != CredentialState.Issued)
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
-                    $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credential.State}'");
+                    $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credentialRecord.State}'");
 
-            var definition = await SchemaService.GetCredentialDefinitionAsync(agentContext.Wallet, credential.CredentialDefinitionId);
+            var definition = await SchemaService.GetCredentialDefinitionAsync(agentContext.Wallet, credentialRecord.CredentialDefinitionId);
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
 
             // Check if the state machine is valid for revocation
-            await credential.TriggerAsync(CredentialTrigger.Revoke);
+            await credentialRecord.TriggerAsync(CredentialTrigger.Revoke);
 
-            var revocationRecordSearch = await RecordService.SearchAsync<RevocationRegistryRecord>(
-                agentContext.Wallet, SearchQuery.Equal(nameof(RevocationRegistryRecord.CredentialDefinitionId), definition.Id), null, 5);
-            var revocationRecord = revocationRecordSearch.Single(); // TODO: Add support for multiple revocation registries
+            var revocationRecord = await RecordService.GetAsync<RevocationRegistryRecord>(agentContext.Wallet, credentialRecord.RevocationRegistryId);
 
             // Revoke the credential
             var tailsReader = await TailsService.OpenTailsAsync(revocationRecord.TailsFile);
-            var revocRegistryDeltaJson = await AnonCreds.IssuerRevokeCredentialAsync(agentContext.Wallet, tailsReader,
-                revocationRecord.Id, credential.CredentialRevocationId);
+            var revocRegistryDeltaJson = await AnonCreds.IssuerRevokeCredentialAsync(
+                agentContext.Wallet, 
+                tailsReader,
+                revocationRecord.Id, 
+                credentialRecord.CredentialRevocationId);
 
             var paymentInfo = await PaymentService.GetTransactionCostAsync(agentContext, TransactionTypes.REVOC_REG_ENTRY);
 
             // Write the delta state on the ledger for the corresponding revocation registry
-            await LedgerService.SendRevocationRegistryEntryAsync(context: agentContext,
-                                                                 issuerDid: provisioning.IssuerDid,
-                                                                 revocationRegistryDefinitionId: revocationRecord.Id,
-                                                                 revocationDefinitionType: "CL_ACCUM",
-                                                                 value: revocRegistryDeltaJson,
-                                                                 paymentInfo: paymentInfo);
+            await LedgerService.SendRevocationRegistryEntryAsync(
+                context: agentContext,
+                issuerDid: provisioning.IssuerDid,
+                revocationRegistryDefinitionId: revocationRecord.Id,
+                revocationDefinitionType: "CL_ACCUM",
+                value: revocRegistryDeltaJson,
+                paymentInfo: paymentInfo);
 
             if (paymentInfo != null)
             {
@@ -202,7 +204,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             }
 
             // Update local credential record
-            await RecordService.UpdateAsync(agentContext.Wallet, credential);
+            await RecordService.UpdateAsync(agentContext.Wallet, credentialRecord);
         }
 
         /// <inheritdoc />
@@ -578,7 +580,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
                     revocationDefinitionType: "CL_ACCUM",
                     value: issuedCredential.RevocRegDeltaJson,
                     paymentInfo: paymentInfo);
+
+                // Store data relevant for credential revocation
                 credentialRecord.CredentialRevocationId = issuedCredential.RevocId;
+                credentialRecord.RevocationRegistryId = revocationRecord.Id;
 
                 if (paymentInfo != null)
                 {

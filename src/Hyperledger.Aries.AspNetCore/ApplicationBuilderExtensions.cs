@@ -13,12 +13,16 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Allows default agent configuration
         /// </summary>
         /// <param name="app">App.</param>
-        public static void UseAriesFramework(this IApplicationBuilder app) => app.UseMiddleware<AgentMiddleware>();
+        public static void UseAriesFramework(this IApplicationBuilder app) => UseAriesFramework<AgentMiddleware>(app);
 
         /// <summary>
         /// Allows agent configuration by specifying a custom middleware
         /// </summary>
         /// <param name="app">App.</param>
-        public static void UseAriesFramework<T>(this IApplicationBuilder app) => app.UseMiddleware<T>();
+        public static void UseAriesFramework<T>(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<T>();
+            app.UseMiddleware<TailsMiddleware>();
+        }
     }
 }

@@ -153,6 +153,14 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <summary>
+        /// Gets or sets the revocation registry identifier.
+        /// </summary>
+        /// <value>
+        /// The revocation registry identifier.
+        /// </value>
+        public string RevocationRegistryId { get; set; }
+
+        /// <summary>
         /// Triggers the async.
         /// </summary>
         /// <returns>The async.</returns>
