@@ -14,6 +14,8 @@ using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
+using Microsoft.Extensions.Options;
+using Flurl;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
@@ -31,6 +33,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// <summary>The tails service</summary>
         protected readonly ITailsService TailsService;
+        /// <summary>
+        /// The agent options
+        /// </summary>
+        protected readonly AgentOptions AgentOptions;
+
         // ReSharper restore InconsistentNaming
 
         /// <summary>
@@ -41,18 +48,21 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="ledgerService">Ledger service.</param>
         /// <param name="paymentService">The payment service.</param>
         /// <param name="tailsService">Tails service.</param>
+        /// <param name="agentOptions">The agent options.</param>
         public DefaultSchemaService(
             IProvisioningService provisioningService,
             IWalletRecordService recordService,
             ILedgerService ledgerService,
             IPaymentService paymentService,
-            ITailsService tailsService)
+            ITailsService tailsService,
+            IOptions<AgentOptions> agentOptions)
         {
             ProvisioningService = provisioningService;
             RecordService = recordService;
             LedgerService = ledgerService;
             this.paymentService = paymentService;
             TailsService = tailsService;
+            AgentOptions = agentOptions.Value;
         }
 
         /// <inheritdoc />
@@ -156,69 +166,81 @@ namespace Hyperledger.Aries.Features.IssueCredential
             RecordService.SearchAsync<SchemaRecord>(wallet, null, null, 100);
 
         /// <inheritdoc />
-        public virtual async Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId,
+        [Obsolete("This method is obsolete. Please use 'CreateCredentialDefinitionAsync(IAgentContext, CredentialDefinitionConfiguration)'")]
+        public virtual Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId,
             string issuerDid, string tag, bool supportsRevocation, int maxCredentialCount, Uri tailsBaseUri)
         {
-            var definitionRecord = new DefinitionRecord();
-            var schema = await LedgerService.LookupSchemaAsync(await context.Pool, schemaId);
-
-            var credentialDefinition = await AnonCreds.IssuerCreateAndStoreCredentialDefAsync(context.Wallet, issuerDid,
-                schema.ObjectJson, tag, null, new { support_revocation = supportsRevocation }.ToJson());
-
-            var paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.CRED_DEF);
-
-            await LedgerService.RegisterCredentialDefinitionAsync(context: context,
-                                                                  submitterDid: issuerDid,
-                                                                  data: credentialDefinition.CredDefJson,
-                                                                  paymentInfo: paymentInfo);
-            if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
-
-            definitionRecord.SupportsRevocation = supportsRevocation;
-            definitionRecord.Id = credentialDefinition.CredDefId;
-            definitionRecord.SchemaId = schemaId;
-
-            if (supportsRevocation)
+            return CreateCredentialDefinitionAsync(context, new CredentialDefinitionConfiguration
             {
-                definitionRecord.MaxCredentialCount = maxCredentialCount;
-                var tailsHandle = await TailsService.CreateTailsAsync();
+                SchemaId = schemaId,
+                Tag = tag,
+                EnableRevocation = supportsRevocation,
+                RevocationRegistrySize = maxCredentialCount,
+                RevocationRegistryBaseUri = tailsBaseUri.ToString(),
+                RevocationRegistryAutoScale = false,
+                IssuerDid = issuerDid
+            });
+        }
 
-                var revRegDefConfig =
-                    new { issuance_type = "ISSUANCE_ON_DEMAND", max_cred_num = maxCredentialCount }.ToJson();
-                var revocationRegistry = await AnonCreds.IssuerCreateAndStoreRevocRegAsync(context.Wallet, issuerDid, null,
-                    "Tag2", credentialDefinition.CredDefId, revRegDefConfig, tailsHandle);
+        /// <inheritdoc />
+        public async Task<string> CreateCredentialDefinitionAsync(IAgentContext context, CredentialDefinitionConfiguration configuration)
+        {
+            if (configuration == null) throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "Configuration must be specified.");
+            if (configuration.SchemaId == null) throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "SchemaId must be specified.");
+            if (configuration.EnableRevocation &&
+                configuration.RevocationRegistryBaseUri == null &&
+                AgentOptions.RevocationRegistryBaseUri == null) throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "RevocationRegistryBaseUri must be specified either in the configuration or the AgentOptions");
 
-                var revocationRecord = new RevocationRegistryRecord
-                {
-                    Id = revocationRegistry.RevRegId,
-                    CredentialDefinitionId = credentialDefinition.CredDefId
-                };
+            var schema = await LedgerService.LookupSchemaAsync(await context.Pool, configuration.SchemaId);
 
-                // Update tails location URI
-                var revocationDefinition = JObject.Parse(revocationRegistry.RevRegDefJson);
-                if (tailsBaseUri != null)
-                {
-                    var tailsfile = Path.GetFileName(revocationDefinition["value"]["tailsLocation"].ToObject<string>());
-                    revocationDefinition["value"]["tailsLocation"] = new Uri(tailsBaseUri + tailsfile).ToString();
-                    revocationRecord.TailsFile = tailsfile;
-                }
+            var provisioning = await ProvisioningService.GetProvisioningAsync(context.Wallet);
+            configuration.IssuerDid ??= provisioning.IssuerDid;
 
-                paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_DEF);
-                await LedgerService.RegisterRevocationRegistryDefinitionAsync(context: context,
-                                                                              submitterDid: issuerDid,
-                                                                              data: revocationDefinition.ToString(),
-                                                                              paymentInfo: paymentInfo);
-                if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
+            var credentialDefinition = await AnonCreds.IssuerCreateAndStoreCredentialDefAsync(
+                wallet: context.Wallet,
+                issuerDid: configuration.IssuerDid,
+                schemaJson: schema.ObjectJson,
+                tag: configuration.Tag,
+                type: null,
+                configJson: new { support_revocation = configuration.EnableRevocation }.ToJson());
 
-                paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_ENTRY);
+            var definitionRecord = new DefinitionRecord();
+            definitionRecord.IssuerDid = configuration.IssuerDid;
+
+            //var paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.CRED_DEF);
+
+            await LedgerService.RegisterCredentialDefinitionAsync(
+                context: context,
+                submitterDid: configuration.IssuerDid,
+                data: credentialDefinition.CredDefJson,
+                paymentInfo: null);
+
+            definitionRecord.SupportsRevocation = configuration.EnableRevocation;
+            definitionRecord.Id = credentialDefinition.CredDefId;
+            definitionRecord.SchemaId = configuration.SchemaId;
+
+            if (configuration.EnableRevocation)
+            {
+                definitionRecord.MaxCredentialCount = configuration.RevocationRegistrySize;
+                definitionRecord.RevocationAutoScale = configuration.RevocationRegistryAutoScale;
+                definitionRecord.RevocationRegistryBaseUri = configuration.RevocationRegistryBaseUri ?? AgentOptions.RevocationRegistryBaseUri;
+
+                var (revocationRegistry, revocationRecord) = await CreateRevocationRegistryAsync(
+                    context: context,
+                    tag: $"1-{configuration.RevocationRegistrySize}",
+                    definitionRecord: definitionRecord);
+                definitionRecord.CurrentRevocationRegistryId = revocationRecord.Id;
+
+                //if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
+
+                //paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_ENTRY);
                 await LedgerService.SendRevocationRegistryEntryAsync(context: context,
-                                                                     issuerDid: issuerDid,
+                                                                     issuerDid: configuration.IssuerDid,
                                                                      revocationRegistryDefinitionId: revocationRegistry.RevRegId,
                                                                      revocationDefinitionType: "CL_ACCUM",
                                                                      value: revocationRegistry.RevRegEntryJson,
-                                                                     paymentInfo: paymentInfo);
-                if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
-
-                await RecordService.AddAsync(context.Wallet, revocationRecord);
+                                                                     paymentInfo: null);
+                //if (paymentInfo != null) await RecordService.UpdateAsync(context.Wallet, paymentInfo.PaymentAddress);
             }
 
             await RecordService.AddAsync(context.Wallet, definitionRecord);
@@ -227,6 +249,52 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
+        public async Task<(IssuerCreateAndStoreRevocRegResult, RevocationRegistryRecord)> CreateRevocationRegistryAsync(
+                    IAgentContext context,
+                    string tag,
+                    DefinitionRecord definitionRecord)
+        {
+            var tailsHandle = await TailsService.CreateTailsAsync();
+
+            var revocationRegistryDefinitionJson = new
+            {
+                issuance_type = "ISSUANCE_ON_DEMAND",
+                max_cred_num = definitionRecord.MaxCredentialCount
+            }.ToJson();
+            var revocationRegistry = await AnonCreds.IssuerCreateAndStoreRevocRegAsync(
+                wallet: context.Wallet,
+                issuerDid: definitionRecord.IssuerDid,
+                type: null,
+                tag: tag,
+                credDefId: definitionRecord.Id,
+                configJson: revocationRegistryDefinitionJson,
+                tailsWriter: tailsHandle);
+
+            var revocationRecord = new RevocationRegistryRecord
+            {
+                Id = revocationRegistry.RevRegId,
+                CredentialDefinitionId = definitionRecord.Id
+            };
+
+            // Update tails location URI
+            var revocationDefinition = JObject.Parse(revocationRegistry.RevRegDefJson);
+            var tailsfile = Path.GetFileName(revocationDefinition["value"]["tailsLocation"].ToObject<string>());
+            revocationDefinition["value"]["tailsLocation"] = Url.Combine(definitionRecord.RevocationRegistryBaseUri, tailsfile);
+            revocationRecord.TailsFile = tailsfile;
+
+            //paymentInfo = await paymentService.GetTransactionCostAsync(context, TransactionTypes.REVOC_REG_DEF);
+            await LedgerService.RegisterRevocationRegistryDefinitionAsync(context: context,
+                                                                          submitterDid: definitionRecord.IssuerDid,
+                                                                          data: revocationDefinition.ToString(),
+                                                                          paymentInfo: null);
+
+            await RecordService.AddAsync(context.Wallet, revocationRecord);
+
+            return (revocationRegistry, revocationRecord);
+        }
+
+        /// <inheritdoc />
+        [Obsolete("This method is obsolete. Please use 'CreateCredentialDefinitionAsync(IAgentContext, CredentialDefinitionConfiguration)'")]
         public virtual async Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId,
             string tag, bool supportsRevocation, int maxCredentialCount)
         {

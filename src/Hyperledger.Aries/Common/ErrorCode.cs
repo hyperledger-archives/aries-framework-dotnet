@@ -51,6 +51,9 @@
         /// Encoding values in the supplied proof are invalid
         /// </summary>
         InvalidProofEncoding,
+        /// <summary>
+        /// The revocation registry unavailable
+        /// </summary>
         RevocationRegistryUnavailable
     }
 }

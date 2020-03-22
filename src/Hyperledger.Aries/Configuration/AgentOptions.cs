@@ -114,5 +114,13 @@ namespace Hyperledger.Aries.Configuration
             get;
             set;
         } = 2;
+
+        /// <summary>
+        /// Gets or sets the revocation registry base URI.
+        /// </summary>
+        /// <value>
+        /// The revocation registry base URI.
+        /// </value>
+        public string RevocationRegistryBaseUri { get; set; }
     }
 }
