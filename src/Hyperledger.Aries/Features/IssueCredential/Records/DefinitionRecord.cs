@@ -52,14 +52,29 @@ namespace Hyperledger.Aries.Models.Records
         /// <summary>Gets or sets the maximum credential count.</summary>
         /// <value>The maximum credential count.</value>
         public int MaxCredentialCount { get; set; }
-        
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"SchemaId={SchemaId}, " +
-            $"SupportsRevocation={SupportsRevocation}, " +
-            $"RequireApproval={RequireApproval}, " +
-            $"MaxCredentialCount={MaxCredentialCount}, " +
-            base.ToString(); 
+
+        /// <summary>
+        /// Gets a value indicating whether revocation automatic scales.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [revocation automatic scale]; otherwise, <c>false</c>.
+        /// </value>
+        public bool RevocationAutoScale { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current revocation registry identifier.
+        /// </summary>
+        /// <value>
+        /// The current revocation registry identifier.
+        /// </value>
+        public string CurrentRevocationRegistryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the issuer DID.
+        /// </summary>
+        /// <value>
+        /// The issuer did.
+        /// </value>
+        public string IssuerDid { get; set; }
     }
 }

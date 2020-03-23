@@ -1,4 +1,5 @@
 ﻿using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.Utils;
 
 namespace Hyperledger.Aries.Configuration
 {
@@ -114,5 +115,26 @@ namespace Hyperledger.Aries.Configuration
             get;
             set;
         } = 2;
+
+        /// <summary>
+        /// Gets or sets the revocation registry URI path e.g. "/tails".
+        /// This path will be appended to the EndpointUri value.
+        /// This is used to optimize the ASP.NET Core middleware pipeline.
+        /// Default value is "/tails". The value must start with a slash '/'.
+        /// </summary>
+        /// <value>
+        /// The revocation registry base URI path.
+        /// </value>
+        public string RevocationRegistryUriPath { get; set; } = "/tails";
+
+        /// <summary>
+        /// Gets or sets the revocation registry directory where
+        /// revocation tails files will be stored. The default path 
+        /// is ~/.indy_client/tails
+        /// </summary>
+        /// <value>
+        /// The revocation registry directory.
+        /// </value>
+        public string RevocationRegistryDirectory { get; set; } = EnvironmentUtils.GetTailsPath();
     }
 }

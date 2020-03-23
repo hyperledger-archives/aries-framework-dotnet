@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Models.Records;
+using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.PoolApi;
 using Hyperledger.Indy.WalletApi;
 
@@ -49,8 +50,25 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// his parameter is only used if <paramref name="supportsRevocation" /> is <c>true</c>.</param>
         /// <returns>The credential definition identifier of the stored definition record.
         /// This identifier can be used for ledger definition lookup.</returns>
-        Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId, string issuerDid,
-            string tag, bool supportsRevocation, int maxCredentialCount, Uri tailsBaseUri);
+        [Obsolete("This method is obsolete. Please use 'CreateCredentialDefinitionAsync(IAgentContext, CredentialDefinitionConfiguration)'")]
+        Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId, string issuerDid, string tag, bool supportsRevocation, int maxCredentialCount, Uri tailsBaseUri);
+
+        /// <summary>
+        /// Creates new credential definition with the given configuration
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns></returns>
+        Task<string> CreateCredentialDefinitionAsync(IAgentContext context, CredentialDefinitionConfiguration configuration);
+
+        /// <summary>
+        /// Creates new revocation registry record and definition for the given credential definition.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="tag">The tag.</param>
+        /// <param name="definitionRecord">The definition record.</param>
+        /// <returns></returns>
+        Task<(IssuerCreateAndStoreRevocRegResult, RevocationRegistryRecord)> CreateRevocationRegistryAsync(IAgentContext context, string tag, DefinitionRecord definitionRecord);
 
         /// <summary>Creates the credential definition and registers it on the ledger.</summary>
         /// <param name="context">The agent context</param>
@@ -59,8 +77,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="supportsRevocation">if set to <c>true</c> [supports revocation].</param>
         /// <param name="maxCredentialCount">The maximum credential count.</param>
         /// <returns></returns>
-        Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId,
-            string tag, bool supportsRevocation, int maxCredentialCount);
+        [Obsolete("This method is obsolete. Please use 'CreateCredentialDefinitionAsync(IAgentContext, CredentialDefinitionConfiguration)'")]
+        Task<string> CreateCredentialDefinitionAsync(IAgentContext context, string schemaId, string tag, bool supportsRevocation, int maxCredentialCount);
 
         /// <summary>
         /// Gets the schemas asynchronous.
