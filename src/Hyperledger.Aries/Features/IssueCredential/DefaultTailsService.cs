@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Extensions;
@@ -86,9 +87,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public virtual async Task<string> EnsureTailsExistsAsync(Pool pool, string revocationRegistryId)
+        public virtual async Task<string> EnsureTailsExistsAsync(IAgentContext agentContext, string revocationRegistryId)
         {
-            var revocationRegistry = await LedgerService.LookupRevocationRegistryDefinitionAsync(pool, revocationRegistryId);
+            var revocationRegistry = await LedgerService.LookupRevocationRegistryDefinitionAsync(agentContext, revocationRegistryId);
             var tailsUri = JObject.Parse(revocationRegistry.ObjectJson)["value"]["tailsLocation"].ToObject<string>();
             var tailsFileName = JObject.Parse(revocationRegistry.ObjectJson)["value"]["tailsHash"].ToObject<string>();
 

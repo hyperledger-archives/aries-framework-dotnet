@@ -90,7 +90,7 @@ namespace Hyperledger.Aries.Tests.Payments
         {
             var ledgerService = Host.Services.GetService<ILedgerService>();
 
-            var rules = await ledgerService.LookupAuthorizationRulesAsync(await Context.Pool);
+            var rules = await ledgerService.LookupAuthorizationRulesAsync(Context);
 
             Assert.NotNull(rules);
             Assert.True(rules.Any());

@@ -106,10 +106,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public async Task<string> LookupSchemaFromCredentialDefinitionAsync(Pool pool,
+        public async Task<string> LookupSchemaFromCredentialDefinitionAsync(IAgentContext agentContext,
             string credentialDefinitionId)
         {
-            var credDef = await LookupCredentialDefinitionAsync(pool, credentialDefinitionId);
+            var credDef = await LookupCredentialDefinitionAsync(agentContext, credentialDefinitionId);
 
             if (string.IsNullOrEmpty(credDef))
                 return null;
@@ -117,7 +117,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             try
             {
                 var schemaSequenceId = Convert.ToInt32(JObject.Parse(credDef)["schemaId"].ToString());
-                return await LookupSchemaAsync(pool, schemaSequenceId);
+                return await LookupSchemaAsync(agentContext, schemaSequenceId);
             }
             catch (Exception) { }
 
@@ -126,9 +126,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// TODO this should return a schema object
         /// <inheritdoc />
-        public virtual async Task<string> LookupSchemaAsync(Pool pool, int sequenceId)
+        public virtual async Task<string> LookupSchemaAsync(IAgentContext agentContext, int sequenceId)
         {
-            var result = await LedgerService.LookupTransactionAsync(pool, null, sequenceId);
+            var result = await LedgerService.LookupTransactionAsync(agentContext, null, sequenceId);
 
             if (!string.IsNullOrEmpty(result))
             {
@@ -155,9 +155,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// TODO this should return a schema object
         /// <inheritdoc />
-        public virtual async Task<string> LookupSchemaAsync(Pool pool, string schemaId)
+        public virtual async Task<string> LookupSchemaAsync(IAgentContext agentContext, string schemaId)
         {
-            var result = await LedgerService.LookupSchemaAsync(pool, schemaId);
+            var result = await LedgerService.LookupSchemaAsync(agentContext, schemaId);
             return result?.ObjectJson;
         }
 
@@ -191,7 +191,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 configuration.RevocationRegistryBaseUri == null &&
                 AgentOptions.RevocationRegistryUriPath == null) throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "RevocationRegistryBaseUri must be specified either in the configuration or the AgentOptions");
 
-            var schema = await LedgerService.LookupSchemaAsync(await context.Pool, configuration.SchemaId);
+            var schema = await LedgerService.LookupSchemaAsync(context, configuration.SchemaId);
 
             var provisioning = await ProvisioningService.GetProvisioningAsync(context.Wallet);
             configuration.IssuerDid ??= provisioning.IssuerDid;
@@ -319,9 +319,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// TODO this should return a definition object
         /// <inheritdoc />
-        public virtual async Task<string> LookupCredentialDefinitionAsync(Pool pool, string definitionId)
+        public virtual async Task<string> LookupCredentialDefinitionAsync(IAgentContext agentContext, string definitionId)
         {
-            var result = await LedgerService.LookupDefinitionAsync(pool, definitionId);
+            var result = await LedgerService.LookupDefinitionAsync(agentContext, definitionId);
             return result?.ObjectJson;
         }
 

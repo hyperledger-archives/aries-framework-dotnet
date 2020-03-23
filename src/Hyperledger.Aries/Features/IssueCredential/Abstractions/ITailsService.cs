@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Hyperledger.Aries.Agents;
 using Hyperledger.Indy.BlobStorageApi;
 using Hyperledger.Indy.PoolApi;
 
@@ -25,11 +26,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <summary>
         /// Check if the tails filename exists locally and download latest version if it doesn't.
         /// </summary>
-        /// <param name="pool">Pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="revocationRegistryId">Revocation registry identifier.</param>
         /// <returns>
         /// The name of the tails file
         /// </returns>
-        Task<string> EnsureTailsExistsAsync(Pool pool, string revocationRegistryId);
+        Task<string> EnsureTailsExistsAsync(IAgentContext agentContext, string revocationRegistryId);
     }
 }
