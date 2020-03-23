@@ -307,7 +307,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 proverDid = newDid.Did;
             }
 
-            var definition = await LedgerService.LookupDefinitionAsync(await agentContext.Pool, credential.CredentialDefinitionId);
+            var definition = await LedgerService.LookupDefinitionAsync(agentContext, credential.CredentialDefinitionId);
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
 
             var request = await AnonCreds.ProverCreateCredentialReqAsync(
@@ -364,13 +364,13 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credentialRecord.State}'");
 
-            var credentialDefinition = await LedgerService.LookupDefinitionAsync(await agentContext.Pool, definitionId);
+            var credentialDefinition = await LedgerService.LookupDefinitionAsync(agentContext, definitionId);
 
             string revocationRegistryDefinitionJson = null;
             if (!string.IsNullOrEmpty(revRegId))
             {
                 // If credential supports revocation, lookup registry definition
-                var revocationRegistry = await LedgerService.LookupRevocationRegistryDefinitionAsync(await agentContext.Pool, revRegId);
+                var revocationRegistry = await LedgerService.LookupRevocationRegistryDefinitionAsync(agentContext, revRegId);
                 revocationRegistryDefinitionJson = revocationRegistry.ObjectJson;
                 credentialRecord.RevocationRegistryId = revRegId;
             }

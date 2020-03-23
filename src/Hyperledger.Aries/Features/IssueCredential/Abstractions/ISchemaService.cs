@@ -105,33 +105,41 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <summary>
         /// Looks up the credential definition on the ledger.
         /// </summary>
-        /// <param name="pool">The pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="definitionId">The identifier of the definition to resolve.</param>
-        /// <returns>A json string of the credential definition</returns>
-        Task<string> LookupCredentialDefinitionAsync(Pool pool, string definitionId);
+        /// <returns>
+        /// A json string of the credential definition
+        /// </returns>
+        Task<string> LookupCredentialDefinitionAsync(IAgentContext agentContext, string definitionId);
 
         /// <summary>
         /// Looks up the schema definition on the ledger given a credential definition identifier.
         /// </summary>
-        /// <param name="pool">The pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="credentialDefinitionId">The credential definition id.</param>
-        /// <returns>A json string of the schema</returns>
-        Task<string> LookupSchemaFromCredentialDefinitionAsync(Pool pool, string credentialDefinitionId);
+        /// <returns>
+        /// A json string of the schema
+        /// </returns>
+        Task<string> LookupSchemaFromCredentialDefinitionAsync(IAgentContext agentContext, string credentialDefinitionId);
 
         /// <summary>
         /// Looks up the schema definition on the ledger.
         /// </summary>
-        /// <param name="pool">The pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="sequenceId">The sequence identifier of the schema to resolve.</param>
-        /// <returns>A json string of the schema</returns>
-        Task<string> LookupSchemaAsync(Pool pool, int sequenceId);
+        /// <returns>
+        /// A json string of the schema
+        /// </returns>
+        Task<string> LookupSchemaAsync(IAgentContext agentContext, int sequenceId);
 
         /// <summary>
         /// Looks up the schema definition on the ledger.
         /// </summary>
-        /// <param name="pool">The pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="schemaId">The identifier of the schema definition to resolve.</param>
-        /// <returns>A json string of the schema</returns>
-        Task<string> LookupSchemaAsync(Pool pool, string schemaId);
+        /// <returns>
+        /// A json string of the schema
+        /// </returns>
+        Task<string> LookupSchemaAsync(IAgentContext agentContext, string schemaId);
     }
 }
