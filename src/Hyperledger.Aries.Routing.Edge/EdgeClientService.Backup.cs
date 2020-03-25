@@ -113,10 +113,12 @@ namespace Hyperledger.Aries.Routing.Edge
             await Task.Run(() => File.WriteAllBytes(tempWalletPath, walletToRestoreInBytes));
             
             var json = new { path = tempWalletPath, key = seed }.ToJson();
+
+            await walletService.DeleteWalletAsync(agentoptions.WalletConfiguration, agentoptions.WalletCredentials);
             
-            await sourceContext.Wallet.CloseAsync();
-            
-            await Wallet.DeleteWalletAsync(agentoptions.WalletConfiguration.ToJson(), agentoptions.WalletCredentials.ToJson());
+            // Add 1 sec delay to allow filesystem to catch up
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
             await Wallet.ImportAsync(agentoptions.WalletConfiguration.ToJson(), agentoptions.WalletCredentials.ToJson(), json);
         }
 
