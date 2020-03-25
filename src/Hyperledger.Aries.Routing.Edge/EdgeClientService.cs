@@ -26,6 +26,7 @@ namespace Hyperledger.Aries.Routing.Edge
         private readonly IProvisioningService provisioningService;
         private readonly IWalletRecordService recordService;
         private readonly IWalletRecordService walletRecordService;
+        private readonly IWalletService walletService;
         private readonly IMessageService messageService;
 
         private readonly AgentOptions agentoptions;
@@ -36,12 +37,14 @@ namespace Hyperledger.Aries.Routing.Edge
             IWalletRecordService recordService,
             IMessageService messageService,
             IWalletRecordService walletRecordService,
+            IWalletService walletService,
             IOptions<AgentOptions> agentOptions)
         {
             this.httpClientFactory = httpClientFactory;
             this.provisioningService = provisioningService;
             this.recordService = recordService;
             this.walletRecordService = walletRecordService;
+            this.walletService = walletService;
             this.messageService = messageService;
             this.agentoptions = agentOptions.Value;
         }

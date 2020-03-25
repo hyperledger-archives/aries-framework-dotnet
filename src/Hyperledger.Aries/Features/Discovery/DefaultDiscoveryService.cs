@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Decorators.Threading;
+using Hyperledger.Aries.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Hyperledger.Aries.Features.Discovery
@@ -64,9 +66,9 @@ namespace Hyperledger.Aries.Features.Discovery
             else
                 supportedMessages = agentContext.SupportedMessages?.Where(_ => _.MessageTypeUri == message.Query).ToList();
 
-            supportedMessages = supportedMessages ?? new List<MessageType>();
+            supportedMessages ??= new List<MessageType>();
 
-            DiscoveryDiscloseMessage disclosureMessage = new DiscoveryDiscloseMessage();
+            var disclosureMessage = message.CreateThreadedReply<DiscoveryDiscloseMessage>();
             foreach (var supportedMessage in supportedMessages.GroupBy(_ => _.MessageFamilyUri).Select(g => g.First()))
             {
                 disclosureMessage.Protocols.Add(new DisclosedMessageProtocol
