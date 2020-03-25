@@ -78,7 +78,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         {
             var tailsWriterConfig = new
             {
-                base_dir = EnvironmentUtils.GetTailsPath(),
+                base_dir = AgentOptions.RevocationRegistryDirectory,
                 uri_pattern = string.Empty
             };
 
