@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.BlobStorageApi;
 using Hyperledger.Indy.PoolApi;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Features.IssueCredential
@@ -23,26 +26,35 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <summary>The ledger service</summary>
         // ReSharper disable InconsistentNaming
         protected readonly ILedgerService LedgerService;
+        /// <summary>
+        /// The agent options
+        /// </summary>
+        protected readonly AgentOptions AgentOptions;
 
         /// <summary>The HTTP client</summary>
         protected readonly HttpClient HttpClient;
         // ReSharper restore InconsistentNaming
 
-        /// <summary>Initializes a new instance of the <see cref="DefaultTailsService"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTailsService" /> class.
+        /// </summary>
         /// <param name="ledgerService">The ledger service.</param>
-        /// <param name="httpClientFactory"></param>
+        /// <param name="agentOptions">The agent options.</param>
+        /// <param name="httpClientFactory">The HTTP client factory.</param>
         public DefaultTailsService(
             ILedgerService ledgerService,
+            IOptions<AgentOptions> agentOptions,
             IHttpClientFactory httpClientFactory)
         {
             LedgerService = ledgerService;
+            AgentOptions = agentOptions.Value;
             HttpClient = httpClientFactory.CreateClient();
         }
 
         /// <inheritdoc />
         public virtual async Task<BlobStorageReader> OpenTailsAsync(string filename)
         {
-            var baseDir = EnvironmentUtils.GetTailsPath();
+            var baseDir = AgentOptions.RevocationRegistryDirectory;
 
             var tailsWriterConfig = new
             {
@@ -66,7 +78,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         {
             var tailsWriterConfig = new
             {
-                base_dir = EnvironmentUtils.GetTailsPath(),
+                base_dir = AgentOptions.RevocationRegistryDirectory,
                 uri_pattern = string.Empty
             };
 
@@ -75,18 +87,17 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public virtual async Task<string> EnsureTailsExistsAsync(Pool pool, string revocationRegistryId)
+        public virtual async Task<string> EnsureTailsExistsAsync(IAgentContext agentContext, string revocationRegistryId)
         {
-            var revocationRegistry =
-                await LedgerService.LookupRevocationRegistryDefinitionAsync(pool, revocationRegistryId);
+            var revocationRegistry = await LedgerService.LookupRevocationRegistryDefinitionAsync(agentContext, revocationRegistryId);
             var tailsUri = JObject.Parse(revocationRegistry.ObjectJson)["value"]["tailsLocation"].ToObject<string>();
             var tailsFileName = JObject.Parse(revocationRegistry.ObjectJson)["value"]["tailsHash"].ToObject<string>();
 
-            var tailsfile = Path.Combine(EnvironmentUtils.GetTailsPath(), tailsFileName);
+            var tailsfile = Path.Combine(AgentOptions.RevocationRegistryDirectory, tailsFileName);
 
-            if (!Directory.Exists(EnvironmentUtils.GetTailsPath()))
+            if (!Directory.Exists(AgentOptions.RevocationRegistryDirectory))
             {
-                Directory.CreateDirectory(EnvironmentUtils.GetTailsPath());
+                Directory.CreateDirectory(AgentOptions.RevocationRegistryDirectory);
             }
 
             if (!File.Exists(tailsfile))

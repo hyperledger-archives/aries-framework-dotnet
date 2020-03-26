@@ -23,6 +23,7 @@ using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
+using Microsoft.Extensions.Options;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -63,8 +64,8 @@ namespace Hyperledger.Aries.Tests.Protocols
             clientFactory.Setup(x => x.CreateClient(It.IsAny<string>()))
                 .Returns(new HttpClient());
 
-            var tailsService = new DefaultTailsService(ledgerService, clientFactory.Object);
-            _schemaService = new DefaultSchemaService(provisioning, recordService, ledgerService, paymentService, tailsService);
+            var tailsService = new DefaultTailsService(ledgerService, Options.Create(new Configuration.AgentOptions()), clientFactory.Object);
+            _schemaService = new DefaultSchemaService(provisioning, recordService, ledgerService, paymentService, tailsService, Options.Create(new Configuration.AgentOptions()));
 
             _connectionService = new DefaultConnectionService(
                 _eventAggregator,

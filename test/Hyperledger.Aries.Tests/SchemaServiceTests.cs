@@ -31,7 +31,7 @@ namespace Hyperledger.Aries.Tests
             await Task.Delay(TimeSpan.FromSeconds(5));
 
             //Resolve it from the ledger with its identifier
-            var resultSchema = await schemaService.LookupSchemaAsync(await Context.Pool, schemaId);
+            var resultSchema = await schemaService.LookupSchemaAsync(Context, schemaId);
 
             var resultSchemaName = JObject.Parse(resultSchema)["name"].ToString();
             var resultSchemaVersion = JObject.Parse(resultSchema)["version"].ToString();
@@ -41,7 +41,7 @@ namespace Hyperledger.Aries.Tests
             Assert.Equal(schemaVersion, resultSchemaVersion);
 
             //Resolve it from the ledger with its sequence Id
-            var secondResultSchema = await schemaService.LookupSchemaAsync(await Context.Pool, sequenceId);
+            var secondResultSchema = await schemaService.LookupSchemaAsync(Context, sequenceId);
 
             var secondResultSchemaName = JObject.Parse(secondResultSchema)["name"].ToString();
             var secondResultSchemaVersion = JObject.Parse(secondResultSchema)["version"].ToString();
@@ -78,13 +78,13 @@ namespace Hyperledger.Aries.Tests
             await Task.Delay(TimeSpan.FromSeconds(2));
 
             var credDef =
-                await schemaService.LookupCredentialDefinitionAsync(await Context.Pool, credId);
+                await schemaService.LookupCredentialDefinitionAsync(Context, credId);
 
             var resultCredId = JObject.Parse(credDef)["id"].ToString();
 
             Assert.Equal(credId, resultCredId);
 
-            var result = await schemaService.LookupSchemaFromCredentialDefinitionAsync(await Context.Pool, credId);
+            var result = await schemaService.LookupSchemaFromCredentialDefinitionAsync(Context, credId);
 
             var resultSchemaName = JObject.Parse(result)["name"].ToString();
             var resultSchemaVersion = JObject.Parse(result)["version"].ToString();

@@ -3,26 +3,38 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Hyperledger.Aries.AspNetCore
 {
     /// <summary>
-///     /// A middleware that serves tails data for revocation registries
+    /// A middleware that serves tails data for revocation registries
     /// </summary>
     public class TailsMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<TailsMiddleware> _logger;
+        private readonly AgentOptions _agentOptions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TailsMiddleware"/> class.
+        /// Initializes a new instance of the <see cref="TailsMiddleware" /> class.
         /// </summary>
         /// <param name="next">The next.</param>
-        public TailsMiddleware(RequestDelegate next)
+        /// <param name="logger">The logger.</param>
+        /// <param name="agentOptions">The agent options.</param>
+        public TailsMiddleware(
+            RequestDelegate next,
+            ILogger<TailsMiddleware> logger,
+            IOptions<AgentOptions> agentOptions)
         {
             _next = next;
+            _logger = logger;
+            _agentOptions = agentOptions.Value;
         }
 
         /// <summary>
@@ -42,15 +54,14 @@ namespace Hyperledger.Aries.AspNetCore
             try
             {
                 var uri = new Uri(context.Request.GetEncodedUrl());
-                data = File.ReadAllBytes(
-                    Path.Combine(
-                        EnvironmentUtils.GetTailsPath(), uri.Segments.Last()));
+                data = File.ReadAllBytes(Path.Combine(_agentOptions.RevocationRegistryDirectory, uri.Segments.Last()));
             }
             catch (Exception ex) when (
                 ex is FileNotFoundException
                 || ex is DirectoryNotFoundException)
             {
-                context.Response.StatusCode = (int) HttpStatusCode.NotFound;
+                _logger.LogWarning("Can't locate tails file");
+                await _next(context);
                 return;
             }
 

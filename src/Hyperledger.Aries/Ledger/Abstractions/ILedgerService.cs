@@ -16,18 +16,20 @@ namespace Hyperledger.Aries.Contracts
         /// <summary>
         /// Gets a list of all authorization rules for the given pool
         /// </summary>
-        /// <param name="pool"></param>
+        /// <param name="agentContext">The agent context.</param>
         /// <returns></returns>
-        Task<IList<AuthorizationRule>> LookupAuthorizationRulesAsync(Pool pool);
+        Task<IList<AuthorizationRule>> LookupAuthorizationRulesAsync(IAgentContext agentContext);
 
         /// <summary>
         /// Looks up an attribute value on the ledger.
         /// </summary>
-        /// <returns>The attribute value or <c>null</c> if none were found.</returns>
-        /// <param name="pool">Pool.</param>
-        /// <param name="targetDid">The target DID for the <paramref name="attributeName"/> lookup</param>
+        /// <param name="agentContext">The agent context.</param>
+        /// <param name="targetDid">The target DID for the <paramref name="attributeName" /> lookup</param>
         /// <param name="attributeName">Attribute name.</param>
-        Task<string> LookupAttributeAsync(Pool pool, string targetDid, string attributeName);
+        /// <returns>
+        /// The attribute value or <c>null</c> if none were found.
+        /// </returns>
+        Task<string> LookupAttributeAsync(IAgentContext agentContext, string targetDid, string attributeName);
 
         /// <summary>
         /// Register an attribute for the specified <paramref name="targetDid"/> to the ledger.
@@ -45,69 +47,73 @@ namespace Hyperledger.Aries.Contracts
         /// <summary>
         /// Lookup the schema async.
         /// </summary>
-        /// <param name="pool">The pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="schemaId">Schema identifier.</param>
         /// <returns>
         /// The schema async.
         /// </returns>
-        Task<ParseResponseResult> LookupSchemaAsync(Pool pool, string schemaId);
+        Task<ParseResponseResult> LookupSchemaAsync(IAgentContext agentContext, string schemaId);
 
         /// <summary>
         /// Lookup NYM record on the ledger
         /// </summary>
-        /// <param name="pool"></param>
-        /// <param name="did"></param>
+        /// <param name="agentContext">The agent context.</param>
+        /// <param name="did">The did.</param>
         /// <returns></returns>
-        Task<string> LookupNymAsync(Pool pool, string did);
+        Task<string> LookupNymAsync(IAgentContext agentContext, string did);
 
         /// <summary>
         /// Lookup the ledger transaction async.
         /// </summary>
-        /// <param name="pool">The pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="ledgerType">The ledger type.</param>
         /// <param name="sequenceId">The sequence identifier.</param>
         /// <returns>
         /// The transaction async.
         /// </returns>
-        Task<string> LookupTransactionAsync(Pool pool, string ledgerType, int sequenceId);
+        Task<string> LookupTransactionAsync(IAgentContext agentContext, string ledgerType, int sequenceId);
 
         /// <summary>
         /// Lookups the definition async.
         /// </summary>
-        /// <param name="pool">The pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="definitionId">Definition identifier.</param>
         /// <returns>
         /// The definition async.
         /// </returns>
-        Task<ParseResponseResult> LookupDefinitionAsync(Pool pool, string definitionId);
+        Task<ParseResponseResult> LookupDefinitionAsync(IAgentContext agentContext, string definitionId);
 
         /// <summary>
         /// Lookups the revocation registry definition.
         /// </summary>
-        /// <param name="pool">The pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="registryId">The registry identifier.</param>
         /// <returns></returns>
-        Task<ParseResponseResult> LookupRevocationRegistryDefinitionAsync(Pool pool, string registryId);
+        Task<ParseResponseResult> LookupRevocationRegistryDefinitionAsync(IAgentContext agentContext, string registryId);
 
         /// <summary>
         /// Lookup the revocation registry delta for the given registry in the range specified.
         /// </summary>
-        /// <returns>The revocation registry delta.</returns>
-        /// <param name="pool">Pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="revocationRegistryId">Revocation registry identifier.</param>
         /// <param name="from">From.</param>
         /// <param name="to">To.</param>
-        Task<ParseRegistryResponseResult> LookupRevocationRegistryDeltaAsync(Pool pool, string revocationRegistryId,
+        /// <returns>
+        /// The revocation registry delta.
+        /// </returns>
+        Task<ParseRegistryResponseResult> LookupRevocationRegistryDeltaAsync(IAgentContext agentContext, string revocationRegistryId,
             long from, long to);
 
         /// <summary>
         /// Lookup revocation registry for the given point in time.
         /// </summary>
-        /// <returns>The revocation registry async.</returns>
-        /// <param name="pool">Pool.</param>
+        /// <param name="agentContext">The agent context.</param>
         /// <param name="revocationRegistryId">Revocation registry identifier.</param>
         /// <param name="timestamp">Timestamp.</param>
-        Task<ParseRegistryResponseResult> LookupRevocationRegistryAsync(Pool pool, string revocationRegistryId,
+        /// <returns>
+        /// The revocation registry async.
+        /// </returns>
+        Task<ParseRegistryResponseResult> LookupRevocationRegistryAsync(IAgentContext agentContext, string revocationRegistryId,
             long timestamp);
 
         /// <summary>
