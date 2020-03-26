@@ -3,24 +3,34 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace Hyperledger.Aries.Routing.Mediator.Storage
 {
+    /// <summary>
+    /// Default backup storage service. Uses filesystem for storing backup.
+    /// </summary>
+    /// <seealso cref="Hyperledger.Aries.Routing.Mediator.Storage.IStorageService" />
     public class DefaultStorageService : IStorageService
     {
-        private string StorageDirectory { get; set; }
+        private readonly AgentOptions agentOptions;
 
-        public DefaultStorageService()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultStorageService"/> class.
+        /// </summary>
+        /// <param name="agentOptions">The agent options.</param>
+        public DefaultStorageService(IOptions<AgentOptions> agentOptions)
         {
-            StorageDirectory = Path.Combine(Path.GetTempPath(), "AriesWallets");
-            if (!Directory.Exists(StorageDirectory))
+            this.agentOptions = agentOptions.Value;
+
+            if (!Directory.Exists(this.agentOptions.BackupDirectory))
             {
-                Directory.CreateDirectory(StorageDirectory);
+                Directory.CreateDirectory(this.agentOptions.BackupDirectory);
             }
         }
-
 
         /// <summary>Stores the backup and all attachments.</summary>
         /// <param name="backupId">The backup identifier.</param>
@@ -35,7 +45,7 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
             }
 
             var nowUnix = DateTimeOffset.Now;
-            var backupDir = Path.Combine(StorageDirectory, backupId, nowUnix.ToUnixTimeSeconds().ToString());
+            var backupDir = Path.Combine(agentOptions.BackupDirectory, backupId, nowUnix.ToUnixTimeSeconds().ToString());
 
             if (!Directory.Exists(backupDir))
             {
@@ -99,6 +109,6 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
                 .ToList());
         }
         
-        private string GetBackupPath(string backupId) => Path.Combine(StorageDirectory, backupId);
+        private string GetBackupPath(string backupId) => Path.Combine(agentOptions.BackupDirectory, backupId);
     }
 }
