@@ -1,5 +1,7 @@
 ﻿using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
+using System;
+using System.IO;
 
 namespace Hyperledger.Aries.Configuration
 {
@@ -136,5 +138,14 @@ namespace Hyperledger.Aries.Configuration
         /// The revocation registry directory.
         /// </value>
         public string RevocationRegistryDirectory { get; set; } = EnvironmentUtils.GetTailsPath();
+
+        /// <summary>
+        /// Gets or sets the backup directory where physical backups will be stored.
+        /// This property is only used when running a mediator service.
+        /// </summary>
+        /// <value>
+        /// The backup directory.
+        /// </value>
+        public string BackupDirectory { get; set; } = Path.Combine(Path.GetTempPath(), "AriesBackups");
     }
 }

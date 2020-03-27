@@ -13,18 +13,6 @@ namespace Hyperledger.Aries.Agents
         public static UnpackedMessageContext AsMessageContext(this AgentMessage agentMessage, string senderKey) =>
             new UnpackedMessageContext(agentMessage, senderKey);
 
-        internal static AgentContext AsAgentContext(this IAgentContext context)
-        {
-            return new AgentContext
-            {
-                Wallet = context.Wallet,
-                Pool = context.Pool,
-                SupportedMessages = context.SupportedMessages,
-                State = context.State,
-                Agent = context.Agent
-            };
-        }
-
         /// <summary>
         /// Gets the supported message types.
         /// </summary>

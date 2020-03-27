@@ -102,17 +102,19 @@ namespace Hyperledger.Aries.Agents
         {
             EnsureConfigured();
 
-            var agentContext = context.AsAgentContext();
-            agentContext.AddNext(messageContext);
-            agentContext.Agent = this;
-
-            MessageContext outgoingMessageContext = null;
-            while (agentContext.TryGetNext(out var message) && outgoingMessageContext == null)
+            if (context is DefaultAgentContext agentContext)
             {
-                outgoingMessageContext = await ProcessMessage(agentContext, message);
-            }
+                agentContext.AddNext(messageContext);
+                agentContext.Agent = this;
 
-            return outgoingMessageContext;
+                MessageContext outgoingMessageContext = null;
+                while (agentContext.TryGetNext(out var message) && outgoingMessageContext == null)
+                {
+                    outgoingMessageContext = await ProcessMessage(agentContext, message);
+                }
+                return outgoingMessageContext;
+            }
+            throw new Exception("Unsupported agent context. When using custom context, please inherit from 'DefaultAgentContext'");
         }
 
         private async Task<MessageContext> ProcessMessage(IAgentContext agentContext, MessageContext messageContext)

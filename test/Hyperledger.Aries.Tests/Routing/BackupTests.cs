@@ -130,7 +130,7 @@ namespace Hyperledger.Aries.Tests.Routing
                 File.Delete(edgeWallet);
             }
             
-            var path = Path.Combine(Path.GetTempPath(), "AriesWallets");
+            var path = Path.Combine(Path.GetTempPath(), "AriesBackups");
 
             var walletDirExists = Directory.Exists(path);
 

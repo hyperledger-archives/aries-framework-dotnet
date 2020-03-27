@@ -18,6 +18,10 @@ namespace WebAgent
             AddForwardHandler();
             AddHandler<BasicMessageHandler>();
             AddHandler<TrustPingMessageHandler>();
+            AddDiscoveryHandler();
+            AddTrustPingHandler();
+            AddCredentialHandler();
+            AddProofHandler();
         }
     }
 }
