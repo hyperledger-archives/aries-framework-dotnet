@@ -18,7 +18,7 @@ namespace Hyperledger.Aries.Features.Routing
         {
             var connectionRecord = await _connectionService.ResolveByMyKeyAsync(agentContext, message.To);
 
-            if (agentContext is AgentContext context)
+            if (agentContext is DefaultAgentContext context)
                 context.AddNext(new PackedMessageContext(message.Message.ToJson(), connectionRecord));
 
             return null;

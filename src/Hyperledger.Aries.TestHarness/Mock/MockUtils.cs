@@ -39,7 +39,7 @@ namespace Hyperledger.TestHarness.Mock
 
             return new MockAgent(agentName, provider)
             {
-                Context = new AgentContext
+                Context = new DefaultAgentContext
                 {
                     Wallet = await provider.GetService<IWalletService>().GetWalletAsync(configuration, credentials),
                     Pool = new PoolAwaitable(PoolUtils.GetPoolAsync),

@@ -26,7 +26,7 @@ namespace Hyperledger.Aries.Tests.Decorators
                 // OK
             }
             
-            _agent = new AgentContext
+            _agent = new DefaultAgentContext
             {
                 Wallet = await Wallet.OpenWalletAsync(_walletConfig, Credentials),
             };
