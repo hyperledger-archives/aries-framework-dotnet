@@ -294,8 +294,8 @@ namespace Hyperledger.Aries.Features.PresentProof
                 // ReSharper disable once PossibleMultipleEnumeration
                 var credential = credentialObjects.First(x => x.Referent == requestedCredential.CredentialId);
                 if (credential.RevocationRegistryId == null ||
-                    proofRequest.NonRevoked == null ||
-                    requestedCredential.Timestamp == null)
+                    (proofRequest.NonRevoked == null &&
+                    requestedCredential.Timestamp == null))
                     continue;
 
                 var timestamp = requestedCredential.Timestamp ??
