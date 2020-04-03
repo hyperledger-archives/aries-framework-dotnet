@@ -45,13 +45,5 @@ namespace Hyperledger.Aries.Features.PresentProof
             credIds.AddRange(RequestedPredicates.Values.Select(x => x.CredentialId));
             return credIds.Distinct();
         }
-
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"RequestedAttributes={string.Join(",", RequestedAttributes ?? new Dictionary<string, RequestedAttribute>())}, " +
-            $"SelfAttestedAttributes={string.Join(",", SelfAttestedAttributes ?? new Dictionary<string, string>())}, " +
-            $"RequestedPredicates={string.Join(",", RequestedPredicates ?? new Dictionary<string, RequestedAttribute>())}, " +
-            $"CredentialIdentifiers={string.Join(",", GetCredentialIdentifiers())}";
     }
 }

@@ -119,14 +119,17 @@ namespace Hyperledger.Aries.Features.PresentProof
                     .Select(x => x.SchemaId)
                     .Distinct());
 
-            var definitions = await BuildCredentialDefinitionsAsync(agentContext,
+            var definitions = await BuildCredentialDefinitionsAsync(
+                agentContext,
                 credentialObjects
                     .Select(x => x.CredentialDefinitionId)
                     .Distinct());
 
-            var revocationStates = await BuildRevocationStatesAsync(agentContext,
-                credentialObjects,
-                requestedCredentials);
+            var revocationStates = await BuildRevocationStatesAsync(
+                agentContext: agentContext,
+                credentialObjects: credentialObjects,
+                proofRequest: proofRequest,
+                requestedCredentials: requestedCredentials);
 
             var proofJson = await AnonCreds.ProverCreateProofAsync(agentContext.Wallet, proofRequest.ToJson(),
                 requestedCredentials.ToJson(), provisioningRecord.MasterSecretId, schemas, definitions,
@@ -278,6 +281,7 @@ namespace Hyperledger.Aries.Features.PresentProof
 
         private async Task<string> BuildRevocationStatesAsync(IAgentContext agentContext,
             IEnumerable<CredentialInfo> credentialObjects,
+            ProofRequest proofRequest,
             RequestedCredentials requestedCredentials)
         {
             var allCredentials = new List<RequestedAttribute>();
@@ -289,12 +293,14 @@ namespace Hyperledger.Aries.Features.PresentProof
             {
                 // ReSharper disable once PossibleMultipleEnumeration
                 var credential = credentialObjects.First(x => x.Referent == requestedCredential.CredentialId);
-                if (credential.RevocationRegistryId == null)
+                if (credential.RevocationRegistryId == null ||
+                    (proofRequest.NonRevoked == null &&
+                    requestedCredential.Timestamp == null))
                     continue;
 
                 var timestamp = requestedCredential.Timestamp ??
-                                throw new Exception(
-                                    "Timestamp must be provided for credential that supports revocation");
+                    proofRequest.NonRevoked?.To ??
+                    throw new Exception("Timestamp must be provided for credential that supports revocation");
 
                 if (result.ContainsKey(credential.RevocationRegistryId) &&
                     result[credential.RevocationRegistryId].ContainsKey($"{timestamp}"))
@@ -302,10 +308,15 @@ namespace Hyperledger.Aries.Features.PresentProof
                     continue;
                 }
 
-                var registryDefinition = await LedgerService.LookupRevocationRegistryDefinitionAsync(agentContext, credential.RevocationRegistryId);
+                var registryDefinition = await LedgerService.LookupRevocationRegistryDefinitionAsync(
+                    agentContext: agentContext,
+                    registryId: credential.RevocationRegistryId);
 
-                var delta = await LedgerService.LookupRevocationRegistryDeltaAsync(agentContext,
-                    credential.RevocationRegistryId, -1, timestamp);
+                var delta = await LedgerService.LookupRevocationRegistryDeltaAsync(
+                    agentContext: agentContext,
+                    revocationRegistryId: credential.RevocationRegistryId,
+                    from: -1,
+                    to: timestamp);
 
                 var tailsfile = await TailsService.EnsureTailsExistsAsync(agentContext, credential.RevocationRegistryId);
                 var tailsReader = await TailsService.OpenTailsAsync(tailsfile);
@@ -332,6 +343,8 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             foreach (var identifier in proofIdentifiers)
             {
+                if (identifier.Timestamp == null) continue;
+
                 var delta = await LedgerService.LookupRevocationRegistryDeltaAsync(
                     agentContext: agentContext,
                     revocationRegistryId: identifier.RevocationRegistryId,
