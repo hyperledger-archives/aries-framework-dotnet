@@ -124,7 +124,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(valid);
 
             // Verification - with revocation
-            var now = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var now = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
 
             (requestPresentationMessage, proofRecordIssuer) = await pair.Agent1.Provider.GetService<IProofService>()
                 .CreateRequestAsync(pair.Agent1.Context, new ProofRequest
@@ -138,6 +138,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     },
                     NonRevoked = new RevocationInterval
                     {
+                        From = (uint)DateTimeOffset.Now.AddSeconds(-2).ToUnixTimeSeconds(),
                         To = now
                     }
                 });
@@ -171,9 +172,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             await pair.Agent1.Provider.GetService<ICredentialService>()
                .RevokeCredentialAsync(pair.Agent1.Context, credentialIssuer.Id);
 
-            await Task.Delay(TimeSpan.FromSeconds(5));
-
-            now = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            now = (uint)DateTimeOffset.Now.AddYears(1).AddDays(1).ToUnixTimeSeconds();
 
             (requestPresentationMessage, proofRecordIssuer) = await pair.Agent1.Provider.GetService<IProofService>()
                 .CreateRequestAsync(pair.Agent1.Context, new ProofRequest
@@ -187,6 +186,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     },
                     NonRevoked = new RevocationInterval
                     {
+                        From = (uint)DateTimeOffset.Now.AddYears(1).ToUnixTimeSeconds(),
                         To = now
                     }
                 });
@@ -201,8 +201,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                         { "id-verification", new RequestedAttribute
                             {
                                 CredentialId = credentialHolder.CredentialId,
-                                Revealed = true,
-                                Timestamp = now
+                                Revealed = true
                             }
                         }
                     }

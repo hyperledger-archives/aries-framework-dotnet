@@ -15,6 +15,7 @@ using IndyLedger = Hyperledger.Indy.LedgerApi.Ledger;
 using Hyperledger.Aries.Payments;
 using Polly;
 using Hyperledger.Indy;
+using System.Diagnostics;
 
 namespace Hyperledger.Aries.Ledger
 {

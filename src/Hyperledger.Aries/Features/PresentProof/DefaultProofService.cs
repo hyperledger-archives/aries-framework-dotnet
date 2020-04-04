@@ -109,21 +109,36 @@ namespace Hyperledger.Aries.Features.PresentProof
             var credentialObjects = new List<CredentialInfo>();
             foreach (var credId in requestedCredentials.GetCredentialIdentifiers())
             {
-                credentialObjects.Add(
-                    JsonConvert.DeserializeObject<CredentialInfo>(
-                        await AnonCreds.ProverGetCredentialAsync(agentContext.Wallet, credId)));
+                var credentialInfo = JsonConvert.DeserializeObject<CredentialInfo>(
+                    await AnonCreds.ProverGetCredentialAsync(agentContext.Wallet, credId));
+
+                credentialObjects.Add(credentialInfo);
             }
 
-            var schemas = await BuildSchemasAsync(agentContext,
-                credentialObjects
-                    .Select(x => x.SchemaId)
-                    .Distinct());
+            foreach (var item in requestedCredentials.RequestedAttributes.Values)
+            {
+                var credentialObject = credentialObjects.FirstOrDefault(x => x.Referent == item.CredentialId);
+                if (credentialObject.RevocationRegistryId != null && item.Timestamp == null && proofRequest.NonRevoked != null)
+                {
+                    item.Timestamp = proofRequest.NonRevoked.To;
+                }
+            }
+            foreach (var item in requestedCredentials.RequestedPredicates.Values)
+            {
+                var credentialObject = credentialObjects.FirstOrDefault(x => x.Referent == item.CredentialId);
+                if (credentialObject.RevocationRegistryId != null && item.Timestamp == null && proofRequest.NonRevoked != null)
+                {
+                    item.Timestamp = proofRequest.NonRevoked.To;
+                }
+            }
+
+            var schemas = await BuildSchemasAsync(
+                agentContext: agentContext,
+                schemaIds: credentialObjects.Select(x => x.SchemaId).Distinct());
 
             var definitions = await BuildCredentialDefinitionsAsync(
-                agentContext,
-                credentialObjects
-                    .Select(x => x.CredentialDefinitionId)
-                    .Distinct());
+                agentContext: agentContext,
+                credentialDefIds: credentialObjects.Select(x => x.CredentialDefinitionId).Distinct());
 
             var revocationStates = await BuildRevocationStatesAsync(
                 agentContext: agentContext,
@@ -131,9 +146,14 @@ namespace Hyperledger.Aries.Features.PresentProof
                 proofRequest: proofRequest,
                 requestedCredentials: requestedCredentials);
 
-            var proofJson = await AnonCreds.ProverCreateProofAsync(agentContext.Wallet, proofRequest.ToJson(),
-                requestedCredentials.ToJson(), provisioningRecord.MasterSecretId, schemas, definitions,
-                revocationStates);
+            var proofJson = await AnonCreds.ProverCreateProofAsync(
+                wallet: agentContext.Wallet,
+                proofRequest: proofRequest.ToJson(),
+                requestedCredentials: requestedCredentials.ToJson(),
+                masterSecret: provisioningRecord.MasterSecretId,
+                schemas: schemas,
+                credentialDefs: definitions,
+                revStates: revocationStates);
 
             return proofJson;
         }
@@ -173,6 +193,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         public virtual async Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRequestJson, string proofJson, bool validateEncoding = true)
         {
             var proof = JsonConvert.DeserializeObject<PartialProof>(proofJson);
+            var proofRequest = proofRequestJson.ToObject<ProofRequest>();
 
             // If any values are revealed, validate encoding
             // against expected values
@@ -206,9 +227,10 @@ namespace Hyperledger.Aries.Features.PresentProof
                     .Where(x => x != null)
                     .Distinct());
 
-            var revocationRegistries = await BuildRevocationRegistryDetlasAsync(agentContext,
-                proof.Identifiers
-                    .Where(x => x.RevocationRegistryId != null));
+            var revocationRegistries = await BuildRevocationRegistryDetlasAsync(
+                agentContext,
+                proofRequest,
+                proof.Identifiers.Where(x => x.RevocationRegistryId != null));
 
             return await AnonCreds.VerifierVerifyProofAsync(proofRequestJson, proofJson, schemas,
                 definitions, revocationDefinitions, revocationRegistries);
@@ -315,8 +337,8 @@ namespace Hyperledger.Aries.Features.PresentProof
                 var delta = await LedgerService.LookupRevocationRegistryDeltaAsync(
                     agentContext: agentContext,
                     revocationRegistryId: credential.RevocationRegistryId,
-                    from: -1,
-                    to: timestamp);
+                    from: proofRequest.NonRevoked.From,
+                    to: proofRequest.NonRevoked.To);
 
                 var tailsfile = await TailsService.EnsureTailsExistsAsync(agentContext, credential.RevocationRegistryId);
                 var tailsReader = await TailsService.OpenTailsAsync(tailsfile);
@@ -327,7 +349,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 if (!result.ContainsKey(credential.RevocationRegistryId))
                     result.Add(credential.RevocationRegistryId, new Dictionary<string, JObject>());
 
-                result[credential.RevocationRegistryId].Add($"{timestamp}", JObject.Parse(state));
+                result[credential.RevocationRegistryId].Add($"{proofRequest.NonRevoked.To}", JObject.Parse(state));
 
                 // TODO: Revocation state should provide the state between a certain period
                 // that can be requested in the proof request in the 'non_revocation' field.
@@ -336,7 +358,9 @@ namespace Hyperledger.Aries.Features.PresentProof
             return result.ToJson();
         }
 
-        private async Task<string> BuildRevocationRegistryDetlasAsync(IAgentContext agentContext,
+        private async Task<string> BuildRevocationRegistryDetlasAsync(
+            IAgentContext agentContext,
+            ProofRequest proofRequest,
             IEnumerable<ProofIdentifier> proofIdentifiers)
         {
             var result = new Dictionary<string, Dictionary<string, JObject>>();
@@ -348,8 +372,8 @@ namespace Hyperledger.Aries.Features.PresentProof
                 var delta = await LedgerService.LookupRevocationRegistryDeltaAsync(
                     agentContext: agentContext,
                     revocationRegistryId: identifier.RevocationRegistryId,
-                    from: -1,
-                    to: long.Parse(identifier.Timestamp));
+                    from: proofRequest.NonRevoked.From,
+                    to: proofRequest.NonRevoked.To);
 
                 result.Add(identifier.RevocationRegistryId,
                     new Dictionary<string, JObject>

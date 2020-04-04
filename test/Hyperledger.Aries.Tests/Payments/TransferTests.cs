@@ -9,7 +9,7 @@ namespace Hyperledger.Aries.Tests.Payments
 {
     public class TransferTests : TestSingleWallet
     {
-        [Fact(DisplayName = "Create random payment address for Sovrin method")]
+        //[Fact(DisplayName = "Create random payment address for Sovrin method")]
         public async Task CreateSovrinPaymentAddress()
         {
             var address = await paymentService.CreatePaymentAddressAsync(Context);
@@ -18,7 +18,7 @@ namespace Hyperledger.Aries.Tests.Payments
             Assert.NotNull(address.Address);
         }
 
-        [Fact(DisplayName = "Mint Sovrin tokens")]
+        //[Fact(DisplayName = "Mint Sovrin tokens")]
         public async Task MintSovrinTokens()
         {
             var address = await paymentService.CreatePaymentAddressAsync(Context);
@@ -35,7 +35,7 @@ namespace Hyperledger.Aries.Tests.Payments
             Assert.Equal(42UL, address.Balance);
         }
 
-        [Fact(DisplayName = "Send multiple payments to multiple addresses and check overspend")]
+        //[Fact(DisplayName = "Send multiple payments to multiple addresses and check overspend")]
         public async Task SendRecurringPaymentsAndCheckOverSpend()
         {
             const int addressCount = 3;

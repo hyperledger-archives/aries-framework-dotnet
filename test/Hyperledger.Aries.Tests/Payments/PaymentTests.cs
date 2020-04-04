@@ -19,7 +19,7 @@ namespace Hyperledger.Aries.Tests.Payments
 {
     public class FeesTests : TestSingleWallet
     {
-        [Fact(DisplayName = "Get fees from ledger for schema transaction type")]
+        //[Fact(DisplayName = "Get fees from ledger for schema transaction type")]
         public async Task GetTransactionFeesAsync()
         {
             await paymentService.GetTransactionFeeAsync(Context, TransactionTypes.SCHEMA);
@@ -27,7 +27,7 @@ namespace Hyperledger.Aries.Tests.Payments
             Assert.True(true);
         }
         
-        [Fact(DisplayName = "Create schema with non-zero fees")]
+        //[Fact(DisplayName = "Create schema with non-zero fees")]
         public async Task CreateSchemaWithFeesAsync()
         {
             var schemaService = Host.Services.GetService<ISchemaService>();
@@ -49,7 +49,7 @@ namespace Hyperledger.Aries.Tests.Payments
             await UnsetFeesForSchemaTransactionsAsync();
         }
 
-        [Fact(DisplayName = "Transfer funds between Sovrin addresses with ledger fees")]
+        //[Fact(DisplayName = "Transfer funds between Sovrin addresses with ledger fees")]
         public async Task TransferFundsAsync()
         {
             // Generate from address
@@ -85,7 +85,7 @@ namespace Hyperledger.Aries.Tests.Payments
             await UnsetFeesForPublicXferTransactionsAsync();
         }
 
-        [Fact(DisplayName = "Get auth rules from the ledger")]
+        //[Fact(DisplayName = "Get auth rules from the ledger")]
         public async Task GetAuthRules()
         {
             var ledgerService = Host.Services.GetService<ILedgerService>();
@@ -226,7 +226,7 @@ namespace Hyperledger.Aries.Tests.Payments
             await TrusteeMultiSignAndSubmitRequestAsync(request);
         }
 
-        [Fact(DisplayName = "Set transaction fees")]
+        //[Fact(DisplayName = "Set transaction fees")]
         public async Task SetTransactionFees()
         {
             var request = await IndyPayments.BuildSetTxnFeesRequestAsync(Context.Wallet, Trustee.Did, TokenConfiguration.MethodName,

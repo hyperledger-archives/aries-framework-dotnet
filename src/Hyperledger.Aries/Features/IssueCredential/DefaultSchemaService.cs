@@ -246,7 +246,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
             var revocationRegistryDefinitionJson = new
             {
-                issuance_type = "ISSUANCE_ON_DEMAND",
+                issuance_type = "ISSUANCE_BY_DEFAULT",
                 max_cred_num = definitionRecord.MaxCredentialCount
             }.ToJson();
             var revocationRegistry = await AnonCreds.IssuerCreateAndStoreRevocRegAsync(

@@ -178,8 +178,8 @@ namespace Hyperledger.TestHarness.Mock
                             options.WalletConfiguration.Id = Guid.NewGuid().ToString();
                             options.WalletCredentials.Key = "test";
                             options.EndpointUri = "http://test";
-                        })
-                        .AddSovrinToken());
+                            options.RevocationRegistryDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                        }));
                     services.AddSingleton<IHttpClientFactory>(new InProcFactory(handler));
                     services.AddSingleton<IStorageService, DefaultStorageService>();
                     services.AddMessageHandler<DefaultStoreBackupHandler>();
