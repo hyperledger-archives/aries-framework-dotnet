@@ -42,13 +42,5 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </value>
         [JsonProperty("timestamp")]
         public string Timestamp { get; set; }
-
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"SchemaId={SchemaId}, " +
-            $"CredentialDefintionId={CredentialDefintionId}, " +
-            $"RevocationRegistryId={RevocationRegistryId}, " +
-            $"Timestamp={Timestamp}";
     }
 }

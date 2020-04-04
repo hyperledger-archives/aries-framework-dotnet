@@ -54,6 +54,10 @@
         /// <summary>
         /// The revocation registry unavailable
         /// </summary>
-        RevocationRegistryUnavailable
+        RevocationRegistryUnavailable,
+        /// <summary>
+        /// The revocation interval is out of range
+        /// </summary>
+        RevocationIntervalOutOfRange
     }
 }

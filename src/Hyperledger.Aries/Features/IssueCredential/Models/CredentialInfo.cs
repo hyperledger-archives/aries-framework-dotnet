@@ -61,15 +61,5 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </value>
         [JsonProperty("cred_rev_id")]
         public string CredentialRevocationId { get; set; }
-        
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"Referent={Referent}, " +
-            $"SchemaId={SchemaId}, " +
-            $"CredentialDefinitionId={CredentialDefinitionId}, " +
-            $"RevocationRegistryId={RevocationRegistryId}, " +
-            $"CredentialRevocationId={CredentialRevocationId}, " +
-            $"Attributes={string.Join(",", Attributes ?? new Dictionary<string,string>())}";
     }
 }
