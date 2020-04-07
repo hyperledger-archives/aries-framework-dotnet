@@ -33,14 +33,14 @@ namespace Hyperledger.Aries.Routing
         /// <param name="seed">The seed.</param>
         /// <param name="offset">The offset.</param>
         /// <returns></returns>
-        Task<List<Attachment>> RetrieveBackupAsync(IAgentContext context, string seed, DateTimeOffset offset = default);
+        Task<List<Attachment>> RetrieveBackupAsync(IAgentContext context, string seed, long offset = default);
 
         /// <summary>
         /// Retrieves a list of available backups
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        Task<List<string>> ListBackupsAsync(IAgentContext context);
+        Task<List<long>> ListBackupsAsync(IAgentContext context);
 
         /// <summary>
         /// Restores the agent and wallet from backup. Removes the existing wallet and creates a new one with same

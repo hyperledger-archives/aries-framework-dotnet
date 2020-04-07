@@ -72,7 +72,9 @@ namespace Hyperledger.Aries.Routing
                         return new ListBackupsResponseAgentMessage
                         {
                             BackupList = timestampList
-                                .OrderByDescending(x => long.Parse(x))
+                                .Select(x => long.Parse(x))
+                                .OrderByDescending(x => x)
+                                .ToList()
                         };
                     }
             }
