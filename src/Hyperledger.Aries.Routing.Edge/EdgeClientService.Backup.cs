@@ -23,7 +23,7 @@ namespace Hyperledger.Aries.Routing.Edge
                 throw new ArgumentException($"{nameof(seed)} should be 32 characters");
             }
             
-            var path = Path.Combine(Path.GetTempPath(), seed);
+            var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             
             var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
             
@@ -68,6 +68,8 @@ namespace Hyperledger.Aries.Routing.Edge
                 throw new AriesFrameworkException(ErrorCode.RecordNotFound,
                     "Couldn't locate a connection to mediator agent");
 
+            File.Delete(path);
+
             await messageService
                 .SendReceiveAsync<StoreBackupResponseAgentMessage>(context.Wallet, backupMessage, connection)
                 .ConfigureAwait(false);
@@ -75,7 +77,7 @@ namespace Hyperledger.Aries.Routing.Edge
         }
 
         /// <inheritdoc />
-        public async Task<List<Attachment>> RetrieveBackupAsync(IAgentContext context, string seed, DateTimeOffset offset = default)
+        public async Task<List<Attachment>> RetrieveBackupAsync(IAgentContext context, string seed, long offset = default)
         {
             var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
             var publicKey = provRecord.GetTag("backup_key");
@@ -106,7 +108,7 @@ namespace Hyperledger.Aries.Routing.Edge
             string seed, 
             List<Attachment> backupData)
         {
-            var tempWalletPath = Path.Combine(Path.GetTempPath(), seed);
+            var tempWalletPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             var walletBase64 = backupData.First().Data.Base64;
             var walletToRestoreInBytes = walletBase64.GetBytesFromBase64();
             
@@ -120,10 +122,12 @@ namespace Hyperledger.Aries.Routing.Edge
             await Task.Delay(TimeSpan.FromSeconds(1));
 
             await Wallet.ImportAsync(agentoptions.WalletConfiguration.ToJson(), agentoptions.WalletCredentials.ToJson(), json);
+
+            File.Delete(tempWalletPath);
         }
 
         /// <inheritdoc />
-        public async Task<List<string>> ListBackupsAsync(IAgentContext context)
+        public async Task<List<long>> ListBackupsAsync(IAgentContext context)
         {
             var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
             var publicKey = provRecord.GetTag("backup_key");

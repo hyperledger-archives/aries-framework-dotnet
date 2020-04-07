@@ -10,6 +10,6 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
         Task<DateTimeOffset> StoreBackupAsync(string backupId, IEnumerable<Attachment> attachments);
         Task<List<Attachment>> RetrieveBackupAsync(string backupId);
         Task<IEnumerable<string>> ListBackupsAsync(string backupId);
-        Task<List<Attachment>> RetrieveBackupAsync(string backupId, DateTimeOffset backupDate);
+        Task<List<Attachment>> RetrieveBackupAsync(string backupId, long timestamp);
     }
 }

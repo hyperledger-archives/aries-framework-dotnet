@@ -69,17 +69,16 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
         /// <exception cref="FileNotFoundException">Wallet for key {backupId} was not found.</exception>
         public async Task<List<Attachment>> RetrieveBackupAsync(string backupId)
         {
-            var backupDirectoryPath = GetBackupPath(backupId);
-            var rootBackupDirectory = new DirectoryInfo(backupDirectoryPath);
-            var backupDirectory = rootBackupDirectory.GetDirectories().OrderByDescending(d => d.CreationTimeUtc)
-                .First();
-            var myFile = backupDirectory.GetFiles()
-                .OrderByDescending(f => f.CreationTimeUtc)
+            var rootBackupDirectory = new DirectoryInfo(GetBackupPath(backupId));
+
+            var backupDirectory = rootBackupDirectory
+                .GetDirectories()
+                .OrderByDescending(d => d.CreationTimeUtc)
                 .First();
 
             return await RetrieveBackupAsync(
                 backupId: backupId,
-                backupDate:  myFile.CreationTimeUtc);
+                timestamp: long.Parse(backupDirectory.Name));
         }
 
         /// <summary>
@@ -92,9 +91,9 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
             return Task.FromResult(Directory.EnumerateDirectories(GetBackupPath(backupId)));
         }
 
-        public Task<List<Attachment>> RetrieveBackupAsync(string backupId, DateTimeOffset backupDate)
+        public Task<List<Attachment>> RetrieveBackupAsync(string backupId, long timestamp)
         {
-            var path = Path.Combine(GetBackupPath(backupId), backupDate.ToUnixTimeSeconds().ToString());
+            var path = Path.Combine(GetBackupPath(backupId), $"{timestamp}");
 
             return Task.FromResult(
                 Directory.EnumerateFiles(path, "*", SearchOption.TopDirectoryOnly)
