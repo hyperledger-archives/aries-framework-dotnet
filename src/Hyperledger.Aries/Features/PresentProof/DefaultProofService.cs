@@ -269,7 +269,13 @@ namespace Hyperledger.Aries.Features.PresentProof
                 await AnonCreds.ProverSearchCredentialsForProofRequestAsync(agentContext.Wallet, proofRequest.ToJson()))
             {
                 var searchResult = await search.NextAsync(attributeReferent, 100);
-                return JsonConvert.DeserializeObject<List<Credential>>(searchResult);
+                var result = JsonConvert.DeserializeObject<List<Credential>>(searchResult);
+
+                if (proofRequest.NonRevoked != null)
+                {
+                    return result.Where(x => x.CredentialInfo.RevocationRegistryId != null).ToList();
+                }
+                return result;
             }
         }
 
