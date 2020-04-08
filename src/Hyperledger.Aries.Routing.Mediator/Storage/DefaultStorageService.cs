@@ -69,16 +69,24 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
         /// <exception cref="FileNotFoundException">Wallet for key {backupId} was not found.</exception>
         public async Task<List<Attachment>> RetrieveBackupAsync(string backupId)
         {
-            var rootBackupDirectory = new DirectoryInfo(GetBackupPath(backupId));
+            string backupDirectory = null;
+            try
+            {
+                backupDirectory = Directory.EnumerateDirectories(GetBackupPath(backupId))
+                    .OrderByDescending(x => x)
+                    .FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Couldn't enumerate directory backup: {backupId}", e);
+            }
 
-            var backupDirectory = rootBackupDirectory
-                .GetDirectories()
-                .OrderByDescending(d => d.CreationTimeUtc)
-                .First();
+            if (backupDirectory == null) throw new Exception($"Backup directory not found: {backupDirectory}");
+            var filename = Path.GetFileName(backupDirectory);
 
             return await RetrieveBackupAsync(
                 backupId: backupId,
-                timestamp: long.Parse(backupDirectory.Name));
+                timestamp: long.Parse(filename));
         }
 
         /// <summary>

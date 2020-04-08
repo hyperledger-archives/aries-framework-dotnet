@@ -102,9 +102,12 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
             try
             {
-                File.WriteAllBytes(
-                    path: tailsfile,
-                    bytes: await HttpClient.GetByteArrayAsync(new Uri(tailsUri)));
+                if (!File.Exists(tailsfile))
+                {
+                    File.WriteAllBytes(
+                        path: tailsfile,
+                        bytes: await HttpClient.GetByteArrayAsync(new Uri(tailsUri)));
+                }
             }
             catch (Exception e)
             {
