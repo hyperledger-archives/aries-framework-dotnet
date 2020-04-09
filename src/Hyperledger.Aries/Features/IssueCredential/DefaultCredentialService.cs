@@ -171,7 +171,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credentialRecord.State}'");
 
-            var definition = await SchemaService.GetCredentialDefinitionAsync(agentContext.Wallet, credentialRecord.CredentialDefinitionId);
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
 
             // Check if the state machine is valid for revocation

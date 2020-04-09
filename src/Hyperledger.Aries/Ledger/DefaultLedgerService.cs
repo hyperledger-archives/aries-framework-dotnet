@@ -131,6 +131,8 @@ namespace Hyperledger.Aries.Ledger
             var req = await IndyLedger.BuildRevocRegEntryRequestAsync(issuerDid, revocationRegistryDefinitionId,
                 revocationDefinitionType, value);
             var res = await SignAndSubmitAsync(context, issuerDid, req, paymentInfo);
+
+            EnsureSuccessResponse(res);
         }
 
         /// <inheritdoc />
