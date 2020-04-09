@@ -9,6 +9,7 @@ using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Mock;
+using Hyperledger.Aries.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -34,21 +35,33 @@ namespace Hyperledger.Aries.Tests.Protocols
                     version: "1.0",
                     attributeNames: new[] { "name", "age" });
 
-            var definitionId = await pair.Agent1.Provider.GetRequiredService<ISchemaService>()
+            var definitionWithRevocationId = await pair.Agent1.Provider.GetRequiredService<ISchemaService>()
                 .CreateCredentialDefinitionAsync(
                     context: pair.Agent1.Context,
                     new CredentialDefinitionConfiguration
                     {
                         SchemaId = schemaId,
                         EnableRevocation = true,
-                        RevocationRegistryBaseUri = "http://localhost"
+                        RevocationRegistryBaseUri = "http://localhost",
+                        Tag = "revoc"
                     });
 
-            // Send offer
+            var definitionId = await pair.Agent1.Provider.GetRequiredService<ISchemaService>()
+                .CreateCredentialDefinitionAsync(
+                    context: pair.Agent1.Context,
+                    new CredentialDefinitionConfiguration
+                    {
+                        SchemaId = schemaId,
+                        EnableRevocation = false,
+                        RevocationRegistryBaseUri = "http://localhost",
+                        Tag = "norevoc"
+                    });
+
+            // Send offer for two credentials
             var (offer, record) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
                 .CreateOfferAsync(pair.Agent1.Context, new OfferConfiguration
                 {
-                    CredentialDefinitionId = definitionId,
+                    CredentialDefinitionId = definitionWithRevocationId,
                     IssuerDid = issuerConfiguration.IssuerDid,
                     CredentialAttributeValues = new[]
                     {
@@ -59,31 +72,55 @@ namespace Hyperledger.Aries.Tests.Protocols
             await pair.Agent1.Provider.GetRequiredService<IMessageService>()
                 .SendAsync(pair.Agent1.Context.Wallet, offer, pair.Connection1);
 
-            // Find credential for Agent 2
+            var issuerCredentialWithRevocation = record;
+
+            (offer, record) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
+               .CreateOfferAsync(pair.Agent1.Context, new OfferConfiguration
+               {
+                   CredentialDefinitionId = definitionId,
+                   IssuerDid = issuerConfiguration.IssuerDid,
+                   CredentialAttributeValues = new[]
+                   {
+                        new CredentialPreviewAttribute("name", "random"),
+                        new CredentialPreviewAttribute("age", "22")
+                   }
+               });
+            await pair.Agent1.Provider.GetRequiredService<IMessageService>()
+                .SendAsync(pair.Agent1.Context.Wallet, offer, pair.Connection1);
+
+            // Find credential for Agent 2 and accept all offers
             var credentials = await pair.Agent2.Provider.GetService<ICredentialService>()
                 .ListAsync(pair.Agent2.Context);
-            var credential = credentials.First();
-
-            // Accept the offer and send request
-            var (request, _) = await pair.Agent2.Provider.GetService<ICredentialService>()
+            foreach (var credential in credentials.Where(x => x.State == CredentialState.Offered))
+            {
+                var (request, _) = await pair.Agent2.Provider.GetService<ICredentialService>()
                 .CreateRequestAsync(pair.Agent2.Context, credential.Id);
-            await pair.Agent2.Provider.GetService<IMessageService>()
-                .SendAsync(pair.Agent2.Context.Wallet, request, pair.Connection2);
+                await pair.Agent2.Provider.GetService<IMessageService>()
+                    .SendAsync(pair.Agent2.Context.Wallet, request, pair.Connection2);
+            }
 
             // Issue credential
-            var (issue, _) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
-                .CreateCredentialAsync(pair.Agent1.Context, record.Id);
-            await pair.Agent1.Provider.GetService<IMessageService>()
-                .SendAsync(pair.Agent1.Context.Wallet, issue, pair.Connection1);
+            credentials = await pair.Agent1.Provider.GetService<ICredentialService>()
+                .ListRequestsAsync(pair.Agent1.Context);
+            foreach (var credential in credentials)
+            {
+                var (issue, _) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
+                .CreateCredentialAsync(pair.Agent1.Context, credential.Id);
+                await pair.Agent1.Provider.GetService<IMessageService>()
+                    .SendAsync(pair.Agent1.Context.Wallet, issue, pair.Connection1);
+            }
 
             // Assert
-            var credentialHolder = await pair.Agent2.Provider.GetService<ICredentialService>()
-                .GetAsync(pair.Agent2.Context, credential.Id);
-            var credentialIssuer = await pair.Agent1.Provider.GetService<ICredentialService>()
-                .GetAsync(pair.Agent1.Context, record.Id);
-
-            Assert.Equal(CredentialState.Issued, credentialHolder.State);
-            Assert.Equal(CredentialState.Issued, credentialIssuer.State);
+            foreach (var credential in await pair.Agent1.Provider.GetService<ICredentialService>()
+                .ListAsync(pair.Agent1.Context))
+            {
+                Assert.Equal(CredentialState.Issued, credential.State);
+            }
+            foreach (var credential in await pair.Agent2.Provider.GetService<ICredentialService>()
+                 .ListAsync(pair.Agent2.Context))
+            {
+                Assert.Equal(CredentialState.Issued, credential.State);
+            }
 
 
             // Verification - without revocation
@@ -101,6 +138,10 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             var proofRecordHolder = await pair.Agent2.Provider.GetService<IProofService>()
                 .ProcessRequestAsync(pair.Agent2.Context, requestPresentationMessage, pair.Connection2);
+
+            var availableCredentials = await pair.Agent2.Provider.GetService<IProofService>()
+                .ListCredentialsForProofRequestAsync(pair.Agent2.Context, proofRecordHolder.RequestJson.ToObject<ProofRequest>(), "id-verification");
+            
             var (presentationMessage, _) = await pair.Agent2.Provider.GetService<IProofService>()
                 .CreatePresentationAsync(pair.Agent2.Context, proofRecordHolder.Id, new RequestedCredentials
                 {
@@ -108,7 +149,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     {
                         { "id-verification", new RequestedAttribute
                             {
-                                CredentialId = credentialHolder.CredentialId,
+                                CredentialId = availableCredentials.First().CredentialInfo.Referent,
                                 Revealed = true
                             }
                         }
@@ -145,6 +186,9 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             proofRecordHolder = await pair.Agent2.Provider.GetService<IProofService>()
                 .ProcessRequestAsync(pair.Agent2.Context, requestPresentationMessage, pair.Connection2);
+            availableCredentials = await pair.Agent2.Provider.GetService<IProofService>()
+                .ListCredentialsForProofRequestAsync(pair.Agent2.Context, proofRecordHolder.RequestJson.ToObject<ProofRequest>(), "id-verification");
+
             (presentationMessage, _) = await pair.Agent2.Provider.GetService<IProofService>()
                 .CreatePresentationAsync(pair.Agent2.Context, proofRecordHolder.Id, new RequestedCredentials
                 {
@@ -152,9 +196,8 @@ namespace Hyperledger.Aries.Tests.Protocols
                     {
                         { "id-verification", new RequestedAttribute
                             {
-                                CredentialId = credentialHolder.CredentialId,
-                                Revealed = true,
-                                Timestamp = now
+                                CredentialId = availableCredentials.First().CredentialInfo.Referent,
+                                Revealed = true
                             }
                         }
                     }
@@ -169,8 +212,9 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(valid);
 
             // Revoke the credential
+
             await pair.Agent1.Provider.GetService<ICredentialService>()
-               .RevokeCredentialAsync(pair.Agent1.Context, credentialIssuer.Id);
+               .RevokeCredentialAsync(pair.Agent1.Context, issuerCredentialWithRevocation.Id);
 
             now = (uint)DateTimeOffset.Now.AddYears(1).AddDays(1).ToUnixTimeSeconds();
 
@@ -193,6 +237,9 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             proofRecordHolder = await pair.Agent2.Provider.GetService<IProofService>()
                 .ProcessRequestAsync(pair.Agent2.Context, requestPresentationMessage, pair.Connection2);
+            availableCredentials = await pair.Agent2.Provider.GetService<IProofService>()
+                .ListCredentialsForProofRequestAsync(pair.Agent2.Context, proofRecordHolder.RequestJson.ToObject<ProofRequest>(), "id-verification");
+
             (presentationMessage, _) = await pair.Agent2.Provider.GetService<IProofService>()
                 .CreatePresentationAsync(pair.Agent2.Context, proofRecordHolder.Id, new RequestedCredentials
                 {
@@ -200,7 +247,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     {
                         { "id-verification", new RequestedAttribute
                             {
-                                CredentialId = credentialHolder.CredentialId,
+                                CredentialId = availableCredentials.First().CredentialInfo.Referent,
                                 Revealed = true
                             }
                         }

@@ -71,8 +71,10 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <returns>
         /// The proof.
         /// </returns>
-        Task<string> CreatePresentationAsync(IAgentContext agentContext,
-            ProofRequest proofRequest, RequestedCredentials requestedCredentials);
+        Task<string> CreatePresentationAsync(
+            IAgentContext agentContext,
+            ProofRequest proofRequest, 
+            RequestedCredentials requestedCredentials);
 
         /// <summary>
         /// Creates a presentation message based on a request over connectionless transport.
@@ -153,7 +155,9 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// A collection of <see cref="CredentialInfo" /> that are available
         /// for building a proof for the given proof request
         /// </returns>
-        Task<List<Credential>> ListCredentialsForProofRequestAsync(IAgentContext agentContext,
-            ProofRequest proofRequest, string attributeReferent);
+        Task<List<Credential>> ListCredentialsForProofRequestAsync(
+            IAgentContext agentContext,
+            ProofRequest proofRequest, 
+            string attributeReferent);
     }
 }
