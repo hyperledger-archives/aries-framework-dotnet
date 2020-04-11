@@ -6,6 +6,9 @@ using Hyperledger.Aries.Decorators.Attachments;
 
 namespace Hyperledger.Aries.Routing
 {
+    /// <summary>
+    /// Edge Client Service
+    /// </summary>
     public interface IEdgeClientService
     {
         /// <summary>
@@ -30,6 +33,7 @@ namespace Hyperledger.Aries.Routing
         /// <summary>
         /// Associate a delivery route with the mediator agent.
         /// </summary>
+        /// <remarks>
         /// This method is called internally during the provisioning process and doesn't need to be
         /// invoked in normal workflows.
         /// </remarks>

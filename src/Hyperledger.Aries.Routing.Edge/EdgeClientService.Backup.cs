@@ -15,6 +15,7 @@ using Hyperledger.Indy;
 
 namespace Hyperledger.Aries.Routing.Edge
 {
+    /// <inheritdoc />
     public partial class EdgeClientService : IEdgeClientService
     {
         const string InternalBackupDid = "22222222AriesBackupDid";
@@ -157,6 +158,7 @@ namespace Hyperledger.Aries.Routing.Edge
             return response.BackupList.ToList();
         }
 
+        /// <inheritdoc />
         public async Task RestoreFromBackupAsync(IAgentContext context, string seed)
         {
             var backupAttachments = await RetrieveBackupAsync(context, seed);

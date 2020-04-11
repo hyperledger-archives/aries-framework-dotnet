@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
+    /// <summary>
+    /// Attribtue Filter Converter
+    /// </summary>
     public class AttributeFilterConverter : JsonConverter<AttributeFilter>
     {
         /// <summary>
