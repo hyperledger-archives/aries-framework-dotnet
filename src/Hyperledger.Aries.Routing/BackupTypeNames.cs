@@ -12,6 +12,5 @@ namespace Hyperledger.Aries.Routing
 
         public const string ListBackupsAgentMessage = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/backup_restore/1.0/list_backups";
         public const string ListBackupsResponseAgentMessage = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/backup_restore/1.0/list_backups_response";
-
     }
 }
