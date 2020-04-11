@@ -10,11 +10,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Indy.WalletApi;
+using Hyperledger.Indy.DidApi;
+using Hyperledger.Indy;
 
 namespace Hyperledger.Aries.Routing.Edge
 {
     public partial class EdgeClientService : IEdgeClientService
     {
+        const string InternalBackupDid = "22222222AriesBackupDid";
+
         /// <inheritdoc />
         public async Task<string> CreateBackupAsync(IAgentContext context, string seed)
         {
@@ -22,31 +26,22 @@ namespace Hyperledger.Aries.Routing.Edge
             {
                 throw new ArgumentException($"{nameof(seed)} should be 32 characters");
             }
-            
-            var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            
-            var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
-            
-            var publicKey = provRecord.GetTag("backup_key"); 
-            if (string.IsNullOrEmpty(publicKey))
-            {
-                publicKey = await Crypto.CreateKeyAsync(context.Wallet, new {seed}.ToJson());
-                provRecord.SetTag("backup_key", publicKey);
-                await walletRecordService.UpdateAsync(context.Wallet, provRecord);
-            }
 
+            var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             var json = new { path, key = seed }.ToJson();
 
             await context.Wallet.ExportAsync(json);
 
             var bytesArray = await Task.Run(() => File.ReadAllBytes(path));
-            var signedBytesArray = await Crypto.SignAsync(context.Wallet, publicKey, bytesArray);
+
+            var backupVerkey = await EnsureBackupKeyAsync(context, seed);
+            var signedBytesArray = await Crypto.SignAsync(context.Wallet, backupVerkey, bytesArray);
 
             var payload = bytesArray.ToBase64String();
 
             var backupMessage = new StoreBackupAgentMessage
             {
-                BackupId = publicKey,
+                BackupId = backupVerkey,
                 PayloadSignature = signedBytesArray.ToBase64String(),
                 Payload = new List<Attachment>()
                 {
@@ -73,18 +68,36 @@ namespace Hyperledger.Aries.Routing.Edge
             await messageService
                 .SendReceiveAsync<StoreBackupResponseAgentMessage>(context.Wallet, backupMessage, connection)
                 .ConfigureAwait(false);
-            return publicKey;
+            return backupVerkey;
+        }
+
+        private static async Task<string> EnsureBackupKeyAsync(IAgentContext context, string seed)
+        {
+            try
+            {
+                var didResult = await Did.CreateAndStoreMyDidAsync(context.Wallet, new
+                {
+                    did = InternalBackupDid,
+                    seed = seed
+                }.ToJson());
+                return didResult.VerKey;
+            }
+            catch (IndyException ex) when (ex.SdkErrorCode == 600)
+            {
+                var key = await Did.ReplaceKeysStartAsync(
+                    context.Wallet,
+                    InternalBackupDid,
+                    new { seed = seed }.ToJson());
+
+                await Did.ReplaceKeysApplyAsync(context.Wallet, InternalBackupDid);
+                return key;
+            }
         }
 
         /// <inheritdoc />
         public async Task<List<Attachment>> RetrieveBackupAsync(IAgentContext context, string seed, long offset = default)
         {
-            var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
-            var publicKey = provRecord.GetTag("backup_key");
-            if (string.IsNullOrEmpty(publicKey))
-            {
-                throw new ArgumentException("No such key exists");
-            }
+            var publicKey = await EnsureBackupKeyAsync(context, seed);
 
             var decodedKey = Multibase.Base58.Decode(publicKey);
             var publicKeySigned = await Crypto.SignAsync(context.Wallet, publicKey, decodedKey);
@@ -129,12 +142,7 @@ namespace Hyperledger.Aries.Routing.Edge
         /// <inheritdoc />
         public async Task<List<long>> ListBackupsAsync(IAgentContext context)
         {
-            var provRecord = await provisioningService.GetProvisioningAsync(context.Wallet);
-            var publicKey = provRecord.GetTag("backup_key");
-            if (string.IsNullOrEmpty(publicKey))
-            {
-                throw new ArgumentException("No such key exists");
-            }
+            var publicKey = await Did.KeyForLocalDidAsync(context.Wallet, InternalBackupDid);
             
             var listBackupsMessage = new ListBackupsAgentMessage()
             {
@@ -147,6 +155,12 @@ namespace Hyperledger.Aries.Routing.Edge
 
             var response = await messageService.SendReceiveAsync<ListBackupsResponseAgentMessage>(context.Wallet, listBackupsMessage, connection).ConfigureAwait(false);
             return response.BackupList.ToList();
+        }
+
+        public async Task RestoreFromBackupAsync(IAgentContext context, string seed)
+        {
+            var backupAttachments = await RetrieveBackupAsync(context, seed);
+            await RestoreFromBackupAsync(context, seed, backupAttachments);
         }
     }
 }
