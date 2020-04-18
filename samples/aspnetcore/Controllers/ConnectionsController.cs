@@ -129,7 +129,7 @@ namespace WebAgent.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(string id, bool? trustPingSuccess = null)
         {
-            var context = new AgentContext
+            var context = new DefaultAgentContext
             {
                 Wallet = await _walletService.GetWalletAsync(_walletOptions.WalletConfiguration,
                     _walletOptions.WalletCredentials)
@@ -151,7 +151,7 @@ namespace WebAgent.Controllers
         {
             if (string.IsNullOrEmpty(text)) return RedirectToAction("Details", new { id = connectionId });
 
-            var context = new AgentContext
+            var context = new DefaultAgentContext
             {
                 Wallet = await _walletService.GetWalletAsync(_walletOptions.WalletConfiguration,
                     _walletOptions.WalletCredentials)
