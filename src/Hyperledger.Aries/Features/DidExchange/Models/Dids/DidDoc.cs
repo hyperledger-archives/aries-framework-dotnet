@@ -15,6 +15,13 @@ namespace Hyperledger.Aries.Features.DidExchange
         public string Context { get; set; } = "https://w3id.org/did/v1";
 
         /// <summary>
+        /// The ID of the DID doc
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        /// <summary>
         /// List of public keys available on the DID doc.
         /// </summary>
         [JsonProperty("publicKey")]

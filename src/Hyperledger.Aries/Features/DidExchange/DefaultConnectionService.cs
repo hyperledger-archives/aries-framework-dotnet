@@ -14,7 +14,7 @@ using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.CryptoApi;
 using Hyperledger.Indy.DidApi;
-using Hyperledger.Indy.PairwiseApi;
+using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Logging;
 
 namespace Hyperledger.Aries.Features.DidExchange
@@ -251,11 +251,18 @@ namespace Hyperledger.Aries.Features.DidExchange
             //i.e there is no way for this agent to respond to messages. And or no keys specified
             var connectionObj = await SignatureUtils.UnpackAndVerifyAsync<Connection>(response.ConnectionSig);
 
-            await Did.StoreTheirDidAsync(agentContext.Wallet,
-                new { did = connectionObj.Did, verkey = connectionObj.DidDoc.Keys[0].PublicKeyBase58 }.ToJson());
-
-            await Pairwise.CreateAsync(agentContext.Wallet, connectionObj.Did, connection.MyDid,
-                connectionObj.DidDoc.Services[0].ServiceEndpoint);
+            try
+            {
+                await Did.StoreTheirDidAsync(agentContext.Wallet,
+                    new { did = connectionObj.Did, verkey = connectionObj.DidDoc.Keys[0].PublicKeyBase58 }.ToJson());
+            }
+            catch (WalletItemAlreadyExistsException e)
+            {
+                Logger.LogError(e, "Unable to store their DID. Record already exists", 
+                    connectionObj.Did, 
+                    connectionObj.DidDoc?.Keys.FirstOrDefault()?.PublicKeyBase58
+                        ?? "Verkey not found");
+            }
 
             connection.TheirDid = connectionObj.Did;
             connection.TheirVk = connectionObj.DidDoc.Keys[0].PublicKeyBase58;
@@ -288,8 +295,6 @@ namespace Hyperledger.Aries.Features.DidExchange
             if (connection.State != ConnectionState.Negotiating)
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Connection state was invalid. Expected '{ConnectionState.Negotiating}', found '{connection.State}'");
-
-            await Pairwise.CreateAsync(agentContext.Wallet, connection.TheirDid, connection.MyDid, connection.Endpoint.ToJson());
 
             await connection.TriggerAsync(ConnectionTrigger.Request);
             await RecordService.UpdateAsync(agentContext.Wallet, connection);

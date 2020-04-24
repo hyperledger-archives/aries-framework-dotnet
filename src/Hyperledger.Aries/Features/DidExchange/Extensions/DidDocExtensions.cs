@@ -23,6 +23,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         {
             var doc = new DidDoc
             {
+                Id = connection.MyDid,
                 Keys = new List<DidDocKey>
                 {
                     new DidDocKey
@@ -61,11 +62,12 @@ namespace Hyperledger.Aries.Features.DidExchange
         {
             return new DidDoc
             {
+                Id = connection.TheirDid,
                 Keys = new List<DidDocKey>
                 {
                     new DidDocKey
                     {
-                        Id = $"{connection.MyDid}#keys-1",
+                        Id = $"{connection.TheirDid}#keys-1",
                         Type = DefaultKeyType,
                         Controller = connection.TheirDid,
                         PublicKeyBase58 = connection.TheirVk
@@ -75,7 +77,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                 {
                     new IndyAgentDidDocService
                     {
-                        Id = $"{connection.MyDid};indy",
+                        Id = $"{connection.TheirDid};indy",
                         ServiceEndpoint = connection.Endpoint.Uri,
                         RecipientKeys = connection.TheirVk != null ? new[] { connection.TheirVk } : new string[0],
                         RoutingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0]
