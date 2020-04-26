@@ -58,7 +58,7 @@ namespace Hyperledger.Aries.Routing
         /// </summary>
         /// <param name="agentContext">The agent context.</param>
         /// <returns></returns>
-        Task FetchInboxAsync(IAgentContext agentContext);
+        Task<(int processedCount, IEnumerable<InboxItemMessage> unprocessedItems)> FetchInboxAsync(IAgentContext agentContext);
 
         /// <summary>
         /// Creates a backup for the current edge agent.
