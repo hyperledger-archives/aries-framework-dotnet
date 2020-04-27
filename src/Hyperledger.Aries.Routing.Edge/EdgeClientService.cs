@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
@@ -99,7 +100,7 @@ namespace Hyperledger.Aries.Routing.Edge
             return responseJson.ToObject<AgentPublicConfiguration>();
         }
 
-        public async Task FetchInboxAsync(IAgentContext agentContext)
+        public async Task<(int, IEnumerable<InboxItemMessage>)> FetchInboxAsync(IAgentContext agentContext)
         {
             var connection = await GetMediatorConnectionAsync(agentContext);
             if (connection == null)
@@ -111,6 +112,7 @@ namespace Hyperledger.Aries.Routing.Edge
             var response = await messageService.SendReceiveAsync<GetInboxItemsResponseMessage>(agentContext.Wallet, createInboxMessage, connection);
 
             var processedItems = new List<string>();
+            var unprocessedItem = new List<InboxItemMessage>();
             foreach (var item in response.Items)
             {
                 try
@@ -120,11 +122,16 @@ namespace Hyperledger.Aries.Routing.Edge
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Error processing message {e}");
+                    unprocessedItem.Add(item);
                 }
             }
 
-            await messageService.SendAsync(agentContext.Wallet, new DeleteInboxItemsMessage { InboxItemIds = processedItems }, connection);
+            if (processedItems.Any())
+            {
+                await messageService.SendAsync(agentContext.Wallet, new DeleteInboxItemsMessage { InboxItemIds = processedItems }, connection);
+            }
+
+            return (processedItems.Count, unprocessedItem);
         }
 
         public async Task AddDeviceAsync(IAgentContext agentContext, AddDeviceInfoMessage message)

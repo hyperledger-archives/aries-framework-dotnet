@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -154,7 +154,14 @@ namespace Hyperledger.Aries.Agents
                             : await CryptoUtils.PackAsync(agentContext.Wallet, unpacked.SenderVerkey, response.ToByteArray());
                         return new PackedMessageContext(result);
                     }
-                    await MessageService.SendAsync(agentContext.Wallet, response, inboundMessageContext.Connection);
+                    if (inboundMessageContext.Connection != null)
+                    {
+                        await MessageService.SendAsync(agentContext.Wallet, response, inboundMessageContext.Connection);
+                    }
+                    else
+                    {
+                        Logger.LogWarning("Return response available, but connection was not found or was in invalid state");
+                    }
                 }
                 return null;
             }
