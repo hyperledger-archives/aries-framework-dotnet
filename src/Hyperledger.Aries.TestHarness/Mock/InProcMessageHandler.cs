@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -7,9 +9,12 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Hyperledger.TestHarness.Mock
 {
@@ -27,6 +32,16 @@ namespace Hyperledger.TestHarness.Mock
                 var responseMessage = new HttpResponseMessage(HttpStatusCode.OK);
                 responseMessage.Content = new StringContent(discoveryConfiguration.ToJson());
                 responseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                return responseMessage;
+            }
+            else if (request.RequestUri.AbsolutePath.Contains("/tails"))
+            {
+                var options = TargetAgent.Provider.GetRequiredService<IOptions<AgentOptions>>();
+                var file = request.RequestUri.Segments.Last();
+
+                var responseMessage = new HttpResponseMessage(HttpStatusCode.OK);
+                responseMessage.Content = new ByteArrayContent(File.ReadAllBytes(Path.Combine(options.Value.RevocationRegistryDirectory, file)));
+
                 return responseMessage;
             }
             else

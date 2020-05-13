@@ -21,6 +21,7 @@ namespace Hyperledger.Aries.Features.Discovery
         /// <summary>
         /// A list of supported protocols.
         /// </summary>
+        [JsonProperty("protocols")]
         public IList<DisclosedMessageProtocol> Protocols { get; set; }
     }
 
@@ -38,6 +39,7 @@ namespace Hyperledger.Aries.Features.Discovery
         /// <summary>
         /// Roles for the subject protocol.
         /// </summary>
+        [JsonProperty("roles")]
         public IList<string> Roles { get; set; }
     }
 }

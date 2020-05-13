@@ -14,7 +14,7 @@ using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.CryptoApi;
 using Hyperledger.Indy.DidApi;
-using Hyperledger.Indy.PairwiseApi;
+using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Logging;
 
 namespace Hyperledger.Aries.Features.DidExchange
@@ -245,7 +245,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <inheritdoc />
         public virtual async Task<string> ProcessResponseAsync(IAgentContext agentContext, ConnectionResponseMessage response, ConnectionRecord connection)
         {
-            Logger.LogInformation(LoggingEvents.AcceptConnectionResponse, "To {1}", connection.MyDid);
+            Logger.LogTrace(LoggingEvents.AcceptConnectionResponse, "To {1}", connection.MyDid);
 
             //TODO throw exception or a problem report if the connection request features a did doc that has no indy agent did doc convention featured
             //i.e there is no way for this agent to respond to messages. And or no keys specified
@@ -253,9 +253,6 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             await Did.StoreTheirDidAsync(agentContext.Wallet,
                 new { did = connectionObj.Did, verkey = connectionObj.DidDoc.Keys[0].PublicKeyBase58 }.ToJson());
-
-            await Pairwise.CreateAsync(agentContext.Wallet, connectionObj.Did, connection.MyDid,
-                connectionObj.DidDoc.Services[0].ServiceEndpoint);
 
             connection.TheirDid = connectionObj.Did;
             connection.TheirVk = connectionObj.DidDoc.Keys[0].PublicKeyBase58;
@@ -281,15 +278,13 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <inheritdoc />
         public virtual async Task<(ConnectionResponseMessage, ConnectionRecord)> CreateResponseAsync(IAgentContext agentContext, string connectionId)
         {
-            Logger.LogInformation(LoggingEvents.AcceptConnectionRequest, "ConnectionId {0}", connectionId);
+            Logger.LogTrace(LoggingEvents.AcceptConnectionRequest, "ConnectionId {0}", connectionId);
 
             var connection = await GetAsync(agentContext, connectionId);
 
             if (connection.State != ConnectionState.Negotiating)
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Connection state was invalid. Expected '{ConnectionState.Negotiating}', found '{connection.State}'");
-
-            await Pairwise.CreateAsync(agentContext.Wallet, connection.TheirDid, connection.MyDid, connection.Endpoint.ToJson());
 
             await connection.TriggerAsync(ConnectionTrigger.Request);
             await RecordService.UpdateAsync(agentContext.Wallet, connection);
@@ -315,7 +310,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <inheritdoc />
         public virtual async Task<ConnectionRecord> GetAsync(IAgentContext agentContext, string connectionId)
         {
-            Logger.LogInformation(LoggingEvents.GetConnection, "ConnectionId {0}", connectionId);
+            Logger.LogTrace(LoggingEvents.GetConnection, "ConnectionId {0}", connectionId);
 
             var record = await RecordService.GetAsync<ConnectionRecord>(agentContext.Wallet, connectionId);
 
@@ -329,7 +324,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         public virtual Task<List<ConnectionRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null,
             int count = 100)
         {
-            Logger.LogInformation(LoggingEvents.ListConnections, "List Connections");
+            Logger.LogTrace(LoggingEvents.ListConnections, "List Connections");
 
             return RecordService.SearchAsync<ConnectionRecord>(agentContext.Wallet, query, null, count);
         }
@@ -337,7 +332,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <inheritdoc />
         public virtual async Task<bool> DeleteAsync(IAgentContext agentContext, string connectionId)
         {
-            Logger.LogInformation(LoggingEvents.DeleteConnection, "ConnectionId {0}", connectionId);
+            Logger.LogTrace(LoggingEvents.DeleteConnection, "ConnectionId {0}", connectionId);
 
             return await RecordService.DeleteAsync<ConnectionRecord>(agentContext.Wallet, connectionId);
         }

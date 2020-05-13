@@ -171,7 +171,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credentialRecord.State}'");
 
-            var definition = await SchemaService.GetCredentialDefinitionAsync(agentContext.Wallet, credentialRecord.CredentialDefinitionId);
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
 
             // Check if the state machine is valid for revocation
@@ -573,13 +572,16 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
                 var paymentInfo = await PaymentService.GetTransactionCostAsync(agentContext, TransactionTypes.REVOC_REG_ENTRY);
 
-                await LedgerService.SendRevocationRegistryEntryAsync(
-                    context: agentContext,
-                    issuerDid: provisioning.IssuerDid,
-                    revocationRegistryDefinitionId: revocationRecord.Id,
-                    revocationDefinitionType: "CL_ACCUM",
-                    value: issuedCredential.RevocRegDeltaJson,
-                    paymentInfo: paymentInfo);
+                if (issuedCredential.RevocRegDeltaJson != null)
+                {
+                    await LedgerService.SendRevocationRegistryEntryAsync(
+                        context: agentContext,
+                        issuerDid: provisioning.IssuerDid,
+                        revocationRegistryDefinitionId: revocationRecord.Id,
+                        revocationDefinitionType: "CL_ACCUM",
+                        value: issuedCredential.RevocRegDeltaJson,
+                        paymentInfo: paymentInfo);
+                }
 
                 // Store data relevant for credential revocation
                 credentialRecord.CredentialRevocationId = issuedCredential.RevocId;

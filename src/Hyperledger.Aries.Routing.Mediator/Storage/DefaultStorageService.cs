@@ -3,24 +3,34 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace Hyperledger.Aries.Routing.Mediator.Storage
 {
+    /// <summary>
+    /// Default backup storage service. Uses filesystem for storing backup.
+    /// </summary>
+    /// <seealso cref="Hyperledger.Aries.Routing.Mediator.Storage.IStorageService" />
     public class DefaultStorageService : IStorageService
     {
-        private string StorageDirectory { get; set; }
+        private readonly AgentOptions agentOptions;
 
-        public DefaultStorageService()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultStorageService"/> class.
+        /// </summary>
+        /// <param name="agentOptions">The agent options.</param>
+        public DefaultStorageService(IOptions<AgentOptions> agentOptions)
         {
-            StorageDirectory = Path.Combine(Path.GetTempPath(), "AriesWallets");
-            if (!Directory.Exists(StorageDirectory))
+            this.agentOptions = agentOptions.Value;
+
+            if (!Directory.Exists(this.agentOptions.BackupDirectory))
             {
-                Directory.CreateDirectory(StorageDirectory);
+                Directory.CreateDirectory(this.agentOptions.BackupDirectory);
             }
         }
-
 
         /// <summary>Stores the backup and all attachments.</summary>
         /// <param name="backupId">The backup identifier.</param>
@@ -35,7 +45,7 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
             }
 
             var nowUnix = DateTimeOffset.Now;
-            var backupDir = Path.Combine(StorageDirectory, backupId, nowUnix.ToUnixTimeSeconds().ToString());
+            var backupDir = Path.Combine(agentOptions.BackupDirectory, backupId, nowUnix.ToUnixTimeSeconds().ToString());
 
             if (!Directory.Exists(backupDir))
             {
@@ -59,17 +69,24 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
         /// <exception cref="FileNotFoundException">Wallet for key {backupId} was not found.</exception>
         public async Task<List<Attachment>> RetrieveBackupAsync(string backupId)
         {
-            var backupDirectoryPath = GetBackupPath(backupId);
-            var rootBackupDirectory = new DirectoryInfo(backupDirectoryPath);
-            var backupDirectory = rootBackupDirectory.GetDirectories().OrderByDescending(d => d.CreationTimeUtc)
-                .First();
-            var myFile = backupDirectory.GetFiles()
-                .OrderByDescending(f => f.CreationTimeUtc)
-                .First();
+            string backupDirectory = null;
+            try
+            {
+                backupDirectory = Directory.EnumerateDirectories(GetBackupPath(backupId))
+                    .OrderByDescending(x => x)
+                    .FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Couldn't enumerate directory backup: {backupId}", e);
+            }
+
+            if (backupDirectory == null) throw new Exception($"Backup directory not found: {backupDirectory}");
+            var filename = Path.GetFileName(backupDirectory);
 
             return await RetrieveBackupAsync(
                 backupId: backupId,
-                backupDate:  myFile.CreationTimeUtc);
+                timestamp: long.Parse(filename));
         }
 
         /// <summary>
@@ -82,9 +99,9 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
             return Task.FromResult(Directory.EnumerateDirectories(GetBackupPath(backupId)));
         }
 
-        public Task<List<Attachment>> RetrieveBackupAsync(string backupId, DateTimeOffset backupDate)
+        public Task<List<Attachment>> RetrieveBackupAsync(string backupId, long timestamp)
         {
-            var path = Path.Combine(GetBackupPath(backupId), backupDate.ToUnixTimeSeconds().ToString());
+            var path = Path.Combine(GetBackupPath(backupId), $"{timestamp}");
 
             return Task.FromResult(
                 Directory.EnumerateFiles(path, "*", SearchOption.TopDirectoryOnly)
@@ -99,6 +116,6 @@ namespace Hyperledger.Aries.Routing.Mediator.Storage
                 .ToList());
         }
         
-        private string GetBackupPath(string backupId) => Path.Combine(StorageDirectory, backupId);
+        private string GetBackupPath(string backupId) => Path.Combine(agentOptions.BackupDirectory, backupId);
     }
 }

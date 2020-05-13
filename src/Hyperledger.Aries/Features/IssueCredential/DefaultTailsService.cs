@@ -100,20 +100,20 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 Directory.CreateDirectory(AgentOptions.RevocationRegistryDirectory);
             }
 
-            if (!File.Exists(tailsfile))
+            try
             {
-                try
+                if (!File.Exists(tailsfile))
                 {
                     File.WriteAllBytes(
                         path: tailsfile,
                         bytes: await HttpClient.GetByteArrayAsync(new Uri(tailsUri)));
                 }
-                catch (Exception e)
-                {
-                    throw new AriesFrameworkException(
-                        errorCode: ErrorCode.RevocationRegistryUnavailable,
-                        message: $"Unable to retrieve revocation registry from the specified URL '{tailsUri}'. Error: {e.Message}");
-                }
+            }
+            catch (Exception e)
+            {
+                throw new AriesFrameworkException(
+                    errorCode: ErrorCode.RevocationRegistryUnavailable,
+                    message: $"Unable to retrieve revocation registry from the specified URL '{tailsUri}'. Error: {e.Message}");
             }
 
             return Path.GetFileName(tailsfile);

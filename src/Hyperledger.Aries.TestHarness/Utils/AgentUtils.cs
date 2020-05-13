@@ -9,7 +9,7 @@ namespace Hyperledger.TestHarness.Utils
 {
     public class AgentUtils
     {
-        public static async Task<AgentContext> Create(string config, string credentials, bool withPool = false, IList<MessageType> supportedMessageTypes = null)
+        public static async Task<DefaultAgentContext> Create(string config, string credentials, bool withPool = false, IList<MessageType> supportedMessageTypes = null)
         {
             try
             {
@@ -23,7 +23,8 @@ namespace Hyperledger.TestHarness.Utils
             if (supportedMessageTypes == null)
                 supportedMessageTypes = GetDefaultMessageTypes();
 
-            return new AgentContext {
+            return new DefaultAgentContext
+            {
                 Wallet = await Wallet.OpenWalletAsync(config, credentials),
                 Pool = withPool ? new PoolAwaitable(PoolUtils.GetPoolAsync) : PoolAwaitable.FromPool(null),
                 SupportedMessages = supportedMessageTypes };
@@ -54,7 +55,7 @@ namespace Hyperledger.TestHarness.Utils
             };
         }
 
-        public static Task<AgentContext> CreateRandomAgent(bool withPool= false)
+        public static Task<DefaultAgentContext> CreateRandomAgent(bool withPool= false)
         {
             return Create($"{{\"id\":\"{Guid.NewGuid()}\"}}", "{\"key\":\"test_wallet_key\"}", withPool);
         }

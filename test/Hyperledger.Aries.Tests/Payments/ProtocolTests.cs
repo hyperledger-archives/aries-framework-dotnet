@@ -14,7 +14,7 @@ namespace Hyperledger.Aries.Tests.Payments
 {
     public class ProtocolTests : TestSingleWallet
     {
-        [Fact(DisplayName = "Payment full integration test - request, pay, receipt, verify")]
+        //[Fact(DisplayName = "Payment full integration test - request, pay, receipt, verify")]
         public async Task SendPaymentRequest()
         {
             // Create two agent hosts and establish pairwise connection between them

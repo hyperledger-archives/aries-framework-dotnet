@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -102,17 +102,19 @@ namespace Hyperledger.Aries.Agents
         {
             EnsureConfigured();
 
-            var agentContext = context.AsAgentContext();
-            agentContext.AddNext(messageContext);
-            agentContext.Agent = this;
-
-            MessageContext outgoingMessageContext = null;
-            while (agentContext.TryGetNext(out var message) && outgoingMessageContext == null)
+            if (context is DefaultAgentContext agentContext)
             {
-                outgoingMessageContext = await ProcessMessage(agentContext, message);
-            }
+                agentContext.AddNext(messageContext);
+                agentContext.Agent = this;
 
-            return outgoingMessageContext;
+                MessageContext outgoingMessageContext = null;
+                while (agentContext.TryGetNext(out var message) && outgoingMessageContext == null)
+                {
+                    outgoingMessageContext = await ProcessMessage(agentContext, message);
+                }
+                return outgoingMessageContext;
+            }
+            throw new Exception("Unsupported agent context. When using custom context, please inherit from 'DefaultAgentContext'");
         }
 
         private async Task<MessageContext> ProcessMessage(IAgentContext agentContext, MessageContext messageContext)
@@ -152,7 +154,14 @@ namespace Hyperledger.Aries.Agents
                             : await CryptoUtils.PackAsync(agentContext.Wallet, unpacked.SenderVerkey, response.ToByteArray());
                         return new PackedMessageContext(result);
                     }
-                    await MessageService.SendAsync(agentContext.Wallet, response, inboundMessageContext.Connection);
+                    if (inboundMessageContext.Connection != null)
+                    {
+                        await MessageService.SendAsync(agentContext.Wallet, response, inboundMessageContext.Connection);
+                    }
+                    else
+                    {
+                        Logger.LogWarning("Return response available, but connection was not found or was in invalid state");
+                    }
                 }
                 return null;
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Indy.WalletApi;
 
@@ -38,5 +39,15 @@ namespace Hyperledger.Aries.Agents
         /// Gets or sets the configured agent for this context
         /// </summary>
         public IAgent Agent { get; set; }
+
+        private readonly ConcurrentQueue<MessageContext> _queue = new ConcurrentQueue<MessageContext>();
+
+        /// <summary>
+        /// Adds a message to the current processing queue
+        /// </summary>
+        /// <param name="message"></param>
+        internal void AddNext(MessageContext message) => _queue.Enqueue(message);
+
+        internal bool TryGetNext(out MessageContext message) => _queue.TryDequeue(out message);
     }
 }
