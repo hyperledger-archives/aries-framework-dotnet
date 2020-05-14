@@ -137,7 +137,15 @@ namespace Hyperledger.Aries.Agents
                     inboundMessageContext.Payload.GetUTF8String());
 
                 // Process message in handler
-                var response = await messageHandler.ProcessAsync(agentContext, inboundMessageContext);
+                AgentMessage response;
+                try
+                {
+                    response = await messageHandler.ProcessAsync(agentContext, inboundMessageContext);
+                }
+                catch (AriesFrameworkException e)
+                {
+                    throw new AriesFrameworkException(e.ErrorCode,e.Message,inboundMessageContext.ContextRecord,inboundMessageContext.Connection);
+                }
 
                 // Process message with any registered middlewares
                 foreach (var middleware in Middlewares)
