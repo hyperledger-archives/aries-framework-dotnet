@@ -300,7 +300,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             }
             catch (AriesFrameworkException ex) when (ex.ErrorCode == ErrorCode.A2AMessageTransmissionError)
             {
-                throw new AriesFrameworkException(ex.ErrorCode, ex.Message, record);
+                throw new AriesFrameworkException(ex.ErrorCode, ex.Message, record, null);
             }
         }
 

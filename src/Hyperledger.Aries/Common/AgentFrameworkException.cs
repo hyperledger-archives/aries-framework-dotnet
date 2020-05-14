@@ -38,15 +38,6 @@ namespace Hyperledger.Aries
         public ConnectionRecord ConnectionRecord { get; }
         
         /// <summary>
-        /// Gets the credential record.
-        /// May be <code>null</code>.
-        /// </summary>
-        /// <value>
-        /// The credential record. 
-        /// </value>
-        public CredentialRecord CredentialRecord { get; }
-        
-        /// <summary>
         /// Initializes a new instance of the <see cref="AriesFrameworkException"/> class.
         /// </summary>
         /// <param name="errorCode">The error code.</param>
@@ -100,19 +91,6 @@ namespace Hyperledger.Aries
             ErrorCode = errorCode;
             ContextRecord = contextRecord;
             ConnectionRecord = connectionRecord;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AriesFrameworkException"/> class.
-        /// </summary>
-        /// <param name="errorCode">The error code.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="credentialRecord"></param>
-        public AriesFrameworkException(ErrorCode errorCode, string message, CredentialRecord credentialRecord) :
-            base(message)
-        {
-            ErrorCode = errorCode;
-            CredentialRecord = credentialRecord;
         }
     }
 }
