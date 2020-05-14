@@ -545,7 +545,7 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             var proofMsg = new PresentationMessage
             {
-                Id = threadId,
+                Id = Guid.NewGuid().ToString(),
                 Presentations = new[]
                 {
                     new Attachment
