@@ -1,5 +1,6 @@
 ﻿using System;
-using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries
@@ -17,6 +18,7 @@ namespace Hyperledger.Aries
         /// The error code.
         /// </value>
         public ErrorCode ErrorCode { get; }
+   
         /// <summary>
         /// Gets the message context record.
         /// May be <code>null</code>.
@@ -25,6 +27,24 @@ namespace Hyperledger.Aries
         /// The message context record. 
         /// </value>
         public RecordBase ContextRecord { get; }
+        
+        /// <summary>
+        /// Gets the connection record.
+        /// May be <code>null</code>.
+        /// </summary>
+        /// <value>
+        /// The connection record. 
+        /// </value>
+        public ConnectionRecord ConnectionRecord { get; }
+        
+        /// <summary>
+        /// Gets the credential record.
+        /// May be <code>null</code>.
+        /// </summary>
+        /// <value>
+        /// The credential record. 
+        /// </value>
+        public CredentialRecord CredentialRecord { get; }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="AriesFrameworkException"/> class.
@@ -73,11 +93,26 @@ namespace Hyperledger.Aries
         /// <param name="errorCode">The error code.</param>
         /// <param name="message">The message.</param>
         /// <param name="contextRecord"></param>
-        public AriesFrameworkException(ErrorCode errorCode, string message, RecordBase contextRecord) :
+        /// <param name="connectionRecord"></param>
+        public AriesFrameworkException(ErrorCode errorCode, string message, RecordBase contextRecord, ConnectionRecord connectionRecord) :
             base(message)
         {
             ErrorCode = errorCode;
             ContextRecord = contextRecord;
+            ConnectionRecord = connectionRecord;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AriesFrameworkException"/> class.
+        /// </summary>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="credentialRecord"></param>
+        public AriesFrameworkException(ErrorCode errorCode, string message, CredentialRecord credentialRecord) :
+            base(message)
+        {
+            ErrorCode = errorCode;
+            CredentialRecord = credentialRecord;
         }
     }
 }
