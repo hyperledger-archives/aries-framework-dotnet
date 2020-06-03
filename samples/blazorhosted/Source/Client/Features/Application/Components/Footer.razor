@@ -1,0 +1,11 @@
+@namespace blazorhosted.Features.Applications.Components
+
+@using blazorhosted.Components
+@using blazorhosted.Features.Bases
+
+@inherits BaseComponent
+
+<nav class="navbar fixed-bottom navbar-light bg-light">
+  <BlazorLocation TestId="BlazorLocation" />
+  <span>Version:@Version</span>
+</nav>
