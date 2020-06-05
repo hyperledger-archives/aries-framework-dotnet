@@ -14,6 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Blazor-State" Version="$(BlazorStateVersion)" />
     <PackageReference Include="Dawn.Guard" Version="$(DawnGuardVersion)" />
+    <PackageReference Include="FluentValidation" Version="$(FluentValidationVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(MicrosoftAspNetCoreComponentsWebAssemblyVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="$(MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion)" PrivateAssets="all" />
     <PackageReference Include="System.Net.Http.Json" Version="$(SystemNetHttpJsonVersion)" PrivateAssets="all" />

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dawn.Guard" Version="$(DawnGuardVersion)" />
+    <PackageReference Include="FluentValidation" Version="$(FluentValidationVersion)" />
     <PackageReference Include="MediatR" Version="$(MediatrVersion)" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="$(MediatrExtensionsMicrosoftDependencyInjectionVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(MicrosoftAspNetCoreComponentsWebAssemblyServerVersion)" />

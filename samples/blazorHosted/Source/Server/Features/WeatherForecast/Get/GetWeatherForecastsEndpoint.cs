@@ -6,7 +6,13 @@ namespace BlazorHosted.Features.WeatherForecasts
 
   public class GetWeatherForecastsEndpoint : BaseEndpoint<GetWeatherForecastsRequest, GetWeatherForecastsResponse>
   {
+    /// <summary>
+    /// Gets number of days <see cref="GetWeatherForecastsRequest.Days"/>
+    /// </summary>
+    /// <param name="aRequest"></param>
+    /// <returns><see cref="GetWeatherForecastsResponse"/></returns>
     [HttpGet(GetWeatherForecastsRequest.Route)]
-    public async Task<IActionResult> Process(GetWeatherForecastsRequest aRequest) => await Send(aRequest);
+    public async Task<IActionResult> Process(GetWeatherForecastsRequest aGetWeatherForecastsRequest) => 
+      await Send(aGetWeatherForecastsRequest);
   }
 }

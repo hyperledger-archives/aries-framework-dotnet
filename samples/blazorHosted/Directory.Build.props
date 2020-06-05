@@ -41,6 +41,7 @@
     <DawnGuardVersion>1.12.0</DawnGuardVersion>
     <FixieVersion>2.2.1</FixieVersion>
     <FixieConsoleVersion>2.2.1</FixieConsoleVersion>
+    <FluentValidationVersion>8.6.2</FluentValidationVersion>
     <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
     <MediatrExtensionsMicrosoftDependencyInjectionVersion>8.0.0</MediatrExtensionsMicrosoftDependencyInjectionVersion>
     <MediatrVersion>8.0.1</MediatrVersion>
