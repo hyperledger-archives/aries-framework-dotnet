@@ -18,7 +18,15 @@ namespace BlazorHosted.Features.WeatherForecasts
     /// <param name="aGetWeatherForecastsRequest"></param>
     /// <returns><see cref="GetWeatherForecastsResponse"/></returns>
     [HttpGet(GetWeatherForecastsRequest.Route)]
-    [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
+    [
+      SwaggerOperation
+      (
+        Tags = new[] { FeatureAnnotations.FeatureGroup }, 
+        Description = "Weather Forecasts", // <== doesn't seem to do anything
+        Summary = "A Summary", // <== doesn't seem to do anything
+        OperationId = "AF78591E-5AD6-47F4-9750-E2B90751737A" // <== doesn't seem to do anything
+      ) 
+    ]
     [ProducesResponseType(typeof(GetWeatherForecastsResponse), (int) HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Process([FromQuery] GetWeatherForecastsRequest aGetWeatherForecastsRequest) => 
