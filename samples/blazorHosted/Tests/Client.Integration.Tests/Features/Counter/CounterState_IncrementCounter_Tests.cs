@@ -1,6 +1,6 @@
 namespace CounterState
 {
-  using Shouldly;
+  using FluentAssertions;
   using System.Threading.Tasks;
   using BlazorHosted.Features.Counters;
   using BlazorHosted.Client.Integration.Tests.Infrastructure;
@@ -26,7 +26,7 @@ namespace CounterState
       await Send(incrementCounterRequest);
 
       //Assert
-      CounterState.Count.ShouldBe(13);
+      CounterState.Count.Should().Be(13);
     }
 
     public async Task Increment_Count()
@@ -43,7 +43,7 @@ namespace CounterState
       await Send(incrementCounterRequest);
 
       //Assert
-      CounterState.Count.ShouldBe(27);
+      CounterState.Count.Should().Be(27);
     }
   }
 }

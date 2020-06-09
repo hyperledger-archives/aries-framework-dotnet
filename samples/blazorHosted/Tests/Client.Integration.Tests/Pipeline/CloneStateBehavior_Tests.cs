@@ -1,6 +1,6 @@
 namespace CloneStateBehavior
 {
-  using Shouldly;
+  using FluentAssertions;
   using System;
   using System.Threading.Tasks;
   using BlazorHosted.Features.Counters;
@@ -28,10 +28,10 @@ namespace CloneStateBehavior
       await Send(incrementCounterRequest);
 
       //Assert
-      CounterState.Guid.ShouldNotBe(preActionGuid);
+      CounterState.Guid.Should().NotBe(preActionGuid);
     }
 
-    public async Task RollBackStateAndThrow_When_Exception()
+    public void RollBackStateAndThrow_When_Exception()
     {
       // Arrange
       CounterState.Initialize(aCount: 22);
@@ -43,11 +43,12 @@ namespace CloneStateBehavior
         Message = "Test Rollback of State"
       };
 
-      Exception exception = await Shouldly.Should.ThrowAsync<Exception>(async () =>
-      await Send(throwExceptionAction));
+      // Act
 
+      Func<Task> act = async () => await Send(throwExceptionAction);
+      
       // Assert
-      exception.Message.ShouldBe(throwExceptionAction.Message);
+      act.Should().Throw<Exception>().WithMessage(throwExceptionAction.Message);
       CounterState.Guid.Equals(preActionGuid);
     }
   }

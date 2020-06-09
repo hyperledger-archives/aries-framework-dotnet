@@ -6,6 +6,9 @@ namespace BlazorHosted.Features.WeatherForecasts
 
   public class GetWeatherForecastsResponse : BaseResponse
   {
+    /// <summary>
+    /// The collection of forecasts requested
+    /// </summary>
     public List<WeatherForecastDto> WeatherForecasts { get; set; }
 
     /// <summary>

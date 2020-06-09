@@ -2,7 +2,7 @@ namespace BlazorHosted.EndToEnd.Tests.Infrastructure
 {
   using OpenQA.Selenium;
   using OpenQA.Selenium.Support.UI;
-  using Shouldly;
+  using FluentAssertions;
   using System;
   using System.Collections.Generic;
 
@@ -18,25 +18,25 @@ namespace BlazorHosted.EndToEnd.Tests.Infrastructure
     //    => WaitAssertCore(() => Assert.Collection(actualValues(), elementInspectors));
 
     public static void False(Func<bool> aActual)
-      => WaitAssertCore(() => aActual().ShouldBeFalse());
+      => WaitAssertCore(() => aActual().Should().BeFalse());
 
     public static void Single<T>(Func<IEnumerable<T>> aActualValues)
-      => WaitAssertCore(() => aActualValues().ShouldHaveSingleItem());
+      => WaitAssertCore(() => aActualValues().Should().HaveCount(1));
 
     public static void True(Func<bool> aActual)
-      => WaitAssertCore(() => aActual().ShouldBeTrue());
+      => WaitAssertCore(() => aActual().Should().BeTrue());
 
     public static void WaitAndAssertContains(string aExpectedSubstring, Func<string> aActualString)
-                  => WaitAssertCore(() => aActualString().ShouldContain(aExpectedSubstring));
+                  => WaitAssertCore(() => aActualString().Should().Contain(aExpectedSubstring));
 
     public static void WaitAndAssertEmpty<T>(Func<IEnumerable<T>> aActualValues)
-      => WaitAssertCore(() => aActualValues().ShouldBeEmpty());
+      => WaitAssertCore(() => aActualValues().Should().BeEmpty());
 
     public static void WaitAndAssertEqual<T>(T aExpected, Func<T> aActual)
-      => WaitAssertCore(() => aActual().ShouldBe(aExpected));
+      => WaitAssertCore(() => aActual().Should().Be(aExpected));
 
     public static void WaitAndAssertNotEmpty<T>(Func<IEnumerable<T>> aActualValues)
-          => WaitAssertCore(() => aActualValues().ShouldNotBeEmpty());
+          => WaitAssertCore(() => aActualValues().Should().NotBeEmpty());
 
     private static void WaitAssertCore(Action aAssertion, TimeSpan aTimeout = default)
     {

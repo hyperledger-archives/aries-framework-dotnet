@@ -1,6 +1,6 @@
 namespace WeatherForecastsState
 {
-  using Shouldly;
+  using FluentAssertions;
   using System.Threading.Tasks;
   using BlazorHosted.Features.WeatherForecasts;
   using BlazorHosted.Client.Integration.Tests.Infrastructure;
@@ -18,7 +18,7 @@ namespace WeatherForecastsState
 
       await Send(fetchWeatherForecastsRequest);
 
-      WeatherForecastsState.WeatherForecasts.Count.ShouldBeGreaterThan(0);
+      WeatherForecastsState.WeatherForecasts.Count.Should().BeGreaterThan(0);
     }
   }
 }

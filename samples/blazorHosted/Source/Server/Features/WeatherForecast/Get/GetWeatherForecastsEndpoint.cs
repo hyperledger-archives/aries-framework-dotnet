@@ -1,18 +1,27 @@
 namespace BlazorHosted.Features.WeatherForecasts
 {
-  using Microsoft.AspNetCore.Mvc;
-  using System.Threading.Tasks;
   using BlazorHosted.Features.Bases;
+  using Microsoft.AspNetCore.Mvc;
+  using Swashbuckle.AspNetCore.Annotations;
+  using System.Net;
+  using System.Threading.Tasks;
 
   public class GetWeatherForecastsEndpoint : BaseEndpoint<GetWeatherForecastsRequest, GetWeatherForecastsResponse>
   {
     /// <summary>
-    /// Gets number of days <see cref="GetWeatherForecastsRequest.Days"/>
+    /// Get Weather Forecasts
     /// </summary>
-    /// <param name="aRequest"></param>
+    /// <remarks>
+    /// Gets Weather Forecasts for the number of days specified in the request
+    /// `<see cref="GetWeatherForecastsRequest.Days"/>`
+    /// </remarks>
+    /// <param name="aGetWeatherForecastsRequest"></param>
     /// <returns><see cref="GetWeatherForecastsResponse"/></returns>
     [HttpGet(GetWeatherForecastsRequest.Route)]
-    public async Task<IActionResult> Process(GetWeatherForecastsRequest aGetWeatherForecastsRequest) => 
+    [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
+    [ProducesResponseType(typeof(GetWeatherForecastsResponse), (int) HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> Process([FromQuery] GetWeatherForecastsRequest aGetWeatherForecastsRequest) => 
       await Send(aGetWeatherForecastsRequest);
   }
 }

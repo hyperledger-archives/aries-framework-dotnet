@@ -12,10 +12,11 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
   public class NotTest : Attribute { }
   [NotTest]
-  public class TestingConvention : Discovery, Execution
+  public class TestingConvention : Discovery, Execution, IDisposable
   {
-    const string TestPostfix = "Tests";
     private readonly IServiceScopeFactory ServiceScopeFactory;
+    private bool Disposed;
+    private WebApplicationFactory<Startup> WebApplicationFactory;
 
     public TestingConvention()
     {
@@ -28,6 +29,8 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
       Methods.Where(aMethodInfo => aMethodInfo.Name != nameof(Setup));
     }
 
+    public void Dispose() => Dispose(true);
+
     public void Execute(TestClass aTestClass)
     {
       aTestClass.RunCases
@@ -39,6 +42,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
           Setup(instance);
 
           aCase.Execute(instance);
+          instance.Dispose();
         }
       );
     }
@@ -51,16 +55,32 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 
     private void ConfigureTestServices(ServiceCollection aServiceCollection)
     {
-      aServiceCollection.AddSingleton(new WebApplicationFactory<Startup>());
+      WebApplicationFactory = new WebApplicationFactory<Startup>();
+
+      aServiceCollection.AddSingleton(WebApplicationFactory);
       aServiceCollection.AddSingleton(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
       aServiceCollection.Scan
       (
-        aTypeSourceSelector => aTypeSourceSelector        // Start with all non abstract types in this assembly
+        aTypeSourceSelector => aTypeSourceSelector
           .FromAssemblyOf<TestingConvention>()
           .AddClasses(action: (aClasses) => aClasses.Where(aType => aType.IsPublic && !aType.Has<NotTest>()))
           .AsSelf()
           .WithScopedLifetime()
       );
+    }
+
+    private void Dispose(bool aIsDisposing)
+    {
+      if (!Disposed)
+      {
+        if (aIsDisposing)
+        {
+          Console.WriteLine("==== Disposing ====");
+          WebApplicationFactory?.Dispose();
+          ServiceScopeFactory?.Dispose();
+        }
+        Disposed = true;
+      }
     }
   }
 }

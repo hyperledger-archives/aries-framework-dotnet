@@ -1,7 +1,7 @@
 ﻿namespace BlazorHosted.EndToEnd.Tests
 {
   using OpenQA.Selenium;
-  using Shouldly;
+  using FluentAssertions;
   using BlazorHosted.EndToEnd.Tests.Infrastructure;
 
   public class JsInteropTests : BaseTest
@@ -24,7 +24,7 @@
       WaitUntilClientCached();
 
       object clientApplication = JavaScriptExecutor.ExecuteScript("return window.localStorage.getItem('clientApplication');");
-      clientApplication.ShouldBe("BlazorHosted.0.0.1");
+      clientApplication.Should().Be("TimeWarp.Blazor.0.0.1");
     }
 
     public void InitalizationWorkedClientSide()
@@ -48,19 +48,19 @@
     private void InitalizationWorked()
     {
       object blazorState = JavaScriptExecutor.ExecuteScript("return window.BlazorState;");
-      blazorState.ShouldNotBeNull();
+      blazorState.Should().NotBeNull();
 
       object initializeJavaScriptInterop = JavaScriptExecutor.ExecuteScript("return window.InitializeJavaScriptInterop;");
-      initializeJavaScriptInterop.ShouldNotBeNull();
+      initializeJavaScriptInterop.Should().NotBeNull();
 
       object reduxDevToolsFactory = JavaScriptExecutor.ExecuteScript("return window.ReduxDevToolsFactory;");
-      reduxDevToolsFactory.ShouldNotBeNull();
+      reduxDevToolsFactory.Should().NotBeNull();
 
       object reduxDevTools = JavaScriptExecutor.ExecuteScript("return window.reduxDevTools;");
-      reduxDevTools.ShouldNotBeNull();
+      reduxDevTools.Should().NotBeNull();
 
       object jsonRequestHandler = JavaScriptExecutor.ExecuteScript("return window.jsonRequestHandler;");
-      jsonRequestHandler.ShouldNotBeNull();
+      jsonRequestHandler.Should().NotBeNull();
     }
 
     //public void CanCallCsharpFromJs()

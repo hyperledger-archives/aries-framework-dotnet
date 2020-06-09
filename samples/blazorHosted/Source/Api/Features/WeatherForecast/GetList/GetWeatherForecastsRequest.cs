@@ -1,19 +1,18 @@
 namespace BlazorHosted.Features.WeatherForecasts
 {
   using MediatR;
-  using System.Text.Json.Serialization;
   using BlazorHosted.Features.Bases;
 
-  public class GetWeatherForecastsRequest : BaseRequest, IRequest<GetWeatherForecastsResponse>
+  public class GetWeatherForecastsRequest : BaseApiRequest, IRequest<GetWeatherForecastsResponse>
   {
-    public const string Route = "api/weatherForecast";
+    public const string Route = "api/weatherForecasts";
 
     /// <summary>
     /// The Number of days of forecasts to get
     /// </summary>
+    /// <example>5</example>
     public int Days { get; set; }
 
-    [JsonIgnore]
-    public string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(Id)}={Id}";
+    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(Id)}={Id}";
   }
 }

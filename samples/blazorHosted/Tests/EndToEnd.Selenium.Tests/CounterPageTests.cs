@@ -1,7 +1,7 @@
 ﻿namespace BlazorHosted.EndToEnd.Tests
 {
   using OpenQA.Selenium;
-  using Shouldly;
+  using FluentAssertions;
   using BlazorHosted.EndToEnd.Tests.Infrastructure;
   using static Infrastructure.WaitAndAssert;
 
@@ -38,10 +38,10 @@
 
       // Observe the initial value is 3
       IWebElement countDisplayElement1 = WebDriver.FindElement(By.CssSelector("[data-qa='Counter1'] p"));
-      countDisplayElement1.Text.ShouldBe("Current count: 3");
+      countDisplayElement1.Text.Should().Be("Current count: 3");
 
       IWebElement countDisplayElement2 = WebDriver.FindElement(By.CssSelector("[data-qa='Counter2'] p"));
-      countDisplayElement2.Text.ShouldBe("Current count: 3");
+      countDisplayElement2.Text.Should().Be("Current count: 3");
 
       // Click the button; see it increment by 5
       IWebElement button1 = WebDriver.FindElement(By.CssSelector("[data-qa='Counter1'] button"));

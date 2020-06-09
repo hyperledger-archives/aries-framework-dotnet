@@ -1,7 +1,7 @@
 namespace EventStreamState
 {
   using AnyClone;
-  using Shouldly;
+  using FluentAssertions;
   using System.Collections.Generic;
   using BlazorHosted.Features.EventStreams;
   using BlazorHosted.Client.Integration.Tests.Infrastructure;
@@ -22,9 +22,9 @@ namespace EventStreamState
       var clone = EventStreamState.Clone() as EventStreamState;
 
       //Assert
-      EventStreamState.Events.Count.ShouldBe(clone.Events.Count);
-      EventStreamState.Guid.ShouldNotBe(clone.Guid);
-      EventStreamState.Events[0].ShouldBe(clone.Events[0]);
+      EventStreamState.Events.Count.Should().Be(clone.Events.Count);
+      EventStreamState.Guid.Should().NotBe(clone.Guid);
+      EventStreamState.Events[0].Should().Be(clone.Events[0]);
     }
   }
 }

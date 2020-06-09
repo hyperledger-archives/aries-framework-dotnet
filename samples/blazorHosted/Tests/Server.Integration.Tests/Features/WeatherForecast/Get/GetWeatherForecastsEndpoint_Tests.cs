@@ -2,7 +2,6 @@
 {
   using FluentAssertions;
   using Microsoft.AspNetCore.Mvc.Testing;
-  using Shouldly;
   using System.Text.Json;
   using System.Threading.Tasks;
   using BlazorHosted.Features.WeatherForecasts;
@@ -32,9 +31,7 @@
 
     private void ValidateGetWeatherForecastsResponse(GetWeatherForecastsResponse aGetWeatherForecastsResponse)
     {
-      aGetWeatherForecastsResponse.RequestId.ShouldBe(GetWeatherForecastsRequest.Id);
       aGetWeatherForecastsResponse.RequestId.Should().Be(GetWeatherForecastsRequest.Id);
-      aGetWeatherForecastsResponse.WeatherForecasts.Count.ShouldBe(GetWeatherForecastsRequest.Days);
       aGetWeatherForecastsResponse.WeatherForecasts.Count.Should().Be(GetWeatherForecastsRequest.Days);
     }
 

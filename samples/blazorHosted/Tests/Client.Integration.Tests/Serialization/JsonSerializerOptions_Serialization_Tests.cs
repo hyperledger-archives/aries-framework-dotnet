@@ -1,6 +1,6 @@
 namespace JsonSerializerOptions
 {
-  using Shouldly;
+  using FluentAssertions;
   using System;
   using System.Text.Json;
   using BlazorHosted.JsonSerializer.Tests;
@@ -13,9 +13,9 @@ namespace JsonSerializerOptions
       var person = new Person { FirstName = "Steve", LastName = "Cramer", BirthDay = new DateTime(1967, 09, 27) };
       string json = JsonSerializer.Serialize(person, jsonSerializerOptions);
       Person parsed = JsonSerializer.Deserialize<Person>(json, jsonSerializerOptions);
-      parsed.BirthDay.ShouldBe(person.BirthDay);
-      parsed.FirstName.ShouldBe(person.FirstName);
-      parsed.LastName.ShouldBe(person.LastName);
+      parsed.BirthDay.Should().Be(person.BirthDay);
+      parsed.FirstName.Should().Be(person.FirstName);
+      parsed.LastName.Should().Be(person.LastName);
     }
   }
 }

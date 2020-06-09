@@ -1,13 +1,12 @@
 ﻿namespace GetWeatherForecastsHandler
 {
-  using Shouldly;
-  using System.Threading.Tasks;
-  using System.Text.Json;
-  using Microsoft.AspNetCore.Mvc.Testing;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
   using BlazorHosted.Features.WeatherForecasts;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
   using BlazorHosted.Server;
   using FluentAssertions;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using System.Text.Json;
+  using System.Threading.Tasks;
 
   public class Handle_Returns : BaseTest
   {
@@ -31,9 +30,7 @@
 
     private void ValidateGetWeatherForecastsResponse(GetWeatherForecastsResponse aGetWeatherForecastsResponse)
     {
-      aGetWeatherForecastsResponse.RequestId.ShouldBe(GetWeatherForecastsRequest.Id);
       aGetWeatherForecastsResponse.RequestId.Should().Be(GetWeatherForecastsRequest.Id);
-      aGetWeatherForecastsResponse.WeatherForecasts.Count.ShouldBe(GetWeatherForecastsRequest.Days);
       aGetWeatherForecastsResponse.WeatherForecasts.Count.Should().Be(GetWeatherForecastsRequest.Days);
     }
 
