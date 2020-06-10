@@ -1,16 +1,18 @@
 namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 {
+  using BlazorHosted.Server;
   using MediatR;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Microsoft.Extensions.DependencyInjection;
   using System;
   using System.Net.Http;
+  using System.Net.Mime;
+  using System.Text;
   using System.Text.Json;
   using System.Threading.Tasks;
-  using BlazorHosted.Server;
 
   /// <summary>
-  /// 
+  ///
   /// </summary>
   /// <remarks>
   /// Based on Jimmy's SliceFixture
@@ -18,10 +20,9 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   /// </remarks>
   public abstract class BaseTest
   {
-    private readonly JsonSerializerOptions JsonSerializerOptions;
-    private readonly IServiceScopeFactory ServiceScopeFactory;
+    public readonly JsonSerializerOptions JsonSerializerOptions;
     protected readonly HttpClient HttpClient;
-
+    private readonly IServiceScopeFactory ServiceScopeFactory;
 
     public BaseTest(WebApplicationFactory<Startup> aWebApplicationFactory, JsonSerializerOptions aJsonSerializerOptions)
     {
@@ -34,6 +35,48 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
     {
       using IServiceScope serviceScope = ServiceScopeFactory.CreateScope();
       return await aAction(serviceScope.ServiceProvider);
+    }
+
+    protected async Task<HttpResponseMessage> GetHttpResponseMessageFromPost<TResponse>(string aUri, IRequest<TResponse> aRequest)
+    {
+      string requestAsJson = JsonSerializer.Serialize(aRequest, aRequest.GetType(), JsonSerializerOptions);
+
+      var httpContent =
+        new StringContent
+        (
+          requestAsJson,
+          Encoding.UTF8,
+          MediaTypeNames.Application.Json
+        );
+
+      HttpResponseMessage httpResponseMessage = await HttpClient.PostAsync(aUri, httpContent);
+      return httpResponseMessage;
+    }
+
+    protected async Task<TResponse> GetJsonAsync<TResponse>(string aUri)
+    {
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(aUri);
+
+      httpResponseMessage.EnsureSuccessStatusCode();
+
+      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+
+      TResponse response = JsonSerializer.Deserialize<TResponse>(json, JsonSerializerOptions);
+
+      return response;
+    }
+
+    protected async Task<TResponse> Post<TResponse>(string aUri, IRequest<TResponse> aRequest)
+    {
+      HttpResponseMessage httpResponseMessage = await GetHttpResponseMessageFromPost(aUri, aRequest);
+
+      httpResponseMessage.EnsureSuccessStatusCode();
+
+      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+
+      TResponse response = JsonSerializer.Deserialize<TResponse>(json, JsonSerializerOptions);
+
+      return response;
     }
 
     protected Task Send(IRequest aRequest)
@@ -60,33 +103,6 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
           return mediator.Send(aRequest);
         }
       );
-    }
-
-    protected async Task<TResponse> GetJsonAsync<TResponse>(string aUri)
-    {
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(aUri);
-
-      httpResponseMessage.EnsureSuccessStatusCode();
-
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
-
-      TResponse response = JsonSerializer.Deserialize<TResponse>(json, JsonSerializerOptions);
-
-      return response;
-    }
-
-    protected async Task<TResponse> PostJsonAsync<TResponse>(string aUri, IRequest<TResponse> aRequest)
-    {
-      var httpContent = new StringContent(JsonSerializer.Serialize(aRequest));
-      HttpResponseMessage httpResponseMessage = await HttpClient.PostAsync(aUri, httpContent);
-
-      httpResponseMessage.EnsureSuccessStatusCode();
-
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
-
-      TResponse response = JsonSerializer.Deserialize<TResponse>(json, JsonSerializerOptions);
-
-      return response;
     }
   }
 }
