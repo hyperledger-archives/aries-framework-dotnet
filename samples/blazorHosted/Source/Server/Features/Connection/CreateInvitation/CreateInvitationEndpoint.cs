@@ -13,7 +13,7 @@ namespace BlazorHosted.Features.Connections
     /// </summary>
     /// <remarks>
     /// Longer Description
-    /// `<see cref="CreateInvitationRequest.Days"/>`
+    /// `<see cref="CreateInvitationRequest"/>`
     /// </remarks>
     /// <param name="aCreateInvitationRequest"></param>
     /// <returns><see cref="CreateInvitationResponse"/></returns>

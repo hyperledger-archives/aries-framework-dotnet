@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aries", "Aries", "{F24DF9E5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries", "..\..\src\Hyperledger.Aries\Hyperledger.Aries.csproj", "{5DFCDB48-51CA-4263-9FAE-22CA91C3F07C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.AspNetCore", "..\..\src\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj", "{ABA5778E-7DAF-44D7-A074-C0015065A033}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{5DFCDB48-51CA-4263-9FAE-22CA91C3F07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DFCDB48-51CA-4263-9FAE-22CA91C3F07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DFCDB48-51CA-4263-9FAE-22CA91C3F07C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABA5778E-7DAF-44D7-A074-C0015065A033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABA5778E-7DAF-44D7-A074-C0015065A033}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABA5778E-7DAF-44D7-A074-C0015065A033}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABA5778E-7DAF-44D7-A074-C0015065A033}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +97,7 @@ Global
 		{387F446E-D664-4977-A7FC-5343935D97AE} = {2902FDFD-016E-4BF7-8B41-53D674FA53DD}
 		{D6F76BA2-7E47-4BBB-ADE4-AA32BA06DEEE} = {2902FDFD-016E-4BF7-8B41-53D674FA53DD}
 		{5DFCDB48-51CA-4263-9FAE-22CA91C3F07C} = {F24DF9E5-4306-4C7A-BBFC-86FA68E74AD5}
+		{ABA5778E-7DAF-44D7-A074-C0015065A033} = {F24DF9E5-4306-4C7A-BBFC-86FA68E74AD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16FA64C2-4A0E-42D4-94E6-C8CFDE84597E}

@@ -16,6 +16,9 @@ namespace BlazorHosted.Server
   using System.Net.Mime;
   using System.Reflection;
   using BlazorHosted.Features.Bases;
+  using AutoMapper;
+  using BlazorHosted.Infrastructure;
+  using Hyperledger.Aries.Configuration;
 
   public class Startup
   {
@@ -29,6 +32,7 @@ namespace BlazorHosted.Server
       IWebHostEnvironment aWebHostEnvironment
     )
     {
+      aApplicationBuilder.UseAriesFramework();
       // Enable middleware to serve generated Swagger as a JSON endpoint.
       aApplicationBuilder.UseSwagger();
 
@@ -63,7 +67,7 @@ namespace BlazorHosted.Server
 
     public void ConfigureServices(IServiceCollection aServiceCollection)
     {
-
+      ConfigureAries(aServiceCollection);
       aServiceCollection.AddRazorPages();
       aServiceCollection.AddServerSideBlazor();
       aServiceCollection.AddMvc()
@@ -91,7 +95,9 @@ namespace BlazorHosted.Server
 
       Client.Program.ConfigureServices(aServiceCollection);
 
-      aServiceCollection.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+      aServiceCollection.AddMediatR(typeof(Startup).Assembly);
+
+      aServiceCollection.AddAutoMapper(typeof(MappingProfile).Assembly);
 
       aServiceCollection.Scan
       (
@@ -102,6 +108,21 @@ namespace BlazorHosted.Server
           .WithScopedLifetime()
       );
       ConfigureSwagger(aServiceCollection);
+    }
+
+    private void ConfigureAries(IServiceCollection aServiceCollection)
+    {
+      aServiceCollection.AddAriesFramework
+      (
+        aAriesFrameworkBuilder =>
+          aAriesFrameworkBuilder.RegisterAgent
+          (
+            aAgentOptions =>
+            {
+              aAgentOptions.EndpointUri = "http://localhost:5000/"; // Is MyKestrel Enpoint.
+            }
+          )
+      );
     }
 
     private void ConfigureSwagger(IServiceCollection aServiceCollection)

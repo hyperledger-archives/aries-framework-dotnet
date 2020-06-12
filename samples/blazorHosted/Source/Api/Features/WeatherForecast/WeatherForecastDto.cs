@@ -14,7 +14,7 @@ namespace BlazorHosted.Features.WeatherForecasts
     public DateTime Date { get; set; }
 
     /// <example>Cool</example>
-    public string Summary { get; set; }
+    public string Summary { get; set; } = null!;
 
     /// <summary>
     /// Temperature in Celsius

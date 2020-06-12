@@ -14,11 +14,12 @@ namespace BlazorHosted.Features.WeatherForecasts
     /// <summary>
     /// a default constructor is required for deserialization
     /// </summary>
-    public GetWeatherForecastsResponse() { }
-
-    public GetWeatherForecastsResponse(Guid aRequestId)
-    {
+    public GetWeatherForecastsResponse() { 
       WeatherForecasts = new List<WeatherForecastDto>();
+    }
+
+    public GetWeatherForecastsResponse(Guid aRequestId): this()
+    {
       RequestId = aRequestId;
     }
   }

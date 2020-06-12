@@ -20,6 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="$(AutomapperVersion)" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="$(AutoMapperExtensionsMicrosoftDependencyInjectionVersion)" />
     <PackageReference Include="Dawn.Guard" Version="$(DawnGuardVersion)" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="$(FluentValidationAspNetCoreVersion)" />
     <PackageReference Include="MediatR" Version="$(MediatrVersion)" />
@@ -35,6 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Hyperledger.Aries\Hyperledger.Aries.csproj" />
     <ProjectReference Include="..\Client\BlazorHosted.Client.csproj" />
     <ProjectReference Include="..\Api\BlazorHosted.Api.csproj" />
   </ItemGroup>

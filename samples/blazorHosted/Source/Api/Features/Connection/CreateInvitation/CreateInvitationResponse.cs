@@ -1,19 +1,85 @@
 namespace BlazorHosted.Features.Connections
 {
+  using BlazorHosted.Features.Bases;
   using System;
   using System.Collections.Generic;
-  using BlazorHosted.Features.Bases;
 
   public class CreateInvitationResponse : BaseResponse
   {
     /// <summary>
-    /// a default constructor is required for deserialization
+    /// Represents an invitation message for establishing connection.
     /// </summary>
+    public InvitationDto Invitation { get; set; } = null!;
+
     public CreateInvitationResponse() { }
 
-    public CreateInvitationResponse(Guid aRequestId)
+    public CreateInvitationResponse(Guid aRequestId, InvitationDto aInvitation) : base(aRequestId)
     {
-      RequestId = aRequestId;
+      Invitation = aInvitation;
+    }
+  }
+
+  /// <summary>
+  /// Represents an invitation message for establishing connection.
+  /// </summary>
+  public class InvitationDto
+  {
+    /// <summary>
+    /// Gets or sets the image URL.
+    /// </summary>
+    /// <value>
+    /// The image URL.
+    /// </value>
+    public Uri? ImageUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name.
+    /// </summary>
+    /// <value>
+    /// The name.
+    /// </value>
+    public string Label { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the recipient keys.
+    /// </summary>
+    /// <value>
+    /// The recipient keys.
+    /// </value>
+    public List<string> RecipientKeys { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the routing keys.
+    /// </summary>
+    /// <value>
+    /// The routing keys.
+    /// </value>
+    public List<string> RoutingKeys { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the service endpoint.
+    /// </summary>
+    /// <value>
+    /// The service endpoint.
+    /// </value>
+    public string ServiceEndpoint { get; set; } = null!;
+
+    public InvitationDto() { }
+
+    public InvitationDto
+    (
+      string aLabel,
+      Uri? aImageUrl,
+      string aServiceEndpoint,
+      IList<string> aRoutingKeys,
+      IList<string> aRecipientKeys
+    )
+    {
+      Label = aLabel;
+      ImageUrl = aImageUrl;
+      ServiceEndpoint = aServiceEndpoint;
+      RoutingKeys = new List<string>(aRoutingKeys);
+      RecipientKeys = new List<string>(aRecipientKeys);
     }
   }
 }
