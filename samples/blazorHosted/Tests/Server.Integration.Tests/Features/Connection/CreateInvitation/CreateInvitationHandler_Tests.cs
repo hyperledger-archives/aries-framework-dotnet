@@ -18,7 +18,7 @@
       JsonSerializerOptions aJsonSerializerOptions
     ) : base(aWebApplicationFactory, aJsonSerializerOptions)
     {
-      CreateInvitationRequest = new CreateInvitationRequest { Days = 10 };
+      CreateInvitationRequest = new CreateInvitationRequest { Alias = "Alice" };
     }
 
     public async Task CreateInvitationResponse()

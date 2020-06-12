@@ -14,7 +14,7 @@
       var __requestName__Request = new CreateInvitationRequest
       {
         // Set Valid values here
-        Days = 5
+        Alias = "Alice"
       };
 
       ValidationResult validationResult = CreateInvitationRequestValidator.TestValidate(__requestName__Request);
@@ -23,7 +23,7 @@
     }
 
     public void Have_error_when_Days_are_negative() => CreateInvitationRequestValidator
-      .ShouldHaveValidationErrorFor(aCreateInvitationRequest => aCreateInvitationRequest.Days, -1);
+      .ShouldHaveValidationErrorFor(aCreateInvitationRequest => aCreateInvitationRequest.Alias, "" );
 
     public void Setup() => CreateInvitationRequestValidator = new CreateInvitationRequestValidator();
   }

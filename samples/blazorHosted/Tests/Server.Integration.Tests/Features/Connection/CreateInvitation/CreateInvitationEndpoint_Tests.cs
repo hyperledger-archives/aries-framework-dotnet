@@ -22,7 +22,7 @@
       JsonSerializerOptions aJsonSerializerOptions
     ) : base(aWebApplicationFactory, aJsonSerializerOptions)
     {
-      CreateInvitationRequest = new CreateInvitationRequest { Days = 10 };
+      CreateInvitationRequest = new CreateInvitationRequest { Alias = "Alice"};
     }
 
     public async Task CreateInvitationResponse()
@@ -36,7 +36,7 @@
     public async Task ValidationError()
     {
       // Set invalid value
-      CreateInvitationRequest.Days = -1;
+      CreateInvitationRequest.Alias = null;
       //string requestAsJson = JsonSerializer.Serialize(CreateInvitationRequest, JsonSerializerOptions);
       //var content = 
       //  new StringContent
@@ -55,7 +55,7 @@
 
       httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
       json.Should().Contain("errors");
-      json.Should().Contain(nameof(CreateInvitationRequest.Days));
+      json.Should().Contain(nameof(CreateInvitationRequest.Alias));
     }
 
     private void ValidateCreateInvitationResponse(CreateInvitationResponse aCreateInvitationResponse)
