@@ -119,7 +119,9 @@ namespace BlazorHosted.Server
           (
             aAgentOptions =>
             {
-              aAgentOptions.EndpointUri = "http://localhost:5000/"; // Is MyKestrel Enpoint.
+              //TODO update this to use the current Kestrel setting which are not available in ConfigureServices
+              // Or use the same Appsetting that Kestrel does to determine the port
+              aAgentOptions.EndpointUri = "https://localhost:5001/"; // Is MyKestrel Enpoint. 
             }
           )
       );
