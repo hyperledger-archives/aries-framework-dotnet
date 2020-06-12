@@ -24,6 +24,7 @@ namespace BlazorHosted.Features.Connections
   /// </summary>
   public class InvitationDto
   {
+    public Guid InvitationId { get; set; }
     /// <summary>
     /// Gets or sets the image URL.
     /// </summary>

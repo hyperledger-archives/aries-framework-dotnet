@@ -43,7 +43,7 @@ namespace BlazorHosted.Features.Connections
       (ConnectionInvitationMessage connectionInvitationMessage, ConnectionRecord connectionRecord) =
         await ConnectionService.CreateInvitationAsync(agentContext, inviteConfiguration);
       InvitationDto invitationDto = Mapper.Map<InvitationDto>(connectionInvitationMessage);
-      var response = new CreateInvitationResponse(aCreateInvitationRequest.Id, invitationDto);
+      var response = new CreateInvitationResponse(aCreateInvitationRequest.RequestId, invitationDto);
 
       return response;
     }

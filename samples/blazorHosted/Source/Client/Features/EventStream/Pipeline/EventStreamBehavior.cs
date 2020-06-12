@@ -56,7 +56,7 @@ namespace BlazorHosted.Features.EventStreams
 
         if (aRequest is BaseRequest request)
         {
-          addEventAction.Message = $"{aTag}:{requestTypeName}:{request.Id}";
+          addEventAction.Message = $"{aTag}:{requestTypeName}:{request.RequestId}";
         }
         else
         {

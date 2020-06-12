@@ -30,7 +30,7 @@
 
     private void ValidateCreateInvitationResponse(CreateInvitationResponse aCreateInvitationResponse)
     {
-      aCreateInvitationResponse.RequestId.Should().Be(CreateInvitationRequest.Id);
+      aCreateInvitationResponse.RequestId.Should().Be(CreateInvitationRequest.RequestId);
       // check Other properties here
     }
 
