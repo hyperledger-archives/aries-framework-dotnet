@@ -27,4 +27,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Hyperledger.Aries\Hyperledger.Aries.csproj" />
+  </ItemGroup>
 </Project>
