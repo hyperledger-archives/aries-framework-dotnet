@@ -1,22 +1,21 @@
 @namespace BlazorHosted.Features.Wallets.Components
-@using BlazorHosted.Features.Bases
 @inherits BaseComponent
 
 <div data-qa="@TestId">
   <p>Wallet Component</p>
 </div>
 
-@*<div class="card text-center mt-2 w-50">
+<div class="card text-center mt-2 w-50">
   <div class="card-header">
     Agent Provisioning Configuration
   </div>
   <div class="card-body">
-    <img style="width: 100px; height: 100px" src="@Url.Identicon(Model.Owner.Name, size: 200)" alt="@Model.Owner.Name">
-    <h5 class="card-title mt-2">@Model.Owner.Name</h5>
-    <small class="text-muted">@Model.Endpoint.Uri</small>
+    <Identicon Value=@WalletState.Name Size=100 />
+    <h5 class="card-title mt-2">@WalletState.Name</h5>
+    <small class="text-muted">@WalletState.Uri</small>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="DID">@Model.Endpoint.Did</li>
-    <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="VERKEY">@Model.Endpoint.Verkey.First()</li>
+    <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="DID">@WalletState.Did</li>
+    <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="VERKEY">@WalletState.VerKey</li>
   </ul>
-</div>*@
+</div>

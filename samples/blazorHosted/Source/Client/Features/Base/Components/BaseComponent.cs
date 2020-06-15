@@ -5,6 +5,7 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.Counters;
   using BlazorHosted.Features.EventStreams;
   using BlazorHosted.Features.WeatherForecasts;
+  using BlazorHosted.Features.Wallets;
 
   /// <summary>
   /// Makes access to the State a little easier and by inheriting from
@@ -20,6 +21,7 @@ namespace BlazorHosted.Features.Bases
     internal ApplicationState ApplicationState => GetState<ApplicationState>();
     internal CounterState CounterState => GetState<CounterState>();
     internal EventStreamState EventStreamState => GetState<EventStreamState>();
+    internal WalletState WalletState => GetState<WalletState>();
     internal WeatherForecastsState WeatherForecastsState => GetState<WeatherForecastsState>();
   }
 }
