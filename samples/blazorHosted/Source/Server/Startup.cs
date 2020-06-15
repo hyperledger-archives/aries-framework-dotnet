@@ -19,6 +19,7 @@ namespace BlazorHosted.Server
   using AutoMapper;
   using BlazorHosted.Infrastructure;
   using Hyperledger.Aries.Configuration;
+  using Jdenticon.AspNetCore;
 
   public class Startup
   {
@@ -32,6 +33,7 @@ namespace BlazorHosted.Server
       IWebHostEnvironment aWebHostEnvironment
     )
     {
+      aApplicationBuilder.UseJdenticon();
       aApplicationBuilder.UseAriesFramework();
       // Enable middleware to serve generated Swagger as a JSON endpoint.
       aApplicationBuilder.UseSwagger();

@@ -24,6 +24,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="$(AutoMapperExtensionsMicrosoftDependencyInjectionVersion)" />
     <PackageReference Include="Dawn.Guard" Version="$(DawnGuardVersion)" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="$(FluentValidationAspNetCoreVersion)" />
+    <PackageReference Include="Jdenticon.AspNetCore" Version="$(JdenticonAspNetCoreVersion)" />
     <PackageReference Include="MediatR" Version="$(MediatrVersion)" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="$(MediatrExtensionsMicrosoftDependencyInjectionVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(MicrosoftAspNetCoreComponentsWebAssemblyServerVersion)" />
@@ -45,5 +46,6 @@
 
   <ItemGroup>
     <Folder Include="Entities\X_Aggregate\Requests\" />
+    <Folder Include="Features\Identicon\" />
   </ItemGroup>
 </Project>

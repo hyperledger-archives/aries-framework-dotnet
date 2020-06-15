@@ -28,7 +28,7 @@
     <MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion>
     <MicrosoftAspNetCoreBlazorHttpClientVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreBlazorHttpClientVersion>
     <MicrosoftAspNetCoreComponentsWebAssemblyServerVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyServerVersion>
-    <SystemNetHttpJsonVersion>3.2.0</SystemNetHttpJsonVersion>
+    <SystemNetHttpJsonVersion>3.2.1</SystemNetHttpJsonVersion>
     <SystemConfigurationConfigurationManagerVersion>4.7.0</SystemConfigurationConfigurationManagerVersion>
 
     <MicrosoftAspNetCoreVersion>3.1.4</MicrosoftAspNetCoreVersion>    
@@ -46,9 +46,13 @@
     <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
     <FluentValidationVersion>8.6.2</FluentValidationVersion>
     <FluentValidationAspNetCoreVersion>8.6.2</FluentValidationAspNetCoreVersion>
+    <Jdenticon-netVersion>2.2.1</Jdenticon-netVersion>
+    <JdenticonAspNetCoreVersion>2.2.1</JdenticonAspNetCoreVersion>
+    <JdenticonAspNetWebApiVersion>2.2.1</JdenticonAspNetWebApiVersion>
     <MediatrExtensionsMicrosoftDependencyInjectionVersion>8.0.0</MediatrExtensionsMicrosoftDependencyInjectionVersion>
     <MediatrVersion>8.0.1</MediatrVersion>
     <MoqVersion>4.14.1</MoqVersion>
+    <PeterLeslieMorrisBlazorFluentValidationVersion>1.3.1</PeterLeslieMorrisBlazorFluentValidationVersion>
     <ScrutorVersion>3.2.1</ScrutorVersion>
     <SeleniumSupportVersion>3.141.0</SeleniumSupportVersion>
     <SeleniumWebDriverVersion>3.141.0</SeleniumWebDriverVersion>
