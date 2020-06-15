@@ -12,7 +12,7 @@
   <div class="card-body">
     <Identicon Value=@WalletState.Name Size=100 />
     <h5 class="card-title mt-2">@WalletState.Name</h5>
-    <small class="text-muted">@WalletState.Uri</small>
+    <small class="text-muted">@WalletState.Uri?.ToString()</small>
   </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="DID">@WalletState.Did</li>

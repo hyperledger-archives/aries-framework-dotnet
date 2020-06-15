@@ -5,14 +5,8 @@ namespace BlazorHosted.Features.Wallets
 
   public class GetWalletRequest : BaseApiRequest, IRequest<GetWalletResponse>
   {
-    public const string Route = "api/Wallets/GetWallet";
+    public const string Route = "api/wallets/wallet";
 
-    /// <summary>
-    /// The Number of days of forecasts to get
-    /// </summary>
-    /// <example>5</example>
-    public int Days { get; set; }
-
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(Id)}={Id}";
+    internal override string RouteFactory => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }

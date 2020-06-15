@@ -17,10 +17,10 @@
     /// </summary>
     public override void Initialize()
     {
-      Name = "Naughty Lichterman"; // null;
-      Uri = new Uri("http://localhost:5000"); // null;
-      Did = "LMx45porrc4LoVk3N8s9i1"; // null;
-      VerKey = "BZ3dzMNrbHUPCx4acXwCRTHj59pnHDCve54mxonVYUbJ"; // null;
+      Name = string.Empty;
+      Uri = null;
+      Did = string.Empty;
+      VerKey = string.Empty;
     }
   }
 }

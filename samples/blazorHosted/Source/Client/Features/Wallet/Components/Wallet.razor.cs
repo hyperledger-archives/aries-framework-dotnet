@@ -6,9 +6,8 @@ namespace BlazorHosted.Features.Wallets.Components
 
   public partial class Wallet : BaseComponent
   {
-    public System.Uri IndentIconUrl => new System.Uri($"api/identicon?value={WalletState.Name}&size=60");
-
-    //protected async Task ButtonClick() =>
-    //  _ = await Mediator.Send(new IncrementCounterAction { Amount = 5 });
+ 
+    protected override async Task OnInitializedAsync() =>
+      await Mediator.Send(new FetchWalletAction());
   }
 }

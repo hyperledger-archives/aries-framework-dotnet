@@ -5,6 +5,7 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.Counters;
   using BlazorHosted.Features.EventStreams;
   using BlazorHosted.Features.WeatherForecasts;
+  using BlazorHosted.Features.Wallets;
 
   /// <summary>
   /// Base Handler that makes it easy to access state
@@ -18,6 +19,8 @@ namespace BlazorHosted.Features.Bases
     protected CounterState CounterState => Store.GetState<CounterState>();
 
     protected EventStreamState EventStreamState => Store.GetState<EventStreamState>();
+
+    protected WalletState WalletState => Store.GetState<WalletState>();
 
     protected WeatherForecastsState WeatherForecastsState => Store.GetState<WeatherForecastsState>();
 
