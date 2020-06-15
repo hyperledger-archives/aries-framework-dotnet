@@ -7,21 +7,16 @@ namespace BlazorHosted.Features.Bases
     /// <summary>
     /// Used to correlate request and response
     /// </summary>
-    public Guid RequestId { get; set; }
-
-    /// <summary>
-    /// Used to correlate request and response
-    /// </summary>
-    public Guid ResponseId { get; }
+    public Guid CorrelationId { get; set; }
 
     public BaseResponse(Guid aRequestId) : this()
     {
-      RequestId = aRequestId;
+      CorrelationId = aRequestId;
     }
 
     public BaseResponse()
     {
-      ResponseId = Guid.NewGuid();
+      CorrelationId = Guid.NewGuid();
     }
   }
 }

@@ -30,7 +30,7 @@
 
     private void ValidateGetWalletResponse(GetWalletResponse aGetWalletResponse)
     {
-      aGetWalletResponse.RequestId.Should().Be(GetWalletRequest.RequestId);
+      aGetWalletResponse.CorrelationId.Should().Be(GetWalletRequest.CorrelationId);
       // check Other properties here
     }
 

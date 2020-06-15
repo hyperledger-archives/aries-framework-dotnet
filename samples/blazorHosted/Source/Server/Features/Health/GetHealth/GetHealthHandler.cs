@@ -16,7 +16,7 @@ namespace BlazorHosted.Features.Healths
       CancellationToken aCancellationToken
     )
     {
-      var response = new GetHealthResponse(aGetHealthRequest.RequestId);
+      var response = new GetHealthResponse(aGetHealthRequest.CorrelationId);
 
       return await Task.Run(() => response);
     }

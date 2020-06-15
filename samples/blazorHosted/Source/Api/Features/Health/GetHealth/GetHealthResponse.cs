@@ -13,7 +13,7 @@ namespace BlazorHosted.Features.Healths
 
     public GetHealthResponse(Guid aRequestId)
     {
-      RequestId = aRequestId;
+      CorrelationId = aRequestId;
     }
   }
 }

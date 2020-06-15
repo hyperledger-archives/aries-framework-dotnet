@@ -29,7 +29,7 @@ namespace BlazorHosted.Features.WeatherForecasts
       CancellationToken aCancellationToken
     )
     {
-      var response = new GetWeatherForecastsResponse(aGetWeatherForecastsRequest.RequestId);
+      var response = new GetWeatherForecastsResponse(aGetWeatherForecastsRequest.CorrelationId);
       var random = new Random();
       var weatherForecasts = new List<WeatherForecastDto>();
       Enumerable.Range(1, aGetWeatherForecastsRequest.Days).ToList().ForEach

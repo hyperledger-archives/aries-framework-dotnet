@@ -20,7 +20,7 @@ namespace BlazorHosted.Features.WeatherForecasts
 
     public GetWeatherForecastsResponse(Guid aRequestId): this()
     {
-      RequestId = aRequestId;
+      CorrelationId = aRequestId;
     }
   }
 }

@@ -16,7 +16,7 @@ namespace BlazorHosted.Features.Wallets
       CancellationToken aCancellationToken
     )
     {
-      var response = new GetWalletResponse(aGetWalletRequest.RequestId);
+      var response = new GetWalletResponse(aGetWalletRequest.CorrelationId);
 
       return await Task.Run(() => response);
     }

@@ -30,7 +30,7 @@
 
     private void ValidateGetHealthResponse(GetHealthResponse aGetHealthResponse)
     {
-      aGetHealthResponse.RequestId.Should().Be(GetHealthRequest.RequestId);
+      aGetHealthResponse.CorrelationId.Should().Be(GetHealthRequest.CorrelationId);
       // check Other properties here
     }
 
