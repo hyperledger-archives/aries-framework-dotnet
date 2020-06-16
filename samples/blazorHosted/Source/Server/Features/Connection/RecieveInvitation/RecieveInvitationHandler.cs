@@ -1,5 +1,7 @@
 namespace BlazorHosted.Features.Connections
 {
+  using Hyperledger.Aries.Features.DidExchange;
+  using Hyperledger.Aries.Utils;
   using MediatR;
   using System;
   using System.Collections.Generic;
@@ -16,8 +18,13 @@ namespace BlazorHosted.Features.Connections
       CancellationToken aCancellationToken
     )
     {
-      var response = new RecieveInvitationResponse(aRecieveInvitationRequest.CorrelationId);
+      ConnectionInvitationMessage connectionInvitationMessage = 
+        MessageUtils
+          .DecodeMessageFromUrlFormat<ConnectionInvitationMessage>(aRecieveInvitationRequest.InvitationDetails);
 
+      var response = 
+        new RecieveInvitationResponse(aRecieveInvitationRequest.CorrelationId, connectionInvitationMessage);
+      
       return await Task.Run(() => response);
     }
   }
