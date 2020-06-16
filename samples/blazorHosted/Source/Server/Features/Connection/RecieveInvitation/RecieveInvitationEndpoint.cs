@@ -16,10 +16,10 @@ namespace BlazorHosted.Features.Connections
     /// </remarks>
     /// <param name="aRecieveInvitationRequest"></param>
     /// <returns><see cref="RecieveInvitationResponse"/></returns>
-    [HttpGet(RecieveInvitationRequest.Route)]
+    [HttpPost(RecieveInvitationRequest.Route)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(RecieveInvitationResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Process(RecieveInvitationRequest aRecieveInvitationRequest) => await Send(aRecieveInvitationRequest);
+    public async Task<IActionResult> Process([FromBody] RecieveInvitationRequest aRecieveInvitationRequest) => await Send(aRecieveInvitationRequest);
   }
 }

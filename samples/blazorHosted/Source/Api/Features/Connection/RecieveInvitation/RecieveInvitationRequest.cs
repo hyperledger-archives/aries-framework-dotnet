@@ -7,12 +7,8 @@ namespace BlazorHosted.Features.Connections
   {
     public const string Route = "api/connections/recieve-invitation";
 
-    /// <summary>
-    /// The Number of days of forecasts to get
-    /// </summary>
-    /// <example>5</example>
-    public int Days { get; set; }
+    public string InvitationDetails { get; set; } = null!;
 
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    internal override string RouteFactory => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }

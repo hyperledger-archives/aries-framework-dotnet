@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Connections
 
   public class AcceptInvitationRequest : BaseApiRequest, IRequest<AcceptInvitationResponse>
   {
-    public const string Route = "api/Connections/AcceptInvitation";
+    public const string Route = "api/connections/accept-invitation";
 
     /// <summary>
     /// The Number of days of forecasts to get
