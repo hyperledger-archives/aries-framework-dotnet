@@ -5,14 +5,21 @@ namespace BlazorHosted.Features.Connections
 
   public class SendPingRequest : BaseApiRequest, IRequest<SendPingResponse>
   {
-    public const string Route = "api/Connections/SendPing";
+    public const string Route = "api/connections/{ConnectionId}/send-ping";
 
     /// <summary>
-    /// The Number of days of forecasts to get
+    /// The Id of the Connection to use to send the message
     /// </summary>
-    /// <example>5</example>
-    public int Days { get; set; }
+    /// <example>Connection identifier</example>
+    public string ConnectionId { get; set; } = null!;
 
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    internal override string RouteFactory
+    {
+      get
+      {
+        string temp = Route.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
+        return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
+      }
+    }
   }
 }

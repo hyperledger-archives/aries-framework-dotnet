@@ -16,7 +16,7 @@ namespace BlazorHosted.Features.Connections
     /// </remarks>
     /// <param name="aSendPingRequest"></param>
     /// <returns><see cref="SendPingResponse"/></returns>
-    [HttpGet(SendPingRequest.Route)]
+    [HttpPost(SendPingRequest.Route)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(SendPingResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
