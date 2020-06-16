@@ -18,7 +18,7 @@
       JsonSerializerOptions aJsonSerializerOptions
     ) : base(aWebApplicationFactory, aJsonSerializerOptions)
     {
-      GetWalletRequest = new GetWalletRequest { Days = 10 };
+      GetWalletRequest = new GetWalletRequest();
     }
 
     public async Task GetWalletResponse()

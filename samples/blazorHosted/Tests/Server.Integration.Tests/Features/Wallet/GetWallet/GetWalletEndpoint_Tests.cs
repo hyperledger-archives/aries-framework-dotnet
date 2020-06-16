@@ -20,7 +20,7 @@
       JsonSerializerOptions aJsonSerializerOptions
     ) : base(aWebApplicationFactory, aJsonSerializerOptions)
     {
-      GetWalletRequest = new GetWalletRequest { Days = 10 };
+      GetWalletRequest = new GetWalletRequest();
     }
 
     public async Task GetWalletResponse()
@@ -31,19 +31,19 @@
       ValidateGetWalletResponse(GetWalletResponse);
     }
 
-    public async Task ValidationError()
-    {
-      // Set invalid value
-      GetWalletRequest.Days = -1;
+    //public async Task ValidationError()
+    //{
+    //  // Set invalid value
+    //  GetWalletRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetWalletRequest.RouteFactory);
+    //  HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetWalletRequest.RouteFactory);
 
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+    //  string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
-      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-      json.Should().Contain("errors");
-      json.Should().Contain(nameof(GetWalletRequest.Days));
-    }
+    //  httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    //  json.Should().Contain("errors");
+    //  json.Should().Contain(nameof(GetWalletRequest.Days));
+    //}
 
     private void ValidateGetWalletResponse(GetWalletResponse aGetWalletResponse)
     {
