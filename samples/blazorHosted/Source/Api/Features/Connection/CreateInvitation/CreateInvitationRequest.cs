@@ -10,7 +10,7 @@ namespace BlazorHosted.Features.Connections
   /// </summary>
   public class CreateInvitationRequest : BaseApiRequest, IRequest<CreateInvitationResponse>
   {
-    public const string Route = "api/Connections/CreateInvitation";
+    public const string Route = "api/connections/createInvitation";
 
     /// <summary>
     /// Used to generated an invitation that multiple parties
