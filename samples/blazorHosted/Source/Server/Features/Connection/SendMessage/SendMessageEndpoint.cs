@@ -16,10 +16,10 @@ namespace BlazorHosted.Features.Connections
     /// </remarks>
     /// <param name="aSendMessageRequest"></param>
     /// <returns><see cref="SendMessageResponse"/></returns>
-    [HttpGet(SendMessageRequest.Route)]
+    [HttpPost(SendMessageRequest.Route)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(SendMessageResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Process(SendMessageRequest aSendMessageRequest) => await Send(aSendMessageRequest);
+    public async Task<IActionResult> Process([FromBody] SendMessageRequest aSendMessageRequest) => await Send(aSendMessageRequest);
   }
 }

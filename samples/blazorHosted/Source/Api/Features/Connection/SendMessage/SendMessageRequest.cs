@@ -5,14 +5,27 @@ namespace BlazorHosted.Features.Connections
 
   public class SendMessageRequest : BaseApiRequest, IRequest<SendMessageResponse>
   {
-    public const string Route = "api/Connections/SendMessage";
+    public const string Route = "api/connections/{ConnectionId}/send-message";
 
     /// <summary>
-    /// The Number of days of forecasts to get
+    /// The Id of the Connection to use to send the message
     /// </summary>
-    /// <example>5</example>
-    public int Days { get; set; }
+    /// <example>Connection identifier</example>
+    public string ConnectionId { get; set; } = null!;
 
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    /// <summary>
+    /// The Message to send
+    /// </summary>
+    /// <example>Hello Friend</example>
+    public string Message { get; set; } = null!;
+
+    internal override string RouteFactory
+    {
+      get
+      {
+        string temp = Route.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
+        return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
+      }
+    }
   }
 }
