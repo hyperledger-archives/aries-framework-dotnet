@@ -12,16 +12,21 @@ namespace BlazorHosted.Features.Connections
 
   public class CreateInvitationHandler : IRequestHandler<CreateInvitationRequest, CreateInvitationResponse>
   {
-    public CreateInvitationHandler(IMapper aMapper, IAgentProvider aAgentProvider, IConnectionService aConnectionService)
+    private readonly IMapper Mapper;
+    private readonly IAgentProvider AgentProvider;
+    private readonly IConnectionService ConnectionService;
+
+    public CreateInvitationHandler
+    (
+      IMapper aMapper, 
+      IAgentProvider aAgentProvider, 
+      IConnectionService aConnectionService
+    )
     {
       Mapper = aMapper;
       AgentProvider = aAgentProvider;
       ConnectionService = aConnectionService;
     }
-
-    public IMapper Mapper { get; }
-    public IAgentProvider AgentProvider { get; }
-    public IConnectionService ConnectionService { get; }
 
     public async Task<CreateInvitationResponse> Handle
     (
