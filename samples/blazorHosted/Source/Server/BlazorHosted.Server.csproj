@@ -45,6 +45,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="pool_genesis.txn">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>  
+  
+  <ItemGroup>
     <Folder Include="Entities\X_Aggregate\Requests\" />
     <Folder Include="Features\Identicon\" />
   </ItemGroup>

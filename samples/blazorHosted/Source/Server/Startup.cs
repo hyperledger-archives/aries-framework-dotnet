@@ -121,6 +121,7 @@ namespace BlazorHosted.Server
           (
             aAgentOptions =>
             {
+              aAgentOptions.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
               //TODO update this to use the current Kestrel setting which are not available in ConfigureServices
               // Or use the same Appsetting that Kestrel does to determine the port
               aAgentOptions.EndpointUri = "https://localhost:5001/"; // Is MyKestrel Enpoint. 
