@@ -2,6 +2,6 @@
 {
   public static class FeatureAnnotations
   {
-    public const string FeatureGroup = "Wallet";
+    public const string FeatureGroup = "Agent";
   }
 }
