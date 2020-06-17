@@ -555,13 +555,30 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             // turn proofProposal into proofRequest
             var proofRequest = new ProofRequest();
-            
+
             // TODO: Pass name from proposed into requested
             proofRequest.Name = "Test";
             proofRequest.Version = "1.0";
             foreach (var attr in presentationPreview.ProposedAttributes)
             {
+                // If there are more attributes that all have the same 
+                // credentail ID, then they should be part of the same policy. We'll need to check these
                 // convert Proposed to Requested
+                // How is referent managed in the proof request?
+                var requestedAttribute = new ProofAttributeInfo()
+                {
+                    Name = attr.Name
+                    //Names - the referent will tell us which attribures share the same cred def. 
+                    //If they share the same cred def and refernt, then they are the same
+                    //
+                };
+
+                if (attr.CredentialDefinitionId != null)
+                {
+                    requestedAttribute.Restrictions.Add(new AttributeFilter(){
+                        CredentialDefinitionId = attr.CredentialDefinitionId
+                    });
+                }
             }
             foreach(var pred in presentationPreview.ProposedPredicates)
             {
