@@ -1,13 +1,19 @@
 namespace BlazorHosted.Features.Schemas
 {
+  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.Models.Records;
   using System;
   using System.Collections.Generic;
-  using BlazorHosted.Features.Bases;
 
   public class GetSchemasResponse : BaseResponse
   {
+    public List<SchemaRecord> SchemaRecords { get; set; } = null!;
+
     public GetSchemasResponse() { }
 
-    public GetSchemasResponse(Guid aCorrelationId) : base(aCorrelationId) { }
+    public GetSchemasResponse(Guid aCorrelationId, List<SchemaRecord> aSchemaRecords) : base(aCorrelationId)
+    {
+      SchemaRecords = aSchemaRecords;
+    }
   }
 }

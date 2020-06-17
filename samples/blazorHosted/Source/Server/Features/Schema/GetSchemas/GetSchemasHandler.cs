@@ -1,14 +1,23 @@
 namespace BlazorHosted.Features.Schemas
 {
+  using Hyperledger.Aries.Agents;
+  using Hyperledger.Aries.Features.IssueCredential;
+  using Hyperledger.Aries.Models.Records;
   using MediatR;
-  using System;
   using System.Collections.Generic;
-  using System.Linq;
   using System.Threading;
   using System.Threading.Tasks;
-  
+
   public class GetSchemasHandler : IRequestHandler<GetSchemasRequest, GetSchemasResponse>
   {
+    private readonly IAgentProvider AgentProvider;
+    private readonly ISchemaService SchemaService;
+
+    public GetSchemasHandler(IAgentProvider aAgentProvider, ISchemaService aSchemaService)
+    {
+      AgentProvider = aAgentProvider;
+      SchemaService = aSchemaService;
+    }
 
     public async Task<GetSchemasResponse> Handle
     (
@@ -16,9 +25,11 @@ namespace BlazorHosted.Features.Schemas
       CancellationToken aCancellationToken
     )
     {
-      var response = new GetSchemasResponse(aGetSchemasRequest.CorrelationId);
+      IAgentContext agentContext = await AgentProvider.GetContextAsync();
+      List<SchemaRecord> schemaRecords = await SchemaService.ListSchemasAsync(agentContext.Wallet);
+      var response = new GetSchemasResponse(aGetSchemasRequest.CorrelationId, schemaRecords);
 
-      return await Task.Run(() => response);
+      return response;
     }
   }
 }
