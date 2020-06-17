@@ -265,11 +265,11 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             // Holder accepts the proof requests and builds a proof
             {
-                //Holder retrives proof request message from their cloud agent
+                // Holder retrieves proof request message from their cloud agent
                 var proofRequest = FindContentMessage<RequestPresentationMessage>();
                 Assert.NotNull(proofRequest);
 
-                //Holder stores the proof request
+                // Holder stores the proof request
                 var holderProofRequestId = await _proofService.ProcessRequestAsync(_holderWallet, proofRequest, holderConnection);
                 var holderProofRecord = await _proofService.GetAsync(_holderWallet, holderProofRequestId.Id);
                 var holderProofObject =

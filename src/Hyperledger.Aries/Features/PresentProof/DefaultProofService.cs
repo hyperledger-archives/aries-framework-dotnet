@@ -566,6 +566,21 @@ namespace Hyperledger.Aries.Features.PresentProof
             return (proofMsg, record);
         }
 
+        public Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, AttributePreview[] attributes, PredicatePreviews[] predicates, string connectionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<(RequestPresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, string proofProposalJson, string connectionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ProofRecord> ProcessProposalAsync(IAgentContext agentContext, ProposePresentationMessage proofProposal, ConnectionRecord connection)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

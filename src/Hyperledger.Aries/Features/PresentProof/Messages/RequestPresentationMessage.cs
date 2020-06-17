@@ -11,7 +11,7 @@ namespace Hyperledger.Aries.Features.PresentProof
     public class RequestPresentationMessage : AgentMessage
     {
         /// <summary>
-        /// Initializes a new instace of the <see cref="RequestPresentationMessage" /> class.
+        /// Initializes a new instance of the <see cref="RequestPresentationMessage" /> class.
         /// </summary>
         public RequestPresentationMessage()
         {
