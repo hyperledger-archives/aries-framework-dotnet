@@ -1,20 +1,17 @@
 namespace BlazorHosted.Features.Credentials
 {
+  using BlazorHosted.Features.Bases;
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;
   using System.Net;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
 
   public class GetCredentialsEndpoint : BaseEndpoint<GetCredentialsRequest, GetCredentialsResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Lists the credentials
     /// </summary>
-    /// <remarks>
-    /// Longer Description
-    /// </remarks>
-    /// <param name="aGetCredentialsRequest"></param>
+    /// <param name="aGetCredentialsRequest"><see cref="GetCredentialsRequest"/></param>
     /// <returns><see cref="GetCredentialsResponse"/></returns>
     [HttpGet(GetCredentialsRequest.Route)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
