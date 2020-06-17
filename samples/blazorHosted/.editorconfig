@@ -257,3 +257,7 @@ dotnet_code_quality.null_check_validation_methods = NotNull
 # CA1062: Validate arguments of public methods
 # TODO: Turn this back on when figure out how to get Dawn.Guard to not trigger it.
 dotnet_diagnostic.CA1062.severity = silent
+
+# C# or VB files
+[*.{cs}]
+guidelines = 120

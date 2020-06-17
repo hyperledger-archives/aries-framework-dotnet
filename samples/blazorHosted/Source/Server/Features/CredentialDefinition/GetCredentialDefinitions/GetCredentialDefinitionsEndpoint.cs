@@ -9,7 +9,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
   public class GetCredentialDefinitionsEndpoint : BaseEndpoint<GetCredentialDefinitionsRequest, GetCredentialDefinitionsResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Get List of Credential Definitions
     /// </summary>
     /// <param name="aGetCredentialDefinitionsRequest"><see cref="GetCredentialDefinitionsRequest"/></param>
     /// <returns><see cref="GetCredentialDefinitionsResponse"/></returns>
