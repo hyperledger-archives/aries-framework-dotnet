@@ -5,14 +5,30 @@ namespace BlazorHosted.Features.CredentialDefinitions
 
   public class GetCredentialDefinitionRequest : BaseApiRequest, IRequest<GetCredentialDefinitionResponse>
   {
-    public const string Route = "api/CredentialDefinitions/GetCredentialDefinition";
+    public const string Route = "api/credential-definitions/{CredentialDefinitionId}";
 
     /// <summary>
-    /// The Number of days of forecasts to get
+    /// The Id of the Credential Definition to retrieve
     /// </summary>
     /// <example>5</example>
-    public int Days { get; set; }
+    public string CredentialDefinitionId { get; set; } = null!;
 
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    public GetCredentialDefinitionRequest() { }
+    public GetCredentialDefinitionRequest(string aCredentialDefinitionId)
+    {
+      CredentialDefinitionId = aCredentialDefinitionId;
+    }
+
+    internal override string RouteFactory
+    {
+      get
+      {
+        string temp =
+          Route
+          .Replace($"{{{nameof(CredentialDefinitionId)}}}", CredentialDefinitionId, System.StringComparison.Ordinal);
+
+        return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
+      }
+    }
   }
 }
