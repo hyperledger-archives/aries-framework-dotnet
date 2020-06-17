@@ -1,5 +1,7 @@
 namespace BlazorHosted.Features.Credentials
 {
+  using Hyperledger.Aries.Agents;
+  using Hyperledger.Aries.Features.IssueCredential;
   using MediatR;
   using System;
   using System.Collections.Generic;
@@ -9,6 +11,14 @@ namespace BlazorHosted.Features.Credentials
   
   public class GetCredentialsHandler : IRequestHandler<GetCredentialsRequest, GetCredentialsResponse>
   {
+    private readonly IAgentProvider AgentProvider;
+    private readonly ICredentialService CredentialService;
+
+    public GetCredentialsHandler(IAgentProvider aAgentProvider, ICredentialService aCredentialService)
+    {
+      AgentProvider = aAgentProvider;
+      CredentialService = aCredentialService;
+    }
 
     public async Task<GetCredentialsResponse> Handle
     (
@@ -16,7 +26,10 @@ namespace BlazorHosted.Features.Credentials
       CancellationToken aCancellationToken
     )
     {
-      var response = new GetCredentialsResponse(aGetCredentialsRequest.CorrelationId);
+      IAgentContext agentContext = await AgentProvider.GetContextAsync();
+      List<CredentialRecord> credentialRecords = await CredentialService.ListAsync(agentContext);
+
+      var response = new GetCredentialsResponse(aGetCredentialsRequest.CorrelationId, credentialRecords);
 
       return await Task.Run(() => response);
     }
