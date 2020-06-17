@@ -1,13 +1,17 @@
 namespace BlazorHosted.Features.CredentialDefinitions
 {
-  using System;
-  using System.Collections.Generic;
   using BlazorHosted.Features.Bases;
+  using System;
 
   public class CreateCredentialDefinitionResponse : BaseResponse
   {
+    public string CredentialDefinitionId { get; set; } = null!;
+
     public CreateCredentialDefinitionResponse() { }
 
-    public CreateCredentialDefinitionResponse(Guid aCorrelationId) : base(aCorrelationId) { }
+    public CreateCredentialDefinitionResponse(Guid aCorrelationId, string aCredentialDefinitionId) : base(aCorrelationId)
+    {
+      CredentialDefinitionId = aCredentialDefinitionId;
+    }
   }
 }

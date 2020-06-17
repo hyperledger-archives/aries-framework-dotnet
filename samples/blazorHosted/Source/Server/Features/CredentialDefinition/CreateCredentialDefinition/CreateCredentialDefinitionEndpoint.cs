@@ -9,14 +9,14 @@ namespace BlazorHosted.Features.CredentialDefinitions
   public class CreateCredentialDefinitionEndpoint : BaseEndpoint<CreateCredentialDefinitionRequest, CreateCredentialDefinitionResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Sends a credential definition to the ledger
     /// </summary>
     /// <param name="aCreateCredentialDefinitionRequest"><see cref="CreateCredentialDefinitionRequest"/></param>
     /// <returns><see cref="CreateCredentialDefinitionResponse"/></returns>
-    [HttpGet(CreateCredentialDefinitionRequest.Route)]
+    [HttpPost(CreateCredentialDefinitionRequest.Route)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(CreateCredentialDefinitionResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Process(CreateCredentialDefinitionRequest aCreateCredentialDefinitionRequest) => await Send(aCreateCredentialDefinitionRequest);
+    public async Task<IActionResult> Process([FromBody]CreateCredentialDefinitionRequest aCreateCredentialDefinitionRequest) => await Send(aCreateCredentialDefinitionRequest);
   }
 }

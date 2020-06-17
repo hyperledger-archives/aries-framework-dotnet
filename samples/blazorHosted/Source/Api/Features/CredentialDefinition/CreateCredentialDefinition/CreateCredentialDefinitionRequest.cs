@@ -7,6 +7,13 @@ namespace BlazorHosted.Features.CredentialDefinitions
   {
     public const string Route = "api/CredentialDefinitions/CreateCredentialDefinition";
 
+    public string SchemaId { get; set; } = null!;
+    public string? Tag { get; set; }
+    public bool EnableRevocation { get; set; } = false;
+    public string RevocationRegistryBaseUri { get; set; } = string.Empty;
+    public int RevocationRegistrySize { get; set; }
+    public bool RevocationRegistryAutoScale { get; set; }
+
     /// <summary>
     /// The Number of days of forecasts to get
     /// </summary>
