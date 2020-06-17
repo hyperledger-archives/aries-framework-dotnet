@@ -4,7 +4,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Decorators.Attachments;
 using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.PresentProof.Messages
+namespace Hyperledger.Aries.Features.PresentProof
 {
     /// <summary>
     /// Presentation Preview Inner Message
@@ -14,10 +14,12 @@ namespace Hyperledger.Aries.Features.PresentProof.Messages
         /// <summary>
 		/// Initializes a new instance of the <see cref="PresentationPreview" /> class.
 		/// </summary>
-        public PresentationPreview()
+        public PresentationPreview(ProposedAttribute[] attributes = null, ProposedPredicate[] predicates = null)
         {
             Id = Guid.NewGuid().ToString();
             Type = MessageTypes.PresentProofNames.PresentationPreview;
+            ProposedAttributes = attributes;
+            ProposedPredicates = predicates;
         }
 
 
@@ -28,18 +30,18 @@ namespace Hyperledger.Aries.Features.PresentProof.Messages
         /// The comment.
         /// </value>
         [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]
-        public AttributePreview[] AttributePreviews { get; set; }
+        public ProposedAttribute[] ProposedAttributes { get; set; }
 
         /// <summary>
         /// Gets or sets the predicate previews
         /// </summary>
         /// <value></value>
         [JsonProperty("predicates")]
-        public PredicatePreview[] PredicatePreviews { get; set; }
+        public ProposedPredicate[] ProposedPredicates { get; set; }
 
     }
 
-    public class AttributePreview
+    public class ProposedAttribute
     {
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace Hyperledger.Aries.Features.PresentProof.Messages
 
     }
 
-    public class PredicatePreview
+    public class ProposedPredicate
     {
         /// <summary>
         /// Gets or sets the Name of the Attribute

@@ -43,6 +43,17 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <returns>The type name.</returns>
         public override string TypeName => "AF.ProofRecord";
 
+
+        /// <summary>
+        /// Gets or sets the proof proposal json.
+        /// </summary>
+        /// <value>The proof proposal json.</value>
+        public string ProposalJson
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Gets or sets the proof request json.
         /// </summary>

@@ -449,6 +449,156 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
+        public Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(
+            IAgentContext agentContext,
+            ProposedAttribute[] Attributes,
+            ProposedPredicate[] Predicates,
+            string connectionId) =>
+            CreateProposalAsync(
+                agentContext: agentContext,
+                // TODO: Clean up param passing
+                presentationPreviewJson: new PresentationPreview(Attributes, Predicates)?.ToJson(),
+                connectionId: connectionId);
+
+        /// <inheritdoc />
+        public async Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, string presentationPreviewJson, string connectionId)
+        {
+            Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
+
+            if (presentationPreviewJson == null)
+            {
+                throw new ArgumentNullException(nameof(presentationPreviewJson), "You must provide a presentation preview");
+            }
+            if (connectionId != null)
+            {
+                var connection = await ConnectionService.GetAsync(agentContext, connectionId);
+
+                if (connection.State != ConnectionState.Connected)
+                    throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
+                        $"Connection state was invalid. Expected '{ConnectionState.Connected}', found '{connection.State}'");
+            }
+
+            var threadId = Guid.NewGuid().ToString();
+            var proofRecord = new ProofRecord
+            {
+                Id = Guid.NewGuid().ToString(),
+                ConnectionId = connectionId,
+                ProposalJson = presentationPreviewJson
+            };
+            
+            proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
+            proofRecord.SetTag(TagConstants.LastThreadId, threadId);
+
+            await RecordService.AddAsync(agentContext.Wallet, proofRecord);
+
+            var message = new ProposePresentationMessage
+            {
+                Id = threadId,
+                // TODO: Confirm this deserialization will go through successfully
+                PresentationPreview = presentationPreviewJson.ToObject<PresentationPreview>()
+            };
+            message.ThreadFrom(threadId);
+            return (message, proofRecord);
+        }
+
+
+        public async Task<ProofRecord> ProcessProposalAsync(IAgentContext agentContext, ProposePresentationMessage proposePresentationMessage, ConnectionRecord connection)
+        {
+            // save in wallet
+            var proposalJson = proposePresentationMessage.PresentationPreview.ToJson();
+
+            var proofRecord = new ProofRecord
+            {
+                Id = Guid.NewGuid().ToString(),
+                ProposalJson = proposalJson,
+                ConnectionId = connection?.Id,
+                State = ProofState.Proposed
+            };
+
+            proofRecord.SetTag(TagConstants.LastThreadId, proposePresentationMessage.GetThreadId());
+            proofRecord.SetTag(TagConstants.Role, TagConstants.Requestor);
+
+            await RecordService.AddAsync(agentContext.Wallet, proofRecord);
+
+            EventAggregator.Publish(new ServiceMessageProcessingEvent
+            {
+                RecordId = proofRecord.Id,
+                MessageType = proposePresentationMessage.Type,
+                ThreadId = proposePresentationMessage.GetThreadId()
+            });
+
+            return proofRecord;
+        }
+
+        /// <inheritdoc />
+        public async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext,
+            string proofRecordId, string connectionId) 
+        {
+            Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
+
+            if (proofRecordId == null)
+            {
+                throw new ArgumentNullException(nameof(proofRecordId), "You must provide proof record Id");
+            }
+            if (connectionId != null)
+            {
+                var connection = await ConnectionService.GetAsync(agentContext, connectionId);
+
+                if (connection.State != ConnectionState.Connected)
+                    throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
+                        $"Connection state was invalid. Expected '{ConnectionState.Connected}', found '{connection.State}'");
+            }
+
+            var proofRecord = await RecordService.GetAsync<ProofRecord>(agentContext.Wallet, proofRecordId);
+            var presentationPreview = proofRecord.ProposalJson.ToObject<PresentationPreview>();
+
+
+            // turn proofProposal into proofRequest
+            var proofRequest = new ProofRequest();
+            
+            // TODO: Pass name from proposed into requested
+            proofRequest.Name = "Test";
+            proofRequest.Version = "1.0";
+            foreach (var attr in presentationPreview.ProposedAttributes)
+            {
+                // convert Proposed to Requested
+            }
+            foreach(var pred in presentationPreview.ProposedPredicates)
+            {
+                // convert proposed to requested
+            }
+
+            //TODO: Remove these three lines?
+            var threadId = Guid.NewGuid().ToString();
+            proofRecord.SetTag(TagConstants.Role, TagConstants.Requestor);
+            proofRecord.SetTag(TagConstants.LastThreadId, threadId);
+
+            await RecordService.AddAsync(agentContext.Wallet, proofRecord);
+
+            var message = new RequestPresentationMessage
+            {
+                Id = threadId,
+                Requests = new[]
+                {
+                    new Attachment
+                    {
+                        Id = "libindy-request-presentation-0",
+                        MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
+                        Data = new AttachmentContent
+                        {
+                            Base64 = proofRequest
+                                .ToJson()
+                                .GetUTF8Bytes()
+                                .ToBase64String()
+                        }
+                    }
+                }
+            };
+            message.ThreadFrom(threadId);
+            return (message, proofRecord);
+        }
+
+        /// <inheritdoc />
         public async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, ProofRequest proofRequest)
         {
             var (message, record) = await CreateRequestAsync(agentContext, proofRequest, null);
@@ -564,21 +714,6 @@ namespace Hyperledger.Aries.Features.PresentProof
             proofMsg.ThreadFrom(threadId);
 
             return (proofMsg, record);
-        }
-
-        public Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, AttributePreview[] attributes, PredicatePreviews[] predicates, string connectionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<(RequestPresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, string proofProposalJson, string connectionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ProofRecord> ProcessProposalAsync(IAgentContext agentContext, ProposePresentationMessage proofProposal, ConnectionRecord connection)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
