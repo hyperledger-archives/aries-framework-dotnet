@@ -108,7 +108,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         }
 
         [Fact]
-        public async Task CredentialProofDemo()
+        public async Task RequestorInitiatedCredentialProofDemo()
         {
             var events = 0;
             _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
@@ -137,7 +137,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             var (holderRequestorConnection, requestorConnection) = await Scenarios.EstablishConnectionAsync(
                 _connectionService, _messages, _holderWallet, _requestorWallet);
 
-            await Scenarios.ProofProtocolAsync(_proofService, _messages, holderRequestorConnection, requestorConnection,
+            await Scenarios.RequestorInitiatedProofProtocolAsync(_proofService, _messages, holderRequestorConnection, requestorConnection,
                 _holderWallet, _requestorWallet, new ProofRequest()
                 {
                     Name = "ProofReq",
@@ -152,6 +152,76 @@ namespace Hyperledger.Aries.Tests.Protocols
             _messages.Clear();
 
             Assert.True(events == 2);
+        }
+
+        [Fact]
+        public async Task ProposerInitiatedCredentialProofDemo()
+        {
+                    var events = 0;
+            _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(_ => (_.MessageType == MessageTypes.PresentProofNames.ProposePresentation ||
+                             _.MessageType == MessageTypes.PresentProofNames.RequestPresentation ||
+                             _.MessageType == MessageTypes.PresentProofNames.Presentation))
+                .Subscribe(_ =>
+                {
+                    events++;
+                });
+
+            //Setup a connection and issue the credentials to the holder
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            await Scenarios.IssueCredentialAsync(
+                _schemaService, _credentialService, _messages, issuerConnection,
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
+                {
+                    new CredentialPreviewAttribute("first_name", "Test"),
+                    new CredentialPreviewAttribute("last_name", "Holder")
+                });
+
+            _messages.Clear();
+
+            //Requestor initialize a connection with the holder
+            var (holderRequestorConnection, requestorConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _holderWallet, _requestorWallet);
+
+            await Scenarios.ProposerInitiatedProofProtocolAsync(_proofService, _messages, holderRequestorConnection, requestorConnection,
+                _holderWallet, _requestorWallet, new ProofProposal()
+                {
+                    Comment = "Hello, World",
+                    ProposedAttributes = new List<ProposedAttribute>
+                    {
+                        // TODO: finish this body
+                    }
+                });
+
+            _messages.Clear();
+
+            Assert.True(events == 2);
+
+        }
+
+         [Fact]
+        public async Task CreateProofProposal()
+        {
+            var connectionId = Guid.NewGuid.ToString();
+            await _connectionService.CreateInvitationAsync(_issuerWallet, new InvitationConfiguration { ConnectionId = connectionId});
+            var (message, record) = await _proofService.CreateProposalAsync(_issuerWallet, new ProofProposal
+            {
+                Comment = "Hello, World",
+                ProposedAttributes = new List<ProposedAttribute>
+                {
+                    new ProposedAttribute() 
+                    {
+                        Name = "first_name",
+                        CredentialDefinitionId = "asdf",
+                        Referent = "asdf",
+                        Value = "Joe"
+                    }
+                }
+            }, connectionId);
+
+            Assert.NotNull(message);
         }
 
         [Fact]
