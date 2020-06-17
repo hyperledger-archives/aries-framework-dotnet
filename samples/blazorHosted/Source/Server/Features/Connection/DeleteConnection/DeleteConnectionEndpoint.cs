@@ -9,14 +9,11 @@ namespace BlazorHosted.Features.Connections
   public class DeleteConnectionEndpoint : BaseEndpoint<DeleteConnectionRequest, DeleteConnectionResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Delete a connection record
     /// </summary>
-    /// <remarks>
-    /// Longer Description
-    /// </remarks>
-    /// <param name="aDeleteConnectionRequest"></param>
+    /// <param name="aDeleteConnectionRequest"><see cref="DeleteConnectionRequest"/></param>
     /// <returns><see cref="DeleteConnectionResponse"/></returns>
-    [HttpGet(DeleteConnectionRequest.Route)]
+    [HttpDelete(DeleteConnectionRequest.Route)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(DeleteConnectionResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
