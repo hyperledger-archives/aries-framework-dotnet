@@ -3,7 +3,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Decorators.Attachments;
 using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.PresentProof.Messages
+namespace Hyperledger.Aries.Features.PresentProof
 {
     /// <summary>
     /// Propose Presentation Message
