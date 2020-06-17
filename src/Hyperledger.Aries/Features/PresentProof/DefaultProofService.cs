@@ -564,8 +564,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 Name = requestName,
                 Version = requestVersion,
                 // TODO: how should the nonce be set when creating a new proofRequest
-                Nonce = await AnonCreds.GenerateNonceAsync(),
-                
+                Nonce = await AnonCreds.GenerateNonceAsync()
             };
 
             // Get Requested Attributes
@@ -588,7 +587,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 var attributeNames = referent.Value.Count() > 1 ? referent.Value.ConvertAll<string>(r => r.Name).ToArray() : null;
                 var credentialDefinitionId = referent.Value.First().CredentialDefinitionId;
 
-                // TODO: this keyNameis not unique
+                // TODO: this keyName is not unique
                 var keyName = $"Proof of {attributeName ?? string.Join(", ", attributeNames)}";
                 var requestedAttribute = new ProofAttributeInfo()
                 {
@@ -603,7 +602,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 proofRequest.RequestedAttributes.Add(keyName, requestedAttribute);
             }
 
-            // Get Requested Attributes
+            // Get Requested Predicates
             foreach(var pred in proofProposal.ProposedPredicates)
             {
                 // TODO: this keyname is not unique 

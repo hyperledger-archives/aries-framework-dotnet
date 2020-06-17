@@ -162,7 +162,33 @@ namespace Hyperledger.TestHarness
             return (issuerCredential, holderCredential);
         }
 
-        public static async Task<(ProofRecord holderProofRecord, ProofRecord RequestorProofRecord)> ProofProtocolAsync(
+        public static async Task<(ProofRecord holderProofRecord, ProofRecord RequestorProofRecord)> ProposerInitiatedProofProtocolAsync(
+            IProofService proofService,
+            IProducerConsumerCollection<AgentMessage> messages,
+            ConnectionRecord holderConnection, ConnectionRecord requestorConnection,
+            IAgentContext holderContext,
+            IAgentContext requestorContext, ProofProposal proofProposalObject)
+        {
+            // Holder sends a proof proposal
+            var (message, holderProofRecord) = await proofService.CreateProposalAsync(holderContext, proofProposalObject, holderConnection.Id);
+            messages.TryAdd(message);
+
+            // Requestor accepts the proposal and builds a proofRequest
+            var proofProposal = FindContentMessage<ProposePresentationMessage>(messages);
+            Assert.NotNull(proofProposal);
+
+            //Requestor stores the proof proposal
+            var requestorProofProposalRecord = await proofService.ProcessProposalAsync(requestorContext, proofProposal, requestorContext);
+            var requestorProofRecord = await proofService.GetAsync(requestorContext, requestorProofProposalRecord.Id);
+
+            // Requestor sends a proof request
+            var (message, requestorProofRecord) = await proofService.CreateRequestFromProposalAsync(requestorContext, "Test", "1.0", requestorProofRecord.id, requestorConnection.Id);
+            messages.TryAdd(message);
+
+            return ProofProtocolAsync(proofService, messages, holderConnection, requestorProofRecord, holderContext, requestorContext, holderProofRecord, requestorProofRecord);
+        }
+
+        public static async Task<(ProofRecord holderProofRecord, ProofRecord RequestorProofRecord)> RequestorInitiatedProofProtocolAsync(
             IProofService proofService,
             IProducerConsumerCollection<AgentMessage> messages,
             ConnectionRecord holderConnection, ConnectionRecord requestorConnection,
@@ -174,13 +200,28 @@ namespace Hyperledger.TestHarness
             var (message, requestorProofRecord) = await proofService.CreateRequestAsync(requestorContext, proofRequestObject, requestorConnection.Id);
             messages.TryAdd(message);
 
+            return ProofProtocolAsync(proofService, messages, holderConnection, requestorProofRecord, holderContext, requestorContext, HolderProofRecord = null, requestorProofRecord);
+        }
+
+        public static async Task<(ProofRecord holderProofRecord, ProofRecord RequestorProofRecord)> ProofProtocolAsync(
+            IProofService proofService,
+            IProducerConsumerCollection<AgentMessage> messages,
+            ConnectionRecord holderConnection, ConnectionRecord requestorConnection,
+            IAgentContext holderContext,
+            IAgentContext requestorContext, ProofRecord HolderProofRecord, ProofRecord RequestorProofRecord)
+        {
+
             // Holder accepts the proof requests and builds a proof
             var proofRequest = FindContentMessage<RequestPresentationMessage>(messages);
             Assert.NotNull(proofRequest);
 
-            //Holder stores the proof request
+            //Holder stores the proof request if they haven't created it already
             var holderProofRequestRecord = await proofService.ProcessRequestAsync(holderContext, proofRequest, holderConnection);
-            var holderProofRecord = await proofService.GetAsync(holderContext, holderProofRequestRecord.Id);
+            if (HolderProofRecord == null)
+            {
+                var holderProofRecord = await proofService.GetAsync(holderContext, holderProofRequestRecord.Id);
+            }
+            
             var holderProofRequest = JsonConvert.DeserializeObject<ProofRequest>(holderProofRecord.RequestJson);
 
             // Auto satify the proof with which ever credentials in the wallet are capable
