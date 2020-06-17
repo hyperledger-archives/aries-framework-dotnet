@@ -9,14 +9,15 @@ namespace BlazorHosted.Features.Schemas
   public class CreateSchemaEndpoint : BaseEndpoint<CreateSchemaRequest, CreateSchemaResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Creates new schema
     /// </summary>
     /// <param name="aCreateSchemaRequest"><see cref="CreateSchemaRequest"/></param>
     /// <returns><see cref="CreateSchemaResponse"/></returns>
-    [HttpGet(CreateSchemaRequest.Route)]
+    [HttpPost(CreateSchemaRequest.Route)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(CreateSchemaResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Process(CreateSchemaRequest aCreateSchemaRequest) => await Send(aCreateSchemaRequest);
+    public async Task<IActionResult> Process([FromBody]CreateSchemaRequest aCreateSchemaRequest) => 
+      await Send(aCreateSchemaRequest);
   }
 }

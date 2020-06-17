@@ -4,15 +4,13 @@ namespace BlazorHosted.Features.Schemas
   using Hyperledger.Aries.Features.IssueCredential;
   using Hyperledger.Aries.Models.Records;
   using MediatR;
-  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading;
   using System.Threading.Tasks;
-  
+
   public class GetSchemaHandler : IRequestHandler<GetSchemaRequest, GetSchemaResponse>
   {
-
     private readonly IAgentProvider AgentProvider;
     private readonly ISchemaService SchemaService;
 
