@@ -12,6 +12,42 @@ namespace Hyperledger.Aries.Features.PresentProof
     /// </summary>
     public interface IProofService
     {
+
+        /// <summary>
+        /// Creates a proof proposal.
+        /// </summary>
+        /// <returns>The proof proposal.</returns>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="attributes">An enumeration of attributes that we wish the verifier to request.</param>
+        /// <param name="predicates">An enumeration of predicates that we wish the verifier to request.</param>
+        /// <param name="connectionId">Connection identifier of who the proof request will be sent to.</param>
+        /// <returns>Proof Request message and identifier.</returns>
+        Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext,
+            AttributePreview[] attributes, PredicatePreviews[] predicates, string connectionId);
+
+        /// <summary>
+        /// Creates a proof proposal from string representation of proof proposal json object.
+        /// </summary>
+        /// <returns>The proof request.</returns>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="proofProposalJson">A string representation of proof proposal json object</param>
+        /// <param name="connectionId">Connection identifier of who the proof proposal will be sent to.</param>
+        /// <returns>Proof Request message and identifier.</returns>
+        Task<(RequestPresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext,
+            string proofProposalJson, string connectionId);
+
+
+        /// <summary>
+        /// Processes a proof proposal and stores it for a given connection.
+        /// </summary>
+        /// <returns>The identifier for the stored proof proposal.</returns>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="proofProposal">A proof proposal.</param>
+        /// <param name="connection">Connection.</param>
+        /// <returns>Proof identifier.</returns>
+        Task<ProofRecord> ProcessProposalAsync(IAgentContext agentContext, ProposePresentationMessage proofProposal, ConnectionRecord connection);
+
+
         /// <summary>
         /// Creates a proof request.
         /// </summary>

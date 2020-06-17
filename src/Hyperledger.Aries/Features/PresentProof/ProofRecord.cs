@@ -97,6 +97,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         private StateMachine<ProofState, ProofTrigger> GetStateMachine()
         {
             var state = new StateMachine<ProofState, ProofTrigger>(() => State, x => State = x);
+            state.Configure(ProofState.Proposed).Permit(ProofTrigger.Propose, ProofState.Requested);
             state.Configure(ProofState.Requested).Permit(ProofTrigger.Accept, ProofState.Accepted);
             state.Configure(ProofState.Requested).Permit(ProofTrigger.Reject, ProofState.Rejected);
             return state;
@@ -122,15 +123,19 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <summary>
         /// The requested
         /// </summary>
-        Requested = 0,
+        Proposed = 0,
+        /// <summary>
+        /// The requested
+        /// </summary>
+        Requested = 1,
         /// <summary>
         /// The accepted
         /// </summary>
-        Accepted = 1,
+        Accepted = 2,
         /// <summary>
         /// The rejected
         /// </summary>
-        Rejected = 2
+        Rejected = 3
     }
 
     /// <summary>
@@ -138,6 +143,10 @@ namespace Hyperledger.Aries.Features.PresentProof
     /// </summary>
     public enum ProofTrigger
     {
+        /// <summary>
+        /// The request
+        /// </summary>
+        Propose,
         /// <summary>
         /// The request
         /// </summary>
