@@ -1,18 +1,25 @@
 namespace BlazorHosted.Features.Credentials
 {
-  using MediatR;
   using BlazorHosted.Features.Bases;
+  using MediatR;
 
   public class GetCredentialRequest : BaseApiRequest, IRequest<GetCredentialResponse>
   {
-    public const string Route = "api/Credentials/GetCredential";
+    public const string Route = "api/credentials/{CredentialId}";
 
     /// <summary>
-    /// The Number of days of forecasts to get
+    /// The Id of the Credential to return
     /// </summary>
     /// <example>5</example>
-    public int Days { get; set; }
+    public string CredentialId { get; set; } = null!;
 
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    internal override string RouteFactory
+    {
+      get
+      {
+        string temp = Route.Replace($"{{{nameof(CredentialId)}}}", CredentialId, System.StringComparison.Ordinal);
+        return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
+      }
+    }
   }
 }
