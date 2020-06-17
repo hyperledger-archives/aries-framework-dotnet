@@ -14,12 +14,10 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <summary>
 		/// Initializes a new instance of the <see cref="PresentationPreview" /> class.
 		/// </summary>
-        public PresentationPreview(ProposedAttribute[] attributes = null, ProposedPredicate[] predicates = null)
+        public PresentationPreview()
         {
             Id = Guid.NewGuid().ToString();
             Type = MessageTypes.PresentProofNames.PresentationPreview;
-            ProposedAttributes = attributes;
-            ProposedPredicates = predicates;
         }
 
 

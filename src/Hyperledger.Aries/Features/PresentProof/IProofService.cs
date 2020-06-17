@@ -33,7 +33,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <param name="presentationPreviewJson">A string representation of proof proposal json object</param>
         /// <param name="connectionId">Connection identifier of who the proof proposal will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
-        Task<(RequestPresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext,
+        Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext,
             string presentationPreviewJson, string connectionId);
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <param name="connectionId">Connection identifier of who the proof proposal will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
         Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext,
-            string proofRecordId, string connectionId);
+            string proofRecordId, string requestName, string requestVersion, string connectionId);
 
         
         /// <summary>

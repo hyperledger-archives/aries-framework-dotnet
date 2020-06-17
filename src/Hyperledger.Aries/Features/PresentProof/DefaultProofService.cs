@@ -451,23 +451,22 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <inheritdoc />
         public Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(
             IAgentContext agentContext,
-            ProposedAttribute[] Attributes,
-            ProposedPredicate[] Predicates,
+            ProofProposal proofProposal,
             string connectionId) =>
             CreateProposalAsync(
                 agentContext: agentContext,
                 // TODO: Clean up param passing
-                presentationPreviewJson: new PresentationPreview(Attributes, Predicates)?.ToJson(),
+                proofProposalJson: proofProposal.ToJson(),
                 connectionId: connectionId);
 
         /// <inheritdoc />
-        public async Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, string presentationPreviewJson, string connectionId)
+        public async Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, string proofProposalJson, string connectionId)
         {
             Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
 
-            if (presentationPreviewJson == null)
+            if (proofProposalJson == null)
             {
-                throw new ArgumentNullException(nameof(presentationPreviewJson), "You must provide a presentation preview");
+                throw new ArgumentNullException(nameof(proofProposalJson), "You must provide a presentation preview");
             }
             if (connectionId != null)
             {
@@ -483,7 +482,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             {
                 Id = Guid.NewGuid().ToString(),
                 ConnectionId = connectionId,
-                ProposalJson = presentationPreviewJson
+                ProposalJson = proofProposalJson
             };
             
             proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
@@ -491,11 +490,17 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             await RecordService.AddAsync(agentContext.Wallet, proofRecord);
 
+            var proofProposal = proofProposalJson.ToObject<ProofProposal>();
             var message = new ProposePresentationMessage
             {
                 Id = threadId,
+                Comment = proofProposal.Comment,
                 // TODO: Confirm this deserialization will go through successfully
-                PresentationPreview = presentationPreviewJson.ToObject<PresentationPreview>()
+                PresentationPreview = new PresentationPreview() 
+                {
+                    ProposedAttributes = proofProposal.ProposedAttributes.ToArray(),
+                    ProposedPredicates = proofProposal.ProposedPredicates.ToArray()
+                }
             };
             message.ThreadFrom(threadId);
             return (message, proofRecord);
@@ -531,7 +536,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
-        public async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext,
+        public async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext, string requestName, string requestVersion,
             string proofRecordId, string connectionId) 
         {
             Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
@@ -550,46 +555,77 @@ namespace Hyperledger.Aries.Features.PresentProof
             }
 
             var proofRecord = await RecordService.GetAsync<ProofRecord>(agentContext.Wallet, proofRecordId);
-            var presentationPreview = proofRecord.ProposalJson.ToObject<PresentationPreview>();
+            var proofProposal = proofRecord.ProposalJson.ToObject<ProofProposal>();
 
-
-            // turn proofProposal into proofRequest
-            var proofRequest = new ProofRequest();
-
-            // TODO: Pass name from proposed into requested
-            proofRequest.Name = "Test";
-            proofRequest.Version = "1.0";
-            foreach (var attr in presentationPreview.ProposedAttributes)
+            
+            // Create Proof Request
+            var proofRequest = new ProofRequest 
             {
-                // If there are more attributes that all have the same 
-                // credentail ID, then they should be part of the same policy. We'll need to check these
-                // convert Proposed to Requested
-                // How is referent managed in the proof request?
-                var requestedAttribute = new ProofAttributeInfo()
-                {
-                    Name = attr.Name
-                    //Names - the referent will tell us which attribures share the same cred def. 
-                    //If they share the same cred def and refernt, then they are the same
-                    //
-                };
+                Name = requestName,
+                Version = requestVersion,
+                // TODO: how should the nonce be set when creating a new proofRequest
+                Nonce = await AnonCreds.GenerateNonceAsync(),
+                
+            };
 
-                if (attr.CredentialDefinitionId != null)
+            // Get Requested Attributes
+            var attributesByReferent = new Dictionary<string, List<ProposedAttribute>>();
+            foreach(var proposedAttribute in proofProposal.ProposedAttributes)
+            {
+                if(attributesByReferent.TryGetValue(proposedAttribute.Referent, out var referentAttributes)) 
                 {
-                    requestedAttribute.Restrictions.Add(new AttributeFilter(){
-                        CredentialDefinitionId = attr.CredentialDefinitionId
-                    });
+                    referentAttributes.Add(proposedAttribute);
+                }
+                else
+                {
+                    attributesByReferent.Add(proposedAttribute.Referent, new List<ProposedAttribute> { proposedAttribute });
                 }
             }
-            foreach(var pred in presentationPreview.ProposedPredicates)
+
+            foreach (var referent in attributesByReferent.AsEnumerable())
             {
-                // convert proposed to requested
+                var attributeName = referent.Value.Count() == 1 ? referent.Value.Single().Name : null;
+                var attributeNames = referent.Value.Count() > 1 ? referent.Value.ConvertAll<string>(r => r.Name).ToArray() : null;
+                var credentialDefinitionId = referent.Value.First().CredentialDefinitionId;
+
+                // TODO: this keyNameis not unique
+                var keyName = $"Proof of {attributeName ?? string.Join(", ", attributeNames)}";
+                var requestedAttribute = new ProofAttributeInfo()
+                {
+                    Name = attributeName,
+                    Names = attributeNames,
+                    // TODO: What if the credential definition Id is empty? aka, self attested attributes?
+                    Restrictions = new List<AttributeFilter> 
+                    {
+                        new AttributeFilter { CredentialDefinitionId = credentialDefinitionId }
+                    }
+                };
+                proofRequest.RequestedAttributes.Add(keyName, requestedAttribute);
             }
 
-            //TODO: Remove these three lines?
+            // Get Requested Attributes
+            foreach(var pred in proofProposal.ProposedPredicates)
+            {
+                // TODO: this keyname is not unique 
+                var keyName = $"{pred.Name} {pred.Predicate} {pred.Threshold}";
+                var predicate = new ProofPredicateInfo() 
+                {
+                    PredicateType = pred.Predicate,
+                    PredicateValue = pred.Threshold,
+                    Restrictions = new List<AttributeFilter> 
+                    {
+                        new AttributeFilter { CredentialDefinitionId = pred.CredentialDefinitionId }
+                    }
+                    
+                };
+                proofRequest.RequestedPredicates.Add(keyName, predicate);
+            }
+
+            //TODO: Do we need to update the threadID?
             var threadId = Guid.NewGuid().ToString();
+            proofRecord.RequestJson = proofRequest.ToJson();
             proofRecord.SetTag(TagConstants.Role, TagConstants.Requestor);
             proofRecord.SetTag(TagConstants.LastThreadId, threadId);
-
             await RecordService.AddAsync(agentContext.Wallet, proofRecord);
 
             var message = new RequestPresentationMessage
