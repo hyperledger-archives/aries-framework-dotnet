@@ -134,30 +134,39 @@ namespace BlazorHosted.Server
     {
       // Register the Swagger generator, defining 1 or more Swagger documents
       aServiceCollection.AddSwaggerGen
-        (
-          aSwaggerGenOptions =>
-          {
-            aSwaggerGenOptions
+      (
+        aSwaggerGenOptions =>
+        {
+          aSwaggerGenOptions
             .SwaggerDoc
             (
               SwaggerVersion,
               new OpenApiInfo { Title = SwaggerApiTitle, Version = SwaggerVersion }
             );
-            aSwaggerGenOptions.EnableAnnotations();
 
-            // Set the comments path for the Swagger JSON and UI.
-            string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            aSwaggerGenOptions.IncludeXmlComments(xmlPath);
+          aSwaggerGenOptions.EnableAnnotations();
 
-            // Set the comments path for the Swagger JSON and UI from API.
-            xmlFile = $"{typeof(BaseRequest).Assembly.GetName().Name}.xml";
-            xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            aSwaggerGenOptions.IncludeXmlComments(xmlPath);
+          // Set the comments path for the Swagger JSON and UI.
+          string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+          string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+          aSwaggerGenOptions.IncludeXmlComments(xmlPath);
 
-            aSwaggerGenOptions.AddFluentValidationRules();
-          }
-        );
+          // Set the comments path for the Swagger JSON and UI from API.
+          xmlFile = $"{typeof(BaseRequest).Assembly.GetName().Name}.xml";
+          xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+          aSwaggerGenOptions.IncludeXmlComments(xmlPath);
+
+          aSwaggerGenOptions.AddFluentValidationRules();
+
+          aSwaggerGenOptions
+            .OrderActionsBy
+            (
+              aApiDescription => 
+                $"{aApiDescription.GroupName}{aApiDescription.HttpMethod}{aApiDescription.RelativePath.Contains("{")}{aApiDescription.RelativePath}"
+            );
+
+        }
+      );
     }
   }
 }
