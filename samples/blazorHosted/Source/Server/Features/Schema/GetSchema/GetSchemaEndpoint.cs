@@ -9,7 +9,7 @@ namespace BlazorHosted.Features.Schemas
   public class GetSchemaEndpoint : BaseEndpoint<GetSchemaRequest, GetSchemaResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Returns the Schema with requested <see cref="GetSchemaRequest.SchemaId"/>
     /// </summary>
     /// <param name="aGetSchemaRequest"><see cref="GetSchemaRequest"/></param>
     /// <returns><see cref="GetSchemaResponse"/></returns>

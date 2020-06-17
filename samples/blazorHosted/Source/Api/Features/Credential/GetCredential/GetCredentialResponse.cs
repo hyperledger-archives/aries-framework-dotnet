@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.Credentials
 
   public class GetCredentialResponse : BaseResponse
   {
-    public CredentialRecord CredentialRecord { get; set; } = null!;
+    public CredentialRecord? CredentialRecord { get; set; }
 
     public GetCredentialResponse() { }
 
