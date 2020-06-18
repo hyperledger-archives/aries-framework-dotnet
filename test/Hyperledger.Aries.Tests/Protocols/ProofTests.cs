@@ -204,8 +204,8 @@ namespace Hyperledger.Aries.Tests.Protocols
          [Fact]
         public async Task CreateProofProposal()
         {
-            var connectionId = Guid.NewGuid.ToString();
-            await _connectionService.CreateInvitationAsync(_issuerWallet, new InvitationConfiguration { ConnectionId = connectionId});
+            var connectionId = Guid.NewGuid().ToString();
+            await _connectionService.CreateInvitationAsync(_issuerWallet, new InviteConfiguration { ConnectionId = connectionId});
             var (message, record) = await _proofService.CreateProposalAsync(_issuerWallet, new ProofProposal
             {
                 Comment = "Hello, World",

@@ -671,13 +671,30 @@ namespace Hyperledger.Aries.Features.PresentProof
             var requestJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
 
             // Write offer record to local wallet
-            var proofRecord = new ProofRecord
+            ProofRecord proofRecord;
+            try
             {
-                Id = Guid.NewGuid().ToString(),
-                RequestJson = requestJson,
-                ConnectionId = connection?.Id,
-                State = ProofState.Requested
-            };
+                proofRecord = await this.GetByThreadIdAsync(agentContext, requestPresentationMessage.GetThreadId());
+            }
+            catch (AriesFrameworkException e)
+            {
+                if(e.ErrorCode == ErrorCode.RecordNotFound)
+                {
+                    proofRecord = new ProofRecord
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        RequestJson = requestJson,
+                        ConnectionId = connection?.Id,
+                        State = ProofState.Requested
+                    };
+                }
+                else
+                {
+                    throw e;
+                }
+            
+            }
+            
             proofRecord.SetTag(TagConstants.LastThreadId, requestPresentationMessage.GetThreadId());
             proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
 
