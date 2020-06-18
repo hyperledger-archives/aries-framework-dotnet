@@ -1,25 +1,36 @@
 namespace BlazorHosted.Features.CredentialDefinitions
 {
-  using MediatR;
   using BlazorHosted.Features.Bases;
+  using MediatR;
+  using System;
 
   public class CreateCredentialDefinitionRequest : BaseApiRequest, IRequest<CreateCredentialDefinitionResponse>
   {
-    public const string Route = "api/CredentialDefinitions/CreateCredentialDefinition";
-
-    public string SchemaId { get; set; } = null!;
-    public string? Tag { get; set; }
-    public bool EnableRevocation { get; set; } = false;
-    public string RevocationRegistryBaseUri { get; set; } = string.Empty;
-    public int RevocationRegistrySize { get; set; }
-    public bool RevocationRegistryAutoScale { get; set; }
+    public const string Route = "api/credential-definitions";
 
     /// <summary>
-    /// The Number of days of forecasts to get
+    /// Should these credentials be revocable
     /// </summary>
-    /// <example>5</example>
-    public int Days { get; set; }
+    public bool EnableRevocation { get; set; } = false;
 
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    public bool RevocationRegistryAutoScale { get; set; }
+
+    public Uri? RevocationRegistryBaseUri { get; set; }
+
+    public int RevocationRegistrySize { get; set; }
+
+    /// <summary>
+    /// The Id of the Schema to be used for the Credential Definition
+    /// </summary>
+    /// <example>WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0</example>
+    public string SchemaId { get; set; } = null!;
+
+    /// <summary>
+    /// Credential definition identifier tag
+    /// </summary>
+    /// <example>default</example>
+    public string? Tag { get; set; }
+
+    internal override string RouteFactory => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }

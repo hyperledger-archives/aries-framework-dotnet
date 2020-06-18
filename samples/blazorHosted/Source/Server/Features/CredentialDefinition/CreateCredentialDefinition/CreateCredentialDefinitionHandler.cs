@@ -47,7 +47,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
             Tag = aCreateCredentialDefinitionRequest.Tag,
             EnableRevocation = aCreateCredentialDefinitionRequest.EnableRevocation,
             RevocationRegistrySize = aCreateCredentialDefinitionRequest.RevocationRegistrySize,
-            RevocationRegistryBaseUri = aCreateCredentialDefinitionRequest.RevocationRegistryBaseUri,
+            RevocationRegistryBaseUri = aCreateCredentialDefinitionRequest.RevocationRegistryBaseUri.ToString(),
             RevocationRegistryAutoScale = aCreateCredentialDefinitionRequest.RevocationRegistryAutoScale,
             IssuerDid = issuerProvisioningRecord.IssuerDid
           }
