@@ -23,7 +23,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <param name="connectionId">Connection identifier of who the proof request will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
         Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext,
-            ProposedAttribute[] attributes, ProposedPredicate[] predicates, string connectionId);
+            ProofProposal proofProposal, string connectionId);
 
         /// <summary>
         /// Creates a proof proposal from string representation of proof proposal json object.

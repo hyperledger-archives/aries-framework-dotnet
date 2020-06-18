@@ -49,24 +49,24 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The requested predicates.</value>
         [JsonProperty("requested_predicates", NullValueHandling = NullValueHandling.Ignore)]
-        public List<ProposedPredicate> ProposedPredicates { get; set; } 
+        public List<ProposedPredicate> ProposedPredicates { get; set; }
 
-    //     /// <summary>
-    //     /// Gets or sets the non revoked.
-    //     /// </summary>
-    //     /// <value>The non revoked.</value>
-    //     [JsonProperty("non_revoked", NullValueHandling = NullValueHandling.Ignore)]
-    //     public RevocationInterval NonRevoked { get; set; }
-        
-    //     /// <inheritdoc />
-    //     public override string ToString() =>
-    //         $"{GetType().Name}: " +
-    //         $"Name={Name}, " +
-    //         $"Version={Version}, " +
-    //         $"Nonce={Nonce}, " +
-    //         $"RequestedAttributes={string.Join(",", RequestedAttributes ?? new Dictionary<string, ProofAttributeInfo>())}, " +
-    //         $"RequestedPredicates={string.Join(",", RequestedPredicates ?? new Dictionary<string, ProofPredicateInfo>())}, " +
-    //         $"NonRevoked={NonRevoked}";
-    // }
+        //     /// <summary>
+        //     /// Gets or sets the non revoked.
+        //     /// </summary>
+        //     /// <value>The non revoked.</value>
+        //     [JsonProperty("non_revoked", NullValueHandling = NullValueHandling.Ignore)]
+        //     public RevocationInterval NonRevoked { get; set; }
 
+        //     /// <inheritdoc />
+        //     public override string ToString() =>
+        //         $"{GetType().Name}: " +
+        //         $"Name={Name}, " +
+        //         $"Version={Version}, " +
+        //         $"Nonce={Nonce}, " +
+        //         $"RequestedAttributes={string.Join(",", RequestedAttributes ?? new Dictionary<string, ProofAttributeInfo>())}, " +
+        //         $"RequestedPredicates={string.Join(",", RequestedPredicates ?? new Dictionary<string, ProofPredicateInfo>())}, " +
+        //         $"NonRevoked={NonRevoked}";
+        // }
+    }
 }
