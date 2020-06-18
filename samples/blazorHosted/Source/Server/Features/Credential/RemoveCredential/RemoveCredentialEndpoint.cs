@@ -9,14 +9,14 @@ namespace BlazorHosted.Features.Credentials
   public class RemoveCredentialEndpoint : BaseEndpoint<RemoveCredentialRequest, RemoveCredentialResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Remove a credential from the wallet by id
     /// </summary>
     /// <param name="aRemoveCredentialRequest"><see cref="RemoveCredentialRequest"/></param>
     /// <returns><see cref="RemoveCredentialResponse"/></returns>
-    [HttpGet(RemoveCredentialRequest.Route)]
+    [HttpPost(RemoveCredentialRequest.Route)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(RemoveCredentialResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Process(RemoveCredentialRequest aRemoveCredentialRequest) => await Send(aRemoveCredentialRequest);
+    public async Task<IActionResult> Process([FromBody] RemoveCredentialRequest aRemoveCredentialRequest) => await Send(aRemoveCredentialRequest);
   }
 }

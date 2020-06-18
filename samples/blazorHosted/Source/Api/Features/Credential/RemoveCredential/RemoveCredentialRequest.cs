@@ -5,14 +5,21 @@ namespace BlazorHosted.Features.Credentials
 
   public class RemoveCredentialRequest : BaseApiRequest, IRequest<RemoveCredentialResponse>
   {
-    public const string Route = "api/Credentials/RemoveCredential";
+    public const string Route = "api/credentials/{CredentialId}/remove";
 
     /// <summary>
-    /// The Number of days of forecasts to get
+    /// The Id of the Credential to return
     /// </summary>
     /// <example>5</example>
-    public int Days { get; set; }
+    public string CredentialId { get; set; } = null!;
 
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    internal override string RouteFactory
+    {
+      get
+      {
+        string temp = Route.Replace($"{{{nameof(CredentialId)}}}", CredentialId, System.StringComparison.Ordinal);
+        return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
+      }
+    }
   }
 }
