@@ -25,7 +25,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// Gets or sets the attribute previews for the PresentationPreviewMessage.
         /// </summary>
         /// <value>
-        /// The comment.
+        /// The proposed attributes.
         /// </value>
         [JsonProperty("attributes", NullValueHandling = NullValueHandling.Ignore)]
         public ProposedAttribute[] ProposedAttributes { get; set; }
@@ -33,7 +33,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <summary>
         /// Gets or sets the predicate previews
         /// </summary>
-        /// <value></value>
+        /// <value>The proposed predicates</value>
         [JsonProperty("predicates")]
         public ProposedPredicate[] ProposedPredicates { get; set; }
 

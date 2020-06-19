@@ -800,7 +800,6 @@ namespace Hyperledger.Aries.Features.PresentProof
             if (record.State != ProofState.Requested)
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Proof state was invalid. Expected '{ProofState.Requested}', found '{record.State}'");
-            Console.WriteLine($"**\n**CreatePresentationProofRequestFromProposed:{record.RequestJson}**/n**");
             var proofJson = await CreatePresentationAsync(
                 agentContext,
                 record.RequestJson.ToObject<ProofRequest>(),
