@@ -30,14 +30,6 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <value>The proposed predicates.</value>
         [JsonProperty("predicates", NullValueHandling = NullValueHandling.Ignore)]
         public List<ProposedPredicate> ProposedPredicates { get; set; } = new List<ProposedPredicate>();
-
-
-        /// <inheritdoc />
-        public override string ToString() =>
-            $"{GetType().Name}: " +
-            $"Comment={Comment}, " +
-            $"ProposedAttributes={string.Join(",", ProposedAttributes ?? new List<ProposedAttribute>())}, " +
-            $"RequestedPredicates={string.Join(",", ProposedPredicates ?? new List<ProposedPredicate>())}, ";
     
     }
 }

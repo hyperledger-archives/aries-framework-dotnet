@@ -14,7 +14,7 @@ namespace Hyperledger.Aries.Features.PresentProof
     {
 
         /// <summary>
-        /// Creates and sends a proof proposal to a connection.
+        /// Creates a proof proposal.
         /// </summary>
         /// <returns>The proof proposal.</returns>
         /// <param name="agentContext">Agent Context.</param>

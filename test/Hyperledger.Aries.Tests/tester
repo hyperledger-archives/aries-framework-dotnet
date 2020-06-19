@@ -1,2 +1,0 @@
-#! /bin/zsh
-dotnet test --no-build --nologo --filter DisplayName~ProposerInitiatedCredential --verbosity normal

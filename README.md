@@ -89,6 +89,30 @@ docker-compose up
 This will create an agent network with a pool of 4 indy nodes and 2 agents able to communicate with each other in the network.
 Navigate to [http://localhost:7000](http://localhost:7000) and [http://localhost:8000](http://localhost:8000) to create and accept connection invitations between the different agents.
 
+
+## Testing
+
+To run the unit tests, the following dependencies also must be installed: 
+- Docker
+
+### Install libindy library
+Follow the build instructions for your OS on the [Hyperledger Indy SDK](https://github.com/hyperledger/indy-sdk) Readme. 
+
+For macOS, if you get a `'indy' DLL not found exception`, move the built `libindy.dylib` file to the `test/Hyperledger.Aries.Tests/bin/Debug/netcoreapp3.1/` directory to explicitly add it to the path. 
+
+
+### Run an indy node pool
+```
+docker build -f docker/indy-pool.dockerfile -t indy_pool docker/
+docker run -itd -p 9701-9709:9701-9709 indy_pool
+```
+
+### Run the tests
+First, edit the keyword in the `scripts/tester.sh` file to select the tests you want to run. Then, run the script
+```
+scripts/tester.sh 
+```
+
 ## License
 
 [Apache License Version 2.0](https://github.com/hyperledger/aries-cloudagent-python/blob/master/LICENSE)
