@@ -34,7 +34,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The requested attributes.</value>
         [JsonProperty("requested_attributes")]
-        public Dictionary<string, ProofAttributeInfo> RequestedAttributes { get; set; }
+        public Dictionary<string, ProofAttributeInfo> RequestedAttributes { get; set; } 
 
         /// <summary>
         /// Gets or sets the requested predicates.

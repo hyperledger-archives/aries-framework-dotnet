@@ -33,7 +33,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value></value>
         [JsonProperty("presentation_proposal")]
-        public PresentationPreview PresentationPreview { get; set; }
+        public PresentationPreviewMessage PresentationPreviewMessage { get; set; }
 
     }
 }
