@@ -387,6 +387,255 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
+        public async Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, ProofProposal proofProposal, string connectionId)
+        {
+            Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
+
+            if (proofProposal == null)
+            {
+                throw new ArgumentNullException(nameof(proofProposal), "You must provide a presentation preview"); ;
+            }
+            if (connectionId != null)
+            {
+                var connection = await ConnectionService.GetAsync(agentContext, connectionId);
+
+                if (connection.State != ConnectionState.Connected)
+                    throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
+                        $"Connection state was invalid. Expected '{ConnectionState.Connected}', found '{connection.State}'");
+            }
+            this.CheckProofProposalParameters(proofProposal);
+
+
+            var threadId = Guid.NewGuid().ToString();
+            var proofRecord = new ProofRecord
+            {
+                Id = Guid.NewGuid().ToString(),
+                ConnectionId = connectionId,
+                ProposalJson = proofProposal.ToJson()
+            };
+
+            proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
+            proofRecord.SetTag(TagConstants.LastThreadId, threadId);
+
+            await RecordService.AddAsync(agentContext.Wallet, proofRecord);
+
+            var message = new ProposePresentationMessage
+            {
+                Id = threadId,
+                Comment = proofProposal.Comment,
+                PresentationPreviewMessage = new PresentationPreviewMessage()
+                {
+                    ProposedAttributes = proofProposal.ProposedAttributes.ToArray(),
+                    ProposedPredicates = proofProposal.ProposedPredicates.ToArray()
+                }
+            };
+            message.ThreadFrom(threadId);
+            return (message, proofRecord);
+        }
+
+        private void CheckProofProposalParameters(ProofProposal proofProposal)
+        {
+            if (proofProposal.ProposedAttributes.Count > 1)
+            {
+                var attrList = proofProposal.ProposedAttributes;
+                var referents = new Dictionary<string, ProposedAttribute>();
+
+                for (int i = 0; i < attrList.Count; i++)
+                {
+                    var attr = attrList[i];
+                    if (referents.ContainsKey(attr.Referent) &&
+                      (referents[attr.Referent].IssuerDid != attr.IssuerDid ||
+                       referents[attr.Referent].SchemaId != attr.SchemaId ||
+                       referents[attr.Referent].CredentialDefinitionId != attr.CredentialDefinitionId))
+                    {
+                        throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "All attributes that share a referent must have identical filters");
+                    }
+                    else
+                    {
+                        referents.Add(attr.Referent, attr);
+                    }
+
+                }
+            }
+            if (proofProposal.ProposedPredicates.Count > 1)
+            {
+                var predList = proofProposal.ProposedPredicates;
+                var referents = new Dictionary<string, ProposedPredicate>();
+
+                for (int i = 0; i < predList.Count; i++)
+                {
+                    var pred = predList[i];
+                    if (referents.ContainsKey(pred.Referent) &&
+                      (referents[pred.Referent].IssuerDid != pred.IssuerDid ||
+                       referents[pred.Referent].SchemaId != pred.SchemaId ||
+                       referents[pred.Referent].CredentialDefinitionId != pred.CredentialDefinitionId))
+                    {
+                        throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "All predicates that share a referent must have identical filters");
+                    }
+                    else
+                    {
+                        referents.Add(pred.Referent, pred);
+                    }
+
+                }
+            }
+
+        }
+
+        public async Task<ProofRecord> ProcessProposalAsync(IAgentContext agentContext, ProposePresentationMessage proposePresentationMessage, ConnectionRecord connection)
+        {
+            // save in wallet
+            var proposalJson = proposePresentationMessage.PresentationPreviewMessage.ToJson();
+
+            var proofRecord = new ProofRecord
+            {
+                Id = Guid.NewGuid().ToString(),
+                ProposalJson = proposalJson,
+                ConnectionId = connection?.Id,
+                State = ProofState.Proposed
+            };
+
+            proofRecord.SetTag(TagConstants.LastThreadId, proposePresentationMessage.GetThreadId());
+            proofRecord.SetTag(TagConstants.Role, TagConstants.Requestor);
+            await RecordService.AddAsync(agentContext.Wallet, proofRecord);
+
+            EventAggregator.Publish(new ServiceMessageProcessingEvent
+            {
+                RecordId = proofRecord.Id,
+                MessageType = proposePresentationMessage.Type,
+                ThreadId = proposePresentationMessage.GetThreadId()
+            });
+
+            return proofRecord;
+        }
+
+
+        /// <inheritdoc />
+        public async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext, ProofRequestParameters requestParams,
+            string proofRecordId, string connectionId)
+        {
+            Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
+
+            if (proofRecordId == null)
+            {
+                throw new ArgumentNullException(nameof(proofRecordId), "You must provide proof record Id");
+            }
+            if (connectionId != null)
+            {
+                var connection = await ConnectionService.GetAsync(agentContext, connectionId);
+
+                if (connection.State != ConnectionState.Connected)
+                    throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
+                        $"Connection state was invalid. Expected '{ConnectionState.Connected}', found '{connection.State}'");
+            }
+
+            var proofRecord = await RecordService.GetAsync<ProofRecord>(agentContext.Wallet, proofRecordId);
+            var proofProposal = proofRecord.ProposalJson.ToObject<ProofProposal>();
+
+
+            // Build Proof Request from Proposal info
+            var proofRequest = new ProofRequest
+            {
+                Name = requestParams.Name,
+                Version = requestParams.Version,
+                Nonce = await AnonCreds.GenerateNonceAsync(),
+                RequestedAttributes = new Dictionary<string, ProofAttributeInfo>(),
+                NonRevoked = requestParams.NonRevoked
+            };
+
+            var attributesByReferent = new Dictionary<string, List<ProposedAttribute>>();
+            foreach (var proposedAttribute in proofProposal.ProposedAttributes)
+            {
+                if (proposedAttribute.Referent == null)
+                {
+                    proposedAttribute.Referent = Guid.NewGuid().ToString();
+                }
+
+                if (attributesByReferent.TryGetValue(proposedAttribute.Referent, out var referentAttributes))
+                {
+                    referentAttributes.Add(proposedAttribute);
+                }
+                else
+                {
+                    attributesByReferent.Add(proposedAttribute.Referent, new List<ProposedAttribute> { proposedAttribute });
+                }
+            }
+
+            foreach (var referent in attributesByReferent.AsEnumerable())
+            {
+                var proposedAttributes = referent.Value;
+                var attributeName = proposedAttributes.Count() == 1 ? proposedAttributes.Single().Name : null;
+                var attributeNames = proposedAttributes.Count() > 1 ? proposedAttributes.ConvertAll<string>(r => r.Name).ToArray() : null;
+
+
+                var requestedAttribute = new ProofAttributeInfo()
+                {
+                    Name = attributeName,
+                    Names = attributeNames,
+                    Restrictions = new List<AttributeFilter>
+                    {
+                        new AttributeFilter {
+                            CredentialDefinitionId = proposedAttributes.First().CredentialDefinitionId,
+                            SchemaId = proposedAttributes.First().SchemaId,
+                            IssuerDid = proposedAttributes.First().IssuerDid
+                        }
+                    }
+                };
+                proofRequest.RequestedAttributes.Add(referent.Key, requestedAttribute);
+                Console.WriteLine($"Added Attribute to Proof Request \n {proofRequest.ToString()}");
+            }
+
+            foreach (var pred in proofProposal.ProposedPredicates)
+            {
+                if (pred.Referent == null)
+                {
+                    pred.Referent = Guid.NewGuid().ToString();
+                }
+                var predicate = new ProofPredicateInfo()
+                {
+                    PredicateType = pred.Predicate,
+                    PredicateValue = pred.Threshold,
+                    Restrictions = new List<AttributeFilter>
+                    {
+                        new AttributeFilter {
+                            CredentialDefinitionId = pred.CredentialDefinitionId,
+                            SchemaId = pred.SchemaId,
+                            IssuerDid = pred.IssuerDid
+                        }
+                    }
+
+                };
+                proofRequest.RequestedPredicates.Add(pred.Referent, predicate);
+            }
+
+            proofRecord.RequestJson = proofRequest.ToJson();
+            await proofRecord.TriggerAsync(ProofTrigger.Request);
+            await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
+
+            var message = new RequestPresentationMessage
+            {
+                Id = proofRecord.Id,
+                Requests = new[]
+                {
+                    new Attachment
+                    {
+                        Id = "libindy-request-presentation-0",
+                        MimeType = CredentialMimeTypes.ApplicationJsonMimeType,
+                        Data = new AttachmentContent
+                        {
+                            Base64 = proofRequest
+                                .ToJson()
+                                .GetUTF8Bytes()
+                                .ToBase64String()
+                        }
+                    }
+                }
+            };
+            message.ThreadFrom(proofRecord.GetTag(TagConstants.LastThreadId));
+            return (message, proofRecord);
+        }
+
+        /// <inheritdoc />
         public Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(
             IAgentContext agentContext,
             ProofRequest proofRequest,
@@ -423,7 +672,6 @@ namespace Hyperledger.Aries.Features.PresentProof
             };
             proofRecord.SetTag(TagConstants.Role, TagConstants.Requestor);
             proofRecord.SetTag(TagConstants.LastThreadId, threadId);
-
             await RecordService.AddAsync(agentContext.Wallet, proofRecord);
 
             var message = new RequestPresentationMessage
@@ -468,19 +716,40 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             var requestJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
 
-            // Write offer record to local wallet
-            var proofRecord = new ProofRecord
+            ProofRecord proofRecord = null;
+        
+            try
             {
-                Id = Guid.NewGuid().ToString(),
-                RequestJson = requestJson,
-                ConnectionId = connection?.Id,
-                State = ProofState.Requested
-            };
-            proofRecord.SetTag(TagConstants.LastThreadId, requestPresentationMessage.GetThreadId());
-            proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
+                proofRecord = await this.GetByThreadIdAsync(agentContext, requestPresentationMessage.GetThreadId());
+            }
+            catch (AriesFrameworkException e)
+            {
+                if (e.ErrorCode != ErrorCode.RecordNotFound)
+                {
+                    throw;  
+                }
+            }
+            
+            if(proofRecord is null)
+            {
+                proofRecord = new ProofRecord
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    RequestJson = requestJson,
+                    ConnectionId = connection?.Id,
+                    State = ProofState.Requested
+                };
+                proofRecord.SetTag(TagConstants.LastThreadId, requestPresentationMessage.GetThreadId());
+                proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
+                await RecordService.AddAsync(agentContext.Wallet, proofRecord);
+            }
+            else
+            {
+                proofRecord.RequestJson = requestJson;
+                await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
+            }
 
-            await RecordService.AddAsync(agentContext.Wallet, proofRecord);
-
+            
             EventAggregator.Publish(new ServiceMessageProcessingEvent
             {
                 RecordId = proofRecord.Id,
@@ -531,7 +800,6 @@ namespace Hyperledger.Aries.Features.PresentProof
             if (record.State != ProofState.Requested)
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Proof state was invalid. Expected '{ProofState.Requested}', found '{record.State}'");
-
             var proofJson = await CreatePresentationAsync(
                 agentContext,
                 record.RequestJson.ToObject<ProofRequest>(),

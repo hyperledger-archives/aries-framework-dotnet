@@ -21,6 +21,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </value>
         public IEnumerable<MessageType> SupportedMessageTypes => new MessageType[]
         {
+            MessageTypes.PresentProofNames.ProposePresentation,
             MessageTypes.PresentProofNames.Presentation,
             MessageTypes.PresentProofNames.RequestPresentation
         };
@@ -37,6 +38,14 @@ namespace Hyperledger.Aries.Features.PresentProof
             switch (messageContext.GetMessageType())
             {
                 // v1.0
+                case MessageTypes.PresentProofNames.ProposePresentation:
+                {
+                    var message = messageContext.GetMessage<ProposePresentationMessage>();
+                    var record = await _proofService.ProcessProposalAsync(agentContext, message, messageContext.Connection);
+
+                    messageContext.ContextRecord = record;
+                    break;
+                }
                 case MessageTypes.PresentProofNames.RequestPresentation:
                 {
                     var message = messageContext.GetMessage<RequestPresentationMessage>();

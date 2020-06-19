@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Decorators.Attachments;
 using Newtonsoft.Json;
@@ -6,17 +6,17 @@ using Newtonsoft.Json;
 namespace Hyperledger.Aries.Features.PresentProof
 {
     /// <summary>
-    /// Request presentation message
+    /// Propose Presentation Message
     /// </summary>
-    public class RequestPresentationMessage : AgentMessage
+    public class ProposePresentationMessage : AgentMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestPresentationMessage" /> class.
+        /// Initializes a new instance of <see cref="ProposePresentationMessage"/> class.
         /// </summary>
-        public RequestPresentationMessage()
+        public ProposePresentationMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.PresentProofNames.RequestPresentation;
+            Type = MessageTypes.PresentProofNames.ProposePresentation;
         }
 
         /// <summary>
@@ -29,10 +29,11 @@ namespace Hyperledger.Aries.Features.PresentProof
         public string Comment { get; set; }
 
         /// <summary>
-        /// Gets or sets the request presentation attachments
+        /// Gets or sets the presentation proposal
         /// </summary>
         /// <value></value>
-        [JsonProperty("request_presentations~attach")]
-        public Attachment[] Requests { get; set; }
+        [JsonProperty("presentation_proposal")]
+        public PresentationPreviewMessage PresentationPreviewMessage { get; set; }
+
     }
 }
