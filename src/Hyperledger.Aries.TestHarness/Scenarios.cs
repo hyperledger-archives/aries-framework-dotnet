@@ -179,13 +179,20 @@ namespace Hyperledger.TestHarness
 
             //Requestor stores the proof proposal
             var requestorProofProposalRecord = await proofService.ProcessProposalAsync(requestorContext, requestorProposalMessage, requestorConnection);
-            var requestorProofRecord = await proofService.GetAsync(requestorContext, requestorProofProposalRecord.Id);
+    
 
             // Requestor sends a proof request
-            var (requestorRequestMessage, requestorProofRequestRecord) = await proofService.CreateRequestFromProposalAsync(requestorContext, "Test", "1.0", requestorProofRecord.Id, requestorConnection.Id);
+            var (requestorRequestMessage, requestorProofRequestRecord) = await proofService.CreateRequestFromProposalAsync(
+                requestorContext, 
+                new ProofRequestParameters 
+                {
+                    Name = "Test",
+                    Version = "1.0"
+                },
+                requestorProofProposalRecord.Id, requestorConnection.Id);
             messages.TryAdd(requestorRequestMessage);
 
-            return await ProofProtocolAsync(proofService, messages, holderConnection, requestorConnection, holderContext, requestorContext, holderProofProposalRecord, requestorProofRequestRecord);
+            return await ProofProtocolAsync(proofService, messages, holderConnection, requestorConnection, holderContext, requestorContext, requestorProofRequestRecord);
         }
 
         public static async Task<(ProofRecord holderProofRecord, ProofRecord requestorProofRecord)> RequestorInitiatedProofProtocolAsync(
@@ -200,7 +207,7 @@ namespace Hyperledger.TestHarness
             var (message, requestorProofRecord) = await proofService.CreateRequestAsync(requestorContext, proofRequestObject, requestorConnection.Id);
             messages.TryAdd(message);
 
-            return await ProofProtocolAsync(proofService, messages, holderConnection, requestorConnection, holderContext, requestorContext, null, requestorProofRecord);
+            return await ProofProtocolAsync(proofService, messages, holderConnection, requestorConnection, holderContext, requestorContext, requestorProofRecord);
         }
 
         public static async Task<(ProofRecord holderProofRecord, ProofRecord RequestorProofRecord)> ProofProtocolAsync(
@@ -208,7 +215,7 @@ namespace Hyperledger.TestHarness
             IProducerConsumerCollection<AgentMessage> messages,
             ConnectionRecord holderConnection, ConnectionRecord requestorConnection,
             IAgentContext holderContext,
-            IAgentContext requestorContext, ProofRecord holderProofRecord, ProofRecord requestorProofRecord)
+            IAgentContext requestorContext, ProofRecord requestorProofRecord)
         {
 
             // Holder accepts the proof requests and builds a proof
@@ -216,13 +223,9 @@ namespace Hyperledger.TestHarness
             Assert.NotNull(holderRequestPresentationMessage);
 
             //Holder stores the proof request if they haven't created it already
-            var holderProofRequestRecord = await proofService.ProcessRequestAsync(holderContext, holderRequestPresentationMessage, holderConnection);
-            //if (holderProofRecord == null)
-            //{
-            //    holderProofRecord = await proofService.GetAsync(holderContext, holderProofRequestRecord.Id);
-            //}
-            
-            var holderProofRequest = JsonConvert.DeserializeObject<ProofRequest>(holderProofRequestRecord.RequestJson);
+            var holderProofRecord = await proofService.ProcessRequestAsync(holderContext, holderRequestPresentationMessage, holderConnection);
+            Console.WriteLine(holderProofRecord.RequestJson);
+            var holderProofRequest = JsonConvert.DeserializeObject<ProofRequest>(holderProofRecord.RequestJson);
 
             // Auto satify the proof with which ever credentials in the wallet are capable
             var requestedCredentials =
@@ -232,7 +235,7 @@ namespace Hyperledger.TestHarness
             //Holder accepts the proof request and sends a proof
             (var proofMessage, _) = await proofService.CreatePresentationAsync(
                 holderContext,
-                holderProofRequestRecord.Id,
+                holderProofRecord.Id,
                 requestedCredentials);
             messages.TryAdd(proofMessage);
 

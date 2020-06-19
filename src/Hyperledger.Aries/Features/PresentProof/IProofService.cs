@@ -14,38 +14,29 @@ namespace Hyperledger.Aries.Features.PresentProof
     {
 
         /// <summary>
-        /// Creates a proof proposal.
+        /// Creates and sends a proof proposal to a connection.
         /// </summary>
         /// <returns>The proof proposal.</returns>
         /// <param name="agentContext">Agent Context.</param>
-        /// <param name="attributes">An enumeration of attributes that we wish the verifier to request.</param>
+        /// <param name="proofProposal">The proof proposal that will be created</param>
         /// <param name="predicates">An enumeration of predicates that we wish the verifier to request.</param>
         /// <param name="connectionId">Connection identifier of who the proof request will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
         Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext,
             ProofProposal proofProposal, string connectionId);
 
-        /// <summary>
-        /// Creates a proof proposal from string representation of proof proposal json object.
-        /// </summary>
-        /// <returns>The proof request.</returns>
-        /// <param name="agentContext">Agent Context.</param>
-        /// <param name="presentationPreviewJson">A string representation of proof proposal json object</param>
-        /// <param name="connectionId">Connection identifier of who the proof proposal will be sent to.</param>
-        /// <returns>Proof Request message and identifier.</returns>
-        Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext,
-            string presentationPreviewJson, string connectionId);
 
         /// <summary>
         /// Creates a proof request from a proof proposal.
         /// </summary>
         /// <returns>The proof request.</returns>
         /// <param name="agentContext">Agent Context.</param>
+        /// <param name="proofRequestParamesters">The parameters needed to generate a request from the proposal</param>
         /// <param name="proofRecordId">proposal Id</param>
         /// <param name="connectionId">Connection identifier of who the proof proposal will be sent to.</param>
         /// <returns>Proof Request message and identifier.</returns>
-        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext,
-            string proofRecordId, string requestName, string requestVersion, string connectionId);
+        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext, ProofRequestParameters requestParameters,
+            string proofRecordId, string connectionId);
 
         
         /// <summary>

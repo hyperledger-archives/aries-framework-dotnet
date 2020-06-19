@@ -12,6 +12,16 @@ namespace Hyperledger.Aries.Features.PresentProof
     /// </summary>
     public static class ProofServiceExtensions
     {
+        /// <summary>Retrieves a list of proposed proof records.</summary>
+        /// <param name="proofService">The proof service.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="count">The count.</param>
+        /// <returns></returns>
+        public static Task<List<ProofRecord>> ListProposedAsync(this IProofService proofService,
+            IAgentContext context, int count = 100)
+            => proofService.ListAsync(context,
+                SearchQuery.Equal(nameof(ProofRecord.State), ProofState.Proposed.ToString("G")), count);
+
         /// <summary>Retrieves a list of proof request records.</summary>
         /// <param name="proofService">The proof service.</param>
         /// <param name="context">The context.</param>
@@ -50,9 +60,5 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             return search.Single();
         }
-
-        
     }
-
-  
 }

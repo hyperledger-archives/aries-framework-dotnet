@@ -9,12 +9,12 @@ namespace Hyperledger.Aries.Features.PresentProof
     /// <summary>
     /// Presentation Preview Inner Message
     /// </summary>
-    public class PresentationPreview : AgentMessage
+    public class PresentationPreviewMessage : AgentMessage
     {
         /// <summary>
-		/// Initializes a new instance of the <see cref="PresentationPreview" /> class.
+		/// Initializes a new instance of the <see cref="PresentationPreviewMessage" /> class.
 		/// </summary>
-        public PresentationPreview()
+        public PresentationPreviewMessage()
         {
             Id = Guid.NewGuid().ToString();
             Type = MessageTypes.PresentProofNames.PresentationPreview;
@@ -22,7 +22,7 @@ namespace Hyperledger.Aries.Features.PresentProof
 
 
         /// <summary>
-        /// Gets or sets the attribute previews for the PresentationPreview.
+        /// Gets or sets the attribute previews for the PresentationPreviewMessage.
         /// </summary>
         /// <value>
         /// The comment.
@@ -55,6 +55,18 @@ namespace Hyperledger.Aries.Features.PresentProof
         public string CredentialDefinitionId { get; set; }
 
         /// <summary>
+        /// Gets or sets the schema id of the attribute
+        /// </summary>
+        [JsonProperty("schema_id")]
+        public string SchemaId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the issuer dod of the attribute
+        /// </summary>
+        [JsonProperty("issuer_did")]
+        public string IssuerDid { get; set; }
+
+        /// <summary>
         /// Gets or sets the mime-type
         /// </summary>
         [JsonProperty("mime-type")]
@@ -77,7 +89,7 @@ namespace Hyperledger.Aries.Features.PresentProof
     public class ProposedPredicate
     {
         /// <summary>
-        /// Gets or sets the Name of the Attribute
+        /// Gets or sets the name of the Attribute
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -89,7 +101,19 @@ namespace Hyperledger.Aries.Features.PresentProof
         public string CredentialDefinitionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the predicate operator
+        /// Gets or sets the issuer did of the attribute
+        /// </summary>
+        [JsonProperty("issuer_did")]
+        public string IssuerDid { get; set; }
+
+        /// <summary>
+        /// Gets or sets the schema Id of the attribute
+        /// </summary>
+        [JsonProperty("schema_id")]
+        public string SchemaId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the predicate operator (>, >=, <, <=)
         /// </summary>
         [JsonProperty("predicate")]
         public string Predicate { get; set; }
@@ -99,6 +123,12 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         [JsonProperty("threshold")]
         public int Threshold { get; set; }
+
+        /// <summary>
+        /// Gets or sets the referent
+        /// </summary>
+        [JsonProperty("referent")]
+        public string Referent { get; set; }
     }
 }
 

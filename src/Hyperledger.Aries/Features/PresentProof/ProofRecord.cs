@@ -108,7 +108,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         private StateMachine<ProofState, ProofTrigger> GetStateMachine()
         {
             var state = new StateMachine<ProofState, ProofTrigger>(() => State, x => State = x);
-            state.Configure(ProofState.Proposed).Permit(ProofTrigger.Propose, ProofState.Requested);
+            state.Configure(ProofState.Proposed).Permit(ProofTrigger.Request, ProofState.Requested);
             state.Configure(ProofState.Requested).Permit(ProofTrigger.Accept, ProofState.Accepted);
             state.Configure(ProofState.Requested).Permit(ProofTrigger.Reject, ProofState.Rejected);
             return state;
