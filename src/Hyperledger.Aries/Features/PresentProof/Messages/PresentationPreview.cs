@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Hyperledger.Aries.Features.PresentProof
 {
     /// <summary>
-    /// Presentation Preview Inner Message
+    /// Presentation Preview Message
     /// </summary>
     public class PresentationPreviewMessage : AgentMessage
     {
@@ -38,12 +38,14 @@ namespace Hyperledger.Aries.Features.PresentProof
         public ProposedPredicate[] ProposedPredicates { get; set; }
 
     }
-
+    /// <summary>
+    /// The proposed attributes
+    /// </summary>
     public class ProposedAttribute
     {
 
         /// <summary>
-        /// Gets or sets the Name of the Attribute
+        /// Gets or sets the name of the Attribute
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -86,28 +88,31 @@ namespace Hyperledger.Aries.Features.PresentProof
 
     }
 
+    /// <summary>
+    /// The proposed predicates
+    /// </summary>
     public class ProposedPredicate
     {
         /// <summary>
-        /// Gets or sets the name of the Attribute
+        /// Gets or sets the name of the predicate
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the credential definition Id of the attribute
+        /// Gets or sets the credential definition Id of the predicate
         /// </summary>
         [JsonProperty("cred_def_id")]
         public string CredentialDefinitionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the issuer did of the attribute
+        /// Gets or sets the issuer did of the predicate
         /// </summary>
         [JsonProperty("issuer_did")]
         public string IssuerDid { get; set; }
 
         /// <summary>
-        /// Gets or sets the schema Id of the attribute
+        /// Gets or sets the schema Id of the predicate
         /// </summary>
         [JsonProperty("schema_id")]
         public string SchemaId { get; set; }
