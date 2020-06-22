@@ -1,6 +1,10 @@
 namespace BlazorHosted.Server
 {
+  using AutoMapper;
+  using BlazorHosted.Features.Bases;
+  using BlazorHosted.Infrastructure;
   using FluentValidation.AspNetCore;
+  using Jdenticon.AspNetCore;
   using MediatR;
   using Microsoft.AspNetCore.Builder;
   using Microsoft.AspNetCore.Hosting;
@@ -15,17 +19,12 @@ namespace BlazorHosted.Server
   using System.Linq;
   using System.Net.Mime;
   using System.Reflection;
-  using BlazorHosted.Features.Bases;
-  using AutoMapper;
-  using BlazorHosted.Infrastructure;
-  using Hyperledger.Aries.Configuration;
-  using Jdenticon.AspNetCore;
 
   public class Startup
   {
-    const string SwaggerVersion = "v1";
-    string SwaggerApiTitle => $"BlazorHosted API {SwaggerVersion}";
-    string SwaggerEndPoint => $"/swagger/{SwaggerVersion}/swagger.json";
+    private const string SwaggerVersion = "v1";
+    private string SwaggerApiTitle => $"BlazorHosted API {SwaggerVersion}";
+    private string SwaggerEndPoint => $"/swagger/{SwaggerVersion}/swagger.json";
 
     public void Configure
     (
@@ -84,7 +83,8 @@ namespace BlazorHosted.Server
 
       aServiceCollection.Configure<ApiBehaviorOptions>
       (
-        aApiBehaviorOptions => aApiBehaviorOptions.SuppressInferBindingSourcesForParameters = true);
+        aApiBehaviorOptions => aApiBehaviorOptions.SuppressInferBindingSourcesForParameters = true
+      );
 
       aServiceCollection.AddResponseCompression
       (
@@ -124,7 +124,7 @@ namespace BlazorHosted.Server
               aAgentOptions.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
               //TODO update this to use the current Kestrel setting which are not available in ConfigureServices
               // Or use the same Appsetting that Kestrel does to determine the port
-              aAgentOptions.EndpointUri = "https://localhost:5001/"; // Is MyKestrel Enpoint. 
+              aAgentOptions.EndpointUri = "https://localhost:5001/"; // Is MyKestrel Enpoint.
             }
           )
       );
@@ -161,10 +161,9 @@ namespace BlazorHosted.Server
           aSwaggerGenOptions
             .OrderActionsBy
             (
-              aApiDescription => 
+              aApiDescription =>
                 $"{aApiDescription.GroupName}{aApiDescription.HttpMethod}{aApiDescription.RelativePath.Contains("{")}{aApiDescription.RelativePath}"
             );
-
         }
       );
     }

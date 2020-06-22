@@ -3,6 +3,7 @@ namespace BlazorHosted.Features.Connections
   using MediatR;
   using BlazorHosted.Features.Bases;
   using System.Collections.Generic;
+  using Hyperledger.Aries.Features.DidExchange;
 
 
   /// <summary>
@@ -11,6 +12,8 @@ namespace BlazorHosted.Features.Connections
   public class CreateInvitationRequest : BaseApiRequest, IRequest<CreateInvitationResponse>
   {
     public const string Route = "api/connections/create-invitation";
+
+    public InviteConfiguration InviteConfiguration { get; set; }
 
     /// <summary>
     /// Used to generated an invitation that multiple parties
@@ -50,6 +53,10 @@ namespace BlazorHosted.Features.Connections
 
     public bool Public { get; set; }
 
+    public CreateInvitationRequest()
+    {
+      InviteConfiguration = new InviteConfiguration { AutoAcceptConnection = true };
+    }
     internal override string RouteFactory => Route;
   }
 

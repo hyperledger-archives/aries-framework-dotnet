@@ -2,7 +2,9 @@ namespace BlazorHosted.Features.Connections
 {
   using AutoMapper;
   using Hyperledger.Aries.Agents;
+  using Hyperledger.Aries.Configuration;
   using Hyperledger.Aries.Features.DidExchange;
+  using Hyperledger.Aries.Extensions;
   using MediatR;
   using System;
   using System.Collections.Generic;
@@ -15,17 +17,20 @@ namespace BlazorHosted.Features.Connections
     private readonly IMapper Mapper;
     private readonly IAgentProvider AgentProvider;
     private readonly IConnectionService ConnectionService;
+    private readonly IProvisioningService ProvisioningService;
 
     public CreateInvitationHandler
     (
       IMapper aMapper, 
       IAgentProvider aAgentProvider, 
-      IConnectionService aConnectionService
+      IConnectionService aConnectionService,
+      IProvisioningService aProvisioningService
     )
     {
       Mapper = aMapper;
       AgentProvider = aAgentProvider;
       ConnectionService = aConnectionService;
+      ProvisioningService = aProvisioningService;
     }
 
     public async Task<CreateInvitationResponse> Handle
@@ -47,8 +52,14 @@ namespace BlazorHosted.Features.Connections
 
       (ConnectionInvitationMessage connectionInvitationMessage, ConnectionRecord connectionRecord) =
         await ConnectionService.CreateInvitationAsync(agentContext, inviteConfiguration);
-      InvitationDto invitationDto = Mapper.Map<InvitationDto>(connectionInvitationMessage);
-      var response = new CreateInvitationResponse(aCreateInvitationRequest.CorrelationId, invitationDto);
+
+      string endpointUri = (await ProvisioningService.GetProvisioningAsync(agentContext.Wallet)).Endpoint.Uri;
+      string encodedInvitation = connectionInvitationMessage.ToJson().ToBase64();
+      var response = new CreateInvitationResponse(aCreateInvitationRequest.CorrelationId, connectionInvitationMessage)
+      {
+        
+        InvitationUrl = $"{endpointUri}?c_i={encodedInvitation}"
+      };
 
       return response;
     }

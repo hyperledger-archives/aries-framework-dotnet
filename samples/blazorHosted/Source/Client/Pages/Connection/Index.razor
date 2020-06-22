@@ -1,0 +1,11 @@
+@namespace BlazorHosted.Pages.Connections
+@using BlazorHosted.Features.Bases
+@using BlazorHosted.Features.Connections.Components
+
+@inherits BaseComponent
+@page "/connections"
+
+<h1>Connection Items</h1>
+<button class="btn btn-primary" @onclick=@CreateClick>Create</button>
+<br />
+<BlazorHosted.Features.Connections.Components.List/>

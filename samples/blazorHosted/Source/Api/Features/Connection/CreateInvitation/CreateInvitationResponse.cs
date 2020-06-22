@@ -1,6 +1,7 @@
 namespace BlazorHosted.Features.Connections
 {
   using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.Features.DidExchange;
   using System;
   using System.Collections.Generic;
 
@@ -9,13 +10,16 @@ namespace BlazorHosted.Features.Connections
     /// <summary>
     /// Represents an invitation message for establishing connection.
     /// </summary>
-    public InvitationDto Invitation { get; set; } = null!;
+    public ConnectionInvitationMessage ConnectionInvitationMessage { get; set; } = null!;
+
+    public string InvitationUrl { get; set; } = null!;
+
 
     public CreateInvitationResponse() { }
 
-    public CreateInvitationResponse(Guid aRequestId, InvitationDto aInvitation) : base(aRequestId)
+    public CreateInvitationResponse(Guid aRequestId, ConnectionInvitationMessage aConnectionInvitationMessage) : base(aRequestId)
     {
-      Invitation = aInvitation;
+      ConnectionInvitationMessage = aConnectionInvitationMessage;
     }
   }
 

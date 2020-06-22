@@ -3,17 +3,13 @@ namespace BlazorHosted.Features.Connections
   using BlazorState;
   using MediatR;
   using System.Net.Http;
-  using System.Net.Http.Json;
   using System.Threading;
   using System.Threading.Tasks;
   using BlazorHosted.Features.Bases;
-  using BlazorHosted.Features.WeatherForecasts;
-  using System.Linq;
-  using System;
   using Newtonsoft.Json;
-  using static BlazorHosted.Features.Connections.ConnectionState;
+  using System.Linq;
 
-  internal partial class ConnectionsState
+  internal partial class ConnectionState
   {
     public class FetchConnectionsHandler : BaseHandler<FetchConnectionsAction>
     {
@@ -35,7 +31,8 @@ namespace BlazorHosted.Features.Connections
         string json = await x.Content.ReadAsStringAsync();
         GetConnectionsResponse getConnectionsResponse = JsonConvert.DeserializeObject<GetConnectionsResponse>(json);
 
-        ConnectionState._ConnectionRecords = getConnectionsResponse.ConnectionRecords;
+        ConnectionState._ConnectionRecords = getConnectionsResponse.ConnectionRecords
+          .ToDictionary(aConnectionRecord => aConnectionRecord.Id, aConnectionRecord => aConnectionRecord);
 
         return Unit.Value;
       }
