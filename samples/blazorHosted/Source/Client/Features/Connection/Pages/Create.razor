@@ -5,11 +5,13 @@
 
 <h1>Create Connection Create Page</h1>
 
-<div>
-  <button>Create New Invitation</button>
+<div class="card text-center mt-2 col-5" >
+  <button @onclick=@ButtonClick>Create New Invitation</button>
   <div>
-    <h3>Invitation Details</h3>
-    <img src="@ConnectionState?.InvitationQrUri" />
-    <span>@ConnectionState?.InvitationUrl</span>
+    <h3 class="card-header">Invitation Details</h3>
+    <img class="card-img" src="@ConnectionState?.InvitationQrUri" />
+    <div class="card-body">
+      <span>@ConnectionState?.InvitationUrl</span>
+    </div>
   </div>
 </div>

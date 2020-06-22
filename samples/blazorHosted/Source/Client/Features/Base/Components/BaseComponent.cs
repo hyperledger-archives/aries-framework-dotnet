@@ -3,7 +3,6 @@ namespace BlazorHosted.Features.Bases
   using BlazorState.Pipeline.ReduxDevTools;
   using BlazorHosted.Features.Applications;
   using BlazorHosted.Features.Counters;
-  using BlazorHosted.Features.EventStreams;
   using BlazorHosted.Features.WeatherForecasts;
   using BlazorHosted.Features.Wallets;
   using BlazorHosted.Features.Connections;
@@ -22,7 +21,6 @@ namespace BlazorHosted.Features.Bases
     internal ApplicationState ApplicationState => GetState<ApplicationState>();
     internal CounterState CounterState => GetState<CounterState>();
     internal ConnectionState ConnectionState => GetState<ConnectionState>();
-    internal EventStreamState EventStreamState => GetState<EventStreamState>();
     internal WalletState WalletState => GetState<WalletState>();
     internal WeatherForecastsState WeatherForecastsState => GetState<WeatherForecastsState>();
   }

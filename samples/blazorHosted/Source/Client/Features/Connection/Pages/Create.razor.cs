@@ -2,10 +2,9 @@ namespace BlazorHosted.Pages.Connections
 {
   using BlazorHosted.Features.Bases;
   using BlazorHosted.Features.Connections;
-  using BlazorState.Features.Routing;
+  using System;
   using System.Threading.Tasks;
   using static BlazorHosted.Features.Connections.ConnectionState;
-  using static BlazorState.Features.Routing.RouteState;
 
   public partial class Create : BaseComponent
   {
@@ -17,12 +16,13 @@ namespace BlazorHosted.Pages.Connections
 
     protected async Task ButtonClick()
     {
-      _ = await Mediator.Send(new CreateConnectionAction { CreateInvitationRequest = CreateInvitationRequest });
+      _ = await Mediator.Send(new CreateConnectionAction());
     }
 
     protected override async Task OnInitializedAsync()
     {
-      _ = await Mediator.Send(new CreateConnectionAction { CreateInvitationRequest = CreateInvitationRequest });
+      Console.WriteLine("Where are you?");
+      _ = await Mediator.Send(new CreateConnectionAction());
 
       await base.OnInitializedAsync();
     }

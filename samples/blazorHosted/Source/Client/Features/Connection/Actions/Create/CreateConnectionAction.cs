@@ -4,9 +4,6 @@
 
   internal partial class ConnectionState
   {
-    public class CreateConnectionAction : BaseAction 
-    {
-      public CreateInvitationRequest CreateInvitationRequest { get; set; }
-    }
+    public class CreateConnectionAction : BaseAction { }
   }
 }

@@ -8,6 +8,7 @@
   using System.Threading.Tasks;
   using BlazorHosted.Features.Bases;
   using Newtonsoft.Json;
+  using System;
 
   internal partial class ConnectionState
   {
@@ -17,7 +18,7 @@
 
       public CreateConnectionHandler
       (
-        IStore aStore, 
+        IStore aStore,
         HttpClient aHttpClient
       ) : base(aStore)
       {
@@ -31,22 +32,33 @@
         CancellationToken aCancellationToken
       )
       {
+        Console.WriteLine("CreateConnectionHandler.0");
+        var createInvitationRequest = new CreateInvitationRequest();
+
         HttpResponseMessage httpResponseMessage =
           await HttpClient.PostAsJsonAsync<CreateInvitationRequest>
           (
-            aCreateConnectionAction.CreateInvitationRequest.GetRoute(),
-            aCreateConnectionAction.CreateInvitationRequest
+            createInvitationRequest.GetRoute(),
+            createInvitationRequest
           );
 
+        Console.WriteLine("CreateConnectionHandler.1");
         httpResponseMessage.EnsureSuccessStatusCode();
+        Console.WriteLine("CreateConnectionHandler.2");
 
         string json = await httpResponseMessage.Content.ReadAsStringAsync();
+        Console.WriteLine("CreateConnectionHandler.3");
 
         CreateInvitationResponse createConnectionResponse =
           JsonConvert.DeserializeObject<CreateInvitationResponse>(json);
 
+        Console.WriteLine("CreateConnectionHandler.4");
         ConnectionState.InvitationUrl = createConnectionResponse.InvitationUrl;
-        
+        Console.WriteLine("CreateConnectionHandler.5");
+        ConnectionState.InvitationQrUri =
+          $"https://chart.googleapis.com/chart?cht=qr&chs=300x300&chld=L|0&chl=" +
+          $"{Uri.EscapeDataString(createConnectionResponse.InvitationUrl)}";
+        Console.WriteLine("CreateConnectionHandler.6");
         return Unit.Value;
       }
     }

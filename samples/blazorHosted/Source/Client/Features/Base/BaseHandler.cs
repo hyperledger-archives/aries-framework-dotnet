@@ -3,7 +3,6 @@ namespace BlazorHosted.Features.Bases
   using BlazorState;
   using BlazorHosted.Features.Applications;
   using BlazorHosted.Features.Counters;
-  using BlazorHosted.Features.EventStreams;
   using BlazorHosted.Features.WeatherForecasts;
   using BlazorHosted.Features.Wallets;
   using BlazorHosted.Features.Connections;
@@ -20,7 +19,6 @@ namespace BlazorHosted.Features.Bases
     protected CounterState CounterState => Store.GetState<CounterState>();
 
     protected ConnectionState ConnectionState => Store.GetState<ConnectionState>();
-    protected EventStreamState EventStreamState => Store.GetState<EventStreamState>();
 
     protected WalletState WalletState => Store.GetState<WalletState>();
 

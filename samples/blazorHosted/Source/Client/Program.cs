@@ -2,9 +2,7 @@ namespace BlazorHosted.Client
 {
   using BlazorHosted.Components;
   using BlazorHosted.Features.ClientLoaders;
-  using BlazorHosted.Features.EventStreams;
   using BlazorState;
-  using MediatR;
   using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
   using Microsoft.Extensions.DependencyInjection;
   using PeterLeslieMorris.Blazor.Validation;
@@ -43,7 +41,6 @@ namespace BlazorHosted.Client
           )
       );
 
-      aServiceCollection.AddScoped(typeof(IPipelineBehavior<,>), typeof(EventStreamBehavior<,>));
       aServiceCollection.AddScoped<ClientLoader>();
       aServiceCollection.AddScoped<IClientLoaderConfiguration, ClientLoaderConfiguration>();
     }
