@@ -17,7 +17,7 @@ namespace BlazorHosted.Features.Healths
     /// </remarks>
     /// <param name="aGetHealthRequest"></param>
     /// <returns><see cref="GetHealthResponse"/></returns>
-    [HttpGet(GetHealthRequest.Route)]
+    [HttpGet(GetHealthRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(GetHealthResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

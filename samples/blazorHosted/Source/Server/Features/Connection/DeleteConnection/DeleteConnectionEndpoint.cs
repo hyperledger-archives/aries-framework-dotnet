@@ -13,7 +13,7 @@ namespace BlazorHosted.Features.Connections
     /// </summary>
     /// <param name="aDeleteConnectionRequest"><see cref="DeleteConnectionRequest"/></param>
     /// <returns><see cref="DeleteConnectionResponse"/></returns>
-    [HttpDelete(DeleteConnectionRequest.Route)]
+    [HttpDelete(DeleteConnectionRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(DeleteConnectionResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

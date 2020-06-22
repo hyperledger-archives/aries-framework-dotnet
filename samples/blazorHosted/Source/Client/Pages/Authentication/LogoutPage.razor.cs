@@ -4,6 +4,8 @@ namespace BlazorHosted.Pages
 
   public partial class LogoutPage : BaseComponent
   {
-    public const string Route = "Logout";
+    public const string RouteTemplate = "Logout";
+
+    public static string GetRoute() => RouteTemplate;
   }
 }

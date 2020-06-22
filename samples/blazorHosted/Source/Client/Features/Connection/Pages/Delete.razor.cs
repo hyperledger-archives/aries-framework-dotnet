@@ -7,10 +7,11 @@ namespace BlazorHosted.Pages.Connections
 
   public partial class Delete: BaseComponent
   {
-    public const string Route = "/Connection/Delete/{ConnectionId}";
+    public const string RouteTemplate = "/Connection/Delete/{ConnectionId}";
 
-    public static string RouteFactory(string aConnectionId) =>
-      Route.Replace($"{{{nameof(ConnectionId)}}}", aConnectionId.ToString(), System.StringComparison.OrdinalIgnoreCase);
+    public static string GetRoute(string aConnectionId) =>
+      RouteTemplate
+        .Replace($"{{{nameof(ConnectionId)}}}", aConnectionId.ToString(), System.StringComparison.OrdinalIgnoreCase);
 
     [Parameter] public string ConnectionId { get; set; }
 

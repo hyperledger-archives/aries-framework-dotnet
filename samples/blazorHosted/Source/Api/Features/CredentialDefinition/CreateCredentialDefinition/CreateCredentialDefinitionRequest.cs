@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
 
   public class CreateCredentialDefinitionRequest : BaseApiRequest, IRequest<CreateCredentialDefinitionResponse>
   {
-    public const string Route = "api/credential-definitions";
+    public const string RouteTemplate = "api/credential-definitions";
 
     /// <summary>
     /// Should these credentials be revocable
@@ -31,6 +31,6 @@ namespace BlazorHosted.Features.CredentialDefinitions
     /// <example>default</example>
     public string? Tag { get; set; }
 
-    internal override string GetRoute() => Route;
+    internal override string GetRoute() => RouteTemplate;
   }
 }

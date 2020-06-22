@@ -6,7 +6,8 @@ namespace BlazorHosted.Pages
 
   public partial class WeatherForecastsPage : BaseComponent
   {
-    public const string Route = "/weatherforecasts";
+    public const string RouteTemplate = "/weatherforecasts";
+    public static string GetRoute() => RouteTemplate;
 
     protected override async Task OnInitializedAsync() =>
       await Mediator.Send(new FetchWeatherForecastsAction());

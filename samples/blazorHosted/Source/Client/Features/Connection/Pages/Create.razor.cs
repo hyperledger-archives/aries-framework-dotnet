@@ -6,9 +6,11 @@ namespace BlazorHosted.Pages.Connections
 
   public partial class Create: BaseComponent
   {
-    public const string Route = "/Connections/Create";
+    public const string RouteTemplate = "/Connections/Create";
+
+    public static string GetRoute() => RouteTemplate;
 
     protected async Task ButtonClick() =>
-      _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = Route });
+      _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = RouteTemplate });
   }
 }

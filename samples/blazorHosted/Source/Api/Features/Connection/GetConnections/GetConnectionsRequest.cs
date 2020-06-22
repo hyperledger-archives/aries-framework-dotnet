@@ -5,8 +5,8 @@ namespace BlazorHosted.Features.Connections
 
   public class GetConnectionsRequest : BaseApiRequest, IRequest<GetConnectionsResponse>
   {
-    public const string Route = "api/connections";
+    public const string RouteTemplate = "api/connections";
 
-    internal override string GetRoute() => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{RouteTemplate}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }

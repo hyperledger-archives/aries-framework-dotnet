@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Healths
 
   public class GetHealthRequest : BaseApiRequest, IRequest<GetHealthResponse>
   {
-    public const string Route = "api/Health/GetHealth";
+    public const string RouteTemplate = "api/Health/GetHealth";
 
     /// <summary>
     /// The Number of days of forecasts to get
@@ -13,6 +13,6 @@ namespace BlazorHosted.Features.Healths
     /// <example>5</example>
     public int Days { get; set; }
 
-    internal override string GetRoute() => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{RouteTemplate}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
   }
 }

@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Connections
 
   public class GetConnectionRequest : BaseApiRequest, IRequest<GetConnectionResponse>
   {
-    public const string Route = "api/connections/{ConnectionId}";
+    public const string RouteTemplate = "api/connections/{ConnectionId}";
 
     /// <summary>
     /// The Id of the Connection to use to send the message
@@ -15,7 +15,7 @@ namespace BlazorHosted.Features.Connections
 
     internal override string GetRoute()
     {
-      string temp = Route.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
+      string temp = RouteTemplate.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
       return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
     }
   }

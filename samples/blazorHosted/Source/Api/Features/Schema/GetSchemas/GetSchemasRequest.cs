@@ -6,8 +6,8 @@ namespace BlazorHosted.Features.Schemas
   public class GetSchemasRequest : BaseApiRequest, IRequest<GetSchemasResponse>
   {
     // Trinsic API Route /definitions/schemas
-    public const string Route = "api/schemas";
+    public const string RouteTemplate = "api/schemas";
 
-    internal override string GetRoute() => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{RouteTemplate}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }

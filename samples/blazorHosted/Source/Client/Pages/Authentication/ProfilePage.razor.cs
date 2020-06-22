@@ -4,6 +4,8 @@ namespace BlazorHosted.Pages
 
   public partial class ProfilePage : BaseComponent
   {
-    public const string Route = "/Profile";
+    public const string RouteTemplate = "/Profile";
+
+    public static string GetRoute() => RouteTemplate;
   }
 }

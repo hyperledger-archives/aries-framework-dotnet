@@ -7,10 +7,12 @@ namespace BlazorHosted.Pages.Connections
 
   public partial class Index: BaseComponent
   {
-    public const string Route = "/connections";
+    public const string RouteTemplate = "/connections";
+
+    public static string GetRoute() => RouteTemplate;
 
     protected async Task CreateClick() =>
-      _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = Create.Route });
+      _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = Create.GetRoute() });
 
     protected override async Task OnAfterRenderAsync(bool aFirstRender) => 
       _ = await Mediator.Send(new FetchConnectionsAction());

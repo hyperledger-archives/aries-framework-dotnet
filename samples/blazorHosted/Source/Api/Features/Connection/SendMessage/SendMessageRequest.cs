@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Connections
 
   public class SendMessageRequest : BaseApiRequest, IRequest<SendMessageResponse>
   {
-    public const string Route = "api/connections/{ConnectionId}/send-message";
+    public const string RouteTemplate = "api/connections/{ConnectionId}/send-message";
 
     /// <summary>
     /// The Id of the Connection to use to send the message
@@ -19,7 +19,7 @@ namespace BlazorHosted.Features.Connections
     /// <example>Hello Friend</example>
     public string Message { get; set; } = null!;
 
-    internal override string GetRoute() => 
-      Route.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
+    internal override string GetRoute() =>
+      RouteTemplate.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
   }
 }

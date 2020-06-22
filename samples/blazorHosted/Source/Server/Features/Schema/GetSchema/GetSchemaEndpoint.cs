@@ -13,7 +13,7 @@ namespace BlazorHosted.Features.Schemas
     /// </summary>
     /// <param name="aGetSchemaRequest"><see cref="GetSchemaRequest"/></param>
     /// <returns><see cref="GetSchemaResponse"/></returns>
-    [HttpGet(GetSchemaRequest.Route)]
+    [HttpGet(GetSchemaRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(GetSchemaResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

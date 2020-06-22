@@ -5,8 +5,8 @@ namespace BlazorHosted.Features.Wallets
 
   public class GetWalletRequest : BaseApiRequest, IRequest<GetWalletResponse>
   {
-    public const string Route = "api/agent/provision";
+    public const string RouteTemplate = "api/agent/provision";
 
-    internal override string GetRoute() => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{RouteTemplate}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }

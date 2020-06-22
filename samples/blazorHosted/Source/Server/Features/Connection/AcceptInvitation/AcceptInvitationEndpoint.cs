@@ -16,7 +16,7 @@ namespace BlazorHosted.Features.Connections
     /// </remarks>
     /// <param name="aAcceptInvitationRequest"></param>
     /// <returns><see cref="AcceptInvitationResponse"/></returns>
-    [HttpPost(AcceptInvitationRequest.Route)]
+    [HttpPost(AcceptInvitationRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(AcceptInvitationResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

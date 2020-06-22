@@ -16,7 +16,7 @@ namespace BlazorHosted.Features.Connections
     /// </remarks>
     /// <param name="aGetConnectionRequest"></param>
     /// <returns><see cref="GetConnectionResponse"/></returns>
-    [HttpGet(GetConnectionRequest.Route)]
+    [HttpGet(GetConnectionRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(GetConnectionResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

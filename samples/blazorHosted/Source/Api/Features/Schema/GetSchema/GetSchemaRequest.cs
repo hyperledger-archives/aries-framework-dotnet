@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Schemas
 
   public class GetSchemaRequest : BaseApiRequest, IRequest<GetSchemaResponse>
   {
-    public const string Route = "api/schemas/{SchemaId}";
+    public const string RouteTemplate = "api/schemas/{SchemaId}";
 
     /// <summary>
     /// Id of the Schema to return
@@ -15,7 +15,7 @@ namespace BlazorHosted.Features.Schemas
 
     internal override string GetRoute()
     {
-      string temp = Route.Replace($"{{{nameof(SchemaId)}}}", SchemaId, System.StringComparison.Ordinal);
+      string temp = RouteTemplate.Replace($"{{{nameof(SchemaId)}}}", SchemaId, System.StringComparison.Ordinal);
       return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
     }
   }

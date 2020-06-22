@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.WeatherForecasts
 
   public class GetWeatherForecastsRequest : BaseApiRequest, IRequest<GetWeatherForecastsResponse>
   {
-    public const string Route = "api/weatherForecasts";
+    public const string RouteTemplate = "api/weatherForecasts";
 
     /// <summary>
     /// The Number of days of forecasts to get
@@ -13,6 +13,6 @@ namespace BlazorHosted.Features.WeatherForecasts
     /// <example>5</example>
     public int Days { get; set; }
 
-    internal override string GetRoute() => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{RouteTemplate}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
   }
 }

@@ -16,7 +16,7 @@ namespace BlazorHosted.Features.Connections
     /// </remarks>
     /// <param name="aSendMessageRequest"></param>
     /// <returns><see cref="SendMessageResponse"/></returns>
-    [HttpPost(SendMessageRequest.Route)]
+    [HttpPost(SendMessageRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(SendMessageResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

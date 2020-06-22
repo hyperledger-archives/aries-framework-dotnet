@@ -16,7 +16,7 @@ namespace BlazorHosted.Features.Wallets
     /// </remarks>
     /// <param name="aGetWalletRequest"></param>
     /// <returns><see cref="GetWalletResponse"/></returns>
-    [HttpGet(GetWalletRequest.Route)]
+    [HttpGet(GetWalletRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(GetWalletResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

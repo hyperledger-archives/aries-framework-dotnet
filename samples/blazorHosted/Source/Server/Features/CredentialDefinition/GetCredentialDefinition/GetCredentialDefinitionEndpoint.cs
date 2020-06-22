@@ -13,7 +13,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
     /// </summary>
     /// <param name="aGetCredentialDefinitionRequest"><see cref="GetCredentialDefinitionRequest"/></param>
     /// <returns><see cref="GetCredentialDefinitionResponse"/></returns>
-    [HttpGet(GetCredentialDefinitionRequest.Route)]
+    [HttpGet(GetCredentialDefinitionRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(GetCredentialDefinitionResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

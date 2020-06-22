@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
 
   public class GetCredentialDefinitionRequest : BaseApiRequest, IRequest<GetCredentialDefinitionResponse>
   {
-    public const string Route = "api/credential-definitions/{CredentialDefinitionId}";
+    public const string RouteTemplate = "api/credential-definitions/{CredentialDefinitionId}";
 
     /// <summary>
     /// The Id of the Credential Definition to retrieve
@@ -22,7 +22,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
     internal override string GetRoute()
     {
       string temp =
-        Route
+        RouteTemplate
         .Replace($"{{{nameof(CredentialDefinitionId)}}}", CredentialDefinitionId, System.StringComparison.Ordinal);
 
       return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";

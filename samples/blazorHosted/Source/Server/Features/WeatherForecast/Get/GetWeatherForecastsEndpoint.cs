@@ -17,7 +17,7 @@ namespace BlazorHosted.Features.WeatherForecasts
     /// </remarks>
     /// <param name="aGetWeatherForecastsRequest"></param>
     /// <returns><see cref="GetWeatherForecastsResponse"/></returns>
-    [HttpGet(GetWeatherForecastsRequest.Route)]
+    [HttpGet(GetWeatherForecastsRequest.RouteTemplate)]
     [
       SwaggerOperation
       (

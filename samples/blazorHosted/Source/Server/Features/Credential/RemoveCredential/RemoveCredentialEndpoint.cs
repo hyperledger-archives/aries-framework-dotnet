@@ -13,7 +13,7 @@ namespace BlazorHosted.Features.Credentials
     /// </summary>
     /// <param name="aRemoveCredentialRequest"><see cref="RemoveCredentialRequest"/></param>
     /// <returns><see cref="RemoveCredentialResponse"/></returns>
-    [HttpPost(RemoveCredentialRequest.Route)]
+    [HttpPost(RemoveCredentialRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(RemoveCredentialResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

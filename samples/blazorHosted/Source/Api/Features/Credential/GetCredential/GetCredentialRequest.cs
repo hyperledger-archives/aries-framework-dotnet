@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Credentials
 
   public class GetCredentialRequest : BaseApiRequest, IRequest<GetCredentialResponse>
   {
-    public const string Route = "api/credentials/{CredentialId}";
+    public const string RouteTemplate = "api/credentials/{CredentialId}";
 
     /// <summary>
     /// The Id of the Credential to return
@@ -15,7 +15,7 @@ namespace BlazorHosted.Features.Credentials
 
     internal override string GetRoute()
     {
-      string temp = Route.Replace($"{{{nameof(CredentialId)}}}", CredentialId, System.StringComparison.Ordinal);
+      string temp = RouteTemplate.Replace($"{{{nameof(CredentialId)}}}", CredentialId, System.StringComparison.Ordinal);
       return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
     }
   }

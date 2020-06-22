@@ -5,10 +5,10 @@ namespace BlazorHosted.Features.Connections
 
   public class RecieveInvitationRequest : BaseApiRequest, IRequest<RecieveInvitationResponse>
   {
-    public const string Route = "api/connections/recieve-invitation";
+    public const string RouteTemplate = "api/connections/recieve-invitation";
 
     public string InvitationDetails { get; set; } = null!;
 
-    internal override string GetRoute() => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{RouteTemplate}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }
