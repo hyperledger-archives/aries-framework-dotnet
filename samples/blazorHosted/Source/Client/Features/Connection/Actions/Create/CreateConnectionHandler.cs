@@ -34,7 +34,7 @@
         HttpResponseMessage httpResponseMessage =
           await HttpClient.PostAsJsonAsync<CreateInvitationRequest>
           (
-            aCreateConnectionAction.CreateInvitationRequest.RouteFactory,
+            aCreateConnectionAction.CreateInvitationRequest.GetRoute(),
             aCreateConnectionAction.CreateInvitationRequest
           );
 

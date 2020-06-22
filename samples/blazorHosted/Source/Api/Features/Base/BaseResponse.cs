@@ -9,14 +9,13 @@ namespace BlazorHosted.Features.Bases
     /// </summary>
     public Guid CorrelationId { get; set; }
 
-    public BaseResponse(Guid aRequestId) : this()
+    public BaseResponse(Guid correlationId) : base()
     {
-      CorrelationId = aRequestId;
+      CorrelationId = correlationId;
     }
 
     public BaseResponse()
     {
-      CorrelationId = Guid.NewGuid();
     }
   }
 }

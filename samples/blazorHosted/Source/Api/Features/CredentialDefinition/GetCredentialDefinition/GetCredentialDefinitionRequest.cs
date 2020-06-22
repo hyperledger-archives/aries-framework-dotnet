@@ -19,16 +19,13 @@ namespace BlazorHosted.Features.CredentialDefinitions
       CredentialDefinitionId = aCredentialDefinitionId;
     }
 
-    internal override string RouteFactory
+    internal override string GetRoute()
     {
-      get
-      {
-        string temp =
-          Route
-          .Replace($"{{{nameof(CredentialDefinitionId)}}}", CredentialDefinitionId, System.StringComparison.Ordinal);
+      string temp =
+        Route
+        .Replace($"{{{nameof(CredentialDefinitionId)}}}", CredentialDefinitionId, System.StringComparison.Ordinal);
 
-        return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
-      }
+      return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
     }
   }
 }

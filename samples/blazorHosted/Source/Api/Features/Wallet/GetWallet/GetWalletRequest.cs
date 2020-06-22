@@ -7,6 +7,6 @@ namespace BlazorHosted.Features.Wallets
   {
     public const string Route = "api/agent/provision";
 
-    internal override string RouteFactory => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }

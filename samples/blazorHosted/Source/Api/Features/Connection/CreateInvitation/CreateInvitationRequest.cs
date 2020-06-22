@@ -57,7 +57,7 @@ namespace BlazorHosted.Features.Connections
     {
       InviteConfiguration = new InviteConfiguration { AutoAcceptConnection = true };
     }
-    internal override string RouteFactory => Route;
+    internal override string GetRoute() => Route;
   }
 
 }

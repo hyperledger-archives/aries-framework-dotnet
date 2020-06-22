@@ -9,6 +9,6 @@ namespace BlazorHosted.Features.Connections
 
     public string InvitationDetails { get; set; } = null!;
 
-    internal override string RouteFactory => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }

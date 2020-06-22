@@ -19,13 +19,7 @@ namespace BlazorHosted.Features.Connections
     /// <example>Hello Friend</example>
     public string Message { get; set; } = null!;
 
-    internal override string RouteFactory
-    {
-      get
-      {
-        string temp = Route.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
-        return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
-      }
-    }
+    internal override string GetRoute() => 
+      Route.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
   }
 }

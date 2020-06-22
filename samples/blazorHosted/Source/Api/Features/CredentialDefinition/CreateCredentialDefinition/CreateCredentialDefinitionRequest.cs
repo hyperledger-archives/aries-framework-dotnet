@@ -31,6 +31,6 @@ namespace BlazorHosted.Features.CredentialDefinitions
     /// <example>default</example>
     public string? Tag { get; set; }
 
-    internal override string RouteFactory => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => Route;
   }
 }

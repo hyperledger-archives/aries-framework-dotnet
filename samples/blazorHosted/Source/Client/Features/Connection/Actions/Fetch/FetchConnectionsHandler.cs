@@ -27,7 +27,7 @@ namespace BlazorHosted.Features.Connections
       )
       {
         var getConnectionsRequest = new GetConnectionsRequest();
-        HttpResponseMessage x = await HttpClient.GetAsync(getConnectionsRequest.RouteFactory);
+        HttpResponseMessage x = await HttpClient.GetAsync(getConnectionsRequest.GetRoute());
         string json = await x.Content.ReadAsStringAsync();
         GetConnectionsResponse getConnectionsResponse = JsonConvert.DeserializeObject<GetConnectionsResponse>(json);
 

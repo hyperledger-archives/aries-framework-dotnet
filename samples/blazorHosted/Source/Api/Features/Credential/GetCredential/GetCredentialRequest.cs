@@ -13,13 +13,10 @@ namespace BlazorHosted.Features.Credentials
     /// <example>5</example>
     public string CredentialId { get; set; } = null!;
 
-    internal override string RouteFactory
+    internal override string GetRoute()
     {
-      get
-      {
-        string temp = Route.Replace($"{{{nameof(CredentialId)}}}", CredentialId, System.StringComparison.Ordinal);
-        return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
-      }
+      string temp = Route.Replace($"{{{nameof(CredentialId)}}}", CredentialId, System.StringComparison.Ordinal);
+      return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
     }
   }
 }

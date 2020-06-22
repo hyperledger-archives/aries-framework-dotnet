@@ -30,7 +30,7 @@ namespace BlazorHosted.Features.Wallets
       )
       {
         var getWalletRequest = new GetWalletRequest();
-        HttpResponseMessage x = await HttpClient.GetAsync(getWalletRequest.RouteFactory);
+        HttpResponseMessage x = await HttpClient.GetAsync(getWalletRequest.GetRoute());
         string json = await x.Content.ReadAsStringAsync();
         GetWalletResponse getWalletResponse = JsonConvert.DeserializeObject<GetWalletResponse>(json);
         WalletState.Did = getWalletResponse.ProvisioningRecord.Endpoint.Did;

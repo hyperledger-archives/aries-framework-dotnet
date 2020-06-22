@@ -7,6 +7,6 @@ namespace BlazorHosted.Features.Credentials
   {
     public const string Route = "api/credentials";
 
-    internal override string RouteFactory => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{Route}?{nameof(CorrelationId)}={CorrelationId}";
   }
 }
