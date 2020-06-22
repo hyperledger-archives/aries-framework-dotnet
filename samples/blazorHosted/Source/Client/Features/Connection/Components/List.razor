@@ -5,7 +5,7 @@
 <div data-qa="@TestId">
   <p>Current count: @ConnectionState.Connections.Count</p>
 
-  <table>
+  <table class="table">
     <thead>
       <tr>
         <th>Alias</th>
@@ -18,17 +18,17 @@
     <tbody>
       @foreach (var connection in ConnectionState.Connections.Values)
       {
-      <tr>
-        <td>@connection.Alias?.Name</td>
-        <td>@connection.Id</td>
-        <td>@connection.State</td>
-        <td>@connection.CreatedAtUtc</td>
-        <td>
-          <a href=@Pages.Connections.Delete.GetRoute(connection.Id)>
-            Delete
-          </a>
-        </td>
-      </tr>
+        <tr>
+          <td>@connection.Alias?.Name</td>
+          <td>@connection.Id</td>
+          <td>@connection.State</td>
+          <td>@connection.CreatedAtUtc</td>
+          <td>
+            <a href=@Pages.Connections.Delete.GetRoute(connection.Id)>
+              Delete
+            </a>
+          </td>
+        </tr>
       }
     </tbody>
   </table>

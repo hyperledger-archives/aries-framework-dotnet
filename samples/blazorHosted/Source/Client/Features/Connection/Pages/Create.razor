@@ -3,6 +3,13 @@
 @inherits BaseComponent
 @page "/connections/create"
 
-<h1>Connection Create Page</h1>
+<h1>Create Connection Create Page</h1>
 
-<BlazorHosted.Features.Connections.Components.Create />
+<div>
+  <button>Create New Invitation</button>
+  <div>
+    <h3>Invitation Details</h3>
+    <img src="@ConnectionState?.InvitationQrUri" />
+    <span>@ConnectionState?.InvitationUrl</span>
+  </div>
+</div>
