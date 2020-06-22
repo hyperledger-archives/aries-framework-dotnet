@@ -49,15 +49,13 @@ namespace BlazorHosted.Features.Connections
           ImageUrl = aCreateInvitationRequest.ImageUrl?.AbsoluteUri
         }
       };
-
-      (ConnectionInvitationMessage connectionInvitationMessage, ConnectionRecord connectionRecord) =
+      (ConnectionInvitationMessage connectionInvitationMessage, _) =
         await ConnectionService.CreateInvitationAsync(agentContext, inviteConfiguration);
 
       string endpointUri = (await ProvisioningService.GetProvisioningAsync(agentContext.Wallet)).Endpoint.Uri;
       string encodedInvitation = connectionInvitationMessage.ToJson().ToBase64();
       var response = new CreateInvitationResponse(aCreateInvitationRequest.CorrelationId, connectionInvitationMessage)
       {
-        
         InvitationUrl = $"{endpointUri}?c_i={encodedInvitation}"
       };
 

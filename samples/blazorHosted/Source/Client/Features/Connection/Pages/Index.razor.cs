@@ -1,4 +1,4 @@
-namespace BlazorHosted.Pages.Connections
+namespace BlazorHosted.Features.Connections.Pages
 {
   using BlazorState.Features.Routing;
   using BlazorHosted.Features.Bases;
@@ -14,7 +14,10 @@ namespace BlazorHosted.Pages.Connections
     protected async Task CreateClick() =>
       _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = Create.GetRoute() });
 
-    protected override async Task OnAfterRenderAsync(bool aFirstRender) => 
+    protected override async Task OnInitializedAsync()
+    {
       _ = await Mediator.Send(new FetchConnectionsAction());
+      await base.OnInitializedAsync();
+    }     
   }
 }

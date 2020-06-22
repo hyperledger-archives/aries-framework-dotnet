@@ -9,7 +9,7 @@
     protected override void ConfigureHandlers()
     {
       AddConnectionHandler();
-      //AddForwardHandler();
+      AddForwardHandler();
       //AddHandler<BasicMessageHandler>();
       //AddHandler<TrustPingMessageHandler>();
       //AddDiscoveryHandler();

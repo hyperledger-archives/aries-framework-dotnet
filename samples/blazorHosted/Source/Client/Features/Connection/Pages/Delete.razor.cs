@@ -1,4 +1,4 @@
-namespace BlazorHosted.Pages.Connections
+namespace BlazorHosted.Features.Connections.Pages
 {
   using BlazorState.Features.Routing;
   using System.Threading.Tasks;
@@ -7,7 +7,7 @@ namespace BlazorHosted.Pages.Connections
 
   public partial class Delete: BaseComponent
   {
-    public const string RouteTemplate = "/Connection/Delete/{ConnectionId}";
+    public const string RouteTemplate = "/connections/delete/{ConnectionId}";
 
     public static string GetRoute(string aConnectionId) =>
       RouteTemplate
@@ -15,7 +15,13 @@ namespace BlazorHosted.Pages.Connections
 
     [Parameter] public string ConnectionId { get; set; }
 
-    protected async Task ButtonClick() =>
-      _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = "/" });
+    //protected async Task DeleteClick()
+    //{
+    //  _ = await Mediator.Send(new DeleteCatalogItemAction { CatalogItemId = EntityId });
+    //  _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Index.RouteTemplate });
+    //}
+
+    //protected async Task CancelClick() =>
+    //  _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Index.RouteTemplate });
   }
 }

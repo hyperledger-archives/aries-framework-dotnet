@@ -1,17 +1,20 @@
-@namespace BlazorHosted.Pages.Connections
+@namespace BlazorHosted.Features.Connections.Pages
 @using BlazorHosted.Features.Bases
 @inherits BaseComponent
 @page "/connections/create"
 
 <h1>Create Connection Create Page</h1>
 
-<div class="card text-center mt-2 col-5" >
+<div class="card text-center mt-2 col-3">
   <button @onclick=@ButtonClick>Create New Invitation</button>
   <div>
     <h3 class="card-header">Invitation Details</h3>
     <img class="card-img" src="@ConnectionState?.InvitationQrUri" />
     <div class="card-body">
-      <span>@ConnectionState?.InvitationUrl</span>
+      <span>@DisplayInvitationUrl</span>
+      <button type="button" class="btn btn-default" aria-label="Copy to Clipboard" @onclick=@CopyToClipboardAsync>
+        <span class="oi oi-clipboard" aria-hidden="true"></span>
+      </button>
     </div>
   </div>
 </div>

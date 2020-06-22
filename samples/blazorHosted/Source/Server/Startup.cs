@@ -1,17 +1,21 @@
 namespace BlazorHosted.Server
 {
   using AutoMapper;
+  using BlazorHosted.Configuration;
   using BlazorHosted.Features.Bases;
   using BlazorHosted.Infrastructure;
   using FluentValidation.AspNetCore;
+  using Hyperledger.Aries.Storage;
   using Jdenticon.AspNetCore;
   using MediatR;
   using Microsoft.AspNetCore.Builder;
   using Microsoft.AspNetCore.Hosting;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.AspNetCore.ResponseCompression;
+  using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
   using Microsoft.Extensions.Hosting;
+  using Microsoft.Extensions.Options;
   using Microsoft.OpenApi.Models;
   using Swashbuckle.AspNetCore.Swagger;
   using System;
@@ -20,11 +24,18 @@ namespace BlazorHosted.Server
   using System.Net.Mime;
   using System.Reflection;
 
+  [System.Runtime.InteropServices.Guid("858D6DFD-C176-4A54-9EAD-CB7E80B98AFA")]
   public class Startup
   {
+    private readonly IConfiguration Configuration;
     private const string SwaggerVersion = "v1";
     private string SwaggerApiTitle => $"BlazorHosted API {SwaggerVersion}";
     private string SwaggerEndPoint => $"/swagger/{SwaggerVersion}/swagger.json";
+
+    public Startup(IConfiguration aConfiguration)
+    {
+      Configuration = aConfiguration;
+    }
 
     public void Configure
     (
@@ -68,9 +79,10 @@ namespace BlazorHosted.Server
 
     public void ConfigureServices(IServiceCollection aServiceCollection)
     {
-      ConfigureAries(aServiceCollection);
+      ConfigureServicesSettings(aServiceCollection);
       aServiceCollection.AddRazorPages();
       aServiceCollection.AddServerSideBlazor();
+
       aServiceCollection.AddMvc()
         .AddFluentValidation
         (
@@ -80,6 +92,8 @@ namespace BlazorHosted.Server
             aFluentValidationMvcConfiguration.RegisterValidatorsFromAssemblyContaining<BaseRequest>();
           }
         );
+
+      aServiceCollection.AddLogging();
 
       aServiceCollection.Configure<ApiBehaviorOptions>
       (
@@ -110,21 +124,32 @@ namespace BlazorHosted.Server
           .WithScopedLifetime()
       );
       ConfigureSwagger(aServiceCollection);
+      ConfigureAries(aServiceCollection);
     }
 
     private void ConfigureAries(IServiceCollection aServiceCollection)
     {
+      IServiceProvider serviceProvider = aServiceCollection.BuildServiceProvider();
+      AgentSettings agentSettings = serviceProvider.GetService<IOptions<AgentSettings>>().Value;
+
       aServiceCollection.AddAriesFramework
       (
         aAriesFrameworkBuilder =>
-          aAriesFrameworkBuilder.RegisterAgent
+          aAriesFrameworkBuilder.RegisterAgent<AriesWebAgent>
           (
             aAgentOptions =>
             {
-              aAgentOptions.GenesisFilename = Path.GetFullPath("pool_genesis.txn");
+              aAgentOptions.AgentName = agentSettings.AgentName;
+              //aAgentOptions.AgentName = "Alice"; // Get from Config based on ENV
+              aAgentOptions.GenesisFilename = Path.GetFullPath(agentSettings.GenesisFilename);
+              aAgentOptions.WalletConfiguration = new WalletConfiguration { Id = agentSettings.WalletId };
+              //aAgentOptions.WalletConfiguration = new WalletConfiguration { Id = "Alice 7B10483F-59E6-4DC3-AA7A-529C48462FDB" };
               //TODO update this to use the current Kestrel setting which are not available in ConfigureServices
               // Or use the same Appsetting that Kestrel does to determine the port
-              aAgentOptions.EndpointUri = "https://localhost:5001/"; // Is MyKestrel Enpoint.
+              // This is set one time on first provisioning.
+              // To reset it delete everything in the ~/.indy_client directory (this will delete all wallet records)
+              aAgentOptions.EndpointUri = agentSettings.EndpointUri;
+              aAgentOptions.PoolName = agentSettings.PoolName;
             }
           )
       );
@@ -166,6 +191,13 @@ namespace BlazorHosted.Server
             );
         }
       );
+    }
+
+    private void ConfigureServicesSettings(IServiceCollection aServiceCollection)
+    {
+      aServiceCollection.AddOptions();
+      //aServiceCollection.Configure<RootSettings>(Configuration);
+      aServiceCollection.Configure<AgentSettings>(Configuration.GetSection(nameof(AgentSettings)));
     }
   }
 }
