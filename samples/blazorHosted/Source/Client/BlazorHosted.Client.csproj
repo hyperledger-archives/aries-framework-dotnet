@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Connection\Pages\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 
