@@ -15,7 +15,7 @@
 
     protected override Task OnParametersSetAsync()
     {
-      // Should fetch the single item if coming form list will be in mem already but if direct it won't be.
+      // Should fetch the single item if coming from list will be in mem already but if direct it won't be.
       //_ = await Mediator.Send(new FetchConnectionAction());
       return base.OnParametersSetAsync();
     }
