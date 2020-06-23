@@ -7,21 +7,13 @@ namespace BlazorHosted.Features.Connections.Pages
   using System;
   using System.Threading.Tasks;
   using static BlazorHosted.Features.Connections.ConnectionState;
+  using static BlazorHosted.Features.Wallets.WalletState;
 
   public partial class Create : BaseComponent
   {
     public const string RouteTemplate = "/connections/create";
 
-    [Inject] protected IJSRuntime JSRuntime { get; set; }
-
     public CreateInvitationRequest CreateInvitationRequest { get; set; }
-
-    public static string GetRoute() => RouteTemplate;
-
-    protected async Task ButtonClick()
-    {
-      _ = await Mediator.Send(new CreateConnectionAction());
-    }
 
     public string DisplayInvitationUrl
     {
@@ -32,6 +24,15 @@ namespace BlazorHosted.Features.Connections.Pages
       }
     }
 
+    [Inject] protected IJSRuntime JSRuntime { get; set; }
+
+    public static string GetRoute() => RouteTemplate;
+
+    protected async Task ButtonClick()
+    {
+      _ = await Mediator.Send(new CreateConnectionAction());
+    }
+
     protected async Task CopyToClipboardAsync()
     {
       await JSRuntime.InvokeAsync<object>("navigator.clipboard.writeText", ConnectionState.InvitationUrl);
@@ -39,10 +40,10 @@ namespace BlazorHosted.Features.Connections.Pages
 
     protected override async Task OnInitializedAsync()
     {
-      Console.WriteLine("Where are you?");
+      _ = await Mediator.Send(new FetchWalletAction());
       _ = await Mediator.Send(new CreateConnectionAction());
 
       await base.OnInitializedAsync();
-    }
+    }  
   }
 }

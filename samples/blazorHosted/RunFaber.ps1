@@ -1,0 +1,1 @@
+dotnet run --project .\Source\Server\ --launch-profile "BlazorHosted.Server Faber"

@@ -143,10 +143,7 @@ namespace BlazorHosted.Server
               //aAgentOptions.AgentName = "Alice"; // Get from Config based on ENV
               aAgentOptions.GenesisFilename = Path.GetFullPath(agentSettings.GenesisFilename);
               aAgentOptions.WalletConfiguration = new WalletConfiguration { Id = agentSettings.WalletId };
-              //aAgentOptions.WalletConfiguration = new WalletConfiguration { Id = "Alice 7B10483F-59E6-4DC3-AA7A-529C48462FDB" };
-              //TODO update this to use the current Kestrel setting which are not available in ConfigureServices
-              // Or use the same Appsetting that Kestrel does to determine the port
-              // This is set one time on first provisioning.
+              // The following is set one time when first provisioned.
               // To reset it delete everything in the ~/.indy_client directory (this will delete all wallet records)
               aAgentOptions.EndpointUri = agentSettings.EndpointUri;
               aAgentOptions.PoolName = agentSettings.PoolName;

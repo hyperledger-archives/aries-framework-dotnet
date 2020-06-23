@@ -31,7 +31,10 @@
         CancellationToken aCancellationToken
       )
       {
-        var createInvitationRequest = new CreateInvitationRequest();
+        var createInvitationRequest = new CreateInvitationRequest
+        {
+          Alias = WalletState.Name         
+        };
 
         HttpResponseMessage httpResponseMessage =
           await HttpClient.PostAsJsonAsync<CreateInvitationRequest>

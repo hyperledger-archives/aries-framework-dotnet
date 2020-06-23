@@ -36,7 +36,7 @@ namespace BlazorHosted.Features.Credentials
 
       var response = new GetCredentialResponse(aGetCredentialRequest.CorrelationId, credentialRecord);
 
-      return await Task.Run(() => response);
+      return response;
     }
   }
 }

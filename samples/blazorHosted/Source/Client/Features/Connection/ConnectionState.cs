@@ -16,6 +16,8 @@
     public string InvitationUrl { get; private set; }
     public string InvitationQrUri { get; private set; }
 
+    public ConnectionInvitationMessage ConnectionInvitationMessage { get; private set; }
+
     [JsonIgnore]
     public IReadOnlyDictionary<string, ConnectionRecord> Connections => _ConnectionRecords;
 

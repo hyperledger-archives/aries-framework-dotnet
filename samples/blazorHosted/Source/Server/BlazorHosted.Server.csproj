@@ -46,7 +46,7 @@
 
   <ItemGroup>
     <None Update="pool_genesis.txn">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>  
   
