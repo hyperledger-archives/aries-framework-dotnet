@@ -4,7 +4,6 @@ namespace BlazorHosted.Features.Connections.Pages
   using BlazorHosted.Features.Connections;
   using Microsoft.AspNetCore.Components;
   using Microsoft.JSInterop;
-  using System;
   using System.Threading.Tasks;
   using static BlazorHosted.Features.Connections.ConnectionState;
   using static BlazorHosted.Features.Wallets.WalletState;

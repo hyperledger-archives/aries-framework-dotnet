@@ -6,6 +6,7 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.WeatherForecasts;
   using BlazorHosted.Features.Wallets;
   using BlazorHosted.Features.Connections;
+  using BlazorHosted.Features.Schemas;
 
   /// <summary>
   /// Base Handler that makes it easy to access state
@@ -19,6 +20,7 @@ namespace BlazorHosted.Features.Bases
     protected CounterState CounterState => Store.GetState<CounterState>();
 
     protected ConnectionState ConnectionState => Store.GetState<ConnectionState>();
+    protected SchemaState SchemaState => Store.GetState<SchemaState>();
 
     protected WalletState WalletState => Store.GetState<WalletState>();
 

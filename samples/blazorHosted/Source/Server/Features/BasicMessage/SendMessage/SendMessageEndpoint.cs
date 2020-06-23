@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.Connections
+namespace BlazorHosted.Features.BasicMessaging
 {
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;

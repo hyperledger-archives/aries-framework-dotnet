@@ -37,28 +37,6 @@ namespace BlazorHosted.Features.Schemas
     {
       IAgentContext agentContext = await AgentProvider.GetContextAsync();
       ProvisioningRecord issuerProvisioningRecord = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
-      
-      CreateAndStoreMyDidResult trusteeCreateAndStoreMyDidResult =
-        await Did.CreateAndStoreMyDidAsync
-        (
-          agentContext.Wallet,
-          new { seed = "000000000000000000000000Trustee1" }.ToJson()
-        );
-
-      await Ledger.SignAndSubmitRequestAsync
-      (
-        await agentContext.Pool,
-        agentContext.Wallet,
-        trusteeCreateAndStoreMyDidResult.Did,
-        requestJson: await Ledger.BuildNymRequestAsync
-        (
-          trusteeCreateAndStoreMyDidResult.Did, 
-          issuerProvisioningRecord.IssuerDid, 
-          issuerProvisioningRecord.IssuerVerkey,
-          alias: null,
-          role: "ENDORSER"
-        )
-      );
 
       string schemaId =
         await SchemaService.CreateSchemaAsync

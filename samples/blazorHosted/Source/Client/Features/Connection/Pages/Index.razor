@@ -2,10 +2,10 @@
 @inherits BaseComponent
 @page "/connections"
 
-<br />
-<h1>Connection Items</h1>
-
 <div data-qa="@TestId">
+  <br />
+  <h1>Connection Items</h1>
+
   <p>Current count: @ConnectionState.Connections.Count</p>
 
   <table class="table">
@@ -19,7 +19,7 @@
       </tr>
     </thead>
     <tbody>
-      @foreach (var connection in ConnectionState.Connections.Values)
+      @foreach (var connection in ConnectionState.ConnectionsAsList)
       {
         <tr>
           <td>@connection.Alias?.Name</td>

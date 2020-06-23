@@ -6,6 +6,7 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.WeatherForecasts;
   using BlazorHosted.Features.Wallets;
   using BlazorHosted.Features.Connections;
+  using BlazorHosted.Features.Schemas;
 
   /// <summary>
   /// Makes access to the State a little easier and by inheriting from
@@ -21,6 +22,7 @@ namespace BlazorHosted.Features.Bases
     internal ApplicationState ApplicationState => GetState<ApplicationState>();
     internal CounterState CounterState => GetState<CounterState>();
     internal ConnectionState ConnectionState => GetState<ConnectionState>();
+    internal SchemaState SchemaState => GetState<SchemaState>();
     internal WalletState WalletState => GetState<WalletState>();
     internal WeatherForecastsState WeatherForecastsState => GetState<WeatherForecastsState>();
   }

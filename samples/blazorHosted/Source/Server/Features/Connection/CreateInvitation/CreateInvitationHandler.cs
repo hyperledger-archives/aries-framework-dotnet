@@ -47,7 +47,8 @@ namespace BlazorHosted.Features.Connections
         {
           Name = aCreateInvitationRequest.Alias,
           ImageUrl = aCreateInvitationRequest.ImageUrl?.AbsoluteUri
-        }
+        },
+        AutoAcceptConnection = true
       };
       (ConnectionInvitationMessage connectionInvitationMessage, _) =
         await ConnectionService.CreateInvitationAsync(agentContext, inviteConfiguration);

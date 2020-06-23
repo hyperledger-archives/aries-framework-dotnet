@@ -1,8 +1,7 @@
-namespace BlazorHosted.Features.Connections
+namespace BlazorHosted.Features.BasicMessaging
 {
-  using System;
-  using System.Collections.Generic;
   using BlazorHosted.Features.Bases;
+  using System;
 
   public class SendMessageResponse : BaseResponse
   {

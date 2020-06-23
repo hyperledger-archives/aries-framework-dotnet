@@ -27,6 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Credential\Actions\" />
+    <Folder Include="Features\Credential\Components\" />
+    <Folder Include="Features\Credential\Pages\" />
+    <Folder Include="Features\BasicMessaging\" />
+    <Folder Include="Features\Schema\Components\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 

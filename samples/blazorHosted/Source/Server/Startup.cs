@@ -140,6 +140,7 @@ namespace BlazorHosted.Server
             aAgentOptions =>
             {
               aAgentOptions.AgentName = agentSettings.AgentName;
+              aAgentOptions.IssuerKeySeed = agentSettings.IssuerKeySeed;
               //aAgentOptions.AgentName = "Alice"; // Get from Config based on ENV
               aAgentOptions.GenesisFilename = Path.GetFullPath(agentSettings.GenesisFilename);
               aAgentOptions.WalletConfiguration = new WalletConfiguration { Id = agentSettings.WalletId };
