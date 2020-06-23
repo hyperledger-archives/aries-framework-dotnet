@@ -11,17 +11,13 @@ namespace BlazorHosted.Features.Connections
   using System.Net.Http.Json;
   using Hyperledger.Aries.Utils;
   using Hyperledger.Aries.Features.DidExchange;
+  using System;
 
   internal partial class ConnectionState
   {
     public class ViewInvitationHandler : BaseHandler<ViewInvitationAction>
     {
-      private readonly HttpClient HttpClient;
-
-      public ViewInvitationHandler(IStore aStore, HttpClient aHttpClient) : base(aStore)
-      {
-        HttpClient = aHttpClient;
-      }
+      public ViewInvitationHandler(IStore aStore) : base(aStore) { }
 
       public override Task<Unit> Handle
       (
@@ -29,9 +25,12 @@ namespace BlazorHosted.Features.Connections
         CancellationToken aCancellationToken
       )
       {
+        Console.WriteLine($"aViewInvitationAction.InvitationDetails:{aViewInvitationAction.InvitationDetails}");
         ConnectionState.ConnectionInvitationMessage =
            MessageUtils
             .DecodeMessageFromUrlFormat<ConnectionInvitationMessage>(aViewInvitationAction.InvitationDetails);
+        Console.WriteLine("====");
+        Console.WriteLine(ConnectionState.ConnectionInvitationMessage.Label);
 
         return Unit.Task;
       }

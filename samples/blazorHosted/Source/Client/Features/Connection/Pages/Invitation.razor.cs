@@ -14,10 +14,9 @@
 
     public string InvitationDetails { get; set; }
 
-    public ConnectionInvitationMessage ConnectionInvitationMessage { get; set; }
+    public ConnectionInvitationMessage ConnectionInvitationMessage => ConnectionState.ConnectionInvitationMessage;
 
-    protected async Task OnViewClickAsync() => 
-      _ = await Mediator.Send(new ViewInvitationAction { InvitationDetails = InvitationDetails });
+    protected async Task OnViewClickAsync() => _ = await Mediator.Send(new ViewInvitationAction { InvitationDetails = InvitationDetails });
 
     protected async Task OnAcceptClickAsync()
     {
