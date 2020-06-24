@@ -1,7 +1,7 @@
 ﻿namespace BlazorHosted.Features.Credentials
 {
   using BlazorHosted.Features.Bases;
-  using BlazorHosted.Features.CredentialDefinitions;
+  using BlazorHosted.Features.IssueCredentials;
 
   internal partial class CredentialState
   {

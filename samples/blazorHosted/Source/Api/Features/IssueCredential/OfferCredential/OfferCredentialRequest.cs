@@ -13,6 +13,6 @@ namespace BlazorHosted.Features.IssueCredentials
     /// <example>5</example>
     public int Days { get; set; }
 
-    internal override string RouteFactory => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
   }
 }

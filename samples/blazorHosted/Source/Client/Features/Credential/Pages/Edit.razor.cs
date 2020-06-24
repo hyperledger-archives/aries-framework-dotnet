@@ -2,10 +2,11 @@
 {
   using BlazorHosted.Features.Bases;
   using System.Threading.Tasks;
+  using static BlazorHosted.Features.Credentials.CredentialState;
 
   public partial class Edit : BaseComponent
   {
-    public const string RouteTemplate = "/schemas/create";
+    public const string RouteTemplate = "/credentials/offer";
 
     public static string GetRoute() => RouteTemplate;
 

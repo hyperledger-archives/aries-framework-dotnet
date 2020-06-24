@@ -2,6 +2,6 @@
 {
   public static class FeatureAnnotations
   {
-    public const string FeatureGroup = "IssueCredential";
+    public const string FeatureGroup = "Issue Credential";
   }
 }
