@@ -8,19 +8,17 @@ namespace BlazorHosted.Features.BasicMessaging
   using MediatR;
   using Microsoft.Extensions.Options;
   using System;
-  using System.Collections.Generic;
   using System.Globalization;
-  using System.Linq;
   using System.Threading;
   using System.Threading.Tasks;
 
   public class SendMessageHandler : IRequestHandler<SendMessageRequest, SendMessageResponse>
   {
-    private readonly IWalletService WalletService;
-    private readonly IConnectionService ConnectionService;
-    private readonly IWalletRecordService WalletRecordService;
-    private readonly IMessageService MessageService;
     private readonly AgentOptions AgentOptions;
+    private readonly IConnectionService ConnectionService;
+    private readonly IMessageService MessageService;
+    private readonly IWalletRecordService WalletRecordService;
+    private readonly IWalletService WalletService;
 
     public SendMessageHandler
     (
@@ -37,6 +35,7 @@ namespace BlazorHosted.Features.BasicMessaging
       MessageService = aMessageService;
       AgentOptions = aAgentOptions.Value;
     }
+
     public async Task<SendMessageResponse> Handle
     (
       SendMessageRequest aSendMessageRequest,
@@ -65,7 +64,7 @@ namespace BlazorHosted.Features.BasicMessaging
         SentTime = sentTime.ToString("s", CultureInfo.InvariantCulture)
       };
 
-      ConnectionRecord connectionRecord = 
+      ConnectionRecord connectionRecord =
         await ConnectionService.GetAsync(defaultAgentContext, aSendMessageRequest.ConnectionId);
 
       // Save the outgoing message to the local wallet for chat history purposes

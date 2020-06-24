@@ -1,12 +1,13 @@
 namespace BlazorHosted.Features.Bases
 {
-  using BlazorState;
   using BlazorHosted.Features.Applications;
-  using BlazorHosted.Features.Counters;
-  using BlazorHosted.Features.WeatherForecasts;
-  using BlazorHosted.Features.Wallets;
   using BlazorHosted.Features.Connections;
+  using BlazorHosted.Features.Counters;
+  using BlazorHosted.Features.CredentialDefinitions;
   using BlazorHosted.Features.Schemas;
+  using BlazorHosted.Features.Wallets;
+  using BlazorHosted.Features.WeatherForecasts;
+  using BlazorState;
 
   /// <summary>
   /// Base Handler that makes it easy to access state
@@ -16,14 +17,11 @@ namespace BlazorHosted.Features.Bases
     where TAction : IAction
   {
     protected ApplicationState ApplicationState => Store.GetState<ApplicationState>();
-
-    protected CounterState CounterState => Store.GetState<CounterState>();
-
     protected ConnectionState ConnectionState => Store.GetState<ConnectionState>();
+    protected CounterState CounterState => Store.GetState<CounterState>();
+    protected CredentialDefinitionState CredentialDefinitionState => Store.GetState<CredentialDefinitionState>();
     protected SchemaState SchemaState => Store.GetState<SchemaState>();
-
     protected WalletState WalletState => Store.GetState<WalletState>();
-
     protected WeatherForecastsState WeatherForecastsState => Store.GetState<WeatherForecastsState>();
 
     public BaseHandler(IStore aStore) : base(aStore) { }
