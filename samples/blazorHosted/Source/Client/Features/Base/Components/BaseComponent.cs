@@ -8,6 +8,7 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.Connections;
   using BlazorHosted.Features.Schemas;
   using BlazorHosted.Features.CredentialDefinitions;
+  using BlazorHosted.Features.Credentials;
 
   /// <summary>
   /// Makes access to the State a little easier and by inheriting from
@@ -24,6 +25,7 @@ namespace BlazorHosted.Features.Bases
     internal CounterState CounterState => GetState<CounterState>();
     internal ConnectionState ConnectionState => GetState<ConnectionState>();
     internal CredentialDefinitionState CredentialDefinitionState => GetState<CredentialDefinitionState>();
+    internal CredentialState CredentialState => GetState<CredentialState>();
     internal SchemaState SchemaState => GetState<SchemaState>();
     internal WalletState WalletState => GetState<WalletState>();
     internal WeatherForecastsState WeatherForecastsState => GetState<WeatherForecastsState>();
