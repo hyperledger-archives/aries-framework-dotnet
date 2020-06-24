@@ -13,7 +13,7 @@ namespace BlazorHosted.Features.IssueCredentials
     /// </summary>
     /// <param name="aOfferCredentialRequest"><see cref="OfferCredentialRequest"/></param>
     /// <returns><see cref="OfferCredentialResponse"/></returns>
-    [HttpGet(OfferCredentialRequest.Route)]
+    [HttpGet(OfferCredentialRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(OfferCredentialResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]

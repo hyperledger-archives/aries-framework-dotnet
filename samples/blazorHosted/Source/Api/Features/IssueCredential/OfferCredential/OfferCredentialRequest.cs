@@ -1,18 +1,29 @@
 namespace BlazorHosted.Features.IssueCredentials
 {
-  using MediatR;
   using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.Features.IssueCredential;
+  using MediatR;
+  using System.Collections.Generic;
 
   public class OfferCredentialRequest : BaseApiRequest, IRequest<OfferCredentialResponse>
   {
-    public const string Route = "api/IssueCredentials/OfferCredential";
+    public const string RouteTemplate = "api/issue-credential/send-offer";
 
     /// <summary>
-    /// The Number of days of forecasts to get
+    /// The ConnectionId to use to send the offer
     /// </summary>
-    /// <example>5</example>
-    public int Days { get; set; }
+    /// <example>TODO</example>
+    public string ConnectionId { get; set; } = null!;
 
-    internal override string GetRoute() => $"{Route}?{nameof(Days)}={Days}&{nameof(CorrelationId)}={CorrelationId}";
+    public string CredentialDefinitionId { get; set; } = null!;
+    public List<CredentialPreviewAttribute> CredentialPreviewAttributes { get; set; } = null!;
+    public string SchemaId { get; set; } = null!;
+
+    internal override string GetRoute() => RouteTemplate;
+
+    public OfferCredentialRequest()
+    {
+      CredentialPreviewAttributes = new List<CredentialPreviewAttribute>();
+    }
   }
 }
