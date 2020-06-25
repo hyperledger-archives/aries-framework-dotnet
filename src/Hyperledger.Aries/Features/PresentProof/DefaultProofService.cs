@@ -411,7 +411,8 @@ namespace Hyperledger.Aries.Features.PresentProof
             {
                 Id = Guid.NewGuid().ToString(),
                 ConnectionId = connectionId,
-                ProposalJson = proofProposal.ToJson()
+                ProposalJson = proofProposal.ToJson(),
+                State = ProofState.Proposed
             };
 
             proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
@@ -593,6 +594,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 }
                 var predicate = new ProofPredicateInfo()
                 {
+                    Name = pred.Name,
                     PredicateType = pred.Predicate,
                     PredicateValue = pred.Threshold,
                     Restrictions = new List<AttributeFilter>
