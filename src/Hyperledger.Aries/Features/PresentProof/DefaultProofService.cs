@@ -747,6 +747,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             }
             else
             {
+                await proofRecord.TriggerAsync(ProofTrigger.Request);
                 proofRecord.RequestJson = requestJson;
                 await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
             }
