@@ -2,6 +2,7 @@ namespace BlazorHosted.Features.PresentProofs
 {
   using MediatR;
   using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.Features.PresentProof;
 
   public class GetCredentialsForProofRequest : BaseApiRequest, IRequest<GetCredentialsForProofResponse>
   {
@@ -12,6 +13,8 @@ namespace BlazorHosted.Features.PresentProofs
     /// </summary>
     /// <example>TODO</example>
     public string ProofId { get; set; } = null!;
+
+    public string Referent { get; set; } = null!;
 
     internal override string GetRoute() => $"{RouteTemplate}?{nameof(ProofId)}={ProofId}&{nameof(CorrelationId)}={CorrelationId}";
   }
