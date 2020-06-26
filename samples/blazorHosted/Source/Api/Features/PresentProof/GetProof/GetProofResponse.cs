@@ -1,13 +1,18 @@
 namespace BlazorHosted.Features.PresentProofs
 {
   using System;
-  using System.Collections.Generic;
   using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.Features.PresentProof;
 
   public class GetProofResponse : BaseResponse
   {
     public GetProofResponse() { }
 
-    public GetProofResponse(Guid aCorrelationId) : base(aCorrelationId) { }
+    public ProofRecord ProofRecord { get; set; } = null!;
+
+    public GetProofResponse(ProofRecord aProofRecord, Guid aCorrelationId) : base(aCorrelationId) 
+    {
+      ProofRecord = aProofRecord;
+    }
   }
 }
