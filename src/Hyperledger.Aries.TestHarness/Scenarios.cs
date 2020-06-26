@@ -180,7 +180,10 @@ namespace Hyperledger.TestHarness
             //Requestor stores the proof proposal
             var requestorProofProposalRecord = await proofService.ProcessProposalAsync(requestorContext, requestorProposalMessage, requestorConnection);
             Assert.Equal(ProofState.Proposed, requestorProofProposalRecord.State);
-
+            var proposal = requestorProofProposalRecord.ProposalJson.ToObject<ProofProposal>();
+            Assert.Equal("Hello, World", proposal.Comment);
+            Assert.NotNull(proposal.ProposedAttributes);
+            Console.WriteLine(requestorProofProposalRecord.ProposalJson);
             // Requestor sends a proof request
             var (requestorRequestMessage, requestorProofRequestRecord) = await proofService.CreateRequestFromProposalAsync(
                 requestorContext, 
@@ -249,7 +252,6 @@ namespace Hyperledger.TestHarness
 
             //Requestor stores proof
             requestorProofRecord = await proofService.ProcessPresentationAsync(requestorContext, proof);
-
             //Requestor verifies proof
             var requestorVerifyResult = await proofService.VerifyProofAsync(requestorContext, requestorProofRecord.Id);
 

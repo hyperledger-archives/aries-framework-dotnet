@@ -486,12 +486,18 @@ namespace Hyperledger.Aries.Features.PresentProof
         public async Task<ProofRecord> ProcessProposalAsync(IAgentContext agentContext, ProposePresentationMessage proposePresentationMessage, ConnectionRecord connection)
         {
             // save in wallet
-            var proposalJson = proposePresentationMessage.PresentationPreviewMessage.ToJson();
+
+            var proofProposal = new ProofProposal
+            {
+                Comment = proposePresentationMessage.Comment,
+                ProposedAttributes = proposePresentationMessage.PresentationPreviewMessage.ProposedAttributes.ToList<ProposedAttribute>(),
+                ProposedPredicates = proposePresentationMessage.PresentationPreviewMessage.ProposedPredicates.ToList<ProposedPredicate>()
+            };
 
             var proofRecord = new ProofRecord
             {
                 Id = Guid.NewGuid().ToString(),
-                ProposalJson = proposalJson,
+                ProposalJson = proofProposal.ToJson(),
                 ConnectionId = connection?.Id,
                 State = ProofState.Proposed
             };
