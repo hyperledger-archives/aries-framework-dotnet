@@ -31,6 +31,7 @@
     <Folder Include="Features\Credential\Components\" />
     <Folder Include="Features\BasicMessaging\" />
     <Folder Include="Features\Schema\Components\" />
+    <Folder Include="Features\Wallet\Components\" />
     <Folder Include="Features\Wallet\Pages\" />
     <Folder Include="Properties\" />
   </ItemGroup>

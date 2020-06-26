@@ -14,11 +14,12 @@
     protected async Task CreateClick() =>
       _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = Create.GetRoute() });
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-      _ = Mediator.Send(new FetchSchemasAction());
-      _ = Mediator.Send(new FetchCredentialDefinitionsAction());
-      return base.OnInitializedAsync();
+      _ = await Mediator.Send(new FetchSchemasAction());
+      _ = await Mediator.Send(new FetchCredentialDefinitionsAction());
+
+      await base.OnInitializedAsync();
     }
   }
 }

@@ -26,7 +26,7 @@
     public async Task GetCredentialDefinitionResponse()
     {
       GetCredentialDefinitionResponse GetCredentialDefinitionResponse =
-        await GetJsonAsync<GetCredentialDefinitionResponse>(GetCredentialDefinitionRequest.RouteFactory);
+        await GetJsonAsync<GetCredentialDefinitionResponse>(GetCredentialDefinitionRequest.GetRoute());
 
       ValidateGetCredentialDefinitionResponse(GetCredentialDefinitionResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       GetCredentialDefinitionRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetCredentialDefinitionRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetCredentialDefinitionRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

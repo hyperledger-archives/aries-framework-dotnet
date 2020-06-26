@@ -26,7 +26,7 @@
     public async Task GetWalletResponse()
     {
       GetWalletResponse GetWalletResponse =
-        await GetJsonAsync<GetWalletResponse>(GetWalletRequest.RouteFactory);
+        await GetJsonAsync<GetWalletResponse>(GetWalletRequest.GetRoute());
 
       ValidateGetWalletResponse(GetWalletResponse);
     }
@@ -36,7 +36,7 @@
     //  // Set invalid value
     //  GetWalletRequest.Days = -1;
 
-    //  HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetWalletRequest.RouteFactory);
+    //  HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetWalletRequest.GetRoute());
 
     //  string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

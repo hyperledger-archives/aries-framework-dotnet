@@ -26,7 +26,7 @@
     public async Task SendPingResponse()
     {
       SendPingResponse SendPingResponse =
-        await GetJsonAsync<SendPingResponse>(SendPingRequest.RouteFactory);
+        await GetJsonAsync<SendPingResponse>(SendPingRequest.GetRoute());
 
       ValidateSendPingResponse(SendPingResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       SendPingRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(SendPingRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(SendPingRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

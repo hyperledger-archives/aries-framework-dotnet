@@ -28,7 +28,7 @@
     public async Task CreateInvitationResponse()
     {
       CreateInvitationResponse createInvitationResponse =
-        await Post(CreateInvitationRequest.RouteFactory, CreateInvitationRequest);
+        await Post(CreateInvitationRequest.GetRoute(), CreateInvitationRequest);
 
       ValidateCreateInvitationResponse(createInvitationResponse);
     }
@@ -49,7 +49,7 @@
       //HttpResponseMessage httpResponseMessage = 
       //  await HttpClient.PostAsync(CreateInvitationRequest.RouteFactory, content);
 
-      HttpResponseMessage httpResponseMessage = await GetHttpResponseMessageFromPost(CreateInvitationRequest.RouteFactory, CreateInvitationRequest);
+      HttpResponseMessage httpResponseMessage = await GetHttpResponseMessageFromPost(CreateInvitationRequest.GetRoute(), CreateInvitationRequest);
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

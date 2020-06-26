@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Pages
+﻿namespace BlazorHosted.Features.Wallets.Pages
 {
   using BlazorHosted.Features.Bases;
   using System.Threading.Tasks;
@@ -11,6 +11,7 @@
     public static string GetRoute() => RouteTemplate;
 
     protected override async Task OnInitializedAsync() =>
-      await Mediator.Send(new FetchWalletAction());
+     _ = await Mediator.Send(new FetchWalletAction());
+
   }
 }

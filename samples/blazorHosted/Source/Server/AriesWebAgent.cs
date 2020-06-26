@@ -14,7 +14,7 @@
       //AddHandler<TrustPingMessageHandler>();
       //AddDiscoveryHandler();
       //AddTrustPingHandler();
-      //AddCredentialHandler();
+      AddCredentialHandler();
       //AddProofHandler();
     }
   }

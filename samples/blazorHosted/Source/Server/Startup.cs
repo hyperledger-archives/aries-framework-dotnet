@@ -84,6 +84,7 @@ namespace BlazorHosted.Server
       aServiceCollection.AddServerSideBlazor();
 
       aServiceCollection.AddMvc()
+        .AddNewtonsoftJson()
         .AddFluentValidation
         (
           aFluentValidationMvcConfiguration =>

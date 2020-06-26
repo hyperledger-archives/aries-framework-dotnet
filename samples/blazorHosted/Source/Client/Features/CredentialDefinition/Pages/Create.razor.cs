@@ -5,6 +5,7 @@
   using System.Threading.Tasks;
   using static BlazorHosted.Features.CredentialDefinitions.CredentialDefinitionState;
   using static BlazorHosted.Features.Schemas.SchemaState;
+  using static BlazorState.Features.Routing.RouteState;
 
   public partial class Create : BaseComponent
   {
@@ -27,12 +28,13 @@
         }
       };
       _ = await Mediator.Send(createCredentialDefinitionAction);
+      _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Pages.Index.RouteTemplate });
     }
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-      _ = Mediator.Send(new FetchSchemasAction());
-      return base.OnInitializedAsync();
+      _ = await Mediator.Send(new FetchSchemasAction());
+      await base.OnInitializedAsync();
     }
   }
 }

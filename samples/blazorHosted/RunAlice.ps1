@@ -1,1 +1,1 @@
-dotnet run --project .\Source\Server\ --launch-profile "BlazorHosted.Server Alice"
+dotnet run --project .\Source\Server\ --no-build  --launch-profile "BlazorHosted.Server Alice"

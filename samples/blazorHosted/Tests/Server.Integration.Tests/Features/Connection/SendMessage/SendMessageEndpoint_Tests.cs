@@ -6,9 +6,9 @@
   using System.Net.Http;
   using System.Text.Json;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Connections;
   using BlazorHosted.Server.Integration.Tests.Infrastructure;
   using BlazorHosted.Server;
+  using BlazorHosted.Features.BasicMessaging;
 
   public class Returns : BaseTest
   {
@@ -20,13 +20,13 @@
       JsonSerializerOptions aJsonSerializerOptions
     ) : base(aWebApplicationFactory, aJsonSerializerOptions)
     {
-      SendMessageRequest = new SendMessageRequest { Days = 10 };
+      SendMessageRequest = new SendMessageRequest { Message = "Hello World"};
     }
 
     public async Task SendMessageResponse()
     {
       SendMessageResponse SendMessageResponse =
-        await GetJsonAsync<SendMessageResponse>(SendMessageRequest.RouteFactory);
+        await GetJsonAsync<SendMessageResponse>(SendMessageRequest.GetRoute());
 
       ValidateSendMessageResponse(SendMessageResponse);
     }
@@ -34,15 +34,15 @@
     public async Task ValidationError()
     {
       // Set invalid value
-      SendMessageRequest.Days = -1;
+      SendMessageRequest.Message = string.Empty;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(SendMessageRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(SendMessageRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
       httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
       json.Should().Contain("errors");
-      json.Should().Contain(nameof(SendMessageRequest.Days));
+      json.Should().Contain(nameof(SendMessageRequest.ConnectionId));
     }
 
     private void ValidateSendMessageResponse(SendMessageResponse aSendMessageResponse)

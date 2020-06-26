@@ -7,10 +7,10 @@
 
     public OfferCredentialRequestValidator()
     {
-      RuleFor(aOfferCredentialRequest => aOfferCredentialRequest.ConnectionId)
-        .NotEmpty();
-      RuleFor(aOfferCredentialRequest => aOfferCredentialRequest.CredentialDefinitionId)
-        .NotEmpty();
+      //RuleFor(aOfferCredentialRequest => aOfferCredentialRequest.ConnectionId)
+      //  .NotEmpty();
+      //RuleFor(aOfferCredentialRequest => aOfferCredentialRequest.CredentialDefinitionId)
+      //  .NotEmpty();
     }
   }
 }

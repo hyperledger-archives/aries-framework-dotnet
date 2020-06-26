@@ -26,7 +26,7 @@
     public async Task DeleteConnectionResponse()
     {
       DeleteConnectionResponse DeleteConnectionResponse =
-        await GetJsonAsync<DeleteConnectionResponse>(DeleteConnectionRequest.RouteFactory);
+        await GetJsonAsync<DeleteConnectionResponse>(DeleteConnectionRequest.GetRoute());
 
       ValidateDeleteConnectionResponse(DeleteConnectionResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       DeleteConnectionRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(DeleteConnectionRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(DeleteConnectionRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

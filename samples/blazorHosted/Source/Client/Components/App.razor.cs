@@ -7,6 +7,11 @@ namespace BlazorHosted.Components
   using BlazorState.Pipeline.ReduxDevTools;
   using Microsoft.AspNetCore.Components;
   using System.Threading.Tasks;
+  using static BlazorHosted.Features.Connections.ConnectionState;
+  using static BlazorHosted.Features.CredentialDefinitions.CredentialDefinitionState;
+  using static BlazorHosted.Features.Credentials.CredentialState;
+  using static BlazorHosted.Features.Schemas.SchemaState;
+  using static BlazorHosted.Features.Wallets.WalletState;
 
   public partial class App : BaseComponent
   {
@@ -24,6 +29,17 @@ namespace BlazorHosted.Components
 #endif
       await JsonRequestHandler.InitAsync();
       await ClientLoader.InitAsync();
+
+      var tasks = new Task[]
+      {
+         Mediator.Send(new FetchWalletAction()),
+         Mediator.Send(new FetchSchemasAction()),
+         Mediator.Send(new FetchCredentialDefinitionsAction()),
+         Mediator.Send(new FetchConnectionsAction()),
+         //Mediator.Send(new FetchCredentialsAction())
+      };
+
+      await Task.WhenAll(tasks);
     }
   }
 }

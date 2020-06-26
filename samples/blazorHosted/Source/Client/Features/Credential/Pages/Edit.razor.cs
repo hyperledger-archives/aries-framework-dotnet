@@ -58,14 +58,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+      OfferCredentialRequest = new OfferCredentialRequest();
+
       _ = await Mediator.Send(new FetchConnectionsAction());
       _ = await Mediator.Send(new FetchCredentialDefinitionsAction());
       _ = await Mediator.Send(new FetchSchemasAction());
 
-      OfferCredentialRequest = new OfferCredentialRequest();
-      OfferCredentialRequest.CredentialDefinitionId = 
-        CredentialDefinitionState.CredentialDefinitions.Values.FirstOrDefault()?.Id;
-      if(!string.IsNullOrEmpty(OfferCredentialRequest.CredentialDefinitionId))
+      OfferCredentialRequest.ConnectionId = Connections.FirstOrDefault()?.Id;
+      OfferCredentialRequest.CredentialDefinitionId = CredentialDefintions.FirstOrDefault()?.Id;
+      if (!string.IsNullOrEmpty(OfferCredentialRequest.CredentialDefinitionId))
       {
         OnCredentialDefintionSelect();
       }

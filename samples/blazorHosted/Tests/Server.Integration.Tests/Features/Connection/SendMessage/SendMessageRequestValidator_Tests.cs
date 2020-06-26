@@ -3,7 +3,7 @@
   using FluentAssertions;
   using FluentValidation.Results;
   using FluentValidation.TestHelper;
-  using BlazorHosted.Features.Connections;
+  using BlazorHosted.Features.BasicMessaging;
 
   public class Validate_Should
   {
@@ -11,19 +11,19 @@
 
     public void Be_Valid()
     {
-      var __requestName__Request = new SendMessageRequest
+      var sendMessageRequest = new SendMessageRequest
       {
         // Set Valid values here
-        Days = 5
+        Message = "Hello World"
       };
 
-      ValidationResult validationResult = SendMessageRequestValidator.TestValidate(__requestName__Request);
+      ValidationResult validationResult = SendMessageRequestValidator.TestValidate(sendMessageRequest);
 
       validationResult.IsValid.Should().BeTrue();
     }
 
-    public void Have_error_when_Days_are_negative() => SendMessageRequestValidator
-      .ShouldHaveValidationErrorFor(aSendMessageRequest => aSendMessageRequest.Days, -1);
+    public void Have_error_when_Message_is_empty() => SendMessageRequestValidator
+      .ShouldHaveValidationErrorFor(aSendMessageRequest => aSendMessageRequest.Message, string.Empty);
 
     public void Setup() => SendMessageRequestValidator = new SendMessageRequestValidator();
   }

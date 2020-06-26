@@ -8,9 +8,8 @@ namespace BlazorHosted.Features.Credentials
   using BlazorHosted.Features.Bases;
   using System.Linq;
   using Newtonsoft.Json;
-  using static BlazorHosted.Features.Credentials.CredentialState;
 
-  internal partial class CredentialsState
+  internal partial class CredentialState
   {
     public class FetchCredentialsHandler : BaseHandler<FetchCredentialsAction>
     {

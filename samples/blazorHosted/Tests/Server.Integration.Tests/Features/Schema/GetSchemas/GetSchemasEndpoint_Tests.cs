@@ -26,7 +26,7 @@
     public async Task GetSchemasResponse()
     {
       GetSchemasResponse GetSchemasResponse =
-        await GetJsonAsync<GetSchemasResponse>(GetSchemasRequest.RouteFactory);
+        await GetJsonAsync<GetSchemasResponse>(GetSchemasRequest.GetRoute());
 
       ValidateGetSchemasResponse(GetSchemasResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       GetSchemasRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetSchemasRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetSchemasRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

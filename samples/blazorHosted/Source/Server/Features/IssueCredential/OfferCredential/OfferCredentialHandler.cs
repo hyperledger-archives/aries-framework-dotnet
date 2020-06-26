@@ -5,12 +5,9 @@ namespace BlazorHosted.Features.IssueCredentials
   using Hyperledger.Aries.Features.DidExchange;
   using Hyperledger.Aries.Features.IssueCredential;
   using MediatR;
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
   using System.Threading;
   using System.Threading.Tasks;
-  
+
   public class OfferCredentialHandler : IRequestHandler<OfferCredentialRequest, OfferCredentialResponse>
   {
     private readonly IAgentProvider AgentProvider;
@@ -44,9 +41,6 @@ namespace BlazorHosted.Features.IssueCredentials
       IAgentContext agentContext = await AgentProvider.GetContextAsync();
       ProvisioningRecord provisioningRecord = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
       ConnectionRecord connectionRecord = await ConnectionService.GetAsync(agentContext, aOfferCredentialRequest.ConnectionId);
-
-      aOfferCredentialRequest
-        .CredentialPreviewAttributes.Add(new CredentialPreviewAttribute("issuer", provisioningRecord.Owner.Name));
 
       (CredentialOfferMessage credentialOfferMessage, _) = 
         await CredentialService.CreateOfferAsync

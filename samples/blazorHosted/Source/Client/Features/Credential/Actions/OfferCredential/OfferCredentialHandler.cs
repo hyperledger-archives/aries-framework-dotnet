@@ -30,14 +30,17 @@
         CancellationToken aCancellationToken
       )
       {
-        OfferCredentialRequest saveCredentialRequest =
+        OfferCredentialRequest offerCredentialRequest =
           aOfferCredentialAction.OfferCredentialRequest;
+        System.Console.WriteLine("====================");
+        System.Console.WriteLine(offerCredentialRequest.CredentialPreviewAttributes[0].Value);
+        System.Console.WriteLine("====================");
 
         HttpResponseMessage httpResponseMessage =
           await HttpClient.PostAsJsonAsync<OfferCredentialRequest>
           (
-            saveCredentialRequest.GetRoute(),
-            saveCredentialRequest
+            offerCredentialRequest.GetRoute(),
+            offerCredentialRequest
           );
 
         httpResponseMessage.EnsureSuccessStatusCode();

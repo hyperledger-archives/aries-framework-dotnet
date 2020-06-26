@@ -4,9 +4,9 @@
   using System.Text.Json;
   using Microsoft.AspNetCore.Mvc.Testing;
   using BlazorHosted.Server.Integration.Tests.Infrastructure;
-  using BlazorHosted.Features.Connections;
   using BlazorHosted.Server;
   using FluentAssertions;
+  using BlazorHosted.Features.BasicMessaging;
 
   public class Handle_Returns : BaseTest
   {
@@ -18,14 +18,14 @@
       JsonSerializerOptions aJsonSerializerOptions
     ) : base(aWebApplicationFactory, aJsonSerializerOptions)
     {
-      SendMessageRequest = new SendMessageRequest { Days = 10 };
+      SendMessageRequest = new SendMessageRequest { Message = "Hello World" };
     }
 
     public async Task SendMessageResponse()
     {
-      SendMessageResponse SendMessageResponse = await Send(SendMessageRequest);
+      SendMessageResponse sendMessageResponse = await Send(SendMessageRequest);
 
-      ValidateSendMessageResponse(SendMessageResponse);
+      ValidateSendMessageResponse(sendMessageResponse);
     }
 
     private void ValidateSendMessageResponse(SendMessageResponse aSendMessageResponse)

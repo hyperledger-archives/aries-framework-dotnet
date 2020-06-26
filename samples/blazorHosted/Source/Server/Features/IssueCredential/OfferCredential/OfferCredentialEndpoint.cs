@@ -5,6 +5,7 @@ namespace BlazorHosted.Features.IssueCredentials
   using System.Net;
   using System.Threading.Tasks;
   using BlazorHosted.Features.Bases;
+  using System;
 
   public class OfferCredentialEndpoint : BaseEndpoint<OfferCredentialRequest, OfferCredentialResponse>
   {
@@ -13,10 +14,13 @@ namespace BlazorHosted.Features.IssueCredentials
     /// </summary>
     /// <param name="aOfferCredentialRequest"><see cref="OfferCredentialRequest"/></param>
     /// <returns><see cref="OfferCredentialResponse"/></returns>
-    [HttpGet(OfferCredentialRequest.RouteTemplate)]
+    [HttpPost(OfferCredentialRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(OfferCredentialResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Process(OfferCredentialRequest aOfferCredentialRequest) => await Send(aOfferCredentialRequest);
+    public async Task<IActionResult> Process([FromBody] OfferCredentialRequest aOfferCredentialRequest)
+    {
+      return await Send(aOfferCredentialRequest);
+    }
   }
 }

@@ -8,7 +8,7 @@
 
   internal partial class CredentialState : State<CredentialState>
   {
-    public Dictionary<string, CredentialRecord> _CredentialRecords { get; set; } = null!;
+    private Dictionary<string, CredentialRecord> _CredentialRecords { get; set; } = null!;
 
     [JsonIgnore]
     public IReadOnlyDictionary<string, CredentialRecord> Credentials => _CredentialRecords;

@@ -26,7 +26,7 @@
     public async Task GetConnectionResponse()
     {
       GetConnectionResponse GetConnectionResponse =
-        await GetJsonAsync<GetConnectionResponse>(GetConnectionRequest.RouteFactory);
+        await GetJsonAsync<GetConnectionResponse>(GetConnectionRequest.GetRoute());
 
       ValidateGetConnectionResponse(GetConnectionResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       GetConnectionRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetConnectionRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetConnectionRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

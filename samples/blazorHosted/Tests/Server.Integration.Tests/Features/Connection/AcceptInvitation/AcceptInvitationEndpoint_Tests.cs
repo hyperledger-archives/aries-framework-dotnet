@@ -26,7 +26,7 @@
     public async Task AcceptInvitationResponse()
     {
       AcceptInvitationResponse AcceptInvitationResponse =
-        await GetJsonAsync<AcceptInvitationResponse>(AcceptInvitationRequest.RouteFactory);
+        await GetJsonAsync<AcceptInvitationResponse>(AcceptInvitationRequest.GetRoute());
 
       ValidateAcceptInvitationResponse(AcceptInvitationResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       AcceptInvitationRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(AcceptInvitationRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(AcceptInvitationRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

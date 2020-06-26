@@ -26,7 +26,7 @@
     public async Task GetHealthResponse()
     {
       GetHealthResponse GetHealthResponse =
-        await GetJsonAsync<GetHealthResponse>(GetHealthRequest.RouteFactory);
+        await GetJsonAsync<GetHealthResponse>(GetHealthRequest.GetRoute());
 
       ValidateGetHealthResponse(GetHealthResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       GetHealthRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetHealthRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetHealthRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

@@ -26,7 +26,7 @@
     public async Task OfferCredentialResponse()
     {
       OfferCredentialResponse OfferCredentialResponse =
-        await GetJsonAsync<OfferCredentialResponse>(OfferCredentialRequest.RouteFactory);
+        await GetJsonAsync<OfferCredentialResponse>(OfferCredentialRequest.GetRoute());
 
       ValidateOfferCredentialResponse(OfferCredentialResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       OfferCredentialRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(OfferCredentialRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(OfferCredentialRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 

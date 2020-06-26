@@ -24,7 +24,7 @@
     public async Task _10WeatherForecasts_Given_10DaysRequested()
     {
       GetWeatherForecastsResponse getWeatherForecastsResponse =
-        await GetJsonAsync<GetWeatherForecastsResponse>(GetWeatherForecastsRequest.RouteFactory);
+        await GetJsonAsync<GetWeatherForecastsResponse>(GetWeatherForecastsRequest.GetRoute());
 
       ValidateGetWeatherForecastsResponse(getWeatherForecastsResponse);
     }

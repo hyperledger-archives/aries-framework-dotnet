@@ -17,13 +17,13 @@ namespace BlazorHosted.Features.IssueCredentials
 
     public string CredentialDefinitionId { get; set; } = null!;
     public List<CredentialPreviewAttribute> CredentialPreviewAttributes { get; set; } = null!;
-    public string SchemaId { get; set; } = null!;
-
-    internal override string GetRoute() => RouteTemplate;
+    //public string SchemaId { get; set; } = null!;
 
     public OfferCredentialRequest()
     {
       CredentialPreviewAttributes = new List<CredentialPreviewAttribute>();
     }
+
+    internal override string GetRoute() => RouteTemplate;
   }
 }

@@ -26,7 +26,7 @@
     public async Task RemoveCredentialResponse()
     {
       RemoveCredentialResponse RemoveCredentialResponse =
-        await GetJsonAsync<RemoveCredentialResponse>(RemoveCredentialRequest.RouteFactory);
+        await GetJsonAsync<RemoveCredentialResponse>(RemoveCredentialRequest.GetRoute());
 
       ValidateRemoveCredentialResponse(RemoveCredentialResponse);
     }
@@ -36,7 +36,7 @@
       // Set invalid value
       RemoveCredentialRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(RemoveCredentialRequest.RouteFactory);
+      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(RemoveCredentialRequest.GetRoute());
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
