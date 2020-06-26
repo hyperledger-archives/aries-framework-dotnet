@@ -32,9 +32,6 @@
       {
         OfferCredentialRequest offerCredentialRequest =
           aOfferCredentialAction.OfferCredentialRequest;
-        System.Console.WriteLine("====================");
-        System.Console.WriteLine(offerCredentialRequest.CredentialPreviewAttributes[0].Value);
-        System.Console.WriteLine("====================");
 
         HttpResponseMessage httpResponseMessage =
           await HttpClient.PostAsJsonAsync<OfferCredentialRequest>

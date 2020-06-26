@@ -1,5 +1,6 @@
 ﻿namespace BlazorHosted.Features.PresentProofs.Pages
 {
+  using BlazorState.Features.Routing;
   using System;
   using System.Collections.Generic;
   using System.Linq;
@@ -10,6 +11,9 @@
     public const string RouteTemplate = "/proofs";
 
     public static string GetRoute() => RouteTemplate;
+
+    protected async Task CreateClick() =>
+      _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = Create.GetRoute() });
 
     protected override async Task OnInitializedAsync()
     {

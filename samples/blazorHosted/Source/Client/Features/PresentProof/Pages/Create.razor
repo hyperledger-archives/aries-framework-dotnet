@@ -1,0 +1,15 @@
+﻿@namespace BlazorHosted.Features.PresentProofs.Pages
+@inherits BaseComponent
+@page "/proofs/create"
+
+  <div data-qa=@TestId>
+    <br />
+    <h1>Create Proof Request</h1>
+
+    <p>Imagine a form here with all the bells and whistles. But until then you can just push the button.</p>
+    <button class="btn btn-primary" @onclick=@CreateClick>Create and Send Proof Request</button>
+
+    <EditForm Model=@SendRequestForProofRequest OnValidSubmit=@HandleValidSubmit>
+
+    </EditForm>
+  </div>

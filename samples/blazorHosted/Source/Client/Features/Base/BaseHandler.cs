@@ -5,6 +5,7 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.Counters;
   using BlazorHosted.Features.CredentialDefinitions;
   using BlazorHosted.Features.Credentials;
+  using BlazorHosted.Features.PresentProof;
   using BlazorHosted.Features.Schemas;
   using BlazorHosted.Features.Wallets;
   using BlazorHosted.Features.WeatherForecasts;
@@ -22,6 +23,7 @@ namespace BlazorHosted.Features.Bases
     protected CounterState CounterState => Store.GetState<CounterState>();
     protected CredentialDefinitionState CredentialDefinitionState => Store.GetState<CredentialDefinitionState>();
     protected CredentialState CredentialState => Store.GetState<CredentialState>();
+    protected PresentProofState PresentProofState => Store.GetState<PresentProofState>();
     protected SchemaState SchemaState => Store.GetState<SchemaState>();
     protected WalletState WalletState => Store.GetState<WalletState>();
     protected WeatherForecastsState WeatherForecastsState => Store.GetState<WeatherForecastsState>();
