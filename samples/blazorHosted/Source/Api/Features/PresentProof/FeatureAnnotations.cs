@@ -2,6 +2,6 @@
 {
   public static class FeatureAnnotations
   {
-    public const string FeatureGroup = "PresentProof";
+    public const string FeatureGroup = "Present Proof/Verification";
   }
 }

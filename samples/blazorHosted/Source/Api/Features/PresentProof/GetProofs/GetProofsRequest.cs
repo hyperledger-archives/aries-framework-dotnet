@@ -5,14 +5,14 @@ namespace BlazorHosted.Features.PresentProofs
 
   public class GetProofsRequest : BaseApiRequest, IRequest<GetProofsResponse>
   {
-    public const string RouteTemplate = "api/PresentProofs/GetProofs";
+    public const string RouteTemplate = "api/present-proof/records";
 
     /// <summary>
     /// Set Properties and Update Docs
     /// </summary>
     /// <example>TODO</example>
-    public string SampleProperty { get; set; }
+    public string SampleProperty { get; set; } = null!;
 
-    internal override string GetRoute() => $"{Route}?{nameof(SampleProperty)}={SampleProperty}&{nameof(CorrelationId)}={CorrelationId}";
+    internal override string GetRoute() => $"{RouteTemplate}?{nameof(SampleProperty)}={SampleProperty}&{nameof(CorrelationId)}={CorrelationId}";
   }
 }
