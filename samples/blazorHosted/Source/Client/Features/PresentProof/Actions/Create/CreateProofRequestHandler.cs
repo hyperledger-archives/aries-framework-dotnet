@@ -10,11 +10,11 @@
 
   internal partial class PresentProofState
   {
-    internal class CreateAndSendProofRequestHandler : BaseHandler<CreateAndSendProofRequestAction>
+    internal class CreateProofRequestHandler : BaseHandler<CreateProofRequestAction>
     {
       private readonly HttpClient HttpClient;
 
-      public CreateAndSendProofRequestHandler
+      public CreateProofRequestHandler
       (
         IStore aStore,
         HttpClient aHttpClient
@@ -25,14 +25,14 @@
 
       public override async Task<Unit> Handle
       (
-        CreateAndSendProofRequestAction aCreateAndSendProofRequestAction,
+        CreateProofRequestAction aCreateAndSendProofRequestAction,
         CancellationToken aCancellationToken
       )
       {
-        SendRequestForProofRequest sendRequestForProofRequest = aCreateAndSendProofRequestAction.SendRequestForProofRequest;
+        CreateProofRequestRequest sendRequestForProofRequest = aCreateAndSendProofRequestAction.CreateProofRequestRequest;
 
         HttpResponseMessage httpResponseMessage =
-          await HttpClient.PostAsJsonAsync<SendRequestForProofRequest>
+          await HttpClient.PostAsJsonAsync<CreateProofRequestRequest>
           (
             sendRequestForProofRequest.GetRoute(),
             sendRequestForProofRequest

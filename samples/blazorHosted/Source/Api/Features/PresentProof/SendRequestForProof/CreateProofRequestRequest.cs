@@ -4,7 +4,7 @@ namespace BlazorHosted.Features.PresentProofs
   using BlazorHosted.Features.Bases;
   using Hyperledger.Aries.Features.PresentProof;
 
-  public class SendRequestForProofRequest : BaseApiRequest, IRequest<SendRequestForProofResponse>
+  public class CreateProofRequestRequest : BaseApiRequest, IRequest<CreateProofRequestRequestResponse>
   {
     public const string RouteTemplate = "api/present-proof/send-request";
 

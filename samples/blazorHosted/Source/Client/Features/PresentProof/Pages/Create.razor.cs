@@ -19,7 +19,7 @@
 
     private IReadOnlyList<ConnectionRecord> Connections => ConnectionState.ConnectionsAsList;
     public string CredentialDefinitionId { get; set; }
-    public SendRequestForProofRequest SendRequestForProofRequest { get; set; }
+    public CreateProofRequestRequest SendRequestForProofRequest { get; set; }
     private IReadOnlyList<DefinitionRecord> CredentialDefintions => CredentialDefinitionState.CredentialDefinitionsAsList;
 
     public static string GetRoute() => RouteTemplate;
@@ -43,15 +43,14 @@
 
     protected async Task HandleValidSubmit()
     {
-      _ = await Mediator.Send(new CreateAndSendProofRequestAction { SendRequestForProofRequest = SendRequestForProofRequest });
+      _ = await Mediator.Send(new CreateProofRequestAction { CreateProofRequestRequest = SendRequestForProofRequest });
       _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Pages.Index.RouteTemplate });
     }
 
     protected void OnCredentialDefintionSelect()
     {
-      Console.WriteLine("===OnCredentialDefintionSelect===");
       SendRequestForProofRequest.ProofRequest.RequestedAttributes.Clear();
-      Console.WriteLine("===OnCredentialDefintionSelect===.2");
+
       if (!string.IsNullOrEmpty(CredentialDefinitionId))
       {
         DefinitionRecord definitionRecord = CredentialDefinitionState.CredentialDefinitions[CredentialDefinitionId];
@@ -85,8 +84,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-      Console.WriteLine("===OnInitializedAsync.start===");
-      SendRequestForProofRequest = new SendRequestForProofRequest
+      SendRequestForProofRequest = new CreateProofRequestRequest
       {
         ProofRequest = new ProofRequest { RequestedAttributes = new Dictionary<string, ProofAttributeInfo>() }
       };
@@ -101,7 +99,7 @@
       {
         OnCredentialDefintionSelect();
       }
-      Console.WriteLine("===OnInitializedAsync.complete===");
+      
       await base.OnInitializedAsync();
     }
   }

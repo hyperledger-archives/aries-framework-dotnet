@@ -14,6 +14,9 @@
     public IReadOnlyList<ProofRecord> ProofsAsList => _ProofRecords.Values.ToList();
     private Dictionary<string, ProofRecord> _ProofRecords { get; set; }
 
+    public RequestPresentationMessage RequestPresentationMessage { get; private set; }
+
+
     public PresentProofState() { }
 
     public override void Initialize()
