@@ -25,12 +25,9 @@ namespace BlazorHosted.Features.Connections
         CancellationToken aCancellationToken
       )
       {
-        Console.WriteLine($"aViewInvitationAction.InvitationDetails:{aViewInvitationAction.InvitationDetails}");
         ConnectionState.ConnectionInvitationMessage =
            MessageUtils
             .DecodeMessageFromUrlFormat<ConnectionInvitationMessage>(aViewInvitationAction.InvitationDetails);
-        Console.WriteLine("====");
-        Console.WriteLine(ConnectionState.ConnectionInvitationMessage.Label);
 
         return Unit.Task;
       }
