@@ -13,7 +13,7 @@
       // public const string InsufficentFundsMessage = "You can not send more than your balance";
       // public const string MustBeGreaterThanZeroMessage = "'{PropertyName}' must be greater than zero";
 
-      RuleFor(aGetProofRequest => aGetProofRequest.SampleProperty)
+      RuleFor(aGetProofRequest => aGetProofRequest.ProofId)
         .NotEmpty();
 
       // https://docs.fluentvalidation.net/
