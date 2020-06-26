@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.Tests", "..\test\Hyperledger.Aries.Tests\Hyperledger.Aries.Tests.csproj", "{A930D0EF-8D15-447B-B8BC-32D29F06CF18}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries", "Hyperledger.Aries\Hyperledger.Aries.csproj", "{CC5370E0-290A-424B-8AB1-E022AC303479}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries", "Hyperledger.Aries\Hyperledger.Aries.csproj", "{CC5370E0-290A-424B-8AB1-E022AC303479}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyperledger.Aries.TestHarness", "Hyperledger.Aries.TestHarness\Hyperledger.Aries.TestHarness.csproj", "{F758A7A6-F048-4B68-AA6A-35851F3048AE}"
 EndProject

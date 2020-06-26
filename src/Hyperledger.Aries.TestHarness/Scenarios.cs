@@ -172,14 +172,14 @@ namespace Hyperledger.TestHarness
             // Holder sends a proof proposal
             var (holderProposalMessage, holderProofProposalRecord) = await proofService.CreateProposalAsync(holderContext, proofProposalObject, holderConnection.Id);
             messages.TryAdd(holderProposalMessage);
-
+            Assert.True(holderProofProposalRecord.State == ProofState.Proposed);
             // Requestor accepts the proposal and builds a proofRequest
             var requestorProposalMessage = FindContentMessage<ProposePresentationMessage>(messages);
             Assert.NotNull(requestorProposalMessage);
 
             //Requestor stores the proof proposal
             var requestorProofProposalRecord = await proofService.ProcessProposalAsync(requestorContext, requestorProposalMessage, requestorConnection);
-    
+            Assert.Equal(ProofState.Proposed, requestorProofProposalRecord.State);
 
             // Requestor sends a proof request
             var (requestorRequestMessage, requestorProofRequestRecord) = await proofService.CreateRequestFromProposalAsync(
@@ -191,6 +191,7 @@ namespace Hyperledger.TestHarness
                 },
                 requestorProofProposalRecord.Id, requestorConnection.Id);
             messages.TryAdd(requestorRequestMessage);
+            Assert.Equal(ProofState.Requested, requestorProofRequestRecord.State);
 
             return await ProofProtocolAsync(proofService, messages, holderConnection, requestorConnection, holderContext, requestorContext, requestorProofRequestRecord);
         }
@@ -224,10 +225,13 @@ namespace Hyperledger.TestHarness
 
             //Holder stores the proof request if they haven't created it already
             var holderProofRecord = await proofService.ProcessRequestAsync(holderContext, holderRequestPresentationMessage, holderConnection);
+            Assert.Equal(ProofState.Requested, holderProofRecord.State);
             Console.WriteLine(holderProofRecord.RequestJson);
+
+            
             var holderProofRequest = JsonConvert.DeserializeObject<ProofRequest>(holderProofRecord.RequestJson);
 
-            // Auto satify the proof with which ever credentials in the wallet are capable
+            // Auto satisfy the proof with which ever credentials in the wallet are capable
             var requestedCredentials =
                 await ProofServiceUtils.GetAutoRequestedCredentialsForProofCredentials(holderContext, proofService,
                     holderProofRequest);
