@@ -6,16 +6,16 @@ namespace BlazorHosted.Features.PresentProofs
   using System.Threading.Tasks;
   using BlazorHosted.Features.Bases;
 
-  public class CreateProofRequestEndpoint : BaseEndpoint<CreateProofRequestRequest, CreateProofRequestRequestResponse>
+  public class CreateProofRequestEndpoint : BaseEndpoint<CreateProofRequestRequest, CreateProofRequestResponse>
   {
     /// <summary>
     /// Your summary these comments will show in the Open API Docs
     /// </summary>
     /// <param name="aSendRequestForProofRequest"><see cref="CreateProofRequestRequest"/></param>
-    /// <returns><see cref="CreateProofRequestRequestResponse"/></returns>
+    /// <returns><see cref="CreateProofRequestResponse"/></returns>
     [HttpPost(CreateProofRequestRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
-    [ProducesResponseType(typeof(CreateProofRequestRequestResponse), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(CreateProofRequestResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Process([FromBody]CreateProofRequestRequest aSendRequestForProofRequest) => await Send(aSendRequestForProofRequest);
   }

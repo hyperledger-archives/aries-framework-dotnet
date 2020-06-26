@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.PresentProofs
   using System.Threading;
   using System.Threading.Tasks;
 
-  public class CreateProofRequestsHandler : IRequestHandler<CreateProofRequestRequest, CreateProofRequestRequestResponse>
+  public class CreateProofRequestsHandler : IRequestHandler<CreateProofRequestRequest, CreateProofRequestResponse>
   {
     private readonly IAgentProvider AgentProvider;
     private readonly IProofService ProofService;
@@ -21,7 +21,7 @@ namespace BlazorHosted.Features.PresentProofs
       ProofService = aProofService;
     }
 
-    public async Task<CreateProofRequestRequestResponse> Handle
+    public async Task<CreateProofRequestResponse> Handle
     (
       CreateProofRequestRequest aSendRequestForProofRequest,
       CancellationToken aCancellationToken
@@ -32,7 +32,7 @@ namespace BlazorHosted.Features.PresentProofs
       (RequestPresentationMessage requestPresentationMessage, ProofRecord proofRecord) =
         await ProofService.CreateRequestAsync(agentContext, aSendRequestForProofRequest.ProofRequest, aSendRequestForProofRequest.ConnectionId);
 
-      var response = new CreateProofRequestRequestResponse(requestPresentationMessage, aSendRequestForProofRequest.CorrelationId);
+      var response = new CreateProofRequestResponse(requestPresentationMessage, aSendRequestForProofRequest.CorrelationId);
 
       return await Task.Run(() => response);
     }
