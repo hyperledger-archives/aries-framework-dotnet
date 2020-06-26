@@ -1,9 +1,12 @@
 ﻿namespace BlazorHosted.Features.PresentProofs.Pages
 {
+  using BlazorHosted.Features.Bases;
   using Hyperledger.Aries.Features.DidExchange;
   using Hyperledger.Aries.Features.PresentProof;
   using Hyperledger.Aries.Models.Records;
-  using System;
+  using Microsoft.AspNetCore.Components;
+  using Microsoft.JSInterop;
+  using Newtonsoft.Json;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
@@ -13,13 +16,14 @@
   using static BlazorHosted.Features.Schemas.SchemaState;
   using static BlazorState.Features.Routing.RouteState;
 
-  public partial class Create
+  public partial class Create: BaseComponent
   {
     public const string RouteTemplate = "/proofs/create";
 
     private IReadOnlyList<ConnectionRecord> Connections => ConnectionState.ConnectionsAsList;
     public string CredentialDefinitionId { get; set; }
     public CreateProofRequestRequest SendRequestForProofRequest { get; set; }
+    [Inject] protected IJSRuntime JSRuntime { get; set; }
     private IReadOnlyList<DefinitionRecord> CredentialDefintions => CredentialDefinitionState.CredentialDefinitionsAsList;
 
     public static string GetRoute() => RouteTemplate;
@@ -27,24 +31,15 @@
     protected async Task CancelClick() =>
       _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Pages.Index.RouteTemplate });
 
-    protected void CreateClick()
+    protected async Task CopyToClipboardAsync()
     {
-      //var createCredentialDefinitionAction = new CreateAndSendProofRequestAction()
-      //{
-      //  CreateCredentialDefinitionRequest = new SendRequestForProofRequest
-      //  {
-      //    Comment = "Some Comment",
-
-      //  }
-      //};
-      //_ = await Mediator.Send(createCredentialDefinitionAction);
-      //_ = await Mediator.Send(new ChangeRouteAction { NewRoute = Pages.Index.RouteTemplate });
+      await JSRuntime.InvokeAsync<object>("navigator.clipboard.writeText", PresentProofState.ProofRequestUrl);
     }
 
     protected async Task HandleValidSubmit()
     {
       _ = await Mediator.Send(new CreateProofRequestAction { CreateProofRequestRequest = SendRequestForProofRequest });
-      _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Pages.Index.RouteTemplate });
+      //_ = await Mediator.Send(new ChangeRouteAction { NewRoute = Pages.Index.RouteTemplate });
     }
 
     protected void OnCredentialDefintionSelect()
@@ -99,7 +94,7 @@
       {
         OnCredentialDefintionSelect();
       }
-      
+
       await base.OnInitializedAsync();
     }
   }
