@@ -1,13 +1,17 @@
 namespace BlazorHosted.Features.PresentProofs
 {
   using System;
-  using System.Collections.Generic;
   using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.Features.PresentProof;
 
   public class SendRequestForProofResponse : BaseResponse
   {
+    public RequestPresentationMessage RequestPresentationMessage { get; set; } = null!;
     public SendRequestForProofResponse() { }
 
-    public SendRequestForProofResponse(Guid aCorrelationId) : base(aCorrelationId) { }
+    public SendRequestForProofResponse(RequestPresentationMessage aRequestPresentationMessage, Guid aCorrelationId) : base(aCorrelationId) 
+    {
+      RequestPresentationMessage = aRequestPresentationMessage;
+    }
   }
 }

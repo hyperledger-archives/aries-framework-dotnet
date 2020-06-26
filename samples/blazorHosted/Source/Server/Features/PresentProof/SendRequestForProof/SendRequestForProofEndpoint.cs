@@ -13,10 +13,10 @@ namespace BlazorHosted.Features.PresentProofs
     /// </summary>
     /// <param name="aSendRequestForProofRequest"><see cref="SendRequestForProofRequest"/></param>
     /// <returns><see cref="SendRequestForProofResponse"/></returns>
-    [HttpGet(SendRequestForProofRequest.RouteTemplate)]
+    [HttpPost(SendRequestForProofRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(SendRequestForProofResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Process(SendRequestForProofRequest aSendRequestForProofRequest) => await Send(aSendRequestForProofRequest);
+    public async Task<IActionResult> Process([FromBody]SendRequestForProofRequest aSendRequestForProofRequest) => await Send(aSendRequestForProofRequest);
   }
 }

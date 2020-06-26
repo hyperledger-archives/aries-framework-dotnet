@@ -2,17 +2,24 @@ namespace BlazorHosted.Features.PresentProofs
 {
   using MediatR;
   using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.Features.PresentProof;
 
   public class SendRequestForProofRequest : BaseApiRequest, IRequest<SendRequestForProofResponse>
   {
-    public const string RouteTemplate = "api/PresentProofs/SendRequestForProof";
+    public const string RouteTemplate = "api/present-proof/send-request";
 
     /// <summary>
     /// Set Properties and Update Docs
     /// </summary>
     /// <example>TODO</example>
-    public string SampleProperty { get; set; }
+    public string ConnectionId { get; set; } = null!;
 
-    internal override string GetRoute() => $"{Route}?{nameof(SampleProperty)}={SampleProperty}&{nameof(CorrelationId)}={CorrelationId}";
+    public string? Comment { get; set; }
+
+    public bool Trace { get; set; } = false;
+
+    public ProofRequest ProofRequest { get; set; } = null!;
+
+    internal override string GetRoute() => RouteTemplate;
   }
 }
