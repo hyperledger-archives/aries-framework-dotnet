@@ -3,11 +3,17 @@ namespace BlazorHosted.Features.PresentProofs
   using System;
   using System.Collections.Generic;
   using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.Features.PresentProof;
 
   public class GetProofsResponse : BaseResponse
   {
     public GetProofsResponse() { }
 
-    public GetProofsResponse(Guid aCorrelationId) : base(aCorrelationId) { }
+    public GetProofsResponse(List<ProofRecord> aProofRecords, Guid aCorrelationId) : base(aCorrelationId) 
+    {
+      ProofRecords = aProofRecords;
+    }
+
+    public List<ProofRecord> ProofRecords { get; set; } = null!;
   }
 }

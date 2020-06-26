@@ -1,14 +1,28 @@
 namespace BlazorHosted.Features.PresentProofs
 {
+  using Hyperledger.Aries.Agents;
+  using Hyperledger.Aries.Features.PresentProof;
   using MediatR;
   using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading;
   using System.Threading.Tasks;
-  
+
   public class GetProofsHandler : IRequestHandler<GetProofsRequest, GetProofsResponse>
   {
+    private readonly IAgentProvider AgentProvider;
+    private readonly IProofService ProofService;
+
+    public GetProofsHandler
+    (
+      IAgentProvider aAgentProvider,
+      IProofService aProofService
+    )
+    {
+      AgentProvider = aAgentProvider;
+      ProofService = aProofService;
+    }
 
     public async Task<GetProofsResponse> Handle
     (
@@ -16,9 +30,12 @@ namespace BlazorHosted.Features.PresentProofs
       CancellationToken aCancellationToken
     )
     {
-      var response = new GetProofsResponse(aGetProofsRequest.CorrelationId);
+      IAgentContext agentContext = await AgentProvider.GetContextAsync();
+      List<ProofRecord> proofRecords = await ProofService.ListAsync(agentContext);
 
-      return await Task.Run(() => response);
+      var response = new GetProofsResponse(proofRecords, aGetProofsRequest.CorrelationId);
+      
+      return response;
     }
   }
 }
