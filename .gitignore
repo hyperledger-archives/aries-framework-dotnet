@@ -336,4 +336,5 @@ ASALocalRun/
 docs/_build
 
 # vs code config
-.vscode/
+.vscode//samples/blazorHosted/Source/Client/Properties/launchSettings.json
+/samples/blazorHosted/Source/Client/Properties/launchSettings.json
