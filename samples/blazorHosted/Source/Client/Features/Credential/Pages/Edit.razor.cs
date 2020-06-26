@@ -20,7 +20,6 @@
 
     private IReadOnlyList<SchemaRecord> Schemas => SchemaState.SchemasAsList;
     private IReadOnlyList<ConnectionRecord> Connections => ConnectionState.ConnectionsAsList;
-
     private IReadOnlyList<DefinitionRecord> CredentialDefintions => CredentialDefinitionState.CredentialDefinitionsAsList;
 
     public OfferCredentialRequest OfferCredentialRequest { get; set; }

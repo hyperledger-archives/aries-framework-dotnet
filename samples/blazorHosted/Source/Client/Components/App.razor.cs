@@ -10,6 +10,7 @@ namespace BlazorHosted.Components
   using static BlazorHosted.Features.Connections.ConnectionState;
   using static BlazorHosted.Features.CredentialDefinitions.CredentialDefinitionState;
   using static BlazorHosted.Features.Credentials.CredentialState;
+  using static BlazorHosted.Features.PresentProofs.PresentProofState;
   using static BlazorHosted.Features.Schemas.SchemaState;
   using static BlazorHosted.Features.Wallets.WalletState;
 
@@ -36,7 +37,8 @@ namespace BlazorHosted.Components
          Mediator.Send(new FetchSchemasAction()),
          Mediator.Send(new FetchCredentialDefinitionsAction()),
          Mediator.Send(new FetchConnectionsAction()),
-         //Mediator.Send(new FetchCredentialsAction())
+         Mediator.Send(new FetchCredentialsAction()),
+         Mediator.Send(new FetchProofsAction())
       };
 
       await Task.WhenAll(tasks);

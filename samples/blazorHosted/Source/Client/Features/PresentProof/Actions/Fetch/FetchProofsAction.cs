@@ -5,9 +5,6 @@
 
   internal partial class PresentProofState
   {
-    public class CreateAndSendProofRequestAction : BaseAction
-    {
-      public SendRequestForProofRequest SendRequestForProofRequest { get; set; }
-    }
+    public class FetchProofsAction : BaseAction { }
   }
 }

@@ -1,11 +1,9 @@
 ﻿namespace BlazorHosted.Features.PresentProofs.Pages
 {
   using BlazorState.Features.Routing;
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using System.Text;
   using System.Threading.Tasks;
+  using static BlazorHosted.Features.PresentProofs.PresentProofState;
+
   public partial class Index
   {
     public const string RouteTemplate = "/proofs";
@@ -17,7 +15,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-      //_ = await Mediator.Send(new FetchProofsAction());
+      _ = await Mediator.Send(new FetchProofsAction());
 
       await base.OnInitializedAsync();
     }

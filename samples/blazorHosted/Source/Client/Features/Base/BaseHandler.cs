@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.Counters;
   using BlazorHosted.Features.CredentialDefinitions;
   using BlazorHosted.Features.Credentials;
-  using BlazorHosted.Features.PresentProof;
+  using BlazorHosted.Features.PresentProofs;
   using BlazorHosted.Features.Schemas;
   using BlazorHosted.Features.Wallets;
   using BlazorHosted.Features.WeatherForecasts;

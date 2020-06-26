@@ -30,7 +30,6 @@
     <Folder Include="Features\CredentialDefinition\Components\" />
     <Folder Include="Features\Credential\Components\" />
     <Folder Include="Features\BasicMessaging\" />
-    <Folder Include="Features\PresentProof\Actions\Fetch\" />
     <Folder Include="Features\Schema\Components\" />
     <Folder Include="Features\Wallet\Components\" />
     <Folder Include="Features\Wallet\Pages\" />

@@ -7,8 +7,7 @@
 
     public GetProofsRequestValidator()
     {
-      RuleFor(aGetProofsRequest => aGetProofsRequest.SampleProperty)
-        .NotEmpty();
+
     }
   }
 }

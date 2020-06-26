@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.PresentProof
+﻿namespace BlazorHosted.Features.PresentProofs
 {
   using BlazorState;
   using Hyperledger.Aries.Features.PresentProof;
@@ -6,7 +6,7 @@
   using System.Linq;
   using System.Text.Json.Serialization;
 
-  public partial class PresentProofState : State<PresentProofState>
+  internal partial class PresentProofState : State<PresentProofState>
   {
     [JsonIgnore]
     public IReadOnlyDictionary<string, ProofRecord> Proofs => _ProofRecords;

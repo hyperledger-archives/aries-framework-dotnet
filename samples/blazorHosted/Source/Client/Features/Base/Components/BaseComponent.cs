@@ -9,7 +9,7 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.Schemas;
   using BlazorHosted.Features.CredentialDefinitions;
   using BlazorHosted.Features.Credentials;
-  using BlazorHosted.Features.PresentProof;
+  using BlazorHosted.Features.PresentProofs;
 
   /// <summary>
   /// Makes access to the State a little easier and by inheriting from
