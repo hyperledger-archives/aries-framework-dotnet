@@ -338,3 +338,6 @@ docs/_build
 # vs code config
 .vscode//samples/blazorHosted/Source/Client/Properties/launchSettings.json
 /samples/blazorHosted/Source/Client/Properties/launchSettings.json
+/.vscode/
+/samples/aspnetcore/.vscode/
+/docs/.vscode/
