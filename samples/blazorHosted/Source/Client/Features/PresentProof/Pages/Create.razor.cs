@@ -7,6 +7,7 @@
   using Microsoft.AspNetCore.Components;
   using Microsoft.JSInterop;
   using Newtonsoft.Json;
+  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
@@ -22,7 +23,7 @@
 
     private IReadOnlyList<ConnectionRecord> Connections => ConnectionState.ConnectionsAsList;
     public string CredentialDefinitionId { get; set; }
-    public CreateProofRequestRequest SendRequestForProofRequest { get; set; }
+    public CreateProofRequestRequest CreateProofRequestRequest { get; set; }
     [Inject] protected IJSRuntime JSRuntime { get; set; }
     private IReadOnlyList<DefinitionRecord> CredentialDefintions => CredentialDefinitionState.CredentialDefinitionsAsList;
 
@@ -38,21 +39,22 @@
 
     protected async Task HandleValidSubmit()
     {
-      _ = await Mediator.Send(new CreateProofRequestAction { CreateProofRequestRequest = SendRequestForProofRequest });
-      //_ = await Mediator.Send(new ChangeRouteAction { NewRoute = Pages.Index.RouteTemplate });
+      _ = await Mediator.Send(new CreateProofRequestAction { CreateProofRequestRequest = CreateProofRequestRequest });
+      _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Pages.Index.RouteTemplate });
     }
 
     protected void OnCredentialDefintionSelect()
     {
-      SendRequestForProofRequest.ProofRequest.RequestedAttributes.Clear();
+      CreateProofRequestRequest.ProofRequest.RequestedAttributes.Clear();
 
       if (!string.IsNullOrEmpty(CredentialDefinitionId))
       {
+        Console.WriteLine("Adding All Attributes");
         DefinitionRecord definitionRecord = CredentialDefinitionState.CredentialDefinitions[CredentialDefinitionId];
         string schemaId = definitionRecord.SchemaId;
         SchemaRecord schemaRecord = SchemaState.Schemas[schemaId];
-        SendRequestForProofRequest.ProofRequest.Name = schemaRecord.Name;
-        SendRequestForProofRequest.ProofRequest.Version = schemaRecord.Version;
+        CreateProofRequestRequest.ProofRequest.Name = schemaRecord.Name;
+        CreateProofRequestRequest.ProofRequest.Version = schemaRecord.Version;
         foreach (string name in schemaRecord.AttributeNames)
         {
           var restrictions = new List<AttributeFilter>();
@@ -70,16 +72,18 @@
             Restrictions = restrictions,
           };
 
-          SendRequestForProofRequest.ProofRequest
+          CreateProofRequestRequest.ProofRequest
             .RequestedAttributes
             .Add($"0_{name}_uuid", proofAttributeInfo);
         }
+
+        Console.WriteLine($"Added:{CreateProofRequestRequest.ProofRequest.RequestedAttributes.Count}");
       }
     }
 
     protected override async Task OnInitializedAsync()
     {
-      SendRequestForProofRequest = new CreateProofRequestRequest
+      CreateProofRequestRequest = new CreateProofRequestRequest
       {
         ProofRequest = new ProofRequest { RequestedAttributes = new Dictionary<string, ProofAttributeInfo>() }
       };
@@ -88,7 +92,7 @@
       _ = await Mediator.Send(new FetchConnectionsAction());
       _ = await Mediator.Send(new FetchCredentialDefinitionsAction());
 
-      SendRequestForProofRequest.ConnectionId = Connections.FirstOrDefault()?.Id;
+      CreateProofRequestRequest.ConnectionId = Connections.FirstOrDefault()?.Id;
       CredentialDefinitionId = CredentialDefintions.FirstOrDefault()?.Id;
       if (!string.IsNullOrEmpty(CredentialDefinitionId))
       {

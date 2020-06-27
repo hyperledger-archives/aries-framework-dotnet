@@ -23,13 +23,14 @@
 
   <!--Versions of packages used across the solution-->
   <PropertyGroup Label="Package Versions">
-    <MicrosoftAspNetCoreBlazorVersion>3.2.0</MicrosoftAspNetCoreBlazorVersion>
-    <MicrosoftAspNetCoreComponentsWebAssemblyVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyVersion>
-    <MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion>
     <MicrosoftAspNetCoreBlazorHttpClientVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreBlazorHttpClientVersion>
+    <MicrosoftAspNetCoreBlazorVersion>3.2.0</MicrosoftAspNetCoreBlazorVersion>
+    <MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion>
     <MicrosoftAspNetCoreComponentsWebAssemblyServerVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyServerVersion>
-    <SystemNetHttpJsonVersion>3.2.1</SystemNetHttpJsonVersion>
+    <MicrosoftAspNetCoreComponentsWebAssemblyVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyVersion>
     <SystemConfigurationConfigurationManagerVersion>4.7.0</SystemConfigurationConfigurationManagerVersion>
+    <SystemNetHttpJsonVersion>3.2.1</SystemNetHttpJsonVersion>
+    <SystemTextJsonVersion>4.7.2</SystemTextJsonVersion>
 
     <MicrosoftAspNetCoreVersion>3.1.4</MicrosoftAspNetCoreVersion>    
     <MicrosoftAspNetCoreMvcTestingVersion>$(MicrosoftAspNetCoreVersion)</MicrosoftAspNetCoreMvcTestingVersion>
@@ -62,7 +63,6 @@
     <SwashbuckleAspNetCoreSwaggerGenVersion>5.4.1</SwashbuckleAspNetCoreSwaggerGenVersion>
     <SwashbuckleAspNetCoreSwaggerUIVersion>5.4.1</SwashbuckleAspNetCoreSwaggerUIVersion>
     <SwashbuckleAspNetCoreSwaggerVersion>5.4.1</SwashbuckleAspNetCoreSwaggerVersion>
-    <SystemTextJsonVersion>4.7.2</SystemTextJsonVersion>
 
   </PropertyGroup>
 </Project>

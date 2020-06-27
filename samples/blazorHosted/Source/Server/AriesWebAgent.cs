@@ -15,7 +15,7 @@
       //AddDiscoveryHandler();
       //AddTrustPingHandler();
       AddCredentialHandler();
-      //AddProofHandler();
+      AddProofHandler();
     }
   }
 }

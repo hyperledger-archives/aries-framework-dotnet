@@ -13,7 +13,7 @@
         <tr>
           <th>Id</th>
           <th>ConnectionId</th>
-          <th>B</th>
+          <th>State</th>
           <th>C</th>
           <th></th>
         </tr>
@@ -24,10 +24,16 @@
           <tr>
             <td>@proof.Id</td>
             <td>@proof.ConnectionId</td>
-            <td>X</td>
+            <td>@proof.State</td>
             <td>Y</td>
             <td>
-              Details | Delete
+              <a href=@Pages.Details.GetRoute(proof.Id)>
+                Details
+              </a>
+              |
+              @*<a href=@Pages.Delete.GetRoute(connection.Id)>*@
+                Delete
+              @*</a>*@
             </td>
           </tr>
         }

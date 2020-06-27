@@ -27,34 +27,32 @@
 
       public override async Task<Unit> Handle
       (
-        CreateProofRequestAction aCreateAndSendProofRequestAction,
+        CreateProofRequestAction aCreateProofRequestAction,
         CancellationToken aCancellationToken
       )
       {
-        CreateProofRequestRequest sendRequestForProofRequest = aCreateAndSendProofRequestAction.CreateProofRequestRequest;
+        CreateProofRequestRequest createProofRequestRequest = aCreateProofRequestAction.CreateProofRequestRequest;
 
         HttpResponseMessage httpResponseMessage =
           await HttpClient.PostAsJsonAsync<CreateProofRequestRequest>
           (
-            sendRequestForProofRequest.GetRoute(),
-            sendRequestForProofRequest
+            createProofRequestRequest.GetRoute(),
+            createProofRequestRequest
           );
 
         httpResponseMessage.EnsureSuccessStatusCode();
+        //string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
-        httpResponseMessage.EnsureSuccessStatusCode();
-        string json = await httpResponseMessage.Content.ReadAsStringAsync();
+        //CreateProofRequestResponse createProofRequestResponse =
+        //  JsonConvert.DeserializeObject<CreateProofRequestResponse>(json);
 
-        CreateProofRequestResponse createProofRequestResponse =
-          JsonConvert.DeserializeObject<CreateProofRequestResponse>(json);
+        //PresentProofState.RequestPresentationMessage = createProofRequestResponse.RequestPresentationMessage;
 
-        PresentProofState.RequestPresentationMessage = createProofRequestResponse.RequestPresentationMessage;
-
-        PresentProofState.ProofRequestUrl = createProofRequestResponse.ProofRequestUrl;
+        //PresentProofState.ProofRequestUrl = createProofRequestResponse.ProofRequestUrl;
         
-        PresentProofState.ProofRequestQrUri =
-          $"https://chart.googleapis.com/chart?cht=qr&chs=300x300&chld=L|0&chl=" +
-          $"{Uri.EscapeDataString(createProofRequestResponse.ProofRequestUrl)}";
+        //PresentProofState.ProofRequestQrUri =
+        //  $"https://chart.googleapis.com/chart?cht=qr&chs=300x300&chld=L|0&chl=" +
+        //  $"{Uri.EscapeDataString(createProofRequestResponse.ProofRequestUrl)}";
   
         return Unit.Value;
       }

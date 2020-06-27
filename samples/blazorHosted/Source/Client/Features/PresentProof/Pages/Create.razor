@@ -8,12 +8,12 @@
   <br />
   <h1>Create Proof Request</h1>
 
-  <EditForm Model=@SendRequestForProofRequest OnValidSubmit=@HandleValidSubmit>
+  <EditForm Model=@CreateProofRequestRequest OnValidSubmit=@HandleValidSubmit>
     <Validate />
     <ValidationSummary />
     <div class="form-group">
       <label for="Connection">Connection</label>
-      <InputSelect @bind-Value=@SendRequestForProofRequest.ConnectionId class="form-control" id="Connection">
+      <InputSelect @bind-Value=@CreateProofRequestRequest.ConnectionId class="form-control" id="Connection">
         @foreach (ConnectionRecord connectionRecord in Connections)
         {
         <option value=@connectionRecord?.Id>@connectionRecord?.Alias?.Name : @connectionRecord?.Id</option>

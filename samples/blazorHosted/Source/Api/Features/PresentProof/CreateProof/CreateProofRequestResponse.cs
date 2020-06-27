@@ -8,19 +8,15 @@ namespace BlazorHosted.Features.PresentProofs
   {
     public RequestPresentationMessage RequestPresentationMessage { get; set; } = null!;
 
-    public string ProofRequestUrl { get; set; } = null!;
-
     public CreateProofRequestResponse() { }
 
     public CreateProofRequestResponse
     (
       RequestPresentationMessage aRequestPresentationMessage,
-      string aProofRequestUrl,
       Guid aCorrelationId
-    ) : base(aCorrelationId) 
+    ) : base(aCorrelationId)
     {
       RequestPresentationMessage = aRequestPresentationMessage;
-      ProofRequestUrl = aProofRequestUrl;
     }
   }
 }
