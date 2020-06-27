@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.PresentProofs
 
   public class CreateProofRequestRequest : BaseApiRequest, IRequest<CreateProofRequestResponse>
   {
-    public const string RouteTemplate = "api/present-proof/send-request";
+    public const string RouteTemplate = "api/present-proof/create-request";
 
     /// <summary>
     /// Set Properties and Update Docs

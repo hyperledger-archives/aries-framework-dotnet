@@ -13,6 +13,9 @@
     protected async Task CreateClick() =>
       _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = Create.GetRoute() });
 
+    protected async Task ViewClick() =>
+      _ = await Mediator.Send(new RouteState.ChangeRouteAction { NewRoute = View.GetRoute() });
+
     protected override async Task OnInitializedAsync()
     {
       _ = await Mediator.Send(new FetchProofsAction());
