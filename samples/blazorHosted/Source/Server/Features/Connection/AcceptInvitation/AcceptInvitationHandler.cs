@@ -4,12 +4,9 @@ namespace BlazorHosted.Features.Connections
   using Hyperledger.Aries.Features.DidExchange;
   using Hyperledger.Aries.Utils;
   using MediatR;
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
   using System.Threading;
   using System.Threading.Tasks;
-  
+
   public class AcceptInvitationHandler : IRequestHandler<AcceptInvitationRequest, AcceptInvitationResponse>
   {
     private readonly IAgentProvider AgentProvider;
@@ -36,11 +33,11 @@ namespace BlazorHosted.Features.Connections
     {
       IAgentContext agentContext = await AgentProvider.GetContextAsync();
 
-      ConnectionInvitationMessage connectionInvitationMessage = 
+      ConnectionInvitationMessage connectionInvitationMessage =
         MessageUtils
           .DecodeMessageFromUrlFormat<ConnectionInvitationMessage>(aAcceptInvitationRequest.InvitationDetails);
 
-      (ConnectionRequestMessage connectionRequestMessage, ConnectionRecord connectionRecord) 
+      (ConnectionRequestMessage connectionRequestMessage, ConnectionRecord connectionRecord)
         = await ConnectionService.CreateRequestAsync(agentContext, connectionInvitationMessage);
 
       await MessageService.SendAsync(agentContext.Wallet, connectionRequestMessage, connectionRecord);
