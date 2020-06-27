@@ -1,15 +1,14 @@
 namespace BlazorHosted.Features.Bases
 {
-  using BlazorState.Pipeline.ReduxDevTools;
   using BlazorHosted.Features.Applications;
-  using BlazorHosted.Features.Counters;
-  using BlazorHosted.Features.WeatherForecasts;
-  using BlazorHosted.Features.Wallets;
   using BlazorHosted.Features.Connections;
-  using BlazorHosted.Features.Schemas;
+  using BlazorHosted.Features.Counters;
   using BlazorHosted.Features.CredentialDefinitions;
   using BlazorHosted.Features.Credentials;
   using BlazorHosted.Features.PresentProofs;
+  using BlazorHosted.Features.Schemas;
+  using BlazorHosted.Features.Wallets;
+  using BlazorState.Pipeline.ReduxDevTools;
 
   /// <summary>
   /// Makes access to the State a little easier and by inheriting from
@@ -23,13 +22,12 @@ namespace BlazorHosted.Features.Bases
   public class BaseComponent : BlazorStateDevToolsComponent
   {
     internal ApplicationState ApplicationState => GetState<ApplicationState>();
-    internal CounterState CounterState => GetState<CounterState>();
     internal ConnectionState ConnectionState => GetState<ConnectionState>();
+    internal CounterState CounterState => GetState<CounterState>();
     internal CredentialDefinitionState CredentialDefinitionState => GetState<CredentialDefinitionState>();
     internal CredentialState CredentialState => GetState<CredentialState>();
     internal PresentProofState PresentProofState => GetState<PresentProofState>();
     internal SchemaState SchemaState => GetState<SchemaState>();
     internal WalletState WalletState => GetState<WalletState>();
-    internal WeatherForecastsState WeatherForecastsState => GetState<WeatherForecastsState>();
   }
 }

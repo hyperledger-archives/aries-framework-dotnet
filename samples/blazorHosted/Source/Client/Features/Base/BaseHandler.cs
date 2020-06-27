@@ -8,7 +8,6 @@ namespace BlazorHosted.Features.Bases
   using BlazorHosted.Features.PresentProofs;
   using BlazorHosted.Features.Schemas;
   using BlazorHosted.Features.Wallets;
-  using BlazorHosted.Features.WeatherForecasts;
   using BlazorState;
 
   /// <summary>
@@ -26,7 +25,6 @@ namespace BlazorHosted.Features.Bases
     protected PresentProofState PresentProofState => Store.GetState<PresentProofState>();
     protected SchemaState SchemaState => Store.GetState<SchemaState>();
     protected WalletState WalletState => Store.GetState<WalletState>();
-    protected WeatherForecastsState WeatherForecastsState => Store.GetState<WeatherForecastsState>();
 
     public BaseHandler(IStore aStore) : base(aStore) { }
   }
