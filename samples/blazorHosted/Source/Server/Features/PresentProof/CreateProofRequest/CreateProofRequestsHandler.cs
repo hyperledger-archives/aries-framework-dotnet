@@ -8,6 +8,7 @@ namespace BlazorHosted.Features.PresentProofs
   using System.Threading;
   using System.Threading.Tasks;
   using Hyperledger.Aries.Features.DidExchange;
+  using Hyperledger.Indy.AnonCredsApi;
 
   public class CreateProofRequestsHandler : IRequestHandler<CreateProofRequestRequest, CreateProofRequestResponse>
   {
@@ -40,7 +41,8 @@ namespace BlazorHosted.Features.PresentProofs
     )
     {
       IAgentContext agentContext = await AgentProvider.GetContextAsync();
-      ConnectionRecord connectionRecord = await ConnectionService.GetAsync(agentContext, aCreateProofRequestRequest.ConnectionId);
+      ConnectionRecord connectionRecord = await ConnectionService.GetAsync(agentContext, aCreateProofRequestRequest.ConnectionId);     
+      aCreateProofRequestRequest.ProofRequest.Nonce = await AnonCreds.GenerateNonceAsync();
 
       (RequestPresentationMessage requestPresentationMessage, ProofRecord proofRecord) =
         await ProofService.CreateRequestAsync(agentContext, aCreateProofRequestRequest.ProofRequest, aCreateProofRequestRequest.ConnectionId);

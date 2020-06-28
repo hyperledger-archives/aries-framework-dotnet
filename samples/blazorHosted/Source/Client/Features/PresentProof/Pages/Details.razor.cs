@@ -17,6 +17,8 @@
 
     public PartialProof PartialProof => string.IsNullOrEmpty(ProofRecord.ProofJson) ? null : JsonConvert.DeserializeObject<PartialProof>(ProofRecord.ProofJson);
 
+
+
     public static string GetRoute(string aProofId) =>
       RouteTemplate
         .Replace($"{{{nameof(ProofId)}}}", aProofId, System.StringComparison.OrdinalIgnoreCase);

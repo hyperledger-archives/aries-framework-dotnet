@@ -10,12 +10,16 @@
   <dl>
     <dt>Id</dt>
     <dd>@ProofRecord?.Id</dd>
+
     <dt>ConnectionId</dt>
     <dd>@ProofRecord?.ConnectionId</dd>
+
     <dt>State</dt>
     <dd>@ProofRecord?.State</dd>
+
     <dt>Create At UTC</dt>
     <dd>@ProofRecord?.CreatedAtUtc</dd>
+
     @if (ProofRequest != null)
     {
       <dt>Proof Request</dt>
@@ -30,16 +34,17 @@
               <table class="table">
                 <thead>
                   <tr>
+                    <th>Key</th>
                     <th>Name</th>
-                    <th>Names</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach (var requestedAttribute in ProofRequest?.RequestedAttributes)
                   {
                     <tr>
+                      <td>@requestedAttribute.Key</td>
                       <td>@requestedAttribute.Value?.Name</td>
-                      <td>@requestedAttribute.Value?.Names</td>
+
                     </tr>
                   }
                 </tbody>
@@ -63,6 +68,8 @@
         </dl>
       </dd>
     }
-
   </dl>
+  <h2>Matching Credentials</h2>
+
+
 </div>

@@ -6,7 +6,6 @@
   using Hyperledger.Aries.Models.Records;
   using Microsoft.AspNetCore.Components;
   using Microsoft.JSInterop;
-  using Newtonsoft.Json;
   using System;
   using System.Collections.Generic;
   using System.Linq;
@@ -85,7 +84,11 @@
     {
       CreateProofRequestRequest = new CreateProofRequestRequest
       {
-        ProofRequest = new ProofRequest { RequestedAttributes = new Dictionary<string, ProofAttributeInfo>() }
+        ProofRequest = new ProofRequest 
+        { 
+          RequestedAttributes = new Dictionary<string, ProofAttributeInfo>(),
+          //Nonce = await AnonCreds.GenerateNonceAsync(),
+        }
       };
 
       _ = await Mediator.Send(new FetchSchemasAction());

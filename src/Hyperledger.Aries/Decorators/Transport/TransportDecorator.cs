@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Decorators.Transport
 {
@@ -30,18 +31,21 @@ namespace Hyperledger.Aries.Decorators.Transport
         /// Return route.
         /// </summary>
         [JsonProperty("return_route")]
+        [JsonPropertyName("return_route")]
         public string ReturnRoute { get; set; }
 
         /// <summary>
         /// Return route thread.
         /// </summary>
         [JsonProperty("return_route_thread")]
+        [JsonPropertyName("return_route_thread")]
         public string ReturnRouteThread { get; set; }
 
         /// <summary>
         /// Queued message count.
         /// </summary>
         [JsonProperty("queued_message_count")]
+        [JsonPropertyName("thid")]
         public string QueuedMessageCount { get; set; }
     }
 }

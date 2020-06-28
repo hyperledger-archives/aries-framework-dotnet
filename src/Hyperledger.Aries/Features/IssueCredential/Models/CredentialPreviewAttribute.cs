@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
     /// <summary>
     /// Represents credential preview attribute
     /// </summary>
-    [JsonConverter(typeof(CredentialPreviewAttributeConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(CredentialPreviewAttributeConverter))]
     public class CredentialPreviewAttribute
     {
         /// <summary>
@@ -40,6 +41,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// The type of the MIME.
         /// </value>
         [JsonProperty("mime-type")]
+        [JsonPropertyName("mime-type")]
         public string MimeType { get; set; }
 
         /// <summary>

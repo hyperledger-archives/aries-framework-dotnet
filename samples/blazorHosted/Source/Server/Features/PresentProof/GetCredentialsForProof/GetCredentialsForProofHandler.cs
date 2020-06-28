@@ -35,9 +35,10 @@ namespace BlazorHosted.Features.PresentProofs
 
       ProofRecord proofRecord = await ProofService.GetAsync(agentContext, aGetCredentialsForProofRequest.ProofId);
 
-      ProofRequest proofRequest = JsonConvert.DeserializeObject<ProofRequest>(proofRecord.ProofJson);
+      ProofRequest proofRequest = JsonConvert.DeserializeObject<ProofRequest>(proofRecord.RequestJson);
 
-      List<Credential> credentials = await ProofService.ListCredentialsForProofRequestAsync(agentContext, proofRequest, attributeReferent: aGetCredentialsForProofRequest.Referent);
+      //ProofServiceUtils.GetAutoRequestedCredentialsForProofCredentials
+      List<Credential> credentials = await ProofService.ListCredentialsForProofRequestAsync(agentContext, proofRequest, attributeReferent: null);
       var response = new GetCredentialsForProofResponse(credentials, aGetCredentialsForProofRequest.CorrelationId);
 
       return response;

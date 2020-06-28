@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Decorators.Attachments
@@ -13,6 +14,7 @@ namespace Hyperledger.Aries.Decorators.Attachments
         /// </summary>
         /// <value></value>
         [JsonProperty("@id")]
+        [JsonPropertyName("@id")]
         public string Id { get; set; }
 
         /// <summary>
@@ -31,6 +33,7 @@ namespace Hyperledger.Aries.Decorators.Attachments
         /// The type of the MIME.
         /// </value>
         [JsonProperty("mime-type", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("mime-type")]
         public string MimeType { get; set; }
 
         /// <summary>
@@ -49,6 +52,7 @@ namespace Hyperledger.Aries.Decorators.Attachments
         /// The last modified time.
         /// </value>
         [JsonProperty("lastmod_time", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("lastmod_time")]
         public DateTimeOffset? LastModifiedTime { get; set; }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Features.IssueCredential
@@ -24,6 +25,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// The attributes.
         /// </value>
         [JsonProperty("attrs")]
+        [JsonPropertyName("attrs")]
         public Dictionary<string, string> Attributes { get; set; }
 
         /// <summary>
@@ -33,6 +35,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// The schema identifier.
         /// </value>
         [JsonProperty("schema_id")]
+        [JsonPropertyName("schema_id")]
         public string SchemaId { get; set; }
 
         /// <summary>
@@ -42,6 +45,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// The credential definition identifier.
         /// </value>
         [JsonProperty("cred_def_id")]
+        [JsonPropertyName("cred_def_id")]
         public string CredentialDefinitionId { get; set; }
 
         /// <summary>
@@ -51,6 +55,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// The revocation registry identifier.
         /// </value>
         [JsonProperty("rev_reg_id")]
+        [JsonPropertyName("rev_reg_id")]
         public string RevocationRegistryId { get; set; }
 
         /// <summary>
@@ -60,6 +65,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// The credential revocation identifier.
         /// </value>
         [JsonProperty("cred_rev_id")]
+        [JsonPropertyName("cred_rev_id")]
         public string CredentialRevocationId { get; set; }
     }
 }

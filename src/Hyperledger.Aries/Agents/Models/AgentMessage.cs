@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Hyperledger.Aries.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,7 +17,7 @@ namespace Hyperledger.Aries.Agents
         /// <summary>
         /// Internal JObject representation of an agent message.
         /// </summary>
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         private IList<JProperty> _decorators = new List<JProperty>();
 
         /// <summary>
@@ -26,6 +27,7 @@ namespace Hyperledger.Aries.Agents
         /// The message id.
         /// </value>
         [JsonProperty("@id")]
+        [JsonPropertyName("@id")]
         public string Id { get; set; }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace Hyperledger.Aries.Agents
         /// The type.
         /// </value>
         [JsonProperty("@type")]
+        [JsonPropertyName("@type")]
         public string Type { get; set; }
 
         /// <summary>

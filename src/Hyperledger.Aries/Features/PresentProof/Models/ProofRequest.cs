@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Features.PresentProof
@@ -34,6 +35,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The requested attributes.</value>
         [JsonProperty("requested_attributes")]
+        [JsonPropertyName("requested_attributes")]
         public Dictionary<string, ProofAttributeInfo> RequestedAttributes { get; set; }
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The requested predicates.</value>
         [JsonProperty("requested_predicates", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("requested_predicates")]
         public Dictionary<string, ProofPredicateInfo> RequestedPredicates { get; set; } =
             new Dictionary<string, ProofPredicateInfo>();
 
@@ -49,6 +52,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The non revoked.</value>
         [JsonProperty("non_revoked", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("non_revoked")]
         public RevocationInterval NonRevoked { get; set; }
         
         /// <inheritdoc />

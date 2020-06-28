@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Decorators.Attachments;
 using Newtonsoft.Json;
@@ -29,6 +30,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <value></value>
         [JsonProperty("credentials~attach")]
+        [JsonPropertyName("credentials~attach")]
         public Attachment[] Credentials { get; set; }
     }
 }

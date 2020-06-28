@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Features.DidExchange
@@ -12,6 +13,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// The DID doc context.
         /// </summary>
         [JsonProperty("@context")]
+        [JsonPropertyName("@context")]
         public string Context { get; set; } = "https://w3id.org/did/v1";
 
         /// <summary>
@@ -25,13 +27,15 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// List of public keys available on the DID doc.
         /// </summary>
         [JsonProperty("publicKey")]
+        [JsonPropertyName("publicKey")]
         public IList<DidDocKey> Keys { get; set; }
 
         /// <summary>
         /// List of services available on the did doc.
         /// </summary>
         [JsonProperty("service")]
-        [JsonConverter(typeof(DidDocServiceEndpointsConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(DidDocServiceEndpointsConverter))]
+        // TODO STJ convertor needed
         public IList<IDidDocServiceEndpoint> Services { get; set; } = new List<IDidDocServiceEndpoint>();
     }
 }
