@@ -1,54 +1,54 @@
-﻿namespace GetProofEndpoint
-{
-  using FluentAssertions;
-  using Microsoft.AspNetCore.Mvc.Testing;
-  using System.Net;
-  using System.Net.Http;
-  using System.Text.Json;
-  using System.Threading.Tasks;
-  using BlazorHosted.Features.PresentProofs;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-  using BlazorHosted.Server;
+﻿//namespace GetProofEndpoint
+//{
+//  using FluentAssertions;
+//  using Microsoft.AspNetCore.Mvc.Testing;
+//  using System.Net;
+//  using System.Net.Http;
+//  using System.Text.Json;
+//  using System.Threading.Tasks;
+//  using BlazorHosted.Features.PresentProofs;
+//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+//  using BlazorHosted.Server;
 
-  public class Returns : BaseTest
-  {
-    private readonly GetProofRequest GetProofRequest;
+//  public class Returns : BaseTest
+//  {
+//    private readonly GetProofRequest GetProofRequest;
 
-    public Returns
-    (
-      WebApplicationFactory<Startup> aWebApplicationFactory,
-      JsonSerializerOptions aJsonSerializerOptions
-    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
-    {
-      GetProofRequest = new GetProofRequest { Days = 10 };
-    }
+//    public Returns
+//    (
+//      WebApplicationFactory<Startup> aWebApplicationFactory,
+//      JsonSerializerOptions aJsonSerializerOptions
+//    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
+//    {
+//      GetProofRequest = new GetProofRequest { Days = 10 };
+//    }
 
-    public async Task GetProofResponse()
-    {
-      GetProofResponse GetProofResponse =
-        await GetJsonAsync<GetProofResponse>(GetProofRequest.RouteFactory);
+//    public async Task GetProofResponse()
+//    {
+//      GetProofResponse GetProofResponse =
+//        await GetJsonAsync<GetProofResponse>(GetProofRequest.RouteFactory);
 
-      ValidateGetProofResponse(GetProofResponse);
-    }
+//      ValidateGetProofResponse(GetProofResponse);
+//    }
 
-    public async Task ValidationError()
-    {
-      // Set invalid value
-      GetProofRequest.Days = -1;
+//    public async Task ValidationError()
+//    {
+//      // Set invalid value
+//      GetProofRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetProofRequest.RouteFactory);
+//      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetProofRequest.RouteFactory);
 
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+//      string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
-      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-      json.Should().Contain("errors");
-      json.Should().Contain(nameof(GetProofRequest.Days));
-    }
+//      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+//      json.Should().Contain("errors");
+//      json.Should().Contain(nameof(GetProofRequest.Days));
+//    }
 
-    private void ValidateGetProofResponse(GetProofResponse aGetProofResponse)
-    {
-      aGetProofResponse.CorrelationId.Should().Be(GetProofRequest.CorrelationId);
-      // check Other properties here
-    }
-  }
-}
+//    private void ValidateGetProofResponse(GetProofResponse aGetProofResponse)
+//    {
+//      aGetProofResponse.CorrelationId.Should().Be(GetProofRequest.CorrelationId);
+//      // check Other properties here
+//    }
+//  }
+//}

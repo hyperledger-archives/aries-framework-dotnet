@@ -3,12 +3,10 @@ namespace BlazorHosted.Features.Connections
   using Hyperledger.Aries.Agents;
   using Hyperledger.Aries.Features.DidExchange;
   using MediatR;
-  using System;
-  using System.Collections.Generic;
   using System.Linq;
   using System.Threading;
   using System.Threading.Tasks;
-  
+
   public class GetConnectionHandler : IRequestHandler<GetConnectionRequest, GetConnectionResponse>
   {
     private readonly IAgentProvider AgentProvider;

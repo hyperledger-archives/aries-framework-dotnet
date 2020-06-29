@@ -1,30 +1,30 @@
-﻿namespace SendPingRequestValidator_
-{
-  using FluentAssertions;
-  using FluentValidation.Results;
-  using FluentValidation.TestHelper;
-  using BlazorHosted.Features.Connections;
+﻿//namespace SendPingRequestValidator_
+//{
+//  using FluentAssertions;
+//  using FluentValidation.Results;
+//  using FluentValidation.TestHelper;
+//  using BlazorHosted.Features.Connections;
 
-  public class Validate_Should
-  {
-    private SendPingRequestValidator SendPingRequestValidator { get; set; }
+//  public class Validate_Should
+//  {
+//    private SendPingRequestValidator SendPingRequestValidator { get; set; }
 
-    public void Be_Valid()
-    {
-      var __requestName__Request = new SendPingRequest
-      {
-        // Set Valid values here
-        Days = 5
-      };
+//    public void Be_Valid()
+//    {
+//      var __requestName__Request = new SendPingRequest
+//      {
+//        // Set Valid values here
+//        Days = 5
+//      };
 
-      ValidationResult validationResult = SendPingRequestValidator.TestValidate(__requestName__Request);
+//      ValidationResult validationResult = SendPingRequestValidator.TestValidate(__requestName__Request);
 
-      validationResult.IsValid.Should().BeTrue();
-    }
+//      validationResult.IsValid.Should().BeTrue();
+//    }
 
-    public void Have_error_when_Days_are_negative() => SendPingRequestValidator
-      .ShouldHaveValidationErrorFor(aSendPingRequest => aSendPingRequest.Days, -1);
+//    public void Have_error_when_Days_are_negative() => SendPingRequestValidator
+//      .ShouldHaveValidationErrorFor(aSendPingRequest => aSendPingRequest.Days, -1);
 
-    public void Setup() => SendPingRequestValidator = new SendPingRequestValidator();
-  }
-}
+//    public void Setup() => SendPingRequestValidator = new SendPingRequestValidator();
+//  }
+//}

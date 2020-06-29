@@ -1,54 +1,54 @@
-﻿namespace CreateCredentialDefinitionEndpoint
-{
-  using FluentAssertions;
-  using Microsoft.AspNetCore.Mvc.Testing;
-  using System.Net;
-  using System.Net.Http;
-  using System.Text.Json;
-  using System.Threading.Tasks;
-  using BlazorHosted.Features.CredentialDefinitions;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-  using BlazorHosted.Server;
+﻿//namespace CreateCredentialDefinitionEndpoint
+//{
+//  using FluentAssertions;
+//  using Microsoft.AspNetCore.Mvc.Testing;
+//  using System.Net;
+//  using System.Net.Http;
+//  using System.Text.Json;
+//  using System.Threading.Tasks;
+//  using BlazorHosted.Features.CredentialDefinitions;
+//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+//  using BlazorHosted.Server;
 
-  public class Returns : BaseTest
-  {
-    private readonly CreateCredentialDefinitionRequest CreateCredentialDefinitionRequest;
+//  public class Returns : BaseTest
+//  {
+//    private readonly CreateCredentialDefinitionRequest CreateCredentialDefinitionRequest;
 
-    public Returns
-    (
-      WebApplicationFactory<Startup> aWebApplicationFactory,
-      JsonSerializerOptions aJsonSerializerOptions
-    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
-    {
-      CreateCredentialDefinitionRequest = new CreateCredentialDefinitionRequest { Days = 10 };
-    }
+//    public Returns
+//    (
+//      WebApplicationFactory<Startup> aWebApplicationFactory,
+//      JsonSerializerOptions aJsonSerializerOptions
+//    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
+//    {
+//      CreateCredentialDefinitionRequest = new CreateCredentialDefinitionRequest { Days = 10 };
+//    }
 
-    public async Task CreateCredentialDefinitionResponse()
-    {
-      CreateCredentialDefinitionResponse CreateCredentialDefinitionResponse =
-        await GetJsonAsync<CreateCredentialDefinitionResponse>(CreateCredentialDefinitionRequest.GetRoute());
+//    public async Task CreateCredentialDefinitionResponse()
+//    {
+//      CreateCredentialDefinitionResponse CreateCredentialDefinitionResponse =
+//        await GetJsonAsync<CreateCredentialDefinitionResponse>(CreateCredentialDefinitionRequest.GetRoute());
 
-      ValidateCreateCredentialDefinitionResponse(CreateCredentialDefinitionResponse);
-    }
+//      ValidateCreateCredentialDefinitionResponse(CreateCredentialDefinitionResponse);
+//    }
 
-    public async Task ValidationError()
-    {
-      // Set invalid value
-      CreateCredentialDefinitionRequest.Days = -1;
+//    public async Task ValidationError()
+//    {
+//      // Set invalid value
+//      CreateCredentialDefinitionRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(CreateCredentialDefinitionRequest.GetRoute());
+//      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(CreateCredentialDefinitionRequest.GetRoute());
 
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+//      string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
-      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-      json.Should().Contain("errors");
-      json.Should().Contain(nameof(CreateCredentialDefinitionRequest.Days));
-    }
+//      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+//      json.Should().Contain("errors");
+//      json.Should().Contain(nameof(CreateCredentialDefinitionRequest.Days));
+//    }
 
-    private void ValidateCreateCredentialDefinitionResponse(CreateCredentialDefinitionResponse aCreateCredentialDefinitionResponse)
-    {
-      aCreateCredentialDefinitionResponse.CorrelationId.Should().Be(CreateCredentialDefinitionRequest.CorrelationId);
-      // check Other properties here
-    }
-  }
-}
+//    private void ValidateCreateCredentialDefinitionResponse(CreateCredentialDefinitionResponse aCreateCredentialDefinitionResponse)
+//    {
+//      aCreateCredentialDefinitionResponse.CorrelationId.Should().Be(CreateCredentialDefinitionRequest.CorrelationId);
+//      // check Other properties here
+//    }
+//  }
+//}

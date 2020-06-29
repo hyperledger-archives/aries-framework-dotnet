@@ -6,7 +6,6 @@
     <br />
     <h1>Proofs</h1>
     <button class="btn btn-primary" @onclick=@CreateClick>Create</button>
-    <button class="btn btn-primary" @onclick=@ViewClick>View</button>
 
     <table class="table">
       <thead>
@@ -14,7 +13,7 @@
           <th>Id</th>
           <th>ConnectionId</th>
           <th>State</th>
-          <th>C</th>
+          <th>CreatedAtUtc</th>
           <th></th>
         </tr>
       </thead>
@@ -22,10 +21,10 @@
         @foreach (var proof in PresentProofState.ProofsAsList)
         {
           <tr>
-            <td>@proof.Id</td>
-            <td>@proof.ConnectionId</td>
-            <td>@proof.State</td>
-            <td>Y</td>
+            <td>@proof?.Id</td>
+            <td>@proof?.ConnectionId</td>
+            <td>@proof?.State</td>
+            <td>@proof?.CreatedAtUtc</td>
             <td>
               <a href=@Pages.Details.GetRoute(proof.Id)>
                 Details

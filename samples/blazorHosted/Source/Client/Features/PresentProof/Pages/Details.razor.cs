@@ -4,6 +4,7 @@
   using Hyperledger.Aries.Features.PresentProof;
   using Microsoft.AspNetCore.Components;
   using Newtonsoft.Json;
+  using System.Threading.Tasks;
 
   public partial class Details : BaseComponent
   {
@@ -17,10 +18,14 @@
 
     public PartialProof PartialProof => string.IsNullOrEmpty(ProofRecord.ProofJson) ? null : JsonConvert.DeserializeObject<PartialProof>(ProofRecord.ProofJson);
 
-
-
     public static string GetRoute(string aProofId) =>
       RouteTemplate
         .Replace($"{{{nameof(ProofId)}}}", aProofId, System.StringComparison.OrdinalIgnoreCase);
+
+    protected override Task OnParametersSetAsync()
+    {
+      //_ = await Mediator.Send(new FetchMathcingCredentialsAction());
+      return base.OnParametersSetAsync();
+    }
   }
 }

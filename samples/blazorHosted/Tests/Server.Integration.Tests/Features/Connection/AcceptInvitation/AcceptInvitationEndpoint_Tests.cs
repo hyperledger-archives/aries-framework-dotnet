@@ -1,54 +1,54 @@
-﻿namespace AcceptInvitationEndpoint
-{
-  using FluentAssertions;
-  using Microsoft.AspNetCore.Mvc.Testing;
-  using System.Net;
-  using System.Net.Http;
-  using System.Text.Json;
-  using System.Threading.Tasks;
-  using BlazorHosted.Features.Connections;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-  using BlazorHosted.Server;
+﻿//namespace AcceptInvitationEndpoint
+//{
+//  using FluentAssertions;
+//  using Microsoft.AspNetCore.Mvc.Testing;
+//  using System.Net;
+//  using System.Net.Http;
+//  using System.Text.Json;
+//  using System.Threading.Tasks;
+//  using BlazorHosted.Features.Connections;
+//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+//  using BlazorHosted.Server;
 
-  public class Returns : BaseTest
-  {
-    private readonly AcceptInvitationRequest AcceptInvitationRequest;
+//  public class Returns : BaseTest
+//  {
+//    private readonly AcceptInvitationRequest AcceptInvitationRequest;
 
-    public Returns
-    (
-      WebApplicationFactory<Startup> aWebApplicationFactory,
-      JsonSerializerOptions aJsonSerializerOptions
-    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
-    {
-      AcceptInvitationRequest = new AcceptInvitationRequest { Days = 10 };
-    }
+//    public Returns
+//    (
+//      WebApplicationFactory<Startup> aWebApplicationFactory,
+//      JsonSerializerOptions aJsonSerializerOptions
+//    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
+//    {
+//      AcceptInvitationRequest = new AcceptInvitationRequest { Days = 10 };
+//    }
 
-    public async Task AcceptInvitationResponse()
-    {
-      AcceptInvitationResponse AcceptInvitationResponse =
-        await GetJsonAsync<AcceptInvitationResponse>(AcceptInvitationRequest.GetRoute());
+//    public async Task AcceptInvitationResponse()
+//    {
+//      AcceptInvitationResponse AcceptInvitationResponse =
+//        await GetJsonAsync<AcceptInvitationResponse>(AcceptInvitationRequest.GetRoute());
 
-      ValidateAcceptInvitationResponse(AcceptInvitationResponse);
-    }
+//      ValidateAcceptInvitationResponse(AcceptInvitationResponse);
+//    }
 
-    public async Task ValidationError()
-    {
-      // Set invalid value
-      AcceptInvitationRequest.Days = -1;
+//    public async Task ValidationError()
+//    {
+//      // Set invalid value
+//      AcceptInvitationRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(AcceptInvitationRequest.GetRoute());
+//      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(AcceptInvitationRequest.GetRoute());
 
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+//      string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
-      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-      json.Should().Contain("errors");
-      json.Should().Contain(nameof(AcceptInvitationRequest.Days));
-    }
+//      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+//      json.Should().Contain("errors");
+//      json.Should().Contain(nameof(AcceptInvitationRequest.Days));
+//    }
 
-    private void ValidateAcceptInvitationResponse(AcceptInvitationResponse aAcceptInvitationResponse)
-    {
-      aAcceptInvitationResponse.CorrelationId.Should().Be(AcceptInvitationRequest.CorrelationId);
-      // check Other properties here
-    }
-  }
-}
+//    private void ValidateAcceptInvitationResponse(AcceptInvitationResponse aAcceptInvitationResponse)
+//    {
+//      aAcceptInvitationResponse.CorrelationId.Should().Be(AcceptInvitationRequest.CorrelationId);
+//      // check Other properties here
+//    }
+//  }
+//}

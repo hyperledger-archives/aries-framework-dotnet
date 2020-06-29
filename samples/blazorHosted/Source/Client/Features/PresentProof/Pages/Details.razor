@@ -22,37 +22,36 @@
 
     @if (ProofRequest != null)
     {
-      <dt>Proof Request</dt>
-      <dd>
-        <dl>
-          <dt>Name</dt>
-          <dd>@ProofRequest?.Name</dd>
-          @if (ProofRequest?.RequestedAttributes != null)
-          {
-            <dt>Requested Attributes</dt>
-            <dd>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Key</th>
-                    <th>Name</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach (var requestedAttribute in ProofRequest?.RequestedAttributes)
-                  {
-                    <tr>
-                      <td>@requestedAttribute.Key</td>
-                      <td>@requestedAttribute.Value?.Name</td>
+      <h2>Proof Request</h2>
 
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </dd>
-          }
-        </dl>
-      </dd>
+      <dl>
+        <dt>Name</dt>
+        <dd>@ProofRequest?.Name</dd>
+        @if (ProofRequest?.RequestedAttributes != null)
+        {
+          <dt>Requested Attributes</dt>
+          <dd>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach (var requestedAttribute in ProofRequest?.RequestedAttributes)
+                {
+                  <tr>
+                    <td>@requestedAttribute.Key</td>
+                    <td>@requestedAttribute.Value?.Name</td>
+
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </dd>
+        }
+      </dl>
     }
     @if (PartialProof != null)
     {

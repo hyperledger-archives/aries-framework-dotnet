@@ -8,7 +8,7 @@ namespace BlazorHosted.Features.Connections
     public const string RouteTemplate = "api/connections/{ConnectionId}";
 
     /// <summary>
-    /// The Id of the Connection to use to send the message
+    /// The Id of the Connection
     /// </summary>
     /// <example>Connection identifier</example>
     public string ConnectionId { get; set; } = null!;
@@ -17,6 +17,12 @@ namespace BlazorHosted.Features.Connections
     {
       string temp = RouteTemplate.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
       return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
+    }
+
+    public GetConnectionRequest() { }
+    public GetConnectionRequest(string aConnectionId)
+    {
+      ConnectionId = aConnectionId;
     }
   }
 }

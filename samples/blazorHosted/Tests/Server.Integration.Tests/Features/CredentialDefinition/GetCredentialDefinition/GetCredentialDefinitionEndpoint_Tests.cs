@@ -1,54 +1,54 @@
-﻿namespace GetCredentialDefinitionEndpoint
-{
-  using FluentAssertions;
-  using Microsoft.AspNetCore.Mvc.Testing;
-  using System.Net;
-  using System.Net.Http;
-  using System.Text.Json;
-  using System.Threading.Tasks;
-  using BlazorHosted.Features.CredentialDefinitions;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-  using BlazorHosted.Server;
+﻿//namespace GetCredentialDefinitionEndpoint
+//{
+//  using FluentAssertions;
+//  using Microsoft.AspNetCore.Mvc.Testing;
+//  using System.Net;
+//  using System.Net.Http;
+//  using System.Text.Json;
+//  using System.Threading.Tasks;
+//  using BlazorHosted.Features.CredentialDefinitions;
+//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+//  using BlazorHosted.Server;
 
-  public class Returns : BaseTest
-  {
-    private readonly GetCredentialDefinitionRequest GetCredentialDefinitionRequest;
+//  public class Returns : BaseTest
+//  {
+//    private readonly GetCredentialDefinitionRequest GetCredentialDefinitionRequest;
 
-    public Returns
-    (
-      WebApplicationFactory<Startup> aWebApplicationFactory,
-      JsonSerializerOptions aJsonSerializerOptions
-    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
-    {
-      GetCredentialDefinitionRequest = new GetCredentialDefinitionRequest { Days = 10 };
-    }
+//    public Returns
+//    (
+//      WebApplicationFactory<Startup> aWebApplicationFactory,
+//      JsonSerializerOptions aJsonSerializerOptions
+//    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
+//    {
+//      GetCredentialDefinitionRequest = new GetCredentialDefinitionRequest { Days = 10 };
+//    }
 
-    public async Task GetCredentialDefinitionResponse()
-    {
-      GetCredentialDefinitionResponse GetCredentialDefinitionResponse =
-        await GetJsonAsync<GetCredentialDefinitionResponse>(GetCredentialDefinitionRequest.GetRoute());
+//    public async Task GetCredentialDefinitionResponse()
+//    {
+//      GetCredentialDefinitionResponse GetCredentialDefinitionResponse =
+//        await GetJsonAsync<GetCredentialDefinitionResponse>(GetCredentialDefinitionRequest.GetRoute());
 
-      ValidateGetCredentialDefinitionResponse(GetCredentialDefinitionResponse);
-    }
+//      ValidateGetCredentialDefinitionResponse(GetCredentialDefinitionResponse);
+//    }
 
-    public async Task ValidationError()
-    {
-      // Set invalid value
-      GetCredentialDefinitionRequest.Days = -1;
+//    public async Task ValidationError()
+//    {
+//      // Set invalid value
+//      GetCredentialDefinitionRequest.Days = -1;
 
-      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetCredentialDefinitionRequest.GetRoute());
+//      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetCredentialDefinitionRequest.GetRoute());
 
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+//      string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
-      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-      json.Should().Contain("errors");
-      json.Should().Contain(nameof(GetCredentialDefinitionRequest.Days));
-    }
+//      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+//      json.Should().Contain("errors");
+//      json.Should().Contain(nameof(GetCredentialDefinitionRequest.Days));
+//    }
 
-    private void ValidateGetCredentialDefinitionResponse(GetCredentialDefinitionResponse aGetCredentialDefinitionResponse)
-    {
-      aGetCredentialDefinitionResponse.CorrelationId.Should().Be(GetCredentialDefinitionRequest.CorrelationId);
-      // check Other properties here
-    }
-  }
-}
+//    private void ValidateGetCredentialDefinitionResponse(GetCredentialDefinitionResponse aGetCredentialDefinitionResponse)
+//    {
+//      aGetCredentialDefinitionResponse.CorrelationId.Should().Be(GetCredentialDefinitionRequest.CorrelationId);
+//      // check Other properties here
+//    }
+//  }
+//}

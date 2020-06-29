@@ -5,19 +5,25 @@
   using Hyperledger.Aries.Features.DidExchange;
   using Microsoft.AspNetCore.Components;
   using System.Threading.Tasks;
+  using static BlazorHosted.Features.Connections.ConnectionState;
 
   public partial class Details : BaseComponent
   {
-    public ConnectionRecord Connection =>
-      ConnectionState.Connections[ConnectionId];
+    public ConnectionRecord Connection
+    {
+      get
+      {
+        ConnectionState.Connections.TryGetValue(ConnectionId, out ConnectionRecord value);
+        return value;
+      }
+    }
 
     [Parameter] public string ConnectionId { get; set; }
 
-    protected override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
-      // Should fetch the single item if coming from list will be in mem already but if direct it won't be.
-      //_ = await Mediator.Send(new FetchConnectionAction());
-      return base.OnParametersSetAsync();
+      _ = await Mediator.Send(new FetchConnectionAction(ConnectionId));
+      await base.OnParametersSetAsync();
     }
   }
 }

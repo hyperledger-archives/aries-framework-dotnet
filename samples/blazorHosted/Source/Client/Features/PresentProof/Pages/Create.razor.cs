@@ -20,7 +20,8 @@
   {
     public const string RouteTemplate = "/proofs/create";
 
-    private IReadOnlyList<ConnectionRecord> Connections => ConnectionState.ConnectionsAsList;
+    private IEnumerable<ConnectionRecord> Connections => 
+      ConnectionState.ConnectionsAsList.Where(aConnection => aConnection.State == Hyperledger.Aries.Features.DidExchange.ConnectionState.Connected);
     public string CredentialDefinitionId { get; set; }
     public CreateProofRequestRequest CreateProofRequestRequest { get; set; }
     [Inject] protected IJSRuntime JSRuntime { get; set; }
