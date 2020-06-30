@@ -4,8 +4,8 @@
   using FluentValidation.Results;
   using FluentValidation.TestHelper;
   using BlazorHosted.Features.Connections;
-  using Hyperledger.Aries.Features.DidExchange;
   using System.Linq;
+  using TestHelpers;
 
   public class Validate_Should
   {
@@ -15,15 +15,7 @@
     public Validate_Should()
     {
       CreateInvitationRequestValidator = new CreateInvitationRequestValidator();
-      
-      // Set Valid values here
-      var inviteConfiguration = new InviteConfiguration
-      {
-        AutoAcceptConnection = true,
-      };
-
-      inviteConfiguration.MyAlias.Name = "Faber";
-      CreateInvitationRequest = new CreateInvitationRequest(inviteConfiguration);
+      CreateInvitationRequest = CreateInvitationTestHelper.CreateValidCreateInvitationRequest();
     }
 
     public void Be_Valid()
@@ -51,7 +43,8 @@
         .Be
         (
           $"{nameof(CreateInvitationRequest.InviteConfiguration)}." + 
-          $"{nameof(CreateInvitationRequest.InviteConfiguration.AutoAcceptConnection)}");
+          $"{nameof(CreateInvitationRequest.InviteConfiguration.AutoAcceptConnection)}"
+        );
     }
   }
 }
