@@ -1,11 +1,13 @@
 namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 {
   using BlazorHosted.Server;
+  using FluentAssertions;
   using MediatR;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Microsoft.Extensions.DependencyInjection;
   using Newtonsoft.Json;
   using System;
+  using System.Net;
   using System.Net.Http;
   using System.Net.Mime;
   using System.Text;
@@ -103,6 +105,17 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
           return mediator.Send(aRequest);
         }
       );
+    }
+
+    protected async Task ConfirmEndpointValidationError<TResponse>(string aRoute, IRequest<TResponse> aRequest, string aAttributeName)
+    {
+      HttpResponseMessage httpResponseMessage = await GetHttpResponseMessageFromPost(aRoute, aRequest);
+
+      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+
+      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+      json.Should().Contain("errors");
+      json.Should().Contain(aAttributeName);
     }
   }
 }
