@@ -16,7 +16,7 @@
 
       public InviteConfigurationValidator()
       {
-        // We currently only support AutoAceptConnections 
+        // We currently only support AutoAcceptConnections 
         RuleFor(aInviteConfiguration => aInviteConfiguration.AutoAcceptConnection)
           .Must(aAutoAcceptConnection => aAutoAcceptConnection == true);
       }
