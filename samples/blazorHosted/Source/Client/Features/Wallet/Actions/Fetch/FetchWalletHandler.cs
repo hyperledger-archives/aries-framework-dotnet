@@ -32,10 +32,8 @@ namespace BlazorHosted.Features.Wallets
           HttpResponseMessage x = await HttpClient.GetAsync(getWalletRequest.GetRoute());
           string json = await x.Content.ReadAsStringAsync();
           GetWalletResponse getWalletResponse = JsonConvert.DeserializeObject<GetWalletResponse>(json);
-          WalletState.Did = getWalletResponse.ProvisioningRecord.Endpoint.Did;
-          WalletState.VerKey = getWalletResponse.ProvisioningRecord.Endpoint.Verkey.First();
-          WalletState.Uri = getWalletResponse.ProvisioningRecord.Endpoint.Uri;
-          WalletState.Name = getWalletResponse.ProvisioningRecord.Owner.Name;
+          WalletState.ProvisioningRecord = getWalletResponse.ProvisioningRecord;
+          WalletState.IsCached = true;
         }
 
         return Unit.Value;

@@ -9,6 +9,11 @@
   {
     private GetWalletRequestValidator GetWalletRequestValidator { get; set; }
 
+    public Validate_Should()
+    {
+      GetWalletRequestValidator = new GetWalletRequestValidator();
+    }
+
     public void Be_Valid()
     {
       var getWalletRequest = new GetWalletRequest
@@ -22,6 +27,5 @@
       validationResult.IsValid.Should().BeTrue();
     }
 
-    public void Setup() => GetWalletRequestValidator = new GetWalletRequestValidator();
   }
 }

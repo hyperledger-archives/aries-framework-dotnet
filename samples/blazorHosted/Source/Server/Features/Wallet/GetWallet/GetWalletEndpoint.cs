@@ -9,13 +9,9 @@ namespace BlazorHosted.Features.Wallets
   public class GetWalletEndpoint : BaseEndpoint<GetWalletRequest, GetWalletResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Returns the Provisioning information for the agent.
     /// </summary>
-    /// <remarks>
-    /// Longer Description
-    /// </remarks>
     /// <param name="aGetWalletRequest"></param>
-    /// <returns><see cref="GetWalletResponse"/></returns>
     [HttpGet(GetWalletRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
     [ProducesResponseType(typeof(GetWalletResponse), (int)HttpStatusCode.OK)]

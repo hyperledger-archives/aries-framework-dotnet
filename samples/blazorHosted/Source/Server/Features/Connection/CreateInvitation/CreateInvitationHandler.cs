@@ -41,17 +41,8 @@ namespace BlazorHosted.Features.Connections
     {
       IAgentContext agentContext = await AgentProvider.GetContextAsync();
 
-      var inviteConfiguration = new InviteConfiguration
-      {
-        MyAlias = new ConnectionAlias()
-        {
-          Name = aCreateInvitationRequest.Alias,
-          ImageUrl = aCreateInvitationRequest.ImageUrl?.AbsoluteUri
-        },
-        AutoAcceptConnection = true
-      };
       (ConnectionInvitationMessage connectionInvitationMessage, _) =
-        await ConnectionService.CreateInvitationAsync(agentContext, inviteConfiguration);
+        await ConnectionService.CreateInvitationAsync(agentContext, aCreateInvitationRequest.InviteConfiguration);
 
       string endpointUri = (await ProvisioningService.GetProvisioningAsync(agentContext.Wallet)).Endpoint.Uri;
       string encodedInvitation = connectionInvitationMessage.ToJson().ToBase64();

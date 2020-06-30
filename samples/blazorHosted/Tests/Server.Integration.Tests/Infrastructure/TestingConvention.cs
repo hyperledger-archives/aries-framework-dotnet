@@ -7,6 +7,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   using System.Reflection;
   using System.Text.Json;
   using BlazorHosted.Server;
+  using Newtonsoft.Json;
 
   [NotTest]
   [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
@@ -59,6 +60,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 
       aServiceCollection.AddSingleton(WebApplicationFactory);
       aServiceCollection.AddSingleton(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+      aServiceCollection.AddSingleton(new JsonSerializerSettings());
       aServiceCollection.Scan
       (
         aTypeSourceSelector => aTypeSourceSelector

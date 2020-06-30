@@ -1,10 +1,8 @@
 namespace BlazorHosted.Features.Connections
 {
-  using MediatR;
   using BlazorHosted.Features.Bases;
-  using System.Collections.Generic;
   using Hyperledger.Aries.Features.DidExchange;
-
+  using MediatR;
 
   /// <summary>
   /// Create Invitation Request
@@ -13,51 +11,18 @@ namespace BlazorHosted.Features.Connections
   {
     public const string RouteTemplate = "api/connections/create-invitation";
 
-    public InviteConfiguration InviteConfiguration { get; set; }
+    public InviteConfiguration InviteConfiguration { get; set; } = null!;
 
     /// <summary>
-    /// Used to generated an invitation that multiple parties
-    /// can use to connect.
+    /// Parameterless constructor for System.Text.Json
     /// </summary>
-    public bool MultiPartyInvitation { get; set; }
+    public CreateInvitationRequest() { }
 
-
-    /// <summary>
-    /// Gets or sets the name of the alias for the connection.
-    /// </summary>
-    /// <value>
-    /// The name of the alias for the connection.
-    /// </value>
-    /// <example>Alice</example>
-    public string? Alias { get; set; }
-
-    /// <summary>
-    /// Gets or sets the url of an image of the alias for the connection.
-    /// </summary>
-    /// <value>
-    /// The image url of the alias for the connection.
-    /// </value>
-    /// <example>https://www.gravatar.com/avatar/fb214494d2a75080e8019f5fc961a1d9</example>
-    public System.Uri? ImageUrl { get; set; }
-
-    /// <summary>
-    /// For automatically accepting a
-    /// connection request generated from this created invite
-    /// </summary>
-    public bool AutoAcceptConnection { get; set; }
-
-    /// <summary>
-    /// Controls the tags that are persisted against the invite/connection record.
-    /// </summary>
-    public Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();
-
-    public bool Public { get; set; }
-
-    public CreateInvitationRequest()
+    public CreateInvitationRequest(InviteConfiguration aInviteConfiguration)
     {
-      InviteConfiguration = new InviteConfiguration { AutoAcceptConnection = true };
+      InviteConfiguration = aInviteConfiguration;
     }
+
     internal override string GetRoute() => RouteTemplate;
   }
-
 }

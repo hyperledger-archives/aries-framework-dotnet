@@ -1,12 +1,12 @@
 ﻿namespace GetWalletHandler
 {
-  using System.Threading.Tasks;
-  using System.Text.Json;
-  using Microsoft.AspNetCore.Mvc.Testing;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
   using BlazorHosted.Features.Wallets;
   using BlazorHosted.Server;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
   using FluentAssertions;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using Newtonsoft.Json;
+  using System.Threading.Tasks;
 
   public class Handle_Returns : BaseTest
   {
@@ -15,8 +15,8 @@
     public Handle_Returns
     (
       WebApplicationFactory<Startup> aWebApplicationFactory,
-      JsonSerializerOptions aJsonSerializerOptions
-    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
     {
       GetWalletRequest = new GetWalletRequest();
     }
@@ -25,12 +25,12 @@
     {
       GetWalletResponse getWalletResponse = await Send(GetWalletRequest);
 
-      ValidateGetWalletResponse(getWalletResponse);
+      ValidateGetWalletResponse(GetWalletRequest, getWalletResponse);
     }
 
-    private void ValidateGetWalletResponse(GetWalletResponse aGetWalletResponse)
+    internal static void ValidateGetWalletResponse(GetWalletRequest aGetWalletRequest, GetWalletResponse aGetWalletResponse)
     {
-      aGetWalletResponse.CorrelationId.Should().Be(GetWalletRequest.CorrelationId);
+      aGetWalletResponse.CorrelationId.Should().Be(aGetWalletRequest.CorrelationId);
 
       aGetWalletResponse.ProvisioningRecord.Should().NotBeNull();
       aGetWalletResponse.ProvisioningRecord.CreatedAtUtc.HasValue.Should().BeTrue();
@@ -38,9 +38,8 @@
 
       aGetWalletResponse.ProvisioningRecord.Endpoint.Should().NotBeNull();
 
-
       // Example: "NPgCqrawdq6zpHgTpza186" Changes every time provisioned so just check for length
-      aGetWalletResponse.ProvisioningRecord.Endpoint.Did.Length.Should().Be(22); 
+      aGetWalletResponse.ProvisioningRecord.Endpoint.Did.Length.Should().Be(22);
 
       aGetWalletResponse.ProvisioningRecord.Endpoint.Uri.Should().Be("https://localhost:5551");
 
@@ -60,11 +59,10 @@
       aGetWalletResponse.ProvisioningRecord.Owner.Name.Should().Be("Faber");
 
       aGetWalletResponse.ProvisioningRecord.TaaAcceptance.Should().BeNull();
-      
+
       aGetWalletResponse.ProvisioningRecord.TailsBaseUri.Should().Be("https://localhost:5551/tails/");
       aGetWalletResponse.ProvisioningRecord.TypeName.Should().Be("AF.ProvisioningRecord");
       aGetWalletResponse.ProvisioningRecord.UpdatedAtUtc.Should().BeNull();
     }
-
   }
 }

@@ -1,16 +1,25 @@
 ﻿namespace BlazorHosted.Features.Connections
 {
   using FluentValidation;
-  
+  using Hyperledger.Aries.Features.DidExchange;
+
   public class CreateInvitationRequestValidator : AbstractValidator<CreateInvitationRequest>
   {
 
     public CreateInvitationRequestValidator()
     {
-      //RuleFor
-      //(
-      //  aCreateInvitationRequest => aCreateInvitationRequest.
-      //).NotEmpty().GreaterThan(0);
+      RuleFor(aCreateInvitationRequest => aCreateInvitationRequest.InviteConfiguration).NotNull().SetValidator(new InviteConfigurationValidator());
+    }
+
+    class InviteConfigurationValidator : AbstractValidator<InviteConfiguration>
+    {
+
+      public InviteConfigurationValidator()
+      {
+        // We currently only support AutoAceptConnections 
+        RuleFor(aInviteConfiguration => aInviteConfiguration.AutoAcceptConnection)
+          .Must(aAutoAcceptConnection => aAutoAcceptConnection == true);
+      }
     }
   }
 }

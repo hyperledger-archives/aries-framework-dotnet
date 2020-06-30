@@ -2,6 +2,7 @@
 {
   using BlazorHosted.Features.Bases;
   using BlazorState;
+  using Hyperledger.Aries.Features.DidExchange;
   using MediatR;
   using Newtonsoft.Json;
   using System;
@@ -31,11 +32,12 @@
         CancellationToken aCancellationToken
       )
       {
-        var createInvitationRequest = new CreateInvitationRequest
-        {
-          Alias = WalletState.Name         
-        };
+        var inviteConfiguration = new InviteConfiguration();
+        inviteConfiguration.MyAlias.Name = WalletState.ProvisioningRecord.Owner.Name;
+        inviteConfiguration.AutoAcceptConnection = true;
 
+        var createInvitationRequest = new CreateInvitationRequest(inviteConfiguration);
+        
         HttpResponseMessage httpResponseMessage =
           await HttpClient.PostAsJsonAsync<CreateInvitationRequest>
           (

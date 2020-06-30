@@ -4,18 +4,14 @@
 
 <br />
 <h1 data-qa="AgentHeader">Wallet / Agent Provisioning Configuration</h1>
-
-<div class="card text-center mt-2 w-50" data-qa="@TestId">
-  <div class="card-header">
-    Agent Provisioning Configuration
-  </div>
-  <div class="card-body">
-    <Identicon Value=@WalletState.Name Size=100 />
-    <h5 class="card-title mt-2">@WalletState.Name</h5>
-    <small class="text-muted">@WalletState.Uri?.ToString()</small>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="DID">@WalletState.Did</li>
-    <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="VERKEY">@WalletState.VerKey</li>
-  </ul>
-</div>
+<Identicon Value=@Name Size=100 />
+<dl>
+  <dt>Uri</dt>
+  <dd>@Uri</dd>
+  <dt>Name</dt>
+  <dd>@Name</dd>
+  <dt>DID</dt>
+  <dd>@Did</dd>
+  <dt>VERKEY</dt>
+  <dd>@VerKey</dd>
+</dl>

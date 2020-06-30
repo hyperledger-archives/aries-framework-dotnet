@@ -12,8 +12,6 @@ namespace BlazorHosted.Features.Connections.Pages
   {
     public const string RouteTemplate = "/connections/create";
 
-    public CreateInvitationRequest CreateInvitationRequest { get; set; }
-
     public string DisplayInvitationUrl
     {
       get

@@ -4,11 +4,11 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   using MediatR;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Microsoft.Extensions.DependencyInjection;
+  using Newtonsoft.Json;
   using System;
   using System.Net.Http;
   using System.Net.Mime;
   using System.Text;
-  using System.Text.Json;
   using System.Threading.Tasks;
 
   /// <summary>
@@ -20,15 +20,15 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   /// </remarks>
   public abstract class BaseTest
   {
-    public readonly JsonSerializerOptions JsonSerializerOptions;
+    public readonly JsonSerializerSettings JsonSerializerSettings;
     protected readonly HttpClient HttpClient;
     private readonly IServiceScopeFactory ServiceScopeFactory;
 
-    public BaseTest(WebApplicationFactory<Startup> aWebApplicationFactory, JsonSerializerOptions aJsonSerializerOptions)
+    public BaseTest(WebApplicationFactory<Startup> aWebApplicationFactory, JsonSerializerSettings aJsonSerializerSettings)
     {
       ServiceScopeFactory = aWebApplicationFactory.Services.GetService<IServiceScopeFactory>();
       HttpClient = aWebApplicationFactory.CreateClient();
-      JsonSerializerOptions = aJsonSerializerOptions;
+      JsonSerializerSettings = aJsonSerializerSettings;
     }
 
     protected async Task<T> ExecuteInScope<T>(Func<IServiceProvider, Task<T>> aAction)
@@ -39,7 +39,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 
     protected async Task<HttpResponseMessage> GetHttpResponseMessageFromPost<TResponse>(string aUri, IRequest<TResponse> aRequest)
     {
-      string requestAsJson = JsonSerializer.Serialize(aRequest, aRequest.GetType(), JsonSerializerOptions);
+      string requestAsJson = JsonConvert.SerializeObject(aRequest, aRequest.GetType(), JsonSerializerSettings);
 
       var httpContent =
         new StringContent
@@ -61,7 +61,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
-      TResponse response = JsonSerializer.Deserialize<TResponse>(json, JsonSerializerOptions);
+      TResponse response = JsonConvert.DeserializeObject<TResponse>(json, JsonSerializerSettings);
 
       return response;
     }
@@ -74,7 +74,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 
       string json = await httpResponseMessage.Content.ReadAsStringAsync();
 
-      TResponse response = JsonSerializer.Deserialize<TResponse>(json, JsonSerializerOptions);
+      TResponse response = JsonConvert.DeserializeObject<TResponse>(json, JsonSerializerSettings);
 
       return response;
     }
