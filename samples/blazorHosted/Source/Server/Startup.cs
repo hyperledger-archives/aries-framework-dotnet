@@ -142,9 +142,9 @@ namespace BlazorHosted.Server
             {
               aAgentOptions.AgentName = agentSettings.AgentName;
               aAgentOptions.IssuerKeySeed = agentSettings.IssuerKeySeed;
-              //aAgentOptions.AgentName = "Alice"; // Get from Config based on ENV
               aAgentOptions.GenesisFilename = Path.GetFullPath(agentSettings.GenesisFilename);
               aAgentOptions.WalletConfiguration = new WalletConfiguration { Id = agentSettings.WalletId };
+              aAgentOptions.WalletCredentials = new WalletCredentials { Key = agentSettings.WalletKey };
               // The following is set one time when first provisioned.
               // To reset it delete everything in the ~/.indy_client directory (this will delete all wallet records)
               aAgentOptions.EndpointUri = agentSettings.EndpointUri;
