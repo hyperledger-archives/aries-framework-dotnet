@@ -14,7 +14,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   using System.Threading.Tasks;
 
   /// <summary>
-  ///
+  /// BaseTest case 
   /// </summary>
   /// <remarks>
   /// Based on Jimmy's SliceFixture
