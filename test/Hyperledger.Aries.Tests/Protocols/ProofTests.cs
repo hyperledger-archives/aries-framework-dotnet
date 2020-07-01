@@ -25,7 +25,7 @@ using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.Options;
 using Hyperledger.Aries.Extensions;
-
+using FluentAssertions;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -232,7 +232,10 @@ namespace Hyperledger.Aries.Tests.Protocols
                 holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
                 {
                      new CredentialPreviewAttribute("first_name", "Test"),
-                     new CredentialPreviewAttribute("salary", "100000")
+                     new CredentialPreviewAttribute("last_name", "Test"),
+                     new CredentialPreviewAttribute("salary", "100000"),
+                     new CredentialPreviewAttribute("age", "25"),
+                     new CredentialPreviewAttribute("wellbeing", "100")
                 });
 
            
@@ -248,10 +251,24 @@ namespace Hyperledger.Aries.Tests.Protocols
                      {
                          Name = "first_name",
                          CredentialDefinitionId = holderCredential.CredentialDefinitionId,
-                         Referent = "Proof of First Name",
+                         Referent = "Proof of Name",
                          Value = "Joe"
+                     },
+                     new ProposedAttribute
+                     {
+                         Name = "last_name",
+                         CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                         Referent = "Proof of Name",
+                         Value = "Shmoe"
+                     },
+                     new ProposedAttribute
+                     {
+                         Name = "age",
+                         CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                         Referent = "Proof of Age",
+                         Value = "Shmoe"
                      }
-                 },
+                },
                 ProposedPredicates = new List<ProposedPredicate>
                 {
                     new ProposedPredicate
@@ -262,14 +279,25 @@ namespace Hyperledger.Aries.Tests.Protocols
                         Threshold = 99999,
                         Referent = "Proof of Salary > $99,999"
 
-                    }
-
+                    },
+                    new ProposedPredicate
+                     {
+                         Name = "wellbeing",
+                         CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                         Referent = "Proof of Wellbeing",
+                         Predicate = "<",
+                         Threshold = 99999
+                     }
                 }
             }, holderConnection.Id);
             Assert.NotNull(message);
 
+            // Process Proposal 
             record = await _proofService.ProcessProposalAsync(_issuerWallet, message, issuerConnection);
+
+            // 
             RequestPresentationMessage requestMessage;
+
             (requestMessage, record) = await _proofService.CreateRequestFromProposalAsync(_issuerWallet, new ProofRequestParameters
             {
                 Name = "Test",
@@ -279,17 +307,34 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             Assert.NotNull(requestMessage);
             Assert.NotNull(record);
+
+            var actualProofRequest = record.RequestJson.ToObject<ProofRequest>();
             var expectedProofRequest = new ProofRequest
             {
                 Name = "Test",
                 Version = "1.0",
-                Nonce = "thisismynonce",
+                Nonce = actualProofRequest.Nonce,
                 RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
                 {
                     {
-                        "Proof of First Name",new ProofAttributeInfo
+                        "Proof of Name",new ProofAttributeInfo
                         {
-                            Name="first_name",
+                            Name=null,
+                            Names= new string[] {"first_name", "last_name" },
+                            NonRevoked=null,
+                            Restrictions=new List<AttributeFilter>
+                            {
+                                new AttributeFilter
+                                {
+                                    CredentialDefinitionId = holderCredential.CredentialDefinitionId
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "Proof of Age", new ProofAttributeInfo
+                        {
+                            Name="age",
                             Names=null,
                             NonRevoked=null,
                             Restrictions=new List<AttributeFilter>
@@ -320,6 +365,23 @@ namespace Hyperledger.Aries.Tests.Protocols
                                 }
                             }
                         }
+                    },
+                    {
+                        "Proof of Wellbeing", new ProofPredicateInfo
+                        {
+                            Name = "wellbeing",
+                            Names = null,
+                            NonRevoked = null,
+                            PredicateType = "<",
+                            PredicateValue = 99999,
+                            Restrictions=new List<AttributeFilter>
+                            {
+                                new AttributeFilter
+                                {
+                                    CredentialDefinitionId = holderCredential.CredentialDefinitionId
+                                }
+                            }
+                        }
                     }
                 }
             };   
@@ -328,11 +390,8 @@ namespace Hyperledger.Aries.Tests.Protocols
                 State = ProofState.Requested,
                 RequestJson = expectedProofRequest.ToJson(),
             };
-            var actualProofRequest = record.RequestJson.ToObject<ProofRequest>();
-            Assert.Equal(expectedProofRequest.Name, actualProofRequest.Name);
-            Assert.Equal(expectedProofRequest.RequestedAttributes["Proof of First Name"].Restrictions[0].CredentialDefinitionId, actualProofRequest.RequestedAttributes["Proof of First Name"].Restrictions[0].CredentialDefinitionId);
-            Assert.Equal(expectedProofRequest.RequestedPredicates["Proof of Salary > $99,999"].Restrictions[0].CredentialDefinitionId, actualProofRequest.RequestedPredicates["Proof of Salary > $99,999"].Restrictions[0].CredentialDefinitionId);
-            Assert.Equal(expectedProofRecord.State, record.State);
+           
+            actualProofRequest.Should().BeEquivalentTo(expectedProofRequest);
         }
 
         [Fact]
@@ -361,6 +420,92 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 
+        [Fact]
+        public async Task CreateProofProposalSuccesfully()
+        {
+            var proposedAttributes = new List<ProposedAttribute>
+            {
+                new ProposedAttribute
+                {
+                    Name = "first_name",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Name",
+                    Value = "Joe"
+                },
+                new ProposedAttribute
+                {
+
+                    Name = "second_name",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Name",
+                    Value = "Joe"
+                },
+                new ProposedAttribute
+                {
+
+                    Name = "age",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Age",
+                    Value = "Joe"
+                }
+            };
+            var proposedPredicates =
+            new List<ProposedPredicate>
+            {
+                new ProposedPredicate
+                {
+                    Name = "salary",
+                    CredentialDefinitionId = "1",
+                    Predicate = ">",
+                    Threshold = 99999,
+                    Referent = "Proof of Salary > $99,999"
+
+                },
+                new ProposedPredicate
+                {
+                    Name = "test",
+                    CredentialDefinitionId = "1",
+                    Predicate = ">",
+                    Threshold = 99999,
+                    Referent = "Proof of Test > $99,999"
+
+                }
+
+            };
+
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+               _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            var proofProposal = new ProofProposal
+            {
+                Comment = "Hello, World",
+                ProposedAttributes = proposedAttributes,
+                ProposedPredicates = proposedPredicates
+            };
+
+            var (message, record) = await _proofService.CreateProposalAsync(_holderWallet, proofProposal, holderConnection.Id);
+
+            var expectedMessage = new ProposePresentationMessage
+            {
+                Id = message.Id,
+                Comment = "Hello, World",
+                PresentationPreviewMessage = new PresentationPreviewMessage
+                {
+                    Id = message.PresentationPreviewMessage.Id,
+                    ProposedAttributes = proposedAttributes.ToArray(),
+                    ProposedPredicates = proposedPredicates.ToArray()
+                }
+            };
+
+            message.Should().BeEquivalentTo(expectedMessage);
+
+        }
 
         [Fact]
         public async Task CreateProofProposalThrowsInvalidParameterFormat()

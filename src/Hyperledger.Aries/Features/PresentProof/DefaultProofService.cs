@@ -441,15 +441,22 @@ namespace Hyperledger.Aries.Features.PresentProof
                 var attrList = proofProposal.ProposedAttributes;
                 var referents = new Dictionary<string, ProposedAttribute>();
 
+                // Check if all attributes that share referent have same requirements
                 for (int i = 0; i < attrList.Count; i++)
                 {
                     var attr = attrList[i];
-                    if (referents.ContainsKey(attr.Referent) &&
-                      (referents[attr.Referent].IssuerDid != attr.IssuerDid ||
-                       referents[attr.Referent].SchemaId != attr.SchemaId ||
-                       referents[attr.Referent].CredentialDefinitionId != attr.CredentialDefinitionId))
+                    if (referents.ContainsKey(attr.Referent))
                     {
-                        throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "All attributes that share a referent must have identical filters");
+                        if(referents[attr.Referent].IssuerDid != attr.IssuerDid ||
+                           referents[attr.Referent].SchemaId != attr.SchemaId ||
+                           referents[attr.Referent].CredentialDefinitionId != attr.CredentialDefinitionId)
+                        {
+                            throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "All attributes that share a referent must have identical requirements");
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
                     else
                     {
@@ -466,12 +473,9 @@ namespace Hyperledger.Aries.Features.PresentProof
                 for (int i = 0; i < predList.Count; i++)
                 {
                     var pred = predList[i];
-                    if (referents.ContainsKey(pred.Referent) &&
-                      (referents[pred.Referent].IssuerDid != pred.IssuerDid ||
-                       referents[pred.Referent].SchemaId != pred.SchemaId ||
-                       referents[pred.Referent].CredentialDefinitionId != pred.CredentialDefinitionId))
+                    if (referents.ContainsKey(pred.Referent))
                     {
-                        throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "All predicates that share a referent must have identical filters");
+                        throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, "Proposed Predicates must all have unique referents");
                     }
                     else
                     {
