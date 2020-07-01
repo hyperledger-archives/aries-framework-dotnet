@@ -17,7 +17,8 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   {
     private readonly IServiceScopeFactory ServiceScopeFactory;
     private bool Disposed;
-    private WebApplicationFactory<Startup> WebApplicationFactory;
+    private FaberWebApplicationFactory FaberWebApplicationFactory;
+    private AliceWebApplicationFactory AliceWebApplicationFactory;
 
     public TestingConvention()
     {
@@ -56,9 +57,12 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 
     private void ConfigureTestServices(ServiceCollection aServiceCollection)
     {
-      WebApplicationFactory = new WebApplicationFactory<Startup>();
+      FaberWebApplicationFactory = new FaberWebApplicationFactory();
+      AliceWebApplicationFactory = new AliceWebApplicationFactory();
 
-      aServiceCollection.AddSingleton(WebApplicationFactory);
+      aServiceCollection.AddSingleton<WebApplicationFactory<Startup>>(FaberWebApplicationFactory);
+      aServiceCollection.AddSingleton(FaberWebApplicationFactory);
+      aServiceCollection.AddSingleton(AliceWebApplicationFactory);
       aServiceCollection.AddSingleton(new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
       aServiceCollection.AddSingleton(new JsonSerializerSettings());
       aServiceCollection.Scan
@@ -78,7 +82,8 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
         if (aIsDisposing)
         {
           Console.WriteLine("==== Disposing ====");
-          WebApplicationFactory?.Dispose();
+          FaberWebApplicationFactory?.Dispose();
+          AliceWebApplicationFactory?.Dispose();
           ServiceScopeFactory?.Dispose();
         }
         Disposed = true;
