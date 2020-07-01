@@ -25,7 +25,7 @@ using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.Options;
 using Hyperledger.Aries.Extensions;
-
+using FluentAssertions;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -232,6 +232,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                 holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
                 {
                      new CredentialPreviewAttribute("first_name", "Test"),
+                     new CredentialPreviewAttribute("last_name", "Test"),
                      new CredentialPreviewAttribute("salary", "100000")
                 });
 
@@ -248,8 +249,15 @@ namespace Hyperledger.Aries.Tests.Protocols
                      {
                          Name = "first_name",
                          CredentialDefinitionId = holderCredential.CredentialDefinitionId,
-                         Referent = "Proof of First Name",
+                         Referent = "Proof of Name",
                          Value = "Joe"
+                     },
+                     new ProposedAttribute
+                     {
+                         Name = "last_name",
+                         CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                         Referent = "Proof of Name",
+                         Value = "Shmoe"
                      }
                  },
                 ProposedPredicates = new List<ProposedPredicate>
@@ -268,8 +276,12 @@ namespace Hyperledger.Aries.Tests.Protocols
             }, holderConnection.Id);
             Assert.NotNull(message);
 
+            // Process Proposal 
             record = await _proofService.ProcessProposalAsync(_issuerWallet, message, issuerConnection);
+
+            // 
             RequestPresentationMessage requestMessage;
+
             (requestMessage, record) = await _proofService.CreateRequestFromProposalAsync(_issuerWallet, new ProofRequestParameters
             {
                 Name = "Test",
@@ -287,10 +299,10 @@ namespace Hyperledger.Aries.Tests.Protocols
                 RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
                 {
                     {
-                        "Proof of First Name",new ProofAttributeInfo
+                        "Proof of Name",new ProofAttributeInfo
                         {
-                            Name="first_name",
-                            Names=null,
+                            Name=null,
+                            Names= new string[] {"first_name", "last_name" },
                             NonRevoked=null,
                             Restrictions=new List<AttributeFilter>
                             {
@@ -330,7 +342,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             };
             var actualProofRequest = record.RequestJson.ToObject<ProofRequest>();
             Assert.Equal(expectedProofRequest.Name, actualProofRequest.Name);
-            Assert.Equal(expectedProofRequest.RequestedAttributes["Proof of First Name"].Restrictions[0].CredentialDefinitionId, actualProofRequest.RequestedAttributes["Proof of First Name"].Restrictions[0].CredentialDefinitionId);
+            Assert.Equal(expectedProofRequest.RequestedAttributes["Proof of Name"].Restrictions[0].CredentialDefinitionId, actualProofRequest.RequestedAttributes["Proof of Name"].Restrictions[0].CredentialDefinitionId);
             Assert.Equal(expectedProofRequest.RequestedPredicates["Proof of Salary > $99,999"].Restrictions[0].CredentialDefinitionId, actualProofRequest.RequestedPredicates["Proof of Salary > $99,999"].Restrictions[0].CredentialDefinitionId);
             Assert.Equal(expectedProofRecord.State, record.State);
         }
@@ -361,6 +373,92 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 
+        [Fact]
+        public async Task CreateProofProposalSuccesfully()
+        {
+            var proposedAttributes = new List<ProposedAttribute>
+            {
+                new ProposedAttribute
+                {
+                    Name = "first_name",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Name",
+                    Value = "Joe"
+                },
+                new ProposedAttribute
+                {
+
+                    Name = "second_name",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Name",
+                    Value = "Joe"
+                },
+                new ProposedAttribute
+                {
+
+                    Name = "age",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Age",
+                    Value = "Joe"
+                }
+            };
+            var proposedPredicates =
+            new List<ProposedPredicate>
+            {
+                new ProposedPredicate
+                {
+                    Name = "salary",
+                    CredentialDefinitionId = "1",
+                    Predicate = ">",
+                    Threshold = 99999,
+                    Referent = "Proof of Salary > $99,999"
+
+                },
+                new ProposedPredicate
+                {
+                    Name = "test",
+                    CredentialDefinitionId = "1",
+                    Predicate = ">",
+                    Threshold = 99999,
+                    Referent = "Proof of Test > $99,999"
+
+                }
+
+            };
+
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+               _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            var proofProposal = new ProofProposal
+            {
+                Comment = "Hello, World",
+                ProposedAttributes = proposedAttributes,
+                ProposedPredicates = proposedPredicates
+            };
+
+            var (message, record) = await _proofService.CreateProposalAsync(_holderWallet, proofProposal, holderConnection.Id);
+
+            var expectedMessage = new ProposePresentationMessage
+            {
+                Id = message.Id,
+                Comment = "Hello, World",
+                PresentationPreviewMessage = new PresentationPreviewMessage
+                {
+                    Id = message.PresentationPreviewMessage.Id,
+                    ProposedAttributes = proposedAttributes.ToArray(),
+                    ProposedPredicates = proposedPredicates.ToArray()
+                }
+            };
+
+            message.Should().BeEquivalentTo(expectedMessage);
+
+        }
 
         [Fact]
         public async Task CreateProofProposalThrowsInvalidParameterFormat()
