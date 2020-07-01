@@ -8,7 +8,7 @@
   public class Validate_Should
   {
     private ResetWalletRequestValidator ResetWalletRequestValidator { get; set; }
-    public ResetWalletRequest ResetWalletRequest { get; private set; }
+    private ResetWalletRequest ResetWalletRequest { get; set; }
 
     public Validate_Should()
     {
