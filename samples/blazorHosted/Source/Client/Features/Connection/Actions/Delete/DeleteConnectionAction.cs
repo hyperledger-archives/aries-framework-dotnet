@@ -7,6 +7,11 @@
     public class DeleteConnectionAction : BaseAction 
     {
       public string ConnectionId { get; set; }
+
+      public DeleteConnectionAction(string aConnectionId)
+      {
+        ConnectionId = aConnectionId;
+      }
     }
   }
 }

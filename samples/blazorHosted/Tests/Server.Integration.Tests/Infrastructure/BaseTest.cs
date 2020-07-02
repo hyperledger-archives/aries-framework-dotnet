@@ -100,9 +100,20 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
     {
       HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(aUri);
 
-      httpResponseMessage.EnsureSuccessStatusCode();
+      return await ReadFromJson<TResponse>(httpResponseMessage);
+    }
 
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+    protected async Task<TResponse> DeleteJsonAsync<TResponse>(string aUri)
+    {
+      HttpResponseMessage httpResponseMessage = await HttpClient.DeleteAsync(aUri);
+      return await ReadFromJson<TResponse>(httpResponseMessage);
+    }
+
+    private async Task<TResponse> ReadFromJson<TResponse>(HttpResponseMessage aHttpResponseMessage)
+    {
+      aHttpResponseMessage.EnsureSuccessStatusCode();
+
+      string json = await aHttpResponseMessage.Content.ReadAsStringAsync();
 
       TResponse response = JsonConvert.DeserializeObject<TResponse>(json, JsonSerializerSettings);
 

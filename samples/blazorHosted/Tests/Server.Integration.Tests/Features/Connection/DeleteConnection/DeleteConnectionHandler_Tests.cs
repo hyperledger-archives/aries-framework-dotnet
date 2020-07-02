@@ -1,38 +1,47 @@
-﻿//namespace DeleteConnectionHandler
-//{
-//  using System.Threading.Tasks;
-//  using System.Text.Json;
-//  using Microsoft.AspNetCore.Mvc.Testing;
-//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-//  using BlazorHosted.Features.Connections;
-//  using BlazorHosted.Server;
-//  using FluentAssertions;
+﻿namespace DeleteConnectionHandler
+{
+  using System.Threading.Tasks;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using BlazorHosted.Features.Connections;
+  using BlazorHosted.Server;
+  using FluentAssertions;
+  using Newtonsoft.Json;
 
-//  public class Handle_Returns : BaseTest
-//  {
-//    private readonly DeleteConnectionRequest DeleteConnectionRequest;
+  public class Handle_Returns : BaseTest
+  {
+    private DeleteConnectionRequest DeleteConnectionRequest { get; set; }
+    private CreateInvitationResponse CreateInvitationResponse { get; set; }
 
-//    public Handle_Returns
-//    (
-//      WebApplicationFactory<Startup> aWebApplicationFactory,
-//      JsonSerializerOptions aJsonSerializerOptions
-//    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
-//    {
-//      DeleteConnectionRequest = new DeleteConnectionRequest { Days = 10 };
-//    }
+    public Handle_Returns
+    (
+      WebApplicationFactory<Startup> aWebApplicationFactory,
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
+    {
+      DeleteConnectionRequest = new DeleteConnectionRequest("ConnectionId");
+    }
 
-//    public async Task DeleteConnectionResponse()
-//    {
-//      DeleteConnectionResponse DeleteConnectionResponse = await Send(DeleteConnectionRequest);
+    public async Task DeleteConnectionResponse()
+    {
+      DeleteConnectionRequest.ConnectionId = CreateInvitationResponse.ConnectionRecord.Id;
 
-//      ValidateDeleteConnectionResponse(DeleteConnectionResponse);
-//    }
+      DeleteConnectionResponse deleteConnectionResponse = await Send(DeleteConnectionRequest);
 
-//    private void ValidateDeleteConnectionResponse(DeleteConnectionResponse aDeleteConnectionResponse)
-//    {
-//      aDeleteConnectionResponse.CorrelationId.Should().Be(DeleteConnectionRequest.CorrelationId);
-//      // check Other properties here
-//    }
+      ValidateDeleteConnectionResponse(DeleteConnectionRequest, deleteConnectionResponse);
 
-//  }
-//}
+      //Confirm it is deleted
+
+      GetConnectionResponse getConnectionResponse = await Send(new GetConnectionRequest(CreateInvitationResponse.ConnectionRecord.Id));
+      getConnectionResponse.ConnectionRecord.Should().BeNull();
+
+    }
+
+
+    public async Task Setup()
+    {
+      await ResetAgent();
+      CreateInvitationResponse = await CreateAnInvitation();
+    }
+  }
+}

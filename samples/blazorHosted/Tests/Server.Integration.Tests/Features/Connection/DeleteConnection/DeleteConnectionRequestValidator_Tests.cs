@@ -1,30 +1,48 @@
-﻿//namespace DeleteConnectionRequestValidator_
-//{
-//  using FluentAssertions;
-//  using FluentValidation.Results;
-//  using FluentValidation.TestHelper;
-//  using BlazorHosted.Features.Connections;
+﻿namespace DeleteConnectionRequestValidator_
+{
+  using FluentAssertions;
+  using FluentValidation.Results;
+  using FluentValidation.TestHelper;
+  using BlazorHosted.Features.Connections;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using Newtonsoft.Json;
+  using BlazorHosted.Server;
 
-//  public class Validate_Should
-//  {
-//    private DeleteConnectionRequestValidator DeleteConnectionRequestValidator { get; set; }
+  public class Validate_Should: BaseTest
+  {
+    private DeleteConnectionRequestValidator DeleteConnectionRequestValidator { get; set; }
+    private DeleteConnectionRequest DeleteConnectionRequest { get; set; }
 
-//    public void Be_Valid()
-//    {
-//      var __requestName__Request = new DeleteConnectionRequest
-//      {
-//        // Set Valid values here
-//        Days = 5
-//      };
+    public Validate_Should
+    (
+      WebApplicationFactory<Startup> aWebApplicationFactory,
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
+    {
+      DeleteConnectionRequestValidator = new DeleteConnectionRequestValidator();
+      DeleteConnectionRequest = new DeleteConnectionRequest("ConnectionId");
+    }
 
-//      ValidationResult validationResult = DeleteConnectionRequestValidator.TestValidate(__requestName__Request);
+    public void Be_Valid()
+    {
+      ValidationResult validationResult = DeleteConnectionRequestValidator.TestValidate(DeleteConnectionRequest);
 
-//      validationResult.IsValid.Should().BeTrue();
-//    }
+      validationResult.IsValid.Should().BeTrue();
+    }
 
-//    public void Have_error_when_Days_are_negative() => DeleteConnectionRequestValidator
-//      .ShouldHaveValidationErrorFor(aDeleteConnectionRequest => aDeleteConnectionRequest.Days, -1);
+    public void Have_error_when_ConnectionId_is_empty() => DeleteConnectionRequestValidator
+      .ShouldHaveValidationErrorFor(aDeleteConnectionRequest => aDeleteConnectionRequest.ConnectionId, string.Empty);
 
-//    public void Setup() => DeleteConnectionRequestValidator = new DeleteConnectionRequestValidator();
-//  }
-//}
+    public void Have_error_when_ConnectionId_is_null()
+    {
+      DeleteConnectionRequest.ConnectionId = null;
+      DeleteConnectionRequestValidator
+        .ShouldHaveValidationErrorFor
+        (
+          aDeleteConnectionRequest => aDeleteConnectionRequest.ConnectionId, 
+          DeleteConnectionRequest
+        );
+    }
+  }
+}

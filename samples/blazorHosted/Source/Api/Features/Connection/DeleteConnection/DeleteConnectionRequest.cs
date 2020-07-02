@@ -1,7 +1,8 @@
 namespace BlazorHosted.Features.Connections
 {
-  using MediatR;
   using BlazorHosted.Features.Bases;
+  using Dawn;
+  using MediatR;
 
   public class DeleteConnectionRequest : BaseApiRequest, IRequest<DeleteConnectionResponse>
   {
@@ -13,8 +14,16 @@ namespace BlazorHosted.Features.Connections
     /// <example>Connection identifier</example>
     public string ConnectionId { get; set; } = null!;
 
+    public DeleteConnectionRequest() { }
+
+    public DeleteConnectionRequest(string aConnectionId)
+    {
+      ConnectionId = aConnectionId;
+    }
+
     internal override string GetRoute()
     {
+      ConnectionId = Guard.Argument(ConnectionId, nameof(ConnectionId)).NotNull().NotEmpty();
       string temp = RouteTemplate.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
       return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
     }

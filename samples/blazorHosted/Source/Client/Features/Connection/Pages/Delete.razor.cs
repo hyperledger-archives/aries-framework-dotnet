@@ -4,6 +4,8 @@ namespace BlazorHosted.Features.Connections.Pages
   using System.Threading.Tasks;
   using BlazorHosted.Features.Bases;
   using Microsoft.AspNetCore.Components;
+  using static BlazorHosted.Features.Connections.ConnectionState;
+  using static BlazorState.Features.Routing.RouteState;
 
   public partial class Delete: BaseComponent
   {
@@ -15,13 +17,13 @@ namespace BlazorHosted.Features.Connections.Pages
 
     [Parameter] public string ConnectionId { get; set; }
 
-    //protected async Task DeleteClick()
-    //{
-    //  _ = await Mediator.Send(new DeleteCatalogItemAction { CatalogItemId = EntityId });
-    //  _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Index.RouteTemplate });
-    //}
+    protected async Task DeleteClick()
+    {
+      _ = await Mediator.Send(new DeleteConnectionAction(ConnectionId));
+      _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Index.RouteTemplate });
+    }
 
-    //protected async Task CancelClick() =>
-    //  _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Index.RouteTemplate });
+    protected async Task CancelClick() =>
+      _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Index.RouteTemplate });
   }
 }
