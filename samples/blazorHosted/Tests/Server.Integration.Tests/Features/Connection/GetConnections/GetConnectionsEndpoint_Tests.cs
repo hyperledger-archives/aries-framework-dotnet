@@ -1,54 +1,54 @@
-﻿//namespace GetConnectionsEndpoint
-//{
-//  using FluentAssertions;
-//  using Microsoft.AspNetCore.Mvc.Testing;
-//  using System.Net;
-//  using System.Net.Http;
-//  using System.Text.Json;
-//  using System.Threading.Tasks;
-//  using BlazorHosted.Features.Connections;
-//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-//  using BlazorHosted.Server;
+﻿namespace GetConnectionsEndpoint
+{
+  using FluentAssertions;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using System.Net;
+  using System.Net.Http;
+  using System.Text.Json;
+  using System.Threading.Tasks;
+  using BlazorHosted.Features.Connections;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using BlazorHosted.Server;
+  using Newtonsoft.Json;
+  using System.Net.Http.Json;
 
-//  public class Returns : BaseTest
-//  {
-//    private readonly GetConnectionsRequest GetConnectionsRequest;
+  public class Returns : BaseTest
+  {
+    private readonly GetConnectionsRequest GetConnectionsRequest;
 
-//    public Returns
-//    (
-//      WebApplicationFactory<Startup> aWebApplicationFactory,
-//      JsonSerializerOptions aJsonSerializerOptions
-//    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
-//    {
-//      GetConnectionsRequest = new GetConnectionsRequest { Days = 10 };
-//    }
+    public Returns
+    (
+      WebApplicationFactory<Startup> aWebApplicationFactory,
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
+    {
+      GetConnectionsRequest = new GetConnectionsRequest();
+    }
 
-//    public async Task GetConnectionsResponse()
-//    {
-//      GetConnectionsResponse GetConnectionsResponse =
-//        await GetJsonAsync<GetConnectionsResponse>(GetConnectionsRequest.GetRoute());
+    public async Task GetConnectionsResponse_using_Json_Net()
+    {
 
-//      ValidateGetConnectionsResponse(GetConnectionsResponse);
-//    }
+      GetConnectionsResponse getConnectionsResponse =
+        await GetJsonAsync<GetConnectionsResponse>(GetConnectionsRequest.GetRoute());
 
-//    public async Task ValidationError()
-//    {
-//      // Set invalid value
-//      GetConnectionsRequest.Days = -1;
+      ValidateGetConnectionsResponse(GetConnectionsRequest, getConnectionsResponse);
+    }
 
-//      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(GetConnectionsRequest.GetRoute());
+    public async Task GetConnectionsResponse_using_System_Text_Json()
+    {
+      GetConnectionsResponse getConnectionsResponse =
+        await HttpClient.GetFromJsonAsync<GetConnectionsResponse>(GetConnectionsRequest.GetRoute());
 
-//      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+      ValidateGetConnectionsResponse(GetConnectionsRequest, getConnectionsResponse);
+    }
 
-//      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-//      json.Should().Contain("errors");
-//      json.Should().Contain(nameof(GetConnectionsRequest.Days));
-//    }
+    // There are no validation requirements for this request
+    public void ValidationError() { }
 
-//    private void ValidateGetConnectionsResponse(GetConnectionsResponse aGetConnectionsResponse)
-//    {
-//      aGetConnectionsResponse.CorrelationId.Should().Be(GetConnectionsRequest.CorrelationId);
-//      // check Other properties here
-//    }
-//  }
-//}
+    public async Task Setup()
+    {
+      await ResetAgent();
+      await CreateAnInvitation();
+    }
+  }
+}
