@@ -9,12 +9,9 @@ namespace BlazorHosted.Features.Connections
   public class GetConnectionsEndpoint : BaseEndpoint<GetConnectionsRequest, GetConnectionsResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Return all ConnectionRecords 
     /// </summary>
-    /// <remarks>
-    /// Longer Description
-    /// </remarks>
-    /// <param name="aGetConnectionsRequest"></param>
+    /// <param name="aGetConnectionsRequest"><see cref="GetConnectionsRequest"/></param>
     /// <returns><see cref="GetConnectionsResponse"/></returns>
     [HttpGet(GetConnectionsRequest.RouteTemplate)]
     [SwaggerOperation(Tags = new[] { FeatureAnnotations.FeatureGroup })]
