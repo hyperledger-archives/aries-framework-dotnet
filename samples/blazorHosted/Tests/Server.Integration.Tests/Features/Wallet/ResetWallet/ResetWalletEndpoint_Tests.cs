@@ -1,54 +1,47 @@
-﻿//namespace ResetWalletEndpoint
-//{
-//  using FluentAssertions;
-//  using Microsoft.AspNetCore.Mvc.Testing;
-//  using System.Net;
-//  using System.Net.Http;
-//  using System.Threading.Tasks;
-//  using BlazorHosted.Features.Wallets;
-//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-//  using BlazorHosted.Server;
-//  using Newtonsoft.Json;
+﻿namespace ResetWalletEndpoint
+{
+  using BlazorHosted.Features.Wallets;
+  using BlazorHosted.Server;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using Newtonsoft.Json;
+  using System.Net.Http;
+  using System.Net.Http.Json;
+  using System.Threading.Tasks;
 
-//  public class Returns : BaseTest
-//  {
-//    private readonly ResetWalletRequest ResetWalletRequest;
+  public class Returns : BaseTest
+  {
+    private readonly ResetWalletRequest ResetWalletRequest;
 
-//    public Returns
-//    (
-//      WebApplicationFactory<Startup> aWebApplicationFactory,
-//      JsonSerializerSettings aJsonSerializerSettings
-//    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
-//    {
-//      ResetWalletRequest = new ResetWalletRequest { SampleProperty = 10 };
-//    }
+    public Returns
+    (
+      WebApplicationFactory<Startup> aWebApplicationFactory,
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
+    {
+      ResetWalletRequest = new ResetWalletRequest();
+    }
 
-//    public async Task ResetWalletResponse()
-//    {
-//      ResetWalletResponse ResetWalletResponse =
-//        await GetJsonAsync<ResetWalletResponse>(ResetWalletRequest.GetRoute());
+    public async Task ResetWalletResponse_using_Json_Net()
+    {
+      ResetWalletResponse resetWalletResponse =
+        await Post<ResetWalletResponse>(ResetWalletRequest.GetRoute(), ResetWalletRequest);
 
-//      ValidateResetWalletResponse(ResetWalletResponse);
-//    }
+      ValidateResetWalletResponse(ResetWalletRequest, resetWalletResponse);
+    }
 
-//    public async Task ValidationError()
-//    {
-//      // Set invalid value
-//      //ResetWalletRequest.SampleProperty = -1;
+    public async Task ResetWalletResponse_using_System_Text_Json()
+    {
+      HttpResponseMessage httpResponseMessage =
+        await HttpClient.PostAsJsonAsync<ResetWalletRequest>(ResetWalletRequest.GetRoute(), ResetWalletRequest);
 
-//      HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(ResetWalletRequest.GetRoute());
+      ResetWalletResponse resetWalletResponse =
+        await httpResponseMessage.Content.ReadFromJsonAsync<ResetWalletResponse>();
 
-//      string json = await httpResponseMessage.Content.ReadAsStringAsync();
+      ValidateResetWalletResponse(ResetWalletRequest, resetWalletResponse);
+    }
 
-//      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-//      json.Should().Contain("errors");
-//      json.Should().Contain(nameof(ResetWalletRequest.SampleProperty));
-//    }
-
-//    private void ValidateResetWalletResponse(ResetWalletResponse aResetWalletResponse)
-//    {
-//      aResetWalletResponse.CorrelationId.Should().Be(ResetWalletRequest.CorrelationId);
-//      // check Other properties here
-//    }
-//  }
-//}
+    // There are no validation requirements for this request
+    public void ValidationError() { }
+  }
+}

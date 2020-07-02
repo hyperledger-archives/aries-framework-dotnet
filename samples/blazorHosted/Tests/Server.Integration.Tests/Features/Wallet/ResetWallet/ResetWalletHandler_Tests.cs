@@ -1,38 +1,44 @@
-﻿//namespace ResetWalletHandler
-//{
-//  using System.Threading.Tasks;
-//  using System.Text.Json;
-//  using Microsoft.AspNetCore.Mvc.Testing;
-//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-//  using BlazorHosted.Features.Wallets;
-//  using BlazorHosted.Server;
-//  using FluentAssertions;
+﻿namespace ResetWalletHandler
+{
+  using BlazorHosted.Features.Connections;
+  using BlazorHosted.Features.Wallets;
+  using BlazorHosted.Server;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using FluentAssertions;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using Newtonsoft.Json;
+  using System.Threading.Tasks;  
 
-//  public class Handle_Returns : BaseTest
-//  {
-//    private readonly ResetWalletRequest ResetWalletRequest;
+  public class Handle_Returns : BaseTest
+  {
+    private readonly ResetWalletRequest ResetWalletRequest;
 
-//    public Handle_Returns
-//    (
-//      WebApplicationFactory<Startup> aWebApplicationFactory,
-//      JsonSerializerOptions aJsonSerializerOptions
-//    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
-//    {
-//      ResetWalletRequest = new ResetWalletRequest { Days = 10 };
-//    }
+    public Handle_Returns
+    (
+      WebApplicationFactory<Startup> aWebApplicationFactory,
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
+    {
+      ResetWalletRequest = new ResetWalletRequest();
+    }
 
-//    public async Task ResetWalletResponse()
-//    {
-//      ResetWalletResponse ResetWalletResponse = await Send(ResetWalletRequest);
+    public async Task ResetWalletResponse_and_reset_wallet()
+    {
+      // Arrage
+      // Add something to the wallet 
+      await CreateAnInvitation();
 
-//      ValidateResetWalletResponse(ResetWalletResponse);
-//    }
+      //Act
+      ResetWalletResponse resetWalletResponse = await Send(ResetWalletRequest);
 
-//    private void ValidateResetWalletResponse(ResetWalletResponse aResetWalletResponse)
-//    {
-//      aResetWalletResponse.CorrelationId.Should().Be(ResetWalletRequest.CorrelationId);
-//      // check Other properties here
-//    }
+      // See what is in the wallet
+      GetConnectionsRequest getConnectionsRequest = CreateValidGetConnectionsRequest();
+      GetConnectionsResponse getConnectionsResponse = await Send(getConnectionsRequest);
 
-//  }
-//}
+      // Assert Item created isn't there
+      getConnectionsResponse.ConnectionRecords.Count.Should().Be(0);
+
+      ValidateResetWalletResponse(ResetWalletRequest, resetWalletResponse);
+    }
+  }
+}

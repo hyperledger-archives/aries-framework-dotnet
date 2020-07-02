@@ -9,7 +9,8 @@ namespace BlazorHosted.Features.Wallets
   public class ResetWalletEndpoint : BaseEndpoint<ResetWalletRequest, ResetWalletResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Caution! All Data will be lost.
+    /// Delete and Create New Wallet and reprovistion the Agent.
     /// </summary>
     /// <param name="aResetWalletRequest"><see cref="ResetWalletRequest"/></param>
     /// <returns><see cref="ResetWalletResponse"/></returns>

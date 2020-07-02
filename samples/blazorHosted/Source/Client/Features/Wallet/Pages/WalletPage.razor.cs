@@ -16,6 +16,8 @@
     public string Uri => WalletState?.ProvisioningRecord?.Endpoint?.Uri;
     public string Name => WalletState?.ProvisioningRecord?.Owner?.Name;
 
+    internal void ResetClick() => Mediator.Send(new ResetWalletAction());
+
     protected override async Task OnInitializedAsync() =>
      _ = await Mediator.Send(new FetchWalletAction());
 
