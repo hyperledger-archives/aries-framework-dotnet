@@ -1,12 +1,11 @@
 ﻿namespace CreateInvitationHandler
 {
-  using System.Threading.Tasks;
-  using Microsoft.AspNetCore.Mvc.Testing;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
   using BlazorHosted.Features.Connections;
   using BlazorHosted.Server;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using Microsoft.AspNetCore.Mvc.Testing;
   using Newtonsoft.Json;
-  using TestHelpers;
+  using System.Threading.Tasks;
 
   public class Handle_Returns : BaseTest
   {
@@ -18,14 +17,14 @@
       JsonSerializerSettings aJsonSerializerSettings
     ) : base(aWebApplicationFactory, aJsonSerializerSettings)
     {
-      CreateInvitationRequest = CreateInvitationTestHelper.CreateValidCreateInvitationRequest();
+      CreateInvitationRequest = CreateValidCreateInvitationRequest();
     }
 
     public async Task CreateInvitationResponse()
     {
       CreateInvitationResponse createInvitationResponse = await Send(CreateInvitationRequest);
 
-      CreateInvitationTestHelper.ValidateCreateInvitationResponse(CreateInvitationRequest, createInvitationResponse);
+      ValidateCreateInvitationResponse(CreateInvitationRequest, createInvitationResponse);
     }
   }
 }

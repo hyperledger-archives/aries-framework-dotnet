@@ -1,21 +1,28 @@
 ﻿namespace CreateInvitationRequestValidator_
 {
+  using BlazorHosted.Features.Connections;
+  using BlazorHosted.Server;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
   using FluentAssertions;
   using FluentValidation.Results;
   using FluentValidation.TestHelper;
-  using BlazorHosted.Features.Connections;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using Newtonsoft.Json;
   using System.Linq;
-  using TestHelpers;
-
-  public class Validate_Should
+  
+  public class Validate_Should : BaseTest
   {
-    private CreateInvitationRequestValidator CreateInvitationRequestValidator { get; set; }
     private CreateInvitationRequest CreateInvitationRequest { get; set; }
+    private CreateInvitationRequestValidator CreateInvitationRequestValidator { get; set; }
 
-    public Validate_Should()
+    public Validate_Should
+    (
+      WebApplicationFactory<Startup> aWebApplicationFactory,
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
     {
       CreateInvitationRequestValidator = new CreateInvitationRequestValidator();
-      CreateInvitationRequest = CreateInvitationTestHelper.CreateValidCreateInvitationRequest();
+      CreateInvitationRequest = CreateValidCreateInvitationRequest();
     }
 
     public void Be_Valid()
@@ -23,14 +30,6 @@
       ValidationResult validationResult = CreateInvitationRequestValidator.TestValidate(CreateInvitationRequest);
 
       validationResult.IsValid.Should().BeTrue();
-    }
-
-    public void Have_error_when_InvitationConfiguration_is_null()
-    {
-      CreateInvitationRequest.InviteConfiguration = null;
-
-      ValidationResult validationResult = CreateInvitationRequestValidator.TestValidate(CreateInvitationRequest);
-      validationResult.Errors.Count.Should().BeGreaterOrEqualTo(1);
     }
 
     public void Have_error_when_AutoAccept_is_false()
@@ -42,9 +41,17 @@
       validationResult.Errors.First().PropertyName.Should()
         .Be
         (
-          $"{nameof(CreateInvitationRequest.InviteConfiguration)}." + 
+          $"{nameof(CreateInvitationRequest.InviteConfiguration)}." +
           $"{nameof(CreateInvitationRequest.InviteConfiguration.AutoAcceptConnection)}"
         );
+    }
+
+    public void Have_error_when_InvitationConfiguration_is_null()
+    {
+      CreateInvitationRequest.InviteConfiguration = null;
+
+      ValidationResult validationResult = CreateInvitationRequestValidator.TestValidate(CreateInvitationRequest);
+      validationResult.Errors.Count.Should().BeGreaterOrEqualTo(1);
     }
   }
 }
