@@ -1,38 +1,39 @@
-﻿//namespace GetConnectionHandler
-//{
-//  using System.Threading.Tasks;
-//  using System.Text.Json;
-//  using Microsoft.AspNetCore.Mvc.Testing;
-//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-//  using BlazorHosted.Features.Connections;
-//  using BlazorHosted.Server;
-//  using FluentAssertions;
+﻿namespace GetConnectionHandler_
+{
+  using System.Threading.Tasks;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using BlazorHosted.Features.Connections;
+  using BlazorHosted.Server;
+  using FluentAssertions;
+  using Newtonsoft.Json;
 
-//  public class Handle_Returns : BaseTest
-//  {
-//    private readonly GetConnectionRequest GetConnectionRequest;
+  public class Handle_Returns : BaseTest
+  {
+    private readonly GetConnectionRequest GetConnectionRequest;
 
-//    public Handle_Returns
-//    (
-//      WebApplicationFactory<Startup> aWebApplicationFactory,
-//      JsonSerializerOptions aJsonSerializerOptions
-//    ) : base(aWebApplicationFactory, aJsonSerializerOptions)
-//    {
-//      GetConnectionRequest = new GetConnectionRequest { Days = 10 };
-//    }
+    public Handle_Returns
+    (
+      WebApplicationFactory<Startup> aWebApplicationFactory,
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
+    {
+      GetConnectionRequest = CreateValidGetConnectionRequest();
+    }
 
-//    public async Task GetConnectionResponse()
-//    {
-//      GetConnectionResponse GetConnectionResponse = await Send(GetConnectionRequest);
+    public async Task GetConnectionResponse()
+    {
+      // Arrange
+      CreateInvitationResponse createInvitationResponse = await CreateAnInvitation();
+      GetConnectionRequest.ConnectionId = createInvitationResponse.ConnectionRecord.Id;
 
-//      ValidateGetConnectionResponse(GetConnectionResponse);
-//    }
+      //Act
+      GetConnectionResponse GetConnectionResponse = await Send(GetConnectionRequest);
 
-//    private void ValidateGetConnectionResponse(GetConnectionResponse aGetConnectionResponse)
-//    {
-//      aGetConnectionResponse.CorrelationId.Should().Be(GetConnectionRequest.CorrelationId);
-//      // check Other properties here
-//    }
+      //Assert
+      ValidateGetConnectionResponse(GetConnectionRequest, GetConnectionResponse);
+    }
 
-//  }
-//}
+    public async Task Setup() => await ResetAgent();
+  }
+}

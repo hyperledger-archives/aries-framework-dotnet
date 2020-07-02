@@ -8,7 +8,7 @@
   {
     public MappingProfile()
     {
-      CreateMap<ConnectionInvitationMessage, InvitationDto>();
+      //CreateMap<ConnectionInvitationMessage, InvitationDto>();
       CreateMap<ConnectionRecord, CreateInvitationResponse>();
     }
   }

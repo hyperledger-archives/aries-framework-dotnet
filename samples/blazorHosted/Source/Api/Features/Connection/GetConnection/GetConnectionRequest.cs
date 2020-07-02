@@ -2,6 +2,7 @@ namespace BlazorHosted.Features.Connections
 {
   using MediatR;
   using BlazorHosted.Features.Bases;
+  using Dawn;
 
   public class GetConnectionRequest : BaseApiRequest, IRequest<GetConnectionResponse>
   {
@@ -15,6 +16,8 @@ namespace BlazorHosted.Features.Connections
 
     internal override string GetRoute()
     {
+      ConnectionId = Guard.Argument(ConnectionId, nameof(ConnectionId)).NotNull().NotEmpty();
+
       string temp = RouteTemplate.Replace($"{{{nameof(ConnectionId)}}}", ConnectionId, System.StringComparison.Ordinal);
       return $"{temp}?{nameof(CorrelationId)}={CorrelationId}";
     }

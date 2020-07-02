@@ -5,6 +5,7 @@ namespace BlazorHosted.Features.Connections
   using MediatR;
   using Newtonsoft.Json;
   using System.Net.Http;
+  using System.Net.Http.Json;
   using System.Threading;
   using System.Threading.Tasks;
 
@@ -26,9 +27,9 @@ namespace BlazorHosted.Features.Connections
       )
       {
         var getConnectionRequest = new GetConnectionRequest(aFetchConnectionAction.ConnectionId);
-        HttpResponseMessage httpResponseMessage = await HttpClient.GetAsync(getConnectionRequest.GetRoute());
-        string json = await httpResponseMessage.Content.ReadAsStringAsync();
-        GetConnectionResponse getConnectionResponse = JsonConvert.DeserializeObject<GetConnectionResponse>(json);
+        GetConnectionResponse getConnectionResponse =
+          await HttpClient.GetFromJsonAsync<GetConnectionResponse>(getConnectionRequest.GetRoute());
+
         if(getConnectionResponse.ConnectionRecord != null)
         {
           ConnectionState._ConnectionRecords[getConnectionResponse.ConnectionRecord.Id] = getConnectionResponse.ConnectionRecord;

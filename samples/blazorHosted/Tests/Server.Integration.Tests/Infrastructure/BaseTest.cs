@@ -14,7 +14,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   using System.Threading.Tasks;
 
   /// <summary>
-  /// BaseTest case 
+  /// BaseTest case
   /// </summary>
   /// <remarks>
   /// Based on Jimmy's SliceFixture
@@ -31,6 +31,47 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
       ServiceScopeFactory = aWebApplicationFactory.Services.GetService<IServiceScopeFactory>();
       HttpClient = aWebApplicationFactory.CreateClient();
       JsonSerializerSettings = aJsonSerializerSettings;
+    }
+
+    internal Task Send(IRequest aRequest)
+    {
+      return ExecuteInScope
+      (
+        aServiceProvider =>
+        {
+          IMediator mediator = aServiceProvider.GetService<IMediator>();
+
+          return mediator.Send(aRequest);
+        }
+      );
+    }
+
+    internal Task<TResponse> Send<TResponse>(IRequest<TResponse> aRequest)
+    {
+      return ExecuteInScope
+      (
+        aServiceProvider =>
+        {
+          IMediator mediator = aServiceProvider.GetService<IMediator>();
+
+          return mediator.Send(aRequest);
+        }
+      );
+    }
+
+    protected async Task ConfirmEndpointValidationError<TResponse>(string aRoute, IRequest<TResponse> aRequest, string aAttributeName)
+    {
+      HttpResponseMessage httpResponseMessage = await GetHttpResponseMessageFromPost(aRoute, aRequest);
+      await ConfirmEndpointValidationError(httpResponseMessage, aAttributeName);
+    }
+
+    protected async Task ConfirmEndpointValidationError(HttpResponseMessage aHttpResponseMessage, string aAttributeName)
+    {
+      string json = await aHttpResponseMessage.Content.ReadAsStringAsync();
+
+      aHttpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+      json.Should().Contain("errors");
+      json.Should().Contain(aAttributeName);
     }
 
     protected async Task<T> ExecuteInScope<T>(Func<IServiceProvider, Task<T>> aAction)
@@ -79,43 +120,6 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
       TResponse response = JsonConvert.DeserializeObject<TResponse>(json, JsonSerializerSettings);
 
       return response;
-    }
-
-    internal Task Send(IRequest aRequest)
-    {
-      return ExecuteInScope
-      (
-        aServiceProvider =>
-        {
-          IMediator mediator = aServiceProvider.GetService<IMediator>();
-
-          return mediator.Send(aRequest);
-        }
-      );
-    }
-
-    internal Task<TResponse> Send<TResponse>(IRequest<TResponse> aRequest)
-    {
-      return ExecuteInScope
-      (
-        aServiceProvider =>
-        {
-          IMediator mediator = aServiceProvider.GetService<IMediator>();
-
-          return mediator.Send(aRequest);
-        }
-      );
-    }
-
-    protected async Task ConfirmEndpointValidationError<TResponse>(string aRoute, IRequest<TResponse> aRequest, string aAttributeName)
-    {
-      HttpResponseMessage httpResponseMessage = await GetHttpResponseMessageFromPost(aRoute, aRequest);
-
-      string json = await httpResponseMessage.Content.ReadAsStringAsync();
-
-      httpResponseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-      json.Should().Contain("errors");
-      json.Should().Contain(aAttributeName);
     }
   }
 }

@@ -3,6 +3,7 @@ namespace BlazorHosted.Features.Connections.Pages
   using System.Threading.Tasks;
   using BlazorHosted.Features.Bases;
   using Microsoft.AspNetCore.Components;
+  using static BlazorHosted.Features.Connections.ConnectionState;
   using static BlazorState.Features.Routing.RouteState;
 
   public partial class Details : BaseComponent
@@ -17,5 +18,11 @@ namespace BlazorHosted.Features.Connections.Pages
 
     protected async Task BackClick() =>
       _ = await Mediator.Send(new ChangeRouteAction { NewRoute = Index.GetRoute() });
+
+    protected override async Task OnInitializedAsync()
+    {
+      _ = await Mediator.Send(new FetchConnectionAction(ConnectionId));
+      await base.OnInitializedAsync();
+    }
   }
 }

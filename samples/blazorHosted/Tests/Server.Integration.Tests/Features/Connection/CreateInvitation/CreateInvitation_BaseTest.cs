@@ -7,9 +7,9 @@
 
   public partial class BaseTest
   {
-    internal async Task CreateAnInvitation()
+    internal async Task<CreateInvitationResponse> CreateAnInvitation()
     {
-      _ = await Send(CreateValidCreateInvitationRequest());
+      return await Send(CreateValidCreateInvitationRequest());
     }
 
     internal CreateInvitationRequest CreateValidCreateInvitationRequest()
