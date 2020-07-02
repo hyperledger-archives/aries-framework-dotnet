@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.Schemas
 
   public class CreateSchemaRequest : BaseApiRequest, IRequest<CreateSchemaResponse>
   {
-    public const string RouteTemplate = "api/schemas";
+    public const string RouteTemplate = BaseRequest.BaseUri + "schemas";
 
     /// <summary>
     /// The list of Attribute Names to be incldude in the Schema.

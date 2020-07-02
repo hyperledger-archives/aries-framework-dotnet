@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Schemas
 
   public class GetSchemaRequest : BaseApiRequest, IRequest<GetSchemaResponse>
   {
-    public const string RouteTemplate = "api/schemas/{SchemaId}";
+    public const string RouteTemplate = BaseRequest.BaseUri + "schemas/{SchemaId}";
 
     /// <summary>
     /// Id of the Schema to return

@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Healths
 
   public class GetHealthRequest : BaseApiRequest, IRequest<GetHealthResponse>
   {
-    public const string RouteTemplate = "api/Health/GetHealth";
+    public const string RouteTemplate = BaseRequest.BaseUri + "Health/GetHealth";
 
     /// <summary>
     /// The Number of days of forecasts to get

@@ -7,7 +7,7 @@ namespace BlazorHosted.Features.IssueCredentials
 
   public class OfferCredentialRequest : BaseApiRequest, IRequest<OfferCredentialResponse>
   {
-    public const string RouteTemplate = "api/issue-credential/send-offer";
+    public const string RouteTemplate = BaseRequest.BaseUri + "issue-credential/send-offer";
 
     /// <summary>
     /// The ConnectionId to use to send the offer

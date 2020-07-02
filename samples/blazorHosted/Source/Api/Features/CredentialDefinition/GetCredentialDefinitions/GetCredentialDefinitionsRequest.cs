@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
 
   public class GetCredentialDefinitionsRequest : BaseApiRequest, IRequest<GetCredentialDefinitionsResponse>
   {
-    public const string RouteTemplate = "api/credential-definitions";
+    public const string RouteTemplate = BaseRequest.BaseUri + "credential-definitions";
 
     internal override string GetRoute() => $"{RouteTemplate}?{nameof(CorrelationId)}={CorrelationId}";
   }

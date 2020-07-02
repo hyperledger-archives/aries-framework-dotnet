@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.PresentProofs
 
   public class GetCredentialsForProofRequest : BaseApiRequest, IRequest<GetCredentialsForProofResponse>
   {
-    public const string RouteTemplate = "api/present-proof/records/{ProofId}/credentials";
+    public const string RouteTemplate = BaseRequest.BaseUri + "present-proof/records/{ProofId}/credentials";
 
     /// <summary>
     /// Set Properties and Update Docs

@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Credentials
 
   public class GetCredentialRequest : BaseApiRequest, IRequest<GetCredentialResponse>
   {
-    public const string RouteTemplate = "api/credentials/{CredentialId}";
+    public const string RouteTemplate = BaseRequest.BaseUri + "credentials/{CredentialId}";
 
     /// <summary>
     /// The Id of the Credential to return

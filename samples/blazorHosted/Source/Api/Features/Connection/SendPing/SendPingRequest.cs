@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Connections
 
   public class SendPingRequest : BaseApiRequest, IRequest<SendPingResponse>
   {
-    public const string RouteTemplate = "api/connections/{ConnectionId}/send-ping";
+    public const string RouteTemplate = BaseRequest.BaseUri + "connections/{ConnectionId}/send-ping";
 
     /// <summary>
     /// The Id of the Connection to use to send the message

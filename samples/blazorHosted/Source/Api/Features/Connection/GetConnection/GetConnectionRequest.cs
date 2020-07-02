@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.Connections
 
   public class GetConnectionRequest : BaseApiRequest, IRequest<GetConnectionResponse>
   {
-    public const string RouteTemplate = "api/connections/{ConnectionId}";
+    public const string RouteTemplate = BaseRequest.BaseUri + "connections/{ConnectionId}";
 
     /// <summary>
     /// The Id of the Connection

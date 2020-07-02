@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.BasicMessaging
 
   public class SendMessageRequest : BaseApiRequest, IRequest<SendMessageResponse>
   {
-    public const string RouteTemplate = "api/connections/{ConnectionId}/send-message";
+    public const string RouteTemplate = BaseRequest.BaseUri + "connections/{ConnectionId}/send-message";
 
     /// <summary>
     /// The Id of the Connection to use to send the message

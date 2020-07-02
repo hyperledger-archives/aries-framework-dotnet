@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
 
   public class CreateCredentialDefinitionRequest : BaseApiRequest, IRequest<CreateCredentialDefinitionResponse>
   {
-    public const string RouteTemplate = "api/credential-definitions";
+    public const string RouteTemplate = BaseRequest.BaseUri + "credential-definitions";
 
     /// <summary>
     /// Should these credentials be revocable

@@ -9,7 +9,7 @@ namespace BlazorHosted.Features.Connections
   /// </summary>
   public class CreateInvitationRequest : BaseApiRequest, IRequest<CreateInvitationResponse>
   {
-    public const string RouteTemplate = "api/connections/create-invitation";
+    public const string RouteTemplate = BaseRequest.BaseUri + "connections/create-invitation";
 
     public InviteConfiguration InviteConfiguration { get; set; } = null!;
 

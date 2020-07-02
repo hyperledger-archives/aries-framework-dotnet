@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Credentials
 
   public class RemoveCredentialRequest : BaseApiRequest, IRequest<RemoveCredentialResponse>
   {
-    public const string RouteTemplate = "api/credentials/{CredentialId}/remove";
+    public const string RouteTemplate = BaseRequest.BaseUri + "credentials/{CredentialId}/remove";
 
     /// <summary>
     /// The Id of the Credential to return

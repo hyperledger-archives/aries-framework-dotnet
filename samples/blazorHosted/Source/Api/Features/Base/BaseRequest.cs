@@ -4,6 +4,8 @@ namespace BlazorHosted.Features.Bases
 
   public abstract class BaseRequest
   {
+    public const string BaseUri = "aries/";
+
     /// <summary>
     /// Unique Identifier
     /// </summary>

@@ -6,7 +6,7 @@ namespace BlazorHosted.Features.Connections
 
   public class DeleteConnectionRequest : BaseApiRequest, IRequest<DeleteConnectionResponse>
   {
-    public const string RouteTemplate = "api/connections/{ConnectionId}";
+    public const string RouteTemplate = BaseRequest.BaseUri + "connections/{ConnectionId}";
 
     /// <summary>
     /// The Id of the Connection to use to send the message

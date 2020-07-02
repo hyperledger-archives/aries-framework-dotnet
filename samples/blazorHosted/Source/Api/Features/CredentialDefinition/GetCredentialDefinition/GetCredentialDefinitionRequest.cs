@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.CredentialDefinitions
 
   public class GetCredentialDefinitionRequest : BaseApiRequest, IRequest<GetCredentialDefinitionResponse>
   {
-    public const string RouteTemplate = "api/credential-definitions/{CredentialDefinitionId}";
+    public const string RouteTemplate = BaseRequest.BaseUri + "credential-definitions/{CredentialDefinitionId}";
 
     /// <summary>
     /// The Id of the Credential Definition to retrieve

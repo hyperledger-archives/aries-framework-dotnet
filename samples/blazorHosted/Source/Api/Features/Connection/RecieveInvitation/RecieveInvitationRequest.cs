@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.Connections
 
   public class RecieveInvitationRequest : BaseApiRequest, IRequest<RecieveInvitationResponse>
   {
-    public const string RouteTemplate = "api/connections/recieve-invitation";
+    public const string RouteTemplate = BaseRequest.BaseUri + "connections/recieve-invitation";
 
     public string InvitationDetails { get; set; } = null!;
 

@@ -5,7 +5,7 @@ namespace BlazorHosted.Features.PresentProofs
 
   public class AcceptProofRequestRequest : BaseApiRequest, IRequest<AcceptProofRequestResponse>
   {
-    public const string RouteTemplate = "api/present-proof/accept";
+    public const string RouteTemplate = BaseRequest.BaseUri + "present-proof/accept";
 
     /// <summary>
     /// Set Properties and Update Docs
