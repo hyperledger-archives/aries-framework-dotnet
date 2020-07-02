@@ -1,30 +1,44 @@
-﻿//namespace GetConnectionRequestValidator_
-//{
-//  using FluentAssertions;
-//  using FluentValidation.Results;
-//  using FluentValidation.TestHelper;
-//  using BlazorHosted.Features.Connections;
+﻿namespace GetConnectionRequestValidator_
+{
+  using BlazorHosted.Features.Connections;
+  using BlazorHosted.Server;
+  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using FluentAssertions;
+  using FluentValidation.Results;
+  using FluentValidation.TestHelper;
+  using Microsoft.AspNetCore.Mvc.Testing;
+  using Newtonsoft.Json;
 
-//  public class Validate_Should
-//  {
-//    private GetConnectionRequestValidator GetConnectionRequestValidator { get; set; }
+  public class Validate_Should : BaseTest
+  {
+    private GetConnectionRequest GetConnectionRequest { get; set; }
+    private GetConnectionRequestValidator GetConnectionRequestValidator { get; set; }
 
-//    public void Be_Valid()
-//    {
-//      var __requestName__Request = new GetConnectionRequest
-//      {
-//        // Set Valid values here
-//        Days = 5
-//      };
+    public Validate_Should
+    (
+      WebApplicationFactory<Startup> aWebApplicationFactory,
+      JsonSerializerSettings aJsonSerializerSettings
+    ) : base(aWebApplicationFactory, aJsonSerializerSettings)
+    {
+      GetConnectionRequestValidator = new GetConnectionRequestValidator();
+      GetConnectionRequest = CreateValidGetConnectionRequest();
+    }
 
-//      ValidationResult validationResult = GetConnectionRequestValidator.TestValidate(__requestName__Request);
+    public void Have_error_when_ConnectionId_is_empty() => GetConnectionRequestValidator
+      .ShouldHaveValidationErrorFor(aGetConnectionRequest => aGetConnectionRequest.ConnectionId, string.Empty);
 
-//      validationResult.IsValid.Should().BeTrue();
-//    }
+    public void Have_error_when_ConnectionId_is_null()
+    {
+      GetConnectionRequest.ConnectionId = null;
+      GetConnectionRequestValidator
+        .ShouldHaveValidationErrorFor(aGetConnectionRequest => aGetConnectionRequest.ConnectionId, GetConnectionRequest);
+    }
 
-//    public void Have_error_when_Days_are_negative() => GetConnectionRequestValidator
-//      .ShouldHaveValidationErrorFor(aGetConnectionRequest => aGetConnectionRequest.Days, -1);
+    public void Be_Valid()
+    {
+      ValidationResult validationResult = GetConnectionRequestValidator.TestValidate(GetConnectionRequest);
 
-//    public void Setup() => GetConnectionRequestValidator = new GetConnectionRequestValidator();
-//  }
-//}
+      validationResult.IsValid.Should().BeTrue();
+    }
+  }
+}
