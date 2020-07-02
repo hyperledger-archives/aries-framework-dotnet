@@ -10,7 +10,7 @@ namespace BlazorHosted.Features.Wallets
   {
     /// <summary>
     /// Caution! All Data will be lost.
-    /// Delete and Create New Wallet and reprovistion the Agent.
+    /// Delete and Create New Wallet and reprovision the Agent.
     /// </summary>
     /// <param name="aResetWalletRequest"><see cref="ResetWalletRequest"/></param>
     /// <returns><see cref="ResetWalletResponse"/></returns>
