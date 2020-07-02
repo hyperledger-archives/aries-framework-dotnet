@@ -1,12 +1,18 @@
-﻿namespace TestHelpers
+﻿namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 {
   using BlazorHosted.Features.Connections;
   using FluentAssertions;
   using Hyperledger.Aries.Features.DidExchange;
+  using System.Threading.Tasks;
 
-  internal static class CreateInvitationTestHelper
+  public partial class BaseTest
   {
-    internal static CreateInvitationRequest CreateValidCreateInvitationRequest()
+    internal async Task CreateAnInvitation()
+    {
+      _ = await Send(CreateValidCreateInvitationRequest());
+    }
+
+    internal CreateInvitationRequest CreateValidCreateInvitationRequest()
     {
       var inviteConfiguration = new InviteConfiguration
       {
@@ -17,7 +23,7 @@
       return new CreateInvitationRequest(inviteConfiguration);
     }
 
-    internal static void ValidateCreateInvitationResponse(CreateInvitationRequest aCreateInvitationRequest, CreateInvitationResponse aCreateInvitationResponse)
+    internal void ValidateCreateInvitationResponse(CreateInvitationRequest aCreateInvitationRequest, CreateInvitationResponse aCreateInvitationResponse)
     {
       aCreateInvitationResponse.CorrelationId.Should().Be(aCreateInvitationRequest.CorrelationId);
       aCreateInvitationResponse.ConnectionInvitationMessage.Id.Should().NotBeNullOrEmpty();
