@@ -3,7 +3,6 @@
   using BlazorHosted.Features.Wallets;
   using BlazorHosted.Server;
   using BlazorHosted.Server.Integration.Tests.Infrastructure;
-  using FluentAssertions;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Newtonsoft.Json;
   using System.Net.Http;
@@ -28,7 +27,7 @@
       GetWalletResponse getWalletResponse =
         await GetJsonAsync<GetWalletResponse>(GetWalletRequest.GetRoute());
 
-      TestHelpers.GetWalletTestHelper.ValidateGetWalletResponse(GetWalletRequest, getWalletResponse);
+      ValidateGetWalletResponse(GetWalletRequest, getWalletResponse);
     }
 
     public async Task GetWalletResponse_using_System_Text_Json()
@@ -36,11 +35,10 @@
       GetWalletResponse getWalletResponse =
         await HttpClient.GetFromJsonAsync<GetWalletResponse>(GetWalletRequest.GetRoute());
 
-      TestHelpers.GetWalletTestHelper.ValidateGetWalletResponse(GetWalletRequest, getWalletResponse);
+      ValidateGetWalletResponse(GetWalletRequest, getWalletResponse);
     }
 
     // There are no validation requirements for this request
     public void ValidationError() { }
-
   }
 }

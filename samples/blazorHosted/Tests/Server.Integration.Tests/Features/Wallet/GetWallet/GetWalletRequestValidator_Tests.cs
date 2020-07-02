@@ -8,21 +8,17 @@
   public class Validate_Should
   {
     private GetWalletRequestValidator GetWalletRequestValidator { get; set; }
+    public GetWalletRequest GetWalletRequest { get; private set; }
 
     public Validate_Should()
     {
       GetWalletRequestValidator = new GetWalletRequestValidator();
+      GetWalletRequest = new GetWalletRequest();
     }
 
     public void Be_Valid()
     {
-      var getWalletRequest = new GetWalletRequest
-      {
-        // Set Valid values here
-        CorrelationId = System.Guid.NewGuid()
-      };
-
-      ValidationResult validationResult = GetWalletRequestValidator.TestValidate(getWalletRequest);
+      ValidationResult validationResult = GetWalletRequestValidator.TestValidate(GetWalletRequest);
 
       validationResult.IsValid.Should().BeTrue();
     }

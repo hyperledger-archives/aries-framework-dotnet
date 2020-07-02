@@ -24,7 +24,9 @@
     {
       GetWalletResponse getWalletResponse = await Send(GetWalletRequest);
 
-      TestHelpers.GetWalletTestHelper.ValidateGetWalletResponse(GetWalletRequest, getWalletResponse);
+      ValidateGetWalletResponse(GetWalletRequest, getWalletResponse);
     }
+
+    public async Task Setup() => await ResetAgent();
   }
 }
