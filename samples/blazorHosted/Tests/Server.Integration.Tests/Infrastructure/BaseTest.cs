@@ -20,7 +20,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   /// Based on Jimmy's SliceFixture
   /// https://github.com/jbogard/ContosoUniversityDotNetCore-Pages/blob/master/ContosoUniversity.IntegrationTests/SliceFixture.cs
   /// </remarks>
-  public abstract class BaseTest
+  public abstract partial class BaseTest
   {
     public readonly JsonSerializerSettings JsonSerializerSettings;
     protected readonly HttpClient HttpClient;
@@ -81,7 +81,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
       return response;
     }
 
-    protected Task Send(IRequest aRequest)
+    internal Task Send(IRequest aRequest)
     {
       return ExecuteInScope
       (
@@ -94,7 +94,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
       );
     }
 
-    protected Task<TResponse> Send<TResponse>(IRequest<TResponse> aRequest)
+    internal Task<TResponse> Send<TResponse>(IRequest<TResponse> aRequest)
     {
       return ExecuteInScope
       (

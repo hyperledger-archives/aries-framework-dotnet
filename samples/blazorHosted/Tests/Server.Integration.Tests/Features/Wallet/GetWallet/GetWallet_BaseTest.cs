@@ -1,13 +1,8 @@
-﻿namespace TestHelpers
+﻿namespace BlazorHosted.Server.Integration.Tests.Infrastructure
 {
   using BlazorHosted.Features.Wallets;
   using FluentAssertions;
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using System.Text;
-  using System.Threading.Tasks;
-  internal static class GetWalletTestHelper
+  public partial class BaseTest
   {
 
     internal static void ValidateGetWalletResponse(GetWalletRequest aGetWalletRequest, GetWalletResponse aGetWalletResponse)
