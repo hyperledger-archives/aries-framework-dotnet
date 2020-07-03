@@ -1,6 +1,5 @@
 namespace BlazorHosted.Features.Connections
 {
-  using AutoMapper;
   using Hyperledger.Aries.Agents;
   using Hyperledger.Aries.Configuration;
   using Hyperledger.Aries.Extensions;
@@ -13,18 +12,15 @@ namespace BlazorHosted.Features.Connections
   {
     private readonly IAgentProvider AgentProvider;
     private readonly IConnectionService ConnectionService;
-    private readonly IMapper Mapper;
     private readonly IProvisioningService ProvisioningService;
 
     public CreateInvitationHandler
     (
-      IMapper aMapper,
       IAgentProvider aAgentProvider,
       IConnectionService aConnectionService,
       IProvisioningService aProvisioningService
     )
     {
-      Mapper = aMapper;
       AgentProvider = aAgentProvider;
       ConnectionService = aConnectionService;
       ProvisioningService = aProvisioningService;
