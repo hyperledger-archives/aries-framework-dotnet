@@ -44,7 +44,6 @@ namespace BlazorHosted.Server
     )
     {
       aApplicationBuilder.UseJdenticon();
-      aApplicationBuilder.UseAriesFramework();
       // Enable middleware to serve generated Swagger as a JSON endpoint.
       aApplicationBuilder.UseSwagger();
 
@@ -84,6 +83,7 @@ namespace BlazorHosted.Server
       aServiceCollection.AddServerSideBlazor();
 
       aServiceCollection.AddMvc()
+        .AddApplicationPart(typeof(BaseEndpoint<,>).Assembly)
         .AddNewtonsoftJson()
         .AddFluentValidation
         (
@@ -112,7 +112,7 @@ namespace BlazorHosted.Server
 
       Client.Program.ConfigureServices(aServiceCollection);
 
-      aServiceCollection.AddMediatR(typeof(Startup).Assembly);
+      aServiceCollection.AddMediatR(typeof(Startup).Assembly,typeof(BaseEndpoint<,>).Assembly);
 
       aServiceCollection.AddAutoMapper(typeof(MappingProfile).Assembly);
 
@@ -177,6 +177,11 @@ namespace BlazorHosted.Server
 
           // Set the comments path for the Swagger JSON and UI from API.
           xmlFile = $"{typeof(BaseRequest).Assembly.GetName().Name}.xml";
+          xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+          aSwaggerGenOptions.IncludeXmlComments(xmlPath);
+
+          // Set the comments path for the Swagger JSON and UI from API.
+          xmlFile = $"{typeof(BaseEndpoint<,>).Assembly.GetName().Name}.xml";
           xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
           aSwaggerGenOptions.IncludeXmlComments(xmlPath);
 
