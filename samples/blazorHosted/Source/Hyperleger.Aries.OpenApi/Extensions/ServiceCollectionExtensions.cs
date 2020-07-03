@@ -33,17 +33,15 @@
       return aServiceCollection;
     }
 
-    private const string SwaggerVersion = "v1";
-
     private static void ConfigureSwagger
     (
-      IServiceCollection aServiceCollection, 
+      IServiceCollection aServiceCollection,
       AriesOpenApiOptions aAriesOpenApiOptions
     )
     {
-
-      string SwaggerApiTitle = $"BlazorHosted API {SwaggerVersion}";
-      string SwaggerEndPoint = $"/swagger/{SwaggerVersion}/swagger.json";
+      const string SwaggerVersion = "v1";
+      string SwaggerApiTitle = $"Aries Open API {SwaggerVersion}";
+      string SwaggerEndPoint = $"/aries/swagger/{SwaggerVersion}/swagger.json";
 
       // Register the Swagger generator, defining 1 or more Swagger documents
       aServiceCollection.AddSwaggerGen
@@ -83,6 +81,5 @@
           }
         );
     }
-
   }
 }
