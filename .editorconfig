@@ -15,7 +15,7 @@ tab_width = 4
 
 # New line preferences
 end_of_line = crlf
-insert_final_newline = false
+insert_final_newline = true
 
 # Development files
 [*.{cs,csx,cshtml,csproj,razor,sln,props,targets,json,md,yml,gitignore,}]
