@@ -1,0 +1,11 @@
+﻿# EditorConfig is awesome:http://EditorConfig.org
+# For dotnet and Csharp specific see below
+# https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
+
+# Set root = false if you want to inherit .editorconfig settings from parent directories
+root = false
+
+[*.cs]
+# CS0618: Type or member is obsolete
+# we still need to test obsolete items until they are removed
+dotnet_diagnostic.CS0618.severity = none
