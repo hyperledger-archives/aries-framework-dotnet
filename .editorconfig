@@ -1,0 +1,22 @@
+﻿# EditorConfig is awesome:http://EditorConfig.org
+# For dotnet and Csharp specific see below
+# https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
+
+# Remove the line below if you want to inherit .editorconfig settings from higher directories
+root = true
+
+#### Core EditorConfig Options ####
+
+[*]
+# Indentation and spacing
+indent_size = 4
+indent_style = space
+tab_width = 4
+
+# New line preferences
+end_of_line = crlf
+insert_final_newline = false
+
+# Development files
+[*.{cs,csx,cshtml,csproj,razor,sln,props,targets,json,md,yml,gitignore,}]
+charset = "utf-8"
