@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.CredentialDefinitions
+namespace Hyperledger.Aries.OpenApi.Features.CredentialDefinitions
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Hyperledger.Aries.Models.Records;
   using System;
 

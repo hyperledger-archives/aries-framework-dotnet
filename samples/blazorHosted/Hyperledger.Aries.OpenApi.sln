@@ -5,19 +5,19 @@ VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2902FDFD-016E-4BF7-8B41-53D674FA53DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorHosted.Api", "Source\Api\BlazorHosted.Api.csproj", "{FDEA3DD3-5647-45D6-A0D7-310C9CAA739F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.OpenApi.Api", "Source\Api\Hyperledger.Aries.OpenApi.Api.csproj", "{FDEA3DD3-5647-45D6-A0D7-310C9CAA739F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorHosted.Server", "Source\Server\BlazorHosted.Server.csproj", "{056A0C11-9C6A-462E-A63E-785EC37EE480}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.OpenApi.Server", "Source\Server\Hyperledger.Aries.OpenApi.Server.csproj", "{056A0C11-9C6A-462E-A63E-785EC37EE480}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorHosted.Client", "Source\Client\BlazorHosted.Client.csproj", "{1515BBAC-5860-4ACB-A497-54C340BB8335}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.OpenApi.Client", "Source\Client\Hyperledger.Aries.OpenApi.Client.csproj", "{1515BBAC-5860-4ACB-A497-54C340BB8335}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorHosted.Client.Integration.Tests", "Tests\Client.Integration.Tests\BlazorHosted.Client.Integration.Tests.csproj", "{7CAF4AD3-43C6-4B0D-8AE9-03899F9F8A65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.OpenApi.Client.Integration.Tests", "Tests\Client.Integration.Tests\Hyperledger.Aries.OpenApi.Client.Integration.Tests.csproj", "{7CAF4AD3-43C6-4B0D-8AE9-03899F9F8A65}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorHosted.EndToEnd.Selenium.Tests", "Tests\EndToEnd.Selenium.Tests\BlazorHosted.EndToEnd.Selenium.Tests.csproj", "{E5338256-77A6-404D-A08E-8783F520A506}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.OpenApi.EndToEnd.Selenium.Tests", "Tests\EndToEnd.Selenium.Tests\Hyperledger.Aries.OpenApi.EndToEnd.Selenium.Tests.csproj", "{E5338256-77A6-404D-A08E-8783F520A506}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorHosted.Server.Integration.Tests", "Tests\Server.Integration.Tests\BlazorHosted.Server.Integration.Tests.csproj", "{387F446E-D664-4977-A7FC-5343935D97AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.OpenApi.Server.Integration.Tests", "Tests\Server.Integration.Tests\Hyperledger.Aries.OpenApi.Server.Integration.Tests.csproj", "{387F446E-D664-4977-A7FC-5343935D97AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorHosted.EndToEnd.TestCafe.Tests", "Tests\EndToEnd.TestCafe.Tests\BlazorHosted.EndToEnd.TestCafe.Tests.csproj", "{D6F76BA2-7E47-4BBB-ADE4-AA32BA06DEEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.OpenApi.EndToEnd.TestCafe.Tests", "Tests\EndToEnd.TestCafe.Tests\Hyperledger.Aries.OpenApi.EndToEnd.TestCafe.Tests.csproj", "{D6F76BA2-7E47-4BBB-ADE4-AA32BA06DEEE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6B623CDC-91E7-47FD-A039-A40427FB7FE8}"
 	ProjectSection(SolutionItems) = preProject
@@ -37,9 +37,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{6DDDEA23-D242-4AB1-92E0-967A60941A81}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\Build\BlazorHosted.Template.yml = ..\..\..\..\Build\BlazorHosted.Template.yml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aries", "Aries", "{F24DF9E5-4306-4C7A-BBFC-86FA68E74AD5}"
 EndProject
@@ -68,7 +65,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		..\..\Directory.Build.props = ..\..\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperleger.Aries.OpenApi", "Source\Hyperleger.Aries.OpenApi\Hyperleger.Aries.OpenApi.csproj", "{F25A5FF5-C962-449B-836D-E4214000541A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.OpenApi.Endpoints", "Source\Hyperleger.Aries.OpenApi\Hyperledger.Aries.OpenApi.Endpoints.csproj", "{F25A5FF5-C962-449B-836D-E4214000541A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

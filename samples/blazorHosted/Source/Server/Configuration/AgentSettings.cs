@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Configuration
+﻿namespace Hyperledger.Aries.OpenApi.Configuration
 {
   public class AgentSettings
   {

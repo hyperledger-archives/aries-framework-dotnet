@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.CredentialDefinitions
+namespace Hyperledger.Aries.OpenApi.Features.CredentialDefinitions
 {
   using Hyperledger.Aries.Agents;
   using Hyperledger.Aries.Features.IssueCredential;

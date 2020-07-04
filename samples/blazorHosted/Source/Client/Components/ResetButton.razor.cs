@@ -1,7 +1,7 @@
-namespace BlazorHosted.Components
+namespace Hyperledger.Aries.OpenApi.Components
 {
-  using BlazorHosted.Features.Bases;
-  using static BlazorHosted.Features.Applications.ApplicationState;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
+  using static Hyperledger.Aries.OpenApi.Features.Applications.ApplicationState;
 
   public partial class ResetButton:BaseComponent
   {

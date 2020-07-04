@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.Applications
+﻿namespace Hyperledger.Aries.OpenApi.Features.Applications
 {
   using BlazorState;
   using Microsoft.JSInterop;

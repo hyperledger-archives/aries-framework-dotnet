@@ -2,9 +2,9 @@
 {
   using System.Threading.Tasks;
   using Microsoft.AspNetCore.Mvc.Testing;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-  using BlazorHosted.Features.Connections;
-  using BlazorHosted.Server;
+  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Server;
   using FluentAssertions;
   using Newtonsoft.Json;
 

@@ -1,8 +1,8 @@
 ﻿namespace GetConnectionEndpoint
 {
-  using BlazorHosted.Features.Connections;
-  using BlazorHosted.Server;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Server;
+  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
   using FluentAssertions;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Newtonsoft.Json;

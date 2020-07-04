@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Client
+﻿namespace Hyperledger.Aries.OpenApi.Client
 {
   public class AssemblyAnnotations
   {

@@ -1,7 +1,7 @@
-﻿//namespace BlazorHosted.Features.Credentials
+﻿//namespace Hyperledger.Aries.OpenApi.Features.Credentials
 //{
-//  using BlazorHosted.Features.Bases;
-//  using BlazorHosted.Features.CredentialDefinitions;
+//  using Hyperledger.Aries.OpenApi.Features.Bases;
+//  using Hyperledger.Aries.OpenApi.Features.CredentialDefinitions;
 
 //  internal partial class CredentialState
 //  {

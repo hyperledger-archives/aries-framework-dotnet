@@ -1,4 +1,4 @@
-namespace BlazorHosted.EndToEnd.Tests.Infrastructure
+namespace Hyperledger.Aries.OpenApi.EndToEnd.Tests.Infrastructure
 {
   using System;
   using System.Diagnostics;

@@ -1,7 +1,7 @@
-﻿namespace BlazorHosted.EndToEnd.Tests
+﻿namespace Hyperledger.Aries.OpenApi.EndToEnd.Tests
 {
   using OpenQA.Selenium;
-  using BlazorHosted.EndToEnd.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.EndToEnd.Tests.Infrastructure;
   using static Infrastructure.WaitAndAssert;
 
   public class ExecutionSideTests : BaseTest

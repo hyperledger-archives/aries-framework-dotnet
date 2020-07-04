@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.PresentProofs
+namespace Hyperledger.Aries.OpenApi.Features.PresentProofs
 {
   using Hyperledger.Aries.Agents;
   using Hyperledger.Aries.Features.PresentProof;

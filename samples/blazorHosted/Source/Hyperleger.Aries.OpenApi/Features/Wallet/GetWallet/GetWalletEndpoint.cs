@@ -1,10 +1,10 @@
-namespace BlazorHosted.Features.Wallets
+namespace Hyperledger.Aries.OpenApi.Features.Wallets
 {
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;
   using System.Net;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetWalletEndpoint : BaseEndpoint<GetWalletRequest, GetWalletResponse>
   {

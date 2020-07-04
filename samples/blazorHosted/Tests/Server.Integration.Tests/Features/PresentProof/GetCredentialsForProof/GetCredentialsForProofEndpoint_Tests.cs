@@ -6,9 +6,9 @@
 //  using System.Net.Http;
 //  using System.Text.Json;
 //  using System.Threading.Tasks;
-//  using BlazorHosted.Features.PresentProofs;
-//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-//  using BlazorHosted.Server;
+//  using Hyperledger.Aries.OpenApi.Features.PresentProofs;
+//  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
+//  using Hyperledger.Aries.OpenApi.Server;
 
 //  public class Returns : BaseTest
 //  {

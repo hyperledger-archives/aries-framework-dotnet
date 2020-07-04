@@ -1,8 +1,8 @@
-namespace BlazorHosted.Features.PresentProofs
+namespace Hyperledger.Aries.OpenApi.Features.PresentProofs
 {
   using System;
   using System.Collections.Generic;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Hyperledger.Aries.Features.PresentProof;
 
   public class GetProofsResponse : BaseResponse

@@ -1,6 +1,6 @@
-﻿namespace BlazorHosted.Features.Schemas
+﻿namespace Hyperledger.Aries.OpenApi.Features.Schemas
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using BlazorState;
   using MediatR;
   using Newtonsoft.Json;

@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.Identicons
+namespace Hyperledger.Aries.OpenApi.Features.Identicons
 {
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;

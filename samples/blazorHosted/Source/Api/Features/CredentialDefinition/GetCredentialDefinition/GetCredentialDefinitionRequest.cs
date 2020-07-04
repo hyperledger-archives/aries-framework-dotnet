@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.CredentialDefinitions
+namespace Hyperledger.Aries.OpenApi.Features.CredentialDefinitions
 {
   using MediatR;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetCredentialDefinitionRequest : BaseApiRequest, IRequest<GetCredentialDefinitionResponse>
   {

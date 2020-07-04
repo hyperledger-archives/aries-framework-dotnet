@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.Connections
+namespace Hyperledger.Aries.OpenApi.Features.Connections
 {
   using MediatR;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Dawn;
 
   public class GetConnectionRequest : BaseApiRequest, IRequest<GetConnectionResponse>

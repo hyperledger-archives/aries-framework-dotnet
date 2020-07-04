@@ -1,8 +1,8 @@
-﻿namespace BlazorHosted.Features.Schemas.Pages
+﻿namespace Hyperledger.Aries.OpenApi.Features.Schemas.Pages
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.Schemas.SchemaState;
+  using static Hyperledger.Aries.OpenApi.Features.Schemas.SchemaState;
   using static BlazorState.Features.Routing.RouteState;
 
   public partial class Create : BaseComponent

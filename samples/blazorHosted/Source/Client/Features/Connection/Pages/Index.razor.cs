@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.Connections.Pages
+namespace Hyperledger.Aries.OpenApi.Features.Connections.Pages
 {
-  using BlazorHosted.Features.Bases;
-  using static BlazorHosted.Features.Connections.ConnectionState;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
+  using static Hyperledger.Aries.OpenApi.Features.Connections.ConnectionState;
   using System.Threading.Tasks;
 
   public partial class Index: BaseComponent

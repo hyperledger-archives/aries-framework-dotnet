@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.Wallets
+namespace Hyperledger.Aries.OpenApi.Features.Wallets
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Hyperledger.Aries.Configuration;
   using System;
 

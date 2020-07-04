@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.Applications.Components
+namespace Hyperledger.Aries.OpenApi.Features.Applications.Components
 {
   public partial class AccountMenu
   {

@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Components.Forms
+﻿namespace Hyperledger.Aries.OpenApi.Components.Forms
 {
   using Microsoft.AspNetCore.Components.Forms;
 

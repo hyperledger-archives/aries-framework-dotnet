@@ -1,10 +1,10 @@
-namespace BlazorHosted.Features.Credentials
+namespace Hyperledger.Aries.OpenApi.Features.Credentials
 {
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;
   using System.Net;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetCredentialEndpoint : BaseEndpoint<GetCredentialRequest, GetCredentialResponse>
   {

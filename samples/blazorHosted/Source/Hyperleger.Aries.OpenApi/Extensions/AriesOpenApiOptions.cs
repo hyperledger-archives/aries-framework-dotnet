@@ -1,20 +1,15 @@
-﻿namespace Hyperledger.Aries.Configuration
+﻿namespace Hyperledger.Aries.OpenApi.Configuration
 {
-  using System.Collections.Generic;
-  using System.Reflection;
   public class AriesOpenApiOptions
   {
-    ///// <summary>
-    ///// Assemblies to be searched for MediatR Requests
-    ///// </summary>
-    public IEnumerable<Assembly> Assemblies { get; set; }
+    /// <summary>
+    /// Enable Swagger UI
+    /// </summary>
+    /// <remarks>Default is true</remarks>
+    public bool UseSwaggerUi { get; set; } = true;
 
-    public bool UseSwaggerUI { get; set; } = true;
-
-    public AriesOpenApiOptions()
-    {
-      Assemblies = new Assembly[] { };
-    }
+    internal string RoutePrefix { get; set; }
+    internal string SwaggerApiTitle { get; set; }
+    internal string SwaggerEndPoint { get; set; }
   }
 }
-

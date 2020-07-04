@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.PresentProofs
+namespace Hyperledger.Aries.OpenApi.Features.PresentProofs
 {
   using MediatR;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class AcceptProofRequestRequest : BaseApiRequest, IRequest<AcceptProofRequestResponse>
   {

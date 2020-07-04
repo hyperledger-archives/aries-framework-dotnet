@@ -15,8 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\Server\BlazorHosted.Server.csproj" />
-    <ProjectReference Include="..\..\Source\Api\BlazorHosted.Api.csproj" />
+    <ProjectReference Include="..\..\Source\Server\Hyperledger.Aries.OpenApi.Server.csproj" />
+    <ProjectReference Include="..\..\Source\Api\Hyperledger.Aries.OpenApi.Api.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Scenarios\" />
   </ItemGroup>
 
 </Project>

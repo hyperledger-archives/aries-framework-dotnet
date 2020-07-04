@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted
+﻿namespace Hyperledger.Aries.OpenApi
 {
   using Hyperledger.Aries.Agents;
   using System;

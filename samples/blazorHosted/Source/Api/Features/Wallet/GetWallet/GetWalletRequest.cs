@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.Wallets
+namespace Hyperledger.Aries.OpenApi.Features.Wallets
 {
   using MediatR;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetWalletRequest : BaseApiRequest, IRequest<GetWalletResponse>
   {

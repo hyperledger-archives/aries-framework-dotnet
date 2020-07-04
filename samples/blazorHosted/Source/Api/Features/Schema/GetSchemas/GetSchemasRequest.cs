@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.Schemas
+namespace Hyperledger.Aries.OpenApi.Features.Schemas
 {
   using MediatR;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetSchemasRequest : BaseApiRequest, IRequest<GetSchemasResponse>
   {

@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.BasicMessaging
+namespace Hyperledger.Aries.OpenApi.Features.BasicMessaging
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using System;
 
   public class SendMessageResponse : BaseResponse

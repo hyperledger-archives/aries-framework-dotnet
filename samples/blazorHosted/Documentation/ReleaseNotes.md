@@ -1,4 +1,4 @@
 ---
-uid: BlazorHosted:ReleaseNotes
-title: BlazorHosted Release Notes
+uid: Hyperledger.Aries.OpenApi:ReleaseNotes
+title: Hyperledger.Aries.OpenApi Release Notes
 ---

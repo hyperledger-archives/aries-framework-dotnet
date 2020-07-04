@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("BlazorHosted.Server.Integration.Tests")]
+[assembly: InternalsVisibleTo("Hyperledger.Aries.OpenApi.Server.Integration.Tests")]

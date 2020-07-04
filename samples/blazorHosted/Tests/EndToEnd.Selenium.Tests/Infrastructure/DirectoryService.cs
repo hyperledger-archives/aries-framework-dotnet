@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.EndToEnd.Tests.Infrastructure
+﻿namespace Hyperledger.Aries.OpenApi.EndToEnd.Tests.Infrastructure
 {
   using System;
   using System.IO;
@@ -14,7 +14,7 @@
     /// <returns>DirectoryInfo of the directory that contains the target directory or returns null if not in a git repository</returns>
     public DirectoryInfo FindSolutionRoot()
     {
-      const string SolutionFileName = "BlazorHosted.sln";
+      const string SolutionFileName = "Hyperledger.Aries.OpenApi.sln";
       var directory = new DirectoryInfo(Environment.CurrentDirectory);
       bool found = directory.GetFiles(SolutionFileName).Length > 0;
       while (!found && directory.Parent != null)

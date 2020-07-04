@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.Connections
+namespace Hyperledger.Aries.OpenApi.Features.Connections
 {
   using Hyperledger.Aries.Agents;
   using Hyperledger.Aries.Configuration;

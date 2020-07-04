@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.Counters
+namespace Hyperledger.Aries.OpenApi.Features.Counters
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   internal partial class CounterState
   {

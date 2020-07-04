@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.Applications
+namespace Hyperledger.Aries.OpenApi.Features.Applications
 {
   using BlazorState;
 
@@ -14,7 +14,7 @@ namespace BlazorHosted.Features.Applications
     public override void Initialize()
     {
       IsMenuExpanded = true;
-      Name = "BlazorHosted";
+      Name = "Hyperledger.Aries.OpenApi";
       Logo = "/images/logo.png";
     }
   }

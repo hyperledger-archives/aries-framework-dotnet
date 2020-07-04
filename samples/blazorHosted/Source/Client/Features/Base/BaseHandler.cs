@@ -1,13 +1,13 @@
-namespace BlazorHosted.Features.Bases
+namespace Hyperledger.Aries.OpenApi.Features.Bases
 {
-  using BlazorHosted.Features.Applications;
-  using BlazorHosted.Features.Connections;
-  using BlazorHosted.Features.Counters;
-  using BlazorHosted.Features.CredentialDefinitions;
-  using BlazorHosted.Features.Credentials;
-  using BlazorHosted.Features.PresentProofs;
-  using BlazorHosted.Features.Schemas;
-  using BlazorHosted.Features.Wallets;
+  using Hyperledger.Aries.OpenApi.Features.Applications;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Features.Counters;
+  using Hyperledger.Aries.OpenApi.Features.CredentialDefinitions;
+  using Hyperledger.Aries.OpenApi.Features.Credentials;
+  using Hyperledger.Aries.OpenApi.Features.PresentProofs;
+  using Hyperledger.Aries.OpenApi.Features.Schemas;
+  using Hyperledger.Aries.OpenApi.Features.Wallets;
   using BlazorState;
 
   /// <summary>

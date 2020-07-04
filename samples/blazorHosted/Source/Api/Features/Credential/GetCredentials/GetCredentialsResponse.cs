@@ -1,8 +1,8 @@
-namespace BlazorHosted.Features.Credentials
+namespace Hyperledger.Aries.OpenApi.Features.Credentials
 {
   using System;
   using System.Collections.Generic;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Hyperledger.Aries.Features.IssueCredential;
 
   public class GetCredentialsResponse : BaseResponse

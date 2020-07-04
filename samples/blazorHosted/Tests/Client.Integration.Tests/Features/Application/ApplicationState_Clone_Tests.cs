@@ -1,9 +1,9 @@
-namespace ApplicationState
+namespace ApplicationState_
 {
   using AnyClone;
   using FluentAssertions;
-  using BlazorHosted.Features.Applications;
-  using BlazorHosted.Client.Integration.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.Features.Applications;
+  using Hyperledger.Aries.OpenApi.Client.Integration.Tests.Infrastructure;
 
   public class Clone_Should : BaseTest
   {

@@ -1,10 +1,10 @@
-﻿namespace BlazorHosted.Features.CredentialDefinitions.Pages
+﻿namespace Hyperledger.Aries.OpenApi.Features.CredentialDefinitions.Pages
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using System.Linq;
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.CredentialDefinitions.CredentialDefinitionState;
-  using static BlazorHosted.Features.Schemas.SchemaState;
+  using static Hyperledger.Aries.OpenApi.Features.CredentialDefinitions.CredentialDefinitionState;
+  using static Hyperledger.Aries.OpenApi.Features.Schemas.SchemaState;
   using static BlazorState.Features.Routing.RouteState;
 
   public partial class Create : BaseComponent

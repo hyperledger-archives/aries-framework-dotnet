@@ -37,6 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Api\BlazorHosted.Api.csproj" />
+    <ProjectReference Include="..\Api\Hyperledger.Aries.OpenApi.Api.csproj" />
   </ItemGroup>
 </Project>

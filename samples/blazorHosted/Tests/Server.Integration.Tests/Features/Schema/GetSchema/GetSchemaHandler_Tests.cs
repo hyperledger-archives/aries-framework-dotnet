@@ -3,9 +3,9 @@
 //  using System.Threading.Tasks;
 //  using System.Text.Json;
 //  using Microsoft.AspNetCore.Mvc.Testing;
-//  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-//  using BlazorHosted.Features.Schemas;
-//  using BlazorHosted.Server;
+//  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
+//  using Hyperledger.Aries.OpenApi.Features.Schemas;
+//  using Hyperledger.Aries.OpenApi.Server;
 //  using FluentAssertions;
 
 //  public class Handle_Returns : BaseTest

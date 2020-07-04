@@ -1,7 +1,7 @@
-﻿namespace BlazorHosted.Features.Connections
+﻿namespace Hyperledger.Aries.OpenApi.Features.Connections
 {
   using BlazorState;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using MediatR;
   using System.Threading;
   using System.Threading.Tasks;

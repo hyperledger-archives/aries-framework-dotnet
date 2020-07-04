@@ -3,7 +3,7 @@
   using FluentAssertions;
   using FluentValidation.Results;
   using FluentValidation.TestHelper;
-  using BlazorHosted.Features.Wallets;
+  using Hyperledger.Aries.OpenApi.Features.Wallets;
 
   public class Validate_Should
   {

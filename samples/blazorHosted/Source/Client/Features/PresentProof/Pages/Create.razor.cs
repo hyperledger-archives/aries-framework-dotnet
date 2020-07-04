@@ -1,6 +1,6 @@
-﻿namespace BlazorHosted.Features.PresentProofs.Pages
+﻿namespace Hyperledger.Aries.OpenApi.Features.PresentProofs.Pages
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Hyperledger.Aries.Features.DidExchange;
   using Hyperledger.Aries.Features.PresentProof;
   using Hyperledger.Aries.Models.Records;
@@ -10,10 +10,10 @@
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.Connections.ConnectionState;
-  using static BlazorHosted.Features.CredentialDefinitions.CredentialDefinitionState;
-  using static BlazorHosted.Features.PresentProofs.PresentProofState;
-  using static BlazorHosted.Features.Schemas.SchemaState;
+  using static Hyperledger.Aries.OpenApi.Features.Connections.ConnectionState;
+  using static Hyperledger.Aries.OpenApi.Features.CredentialDefinitions.CredentialDefinitionState;
+  using static Hyperledger.Aries.OpenApi.Features.PresentProofs.PresentProofState;
+  using static Hyperledger.Aries.OpenApi.Features.Schemas.SchemaState;
   using static BlazorState.Features.Routing.RouteState;
 
   public partial class Create: BaseComponent

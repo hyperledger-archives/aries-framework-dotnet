@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.BasicMessaging
+namespace Hyperledger.Aries.OpenApi.Features.BasicMessaging
 {
   using MediatR;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class SendMessageRequest : BaseApiRequest, IRequest<SendMessageResponse>
   {

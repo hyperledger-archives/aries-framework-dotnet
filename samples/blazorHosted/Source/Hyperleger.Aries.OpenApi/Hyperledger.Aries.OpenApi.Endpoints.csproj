@@ -11,16 +11,15 @@
     <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="$(MicroElementsSwashbuckleFluentValidationVersion)" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="$(SwashbuckleAspNetCoreSwaggerVersion)" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="$(SwashbuckleAspNetCoreSwaggerGenVersion)" />
-    
+    <PackageReference Include="FluentValidation.AspNetCore" Version="$(FluentValidationAspNetCoreVersion)" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleAspNetCoreAnnotationsVersion)" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="$(SwashbuckleAspNetCoreFiltersVersion)" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="$(SwashbuckleAspNetCoreSwaggerUIVersion)" />    
-    
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="$(SwashbuckleAspNetCoreSwaggerUIVersion)" />
   </ItemGroup>
-  <ItemGroup>    
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Api\BlazorHosted.Api.csproj" />
+    <ProjectReference Include="..\Api\Hyperledger.Aries.OpenApi.Api.csproj" />
   </ItemGroup>
 </Project>

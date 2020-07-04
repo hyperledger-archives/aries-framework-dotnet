@@ -1,7 +1,7 @@
-﻿namespace BlazorHosted.Features.PresentProofs
+﻿namespace Hyperledger.Aries.OpenApi.Features.PresentProofs
 {
-  using BlazorHosted.Features.Bases;
-  using BlazorHosted.Features.PresentProofs;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.PresentProofs;
 
   internal partial class PresentProofState
   {

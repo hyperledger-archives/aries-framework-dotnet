@@ -40,9 +40,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
     <ProjectReference Include="..\..\..\..\src\Hyperledger.Aries\Hyperledger.Aries.csproj" />
-    <ProjectReference Include="..\Client\BlazorHosted.Client.csproj" />
-    <ProjectReference Include="..\Api\BlazorHosted.Api.csproj" />
-    <ProjectReference Include="..\Hyperleger.Aries.OpenApi\Hyperleger.Aries.OpenApi.csproj" />
+    <ProjectReference Include="..\Client\Hyperledger.Aries.OpenApi.Client.csproj" />
+    <ProjectReference Include="..\Api\Hyperledger.Aries.OpenApi.Api.csproj" />
+    <ProjectReference Include="..\Hyperleger.Aries.OpenApi\Hyperledger.Aries.OpenApi.Endpoints.csproj" />
   </ItemGroup>
 
   <ItemGroup>

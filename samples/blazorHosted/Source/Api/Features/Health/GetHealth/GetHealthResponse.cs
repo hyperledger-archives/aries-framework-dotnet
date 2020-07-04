@@ -1,8 +1,8 @@
-namespace BlazorHosted.Features.Healths
+namespace Hyperledger.Aries.OpenApi.Features.Healths
 {
   using System;
   using System.Collections.Generic;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetHealthResponse : BaseResponse
   {

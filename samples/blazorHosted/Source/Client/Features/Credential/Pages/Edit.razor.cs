@@ -1,17 +1,17 @@
-﻿namespace BlazorHosted.Features.Credentials.Pages
+﻿namespace Hyperledger.Aries.OpenApi.Features.Credentials.Pages
 {
-  using BlazorHosted.Features.Bases;
-  using BlazorHosted.Features.IssueCredentials;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.IssueCredentials;
   using Hyperledger.Aries.Features.DidExchange;
   using Hyperledger.Aries.Features.IssueCredential;
   using Hyperledger.Aries.Models.Records;
   using System.Collections.Generic;
   using System.Threading.Tasks;
   using System.Linq;
-  using static BlazorHosted.Features.Connections.ConnectionState;
-  using static BlazorHosted.Features.CredentialDefinitions.CredentialDefinitionState;
-  using static BlazorHosted.Features.Credentials.CredentialState;
-  using static BlazorHosted.Features.Schemas.SchemaState;
+  using static Hyperledger.Aries.OpenApi.Features.Connections.ConnectionState;
+  using static Hyperledger.Aries.OpenApi.Features.CredentialDefinitions.CredentialDefinitionState;
+  using static Hyperledger.Aries.OpenApi.Features.Credentials.CredentialState;
+  using static Hyperledger.Aries.OpenApi.Features.Schemas.SchemaState;
   using static BlazorState.Features.Routing.RouteState;
 
   public partial class Edit : BaseComponent

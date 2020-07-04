@@ -1,9 +1,9 @@
-@namespace BlazorHosted.Components
+@namespace Hyperledger.Aries.OpenApi.Components
 @inherits BaseComponent
 
 <Router AppAssembly="typeof(Client.Program).Assembly">
   <Found Context="routeData">
-    <RouteView RouteData="routeData" DefaultLayout="typeof(BlazorHosted.Components.MainLayout)" />
+    <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
   </Found>
   <NotFound>
     <h1>Page not found</h1>

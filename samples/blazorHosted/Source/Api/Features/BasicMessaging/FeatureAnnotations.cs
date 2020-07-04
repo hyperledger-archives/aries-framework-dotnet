@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.BasicMessaging
+﻿namespace Hyperledger.Aries.OpenApi.Features.BasicMessaging
 {
   public static class FeatureAnnotations
   {

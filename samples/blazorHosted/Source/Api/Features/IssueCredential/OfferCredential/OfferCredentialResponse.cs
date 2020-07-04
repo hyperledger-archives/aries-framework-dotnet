@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.IssueCredentials
+namespace Hyperledger.Aries.OpenApi.Features.IssueCredentials
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Hyperledger.Aries.Features.IssueCredential;
   using System;
 

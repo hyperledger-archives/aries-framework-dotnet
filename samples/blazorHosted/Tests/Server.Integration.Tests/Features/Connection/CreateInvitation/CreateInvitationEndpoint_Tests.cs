@@ -1,8 +1,8 @@
 ﻿namespace CreateInvitationEndpoint
 {
-  using BlazorHosted.Features.Connections;
-  using BlazorHosted.Server;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Server;
+  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Newtonsoft.Json;
   using System.Net.Http;

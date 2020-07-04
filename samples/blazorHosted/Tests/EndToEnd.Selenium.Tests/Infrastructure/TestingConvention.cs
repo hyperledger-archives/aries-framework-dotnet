@@ -1,9 +1,9 @@
-﻿namespace BlazorHosted.EndToEnd.Tests
+﻿namespace Hyperledger.Aries.OpenApi.EndToEnd.Tests
 {
   using Fixie;
   using Microsoft.Extensions.DependencyInjection;
   using System;
-  using BlazorHosted.EndToEnd.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.EndToEnd.Tests.Infrastructure;
 
   public class TestingConvention : Discovery, Execution, IDisposable
   {

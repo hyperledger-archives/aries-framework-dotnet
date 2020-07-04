@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.Connections
+namespace Hyperledger.Aries.OpenApi.Features.Connections
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Dawn;
   using MediatR;
 

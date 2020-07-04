@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.Connections
+﻿namespace Hyperledger.Aries.OpenApi.Features.Connections
 {
   using FluentValidation;
   using Hyperledger.Aries.Features.DidExchange;

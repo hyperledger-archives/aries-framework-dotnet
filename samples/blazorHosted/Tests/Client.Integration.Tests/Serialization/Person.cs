@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.JsonSerializer.Tests
+﻿namespace Hyperledger.Aries.OpenApi.JsonSerializer.Tests
 {
   using System;
   internal class Person

@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.Counters
+﻿namespace Hyperledger.Aries.OpenApi.Features.Counters
 {
   using BlazorState;
   using Microsoft.JSInterop;

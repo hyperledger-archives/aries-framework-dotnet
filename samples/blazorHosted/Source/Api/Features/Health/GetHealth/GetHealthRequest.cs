@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.Healths
+namespace Hyperledger.Aries.OpenApi.Features.Healths
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using MediatR;
 
   public class GetHealthRequest : BaseApiRequest, IRequest<GetHealthResponse>

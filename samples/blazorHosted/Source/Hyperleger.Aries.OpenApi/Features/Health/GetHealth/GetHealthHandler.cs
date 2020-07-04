@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.Healths
+namespace Hyperledger.Aries.OpenApi.Features.Healths
 {
   using MediatR;
   using System;

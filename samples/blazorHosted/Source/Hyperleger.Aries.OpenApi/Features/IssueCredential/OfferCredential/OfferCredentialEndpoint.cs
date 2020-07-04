@@ -1,10 +1,10 @@
-namespace BlazorHosted.Features.IssueCredentials
+namespace Hyperledger.Aries.OpenApi.Features.IssueCredentials
 {
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;
   using System.Net;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using System;
 
   public class OfferCredentialEndpoint : BaseEndpoint<OfferCredentialRequest, OfferCredentialResponse>

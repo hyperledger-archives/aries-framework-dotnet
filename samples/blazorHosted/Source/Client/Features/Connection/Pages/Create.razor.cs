@@ -1,12 +1,12 @@
-namespace BlazorHosted.Features.Connections.Pages
+namespace Hyperledger.Aries.OpenApi.Features.Connections.Pages
 {
-  using BlazorHosted.Features.Bases;
-  using BlazorHosted.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
   using Microsoft.AspNetCore.Components;
   using Microsoft.JSInterop;
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.Connections.ConnectionState;
-  using static BlazorHosted.Features.Wallets.WalletState;
+  using static Hyperledger.Aries.OpenApi.Features.Connections.ConnectionState;
+  using static Hyperledger.Aries.OpenApi.Features.Wallets.WalletState;
 
   public partial class Create : BaseComponent
   {

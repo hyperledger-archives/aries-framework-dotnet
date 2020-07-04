@@ -1,10 +1,10 @@
-﻿namespace BlazorHosted.Features.Connections.Pages
+﻿namespace Hyperledger.Aries.OpenApi.Features.Connections.Pages
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Hyperledger.Aries.Features.DidExchange;
   using Hyperledger.Aries.Utils;
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.Connections.ConnectionState;
+  using static Hyperledger.Aries.OpenApi.Features.Connections.ConnectionState;
   using static BlazorState.Features.Routing.RouteState;
 
   public partial class Invitation : BaseComponent

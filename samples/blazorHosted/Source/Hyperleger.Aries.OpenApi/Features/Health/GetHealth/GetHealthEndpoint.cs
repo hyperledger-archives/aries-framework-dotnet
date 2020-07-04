@@ -1,10 +1,10 @@
-namespace BlazorHosted.Features.Healths
+namespace Hyperledger.Aries.OpenApi.Features.Healths
 {
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;
   using System.Net;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetHealthEndpoint : BaseEndpoint<GetHealthRequest, GetHealthResponse>
   {

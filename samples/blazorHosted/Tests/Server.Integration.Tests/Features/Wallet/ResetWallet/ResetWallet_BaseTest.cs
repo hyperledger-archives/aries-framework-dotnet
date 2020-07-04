@@ -1,6 +1,6 @@
-﻿namespace BlazorHosted.Server.Integration.Tests.Infrastructure
+﻿namespace Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure
 {
-  using BlazorHosted.Features.Wallets;
+  using Hyperledger.Aries.OpenApi.Features.Wallets;
   using FluentAssertions;
   using System.Threading.Tasks;
 

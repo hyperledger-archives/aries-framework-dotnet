@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.Applications.Components
+namespace Hyperledger.Aries.OpenApi.Features.Applications.Components
 {
-  using static BlazorHosted.Features.Applications.ApplicationState;
+  using static Hyperledger.Aries.OpenApi.Features.Applications.ApplicationState;
 
   public partial class NavBar
   {

@@ -1,9 +1,9 @@
-﻿namespace BlazorHosted.Features.Wallets.Pages
+﻿namespace Hyperledger.Aries.OpenApi.Features.Wallets.Pages
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using System.Linq;
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.Wallets.WalletState;
+  using static Hyperledger.Aries.OpenApi.Features.Wallets.WalletState;
 
   public partial class WalletPage : BaseComponent
   {

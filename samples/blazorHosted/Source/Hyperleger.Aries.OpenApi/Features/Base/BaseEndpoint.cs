@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.Bases
+namespace Hyperledger.Aries.OpenApi.Features.Bases
 {
   using MediatR;
   using Microsoft.AspNetCore.Mvc;

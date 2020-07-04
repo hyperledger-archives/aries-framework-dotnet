@@ -3,11 +3,11 @@
   using FluentAssertions;
   using FluentValidation.Results;
   using FluentValidation.TestHelper;
-  using BlazorHosted.Features.Connections;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Newtonsoft.Json;
-  using BlazorHosted.Server;
+  using Hyperledger.Aries.OpenApi.Server;
 
   public class Validate_Should: BaseTest
   {

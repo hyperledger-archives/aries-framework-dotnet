@@ -1,7 +1,7 @@
-namespace BlazorHosted.Client
+namespace Hyperledger.Aries.OpenApi.Client
 {
-  using BlazorHosted.Components;
-  using BlazorHosted.Features.ClientLoaders;
+  using Hyperledger.Aries.OpenApi.Components;
+  using Hyperledger.Aries.OpenApi.Features.ClientLoaders;
   using BlazorState;
   using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
   using Microsoft.Extensions.DependencyInjection;

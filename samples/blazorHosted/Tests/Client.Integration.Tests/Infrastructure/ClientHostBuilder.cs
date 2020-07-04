@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Client.Integration.Tests.Infrastructure
+﻿namespace Hyperledger.Aries.OpenApi.Client.Integration.Tests.Infrastructure
 {
   using Microsoft.Extensions.DependencyInjection;
   using System;

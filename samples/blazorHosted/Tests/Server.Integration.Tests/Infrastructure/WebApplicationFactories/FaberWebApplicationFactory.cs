@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Server.Integration.Tests.Infrastructure
+﻿namespace Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure
 {
   using Microsoft.AspNetCore.Hosting;
   using Microsoft.AspNetCore.Mvc.Testing;

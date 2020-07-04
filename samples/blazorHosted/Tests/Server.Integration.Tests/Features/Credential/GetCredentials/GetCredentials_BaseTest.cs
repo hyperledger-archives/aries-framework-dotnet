@@ -1,6 +1,6 @@
-﻿namespace BlazorHosted.Server.Integration.Tests.Infrastructure
+﻿namespace Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure
 {
-  using BlazorHosted.Features.Credentials;
+  using Hyperledger.Aries.OpenApi.Features.Credentials;
   using FluentAssertions;
 
   public partial class BaseTest

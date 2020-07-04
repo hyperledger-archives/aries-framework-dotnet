@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.CredentialDefinitions
+﻿namespace Hyperledger.Aries.OpenApi.Features.CredentialDefinitions
 {
   public static class FeatureAnnotations
   {

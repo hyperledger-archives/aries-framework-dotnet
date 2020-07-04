@@ -1,6 +1,6 @@
-namespace BlazorHosted.Pages
+namespace Hyperledger.Aries.OpenApi.Pages
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public partial class LogoutPage : BaseComponent
   {

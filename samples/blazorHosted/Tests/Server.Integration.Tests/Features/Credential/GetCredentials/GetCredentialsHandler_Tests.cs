@@ -1,8 +1,8 @@
 ﻿namespace GetCredentialsHandler
 {
-  using BlazorHosted.Features.Credentials;
-  using BlazorHosted.Server;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.Features.Credentials;
+  using Hyperledger.Aries.OpenApi.Server;
+  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Newtonsoft.Json;
   using System.Threading.Tasks;

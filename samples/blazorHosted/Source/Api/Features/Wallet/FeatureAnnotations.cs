@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.Wallets
+﻿namespace Hyperledger.Aries.OpenApi.Features.Wallets
 {
   public static class FeatureAnnotations
   {

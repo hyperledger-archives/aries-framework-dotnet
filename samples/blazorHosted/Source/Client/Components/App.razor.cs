@@ -1,18 +1,18 @@
-namespace BlazorHosted.Components
+namespace Hyperledger.Aries.OpenApi.Components
 {
-  using BlazorHosted.Features.Bases;
-  using BlazorHosted.Features.ClientLoaders;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.ClientLoaders;
   using BlazorState.Features.JavaScriptInterop;
   using BlazorState.Features.Routing;
   using BlazorState.Pipeline.ReduxDevTools;
   using Microsoft.AspNetCore.Components;
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.Connections.ConnectionState;
-  using static BlazorHosted.Features.CredentialDefinitions.CredentialDefinitionState;
-  using static BlazorHosted.Features.Credentials.CredentialState;
-  using static BlazorHosted.Features.PresentProofs.PresentProofState;
-  using static BlazorHosted.Features.Schemas.SchemaState;
-  using static BlazorHosted.Features.Wallets.WalletState;
+  using static Hyperledger.Aries.OpenApi.Features.Connections.ConnectionState;
+  using static Hyperledger.Aries.OpenApi.Features.CredentialDefinitions.CredentialDefinitionState;
+  using static Hyperledger.Aries.OpenApi.Features.Credentials.CredentialState;
+  using static Hyperledger.Aries.OpenApi.Features.PresentProofs.PresentProofState;
+  using static Hyperledger.Aries.OpenApi.Features.Schemas.SchemaState;
+  using static Hyperledger.Aries.OpenApi.Features.Wallets.WalletState;
 
   public partial class App : BaseComponent
   {

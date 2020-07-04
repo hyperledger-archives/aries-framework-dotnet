@@ -1,4 +1,4 @@
-namespace BlazorHosted.Server
+namespace Hyperledger.Aries.OpenApi.Server
 {
   using Microsoft.AspNetCore.Hosting;
 
@@ -18,6 +18,6 @@ namespace BlazorHosted.Server
           }
         );
 
-    public static void Main(string[] aArgumentArray) => CreateHostBuilder(aArgumentArray).Build().Run();
+    public static void Main(string[] aArgumentArray) => CreateHostBuilder(aArgumentArray).Build().StartAsync();
   }
 }

@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.ClientLoaders
+namespace Hyperledger.Aries.OpenApi.Features.ClientLoaders
 {
   using Microsoft.Extensions.Logging;
   using Microsoft.JSInterop;

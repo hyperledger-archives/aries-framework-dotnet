@@ -1,10 +1,10 @@
-namespace BlazorHosted.Server
+namespace Hyperledger.Aries.OpenApi.Server
 {
   using AutoMapper;
-  using BlazorHosted.Configuration;
-  using BlazorHosted.Features.Bases;
-  using BlazorHosted.Infrastructure;
   using FluentValidation.AspNetCore;
+  using Hyperledger.Aries.OpenApi.Configuration;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Infrastructure;
   using Hyperledger.Aries.Storage;
   using Jdenticon.AspNetCore;
   using MediatR;
@@ -16,21 +16,15 @@ namespace BlazorHosted.Server
   using Microsoft.Extensions.DependencyInjection;
   using Microsoft.Extensions.Hosting;
   using Microsoft.Extensions.Options;
-  using Microsoft.OpenApi.Models;
-  using Swashbuckle.AspNetCore.Swagger;
   using System;
   using System.IO;
   using System.Linq;
   using System.Net.Mime;
-  using System.Reflection;
 
   [System.Runtime.InteropServices.Guid("858D6DFD-C176-4A54-9EAD-CB7E80B98AFA")]
   public class Startup
   {
     private readonly IConfiguration Configuration;
-    private const string SwaggerVersion = "v1";
-    private string SwaggerApiTitle => $"BlazorHosted API {SwaggerVersion}";
-    private string SwaggerEndPoint => $"/swagger/{SwaggerVersion}/swagger.json";
 
     public Startup(IConfiguration aConfiguration)
     {
@@ -44,16 +38,7 @@ namespace BlazorHosted.Server
     )
     {
       aApplicationBuilder.UseJdenticon();
-      // Enable middleware to serve generated Swagger as a JSON endpoint.
-      aApplicationBuilder.UseSwagger();
-
-      // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-      // specifying the Swagger JSON endpoint.
-      aApplicationBuilder.UseSwaggerUI
-      (
-        aSwaggerUIOptions => aSwaggerUIOptions.SwaggerEndpoint(SwaggerEndPoint, SwaggerApiTitle)
-      );
-
+      aApplicationBuilder.UseAriesOpenApi();
       aApplicationBuilder.UseResponseCompression();
 
       if (aWebHostEnvironment.IsDevelopment())
@@ -82,16 +67,12 @@ namespace BlazorHosted.Server
       aServiceCollection.AddRazorPages();
       aServiceCollection.AddServerSideBlazor();
 
-      aServiceCollection.AddMvc()
-        .AddApplicationPart(typeof(BaseEndpoint<,>).Assembly)
+      IMvcBuilder mvcBuilder = aServiceCollection.AddMvc()
         .AddNewtonsoftJson()
         .AddFluentValidation
         (
           aFluentValidationMvcConfiguration =>
-          {
-            aFluentValidationMvcConfiguration.RegisterValidatorsFromAssemblyContaining<Startup>();
-            aFluentValidationMvcConfiguration.RegisterValidatorsFromAssemblyContaining<BaseRequest>();
-          }
+            aFluentValidationMvcConfiguration.RegisterValidatorsFromAssemblyContaining<Startup>()
         );
 
       aServiceCollection.AddLogging();
@@ -112,7 +93,7 @@ namespace BlazorHosted.Server
 
       Client.Program.ConfigureServices(aServiceCollection);
 
-      aServiceCollection.AddMediatR(typeof(Startup).Assembly,typeof(BaseEndpoint<,>).Assembly);
+      aServiceCollection.AddMediatR(typeof(Startup).Assembly);
 
       aServiceCollection.AddAutoMapper(typeof(MappingProfile).Assembly);
 
@@ -124,8 +105,8 @@ namespace BlazorHosted.Server
           .AsSelf()
           .WithScopedLifetime()
       );
-      ConfigureSwagger(aServiceCollection);
       ConfigureAries(aServiceCollection);
+      aServiceCollection.AddAriesOpenApi(mvcBuilder, a => a.UseSwaggerUi = true);
     }
 
     private void ConfigureAries(IServiceCollection aServiceCollection)
@@ -154,53 +135,9 @@ namespace BlazorHosted.Server
       );
     }
 
-    private void ConfigureSwagger(IServiceCollection aServiceCollection)
-    {
-      // Register the Swagger generator, defining 1 or more Swagger documents
-      aServiceCollection.AddSwaggerGen
-      (
-        aSwaggerGenOptions =>
-        {
-          aSwaggerGenOptions
-            .SwaggerDoc
-            (
-              SwaggerVersion,
-              new OpenApiInfo { Title = SwaggerApiTitle, Version = SwaggerVersion }
-            );
-
-          aSwaggerGenOptions.EnableAnnotations();
-
-          // Set the comments path for the Swagger JSON and UI.
-          string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-          string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-          aSwaggerGenOptions.IncludeXmlComments(xmlPath);
-
-          // Set the comments path for the Swagger JSON and UI from API.
-          xmlFile = $"{typeof(BaseRequest).Assembly.GetName().Name}.xml";
-          xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-          aSwaggerGenOptions.IncludeXmlComments(xmlPath);
-
-          // Set the comments path for the Swagger JSON and UI from API.
-          xmlFile = $"{typeof(BaseEndpoint<,>).Assembly.GetName().Name}.xml";
-          xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-          aSwaggerGenOptions.IncludeXmlComments(xmlPath);
-
-          aSwaggerGenOptions.AddFluentValidationRules();
-
-          aSwaggerGenOptions
-            .OrderActionsBy
-            (
-              aApiDescription =>
-                $"{aApiDescription.GroupName}{aApiDescription.HttpMethod}{aApiDescription.RelativePath.Contains("{")}{aApiDescription.RelativePath}"
-            );
-        }
-      );
-    }
-
     private void ConfigureServicesSettings(IServiceCollection aServiceCollection)
     {
       aServiceCollection.AddOptions();
-      //aServiceCollection.Configure<RootSettings>(Configuration);
       aServiceCollection.Configure<AgentSettings>(Configuration.GetSection(nameof(AgentSettings)));
     }
   }

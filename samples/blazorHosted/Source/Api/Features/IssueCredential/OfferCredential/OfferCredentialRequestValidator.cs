@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.IssueCredentials
+﻿namespace Hyperledger.Aries.OpenApi.Features.IssueCredentials
 {
   using FluentValidation;
   

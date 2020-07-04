@@ -1,11 +1,11 @@
-﻿namespace BlazorHosted.Features.Connections.Components
+﻿namespace Hyperledger.Aries.OpenApi.Features.Connections.Components
 {
-  using BlazorHosted.Features.Bases;
-  using BlazorHosted.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
   using Hyperledger.Aries.Features.DidExchange;
   using Microsoft.AspNetCore.Components;
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.Connections.ConnectionState;
+  using static Hyperledger.Aries.OpenApi.Features.Connections.ConnectionState;
 
   public partial class Details : BaseComponent
   {

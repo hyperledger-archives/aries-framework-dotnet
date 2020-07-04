@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.ClientLoaders
+﻿namespace Hyperledger.Aries.OpenApi.Features.ClientLoaders
 {
   using System;
 

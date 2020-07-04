@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.Counters.Components
+namespace Hyperledger.Aries.OpenApi.Features.Counters.Components
 {
   using System.Threading.Tasks;
-  using static BlazorHosted.Features.Counters.CounterState;
+  using static Hyperledger.Aries.OpenApi.Features.Counters.CounterState;
 
   public partial class Counter
   {

@@ -1,7 +1,7 @@
 {
   "name": "test-app.end-to-end.test-cafe.tests",
   "scripts": {
-    "server": "dotnet run --no-build --project ../../Source/Server/BlazorHosted.Server.csproj  --urls https://localhost:5011",
+    "server": "dotnet run --no-build --project ../../Source/Server/Hyperledger.Aries.OpenApi.Server.csproj  --urls https://localhost:5011",
     "test": "testcafe edge tests/ --app \"npm run server > NUL\" --app-init-delay 5000"
   },
   "devDependencies": {

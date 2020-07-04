@@ -1,4 +1,4 @@
-# BlazorHosted
+# Hyperledger.Aries.OpenApi
 
 [![Join the chat at https://gitter.im/Microsoft/ChakraCore](https://badges.gitter.im/Microsoft/ChakraCore.svg)](https://gitter.im/Microsoft/ChakraCore?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Licensed under the MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Microsoft/ChakraCore/blob/master/LICENSE.txt)
@@ -7,7 +7,7 @@
 TODO: Give a short introduction of your project. Ideally we want readers to go to the documentation site from this Readme.
 
 ## Documentation
-* Please see [BlazorHosted documentation](https://todo/your-docs) for more complete documentation.
+* Please see [Hyperledger.Aries.OpenApi documentation](https://todo/your-docs) for more complete documentation.
 
 ## Run
 

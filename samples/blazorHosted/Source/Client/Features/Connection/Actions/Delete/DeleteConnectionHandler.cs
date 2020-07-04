@@ -1,4 +1,4 @@
-﻿namespace BlazorHosted.Features.Connections
+﻿namespace Hyperledger.Aries.OpenApi.Features.Connections
 {
   using BlazorState;
   using MediatR;
@@ -6,7 +6,7 @@
   using System.Net.Http.Json;
   using System.Threading;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Newtonsoft.Json;
   using System;
 

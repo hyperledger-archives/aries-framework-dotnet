@@ -1,11 +1,11 @@
-namespace BlazorHosted.Features.Credentials
+namespace Hyperledger.Aries.OpenApi.Features.Credentials
 {
   using BlazorState;
   using MediatR;
   using System.Net.Http;
   using System.Threading;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using System.Linq;
   using Newtonsoft.Json;
 

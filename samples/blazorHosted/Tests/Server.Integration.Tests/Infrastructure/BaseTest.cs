@@ -1,6 +1,6 @@
-namespace BlazorHosted.Server.Integration.Tests.Infrastructure
+namespace Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure
 {
-  using BlazorHosted.Server;
+  using Hyperledger.Aries.OpenApi.Server;
   using FluentAssertions;
   using MediatR;
   using Microsoft.AspNetCore.Mvc.Testing;

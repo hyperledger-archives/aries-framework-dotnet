@@ -13,7 +13,7 @@ steps:
   inputs:
     command: publish
     publishWebProjects: false
-    projects: 'Source/Server/BlazorHosted.Server.csproj'
+    projects: 'Source/Server/Hyperledger.Aries.OpenApi.Server.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
   enabled: true
 

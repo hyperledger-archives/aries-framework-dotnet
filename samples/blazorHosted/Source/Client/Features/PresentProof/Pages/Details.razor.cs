@@ -1,6 +1,6 @@
-﻿namespace BlazorHosted.Features.PresentProofs.Pages
+﻿namespace Hyperledger.Aries.OpenApi.Features.PresentProofs.Pages
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Hyperledger.Aries.Features.PresentProof;
   using Microsoft.AspNetCore.Components;
   using Newtonsoft.Json;

@@ -1,7 +1,7 @@
-﻿namespace BlazorHosted.EndToEnd.Tests.Infrastructure
+﻿namespace Hyperledger.Aries.OpenApi.EndToEnd.Tests.Infrastructure
 {
   using System;
-  using BlazorHosted.Features.ClientLoaders;
+  using Hyperledger.Aries.OpenApi.Features.ClientLoaders;
 
   public class TestClientLoaderConfiguration : IClientLoaderConfiguration
   {

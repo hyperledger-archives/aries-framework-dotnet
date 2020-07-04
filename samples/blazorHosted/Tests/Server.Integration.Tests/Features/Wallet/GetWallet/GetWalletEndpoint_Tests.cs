@@ -1,8 +1,8 @@
 ﻿namespace GetWalletEndpoint
 {
-  using BlazorHosted.Features.Wallets;
-  using BlazorHosted.Server;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.Features.Wallets;
+  using Hyperledger.Aries.OpenApi.Server;
+  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
   using Microsoft.AspNetCore.Mvc.Testing;
   using Newtonsoft.Json;
   using System.Net.Http;

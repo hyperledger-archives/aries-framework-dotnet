@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.Bases
+namespace Hyperledger.Aries.OpenApi.Features.Bases
 {
   public class BaseError
   {

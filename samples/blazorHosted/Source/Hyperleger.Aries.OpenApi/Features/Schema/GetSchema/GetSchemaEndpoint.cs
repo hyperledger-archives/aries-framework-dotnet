@@ -1,10 +1,10 @@
-namespace BlazorHosted.Features.Schemas
+namespace Hyperledger.Aries.OpenApi.Features.Schemas
 {
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;
   using System.Net;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetSchemaEndpoint : BaseEndpoint<GetSchemaRequest, GetSchemaResponse>
   {

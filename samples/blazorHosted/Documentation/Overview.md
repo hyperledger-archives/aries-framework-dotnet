@@ -1,8 +1,8 @@
-# BlazorHosted
+# Hyperledger.Aries.OpenApi
 TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.
 
 ## Documentation
-* Please see [BlazorHosted documentation](https://todo/your-docs) for
+* Please see [Hyperledger.Aries.OpenApi documentation](https://todo/your-docs) for
 
 ## Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
@@ -24,7 +24,7 @@ To run your site, execute the `run.ps1` script from powershell.
 ## Contribute
 
 TODO: Explain how other users and developers can contribute to make your code better.
-Contributions to BlazorHosted are welcome.  Here is how you can contribute to BlazorHosted:
+Contributions to Hyperledger.Aries.OpenApi are welcome.  Here is how you can contribute to Hyperledger.Aries.OpenApi:
 
 * [Submit bugs](https://todo/your-repo/issues)
 * [Submit pull requests](https://todo/your-repo/pulls) for bug fixes and features and discuss existing proposals
@@ -41,7 +41,7 @@ For details on our planned features and future direction please refer to our [Ro
 
 ## Contact Us
 
-If you have questions about BlazorHosted, or you would like to reach out to us about an issue you're having or for development advice as you work on a BlazorHosted issue, you can reach us as follows:
+If you have questions about Hyperledger.Aries.OpenApi, or you would like to reach out to us about an issue you're having or for development advice as you work on a Hyperledger.Aries.OpenApi issue, you can reach us as follows:
 
 * Open an issue and prefix the issue title with [Question]. See Question tag for already-opened questions.
-* Discuss BlazorHosted with the team and the community on Discord/Telegram/Slack/Teams <TODO: add link here>.
+* Discuss Hyperledger.Aries.OpenApi with the team and the community on Discord/Telegram/Slack/Teams <TODO: add link here>.

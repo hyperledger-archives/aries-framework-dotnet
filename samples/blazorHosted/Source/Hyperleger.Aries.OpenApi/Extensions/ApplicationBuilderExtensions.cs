@@ -1,34 +1,46 @@
-﻿//using Hyperledger.Aries.Agents;
-//using Hyperledger.Aries.AspNetCore;
-//using Hyperledger.Aries.Configuration;
-//using Microsoft.AspNetCore.Builder;
-//using Microsoft.Extensions.Options;
+﻿namespace Microsoft.Extensions.DependencyInjection
+{
+  using Hyperledger.Aries.OpenApi.Configuration;
+  using Microsoft.AspNetCore.Builder;
 
-//namespace Microsoft.Extensions.DependencyInjection
-//{
-//    /// <summary>
-//    /// <see cref="IServiceCollection"/> extension methods
-//    /// </summary>
-//    public static class ApplicationBuilderExtensions
-//    {
-//        /// <summary>
-//        /// Allows default agent configuration
-//        /// </summary>
-//        /// <param name="app">App.</param>
-//        public static void UseAriesFramework(this IApplicationBuilder app) => UseAriesFramework<AgentMiddleware>(app);
+  /// <summary>
+  /// <see cref="IServiceCollection"/> extension methods
+  /// </summary>
+  public static class ApplicationBuilderExtensions
+  {
+    /// <summary>
+    /// Allows agent configuration by specifying a custom middleware
+    /// </summary>
+    /// <remarks>Requires corresponding call to AddAriesOpenApi in ConfigureServices</remarks>
+    /// <param name="aApplicationBuilder">App.</param>
+    public static void UseAriesOpenApi(this IApplicationBuilder aApplicationBuilder)
+    {
+      AriesOpenApiOptions ariesOpenApiOptions =
+        aApplicationBuilder.ApplicationServices.GetRequiredService<AriesOpenApiOptions>();
 
-//        /// <summary>
-//        /// Allows agent configuration by specifying a custom middleware
-//        /// </summary>
-//        /// <param name="app">App.</param>
-//        public static void UseAriesFramework<T>(this IApplicationBuilder app)
-//        {
-//            var options = app.ApplicationServices.GetRequiredService<IOptions<AgentOptions>>().Value;
+      if (ariesOpenApiOptions.UseSwaggerUi)
+      {
+        aApplicationBuilder
+        .UseSwagger
+        (
+          aSwaggerOptions =>
+            aSwaggerOptions.RouteTemplate = $"{ariesOpenApiOptions.RoutePrefix}/{{documentname}}/swagger.json"
+        );
 
-//            app.UseMiddleware<T>();
-//            app.MapWhen(
-//                context => context.Request.Path.ToUriComponent().Contains(options.RevocationRegistryUriPath), 
-//                app => app.UseMiddleware<TailsMiddleware>());
-//        }
-//    }
-//}
+
+        // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+        // specifying the Swagger JSON endpoint.
+        aApplicationBuilder.UseSwaggerUI
+        (
+          aSwaggerUIOptions =>
+          {
+            aSwaggerUIOptions.SwaggerEndpoint(ariesOpenApiOptions.SwaggerEndPoint, ariesOpenApiOptions.SwaggerApiTitle);
+            aSwaggerUIOptions.RoutePrefix = ariesOpenApiOptions.RoutePrefix;
+          }
+        );
+      }
+      aApplicationBuilder.UseRouting();
+      aApplicationBuilder.UseEndpoints(aEndpointRouteBuilder => aEndpointRouteBuilder.MapControllers());
+    }
+  }
+}

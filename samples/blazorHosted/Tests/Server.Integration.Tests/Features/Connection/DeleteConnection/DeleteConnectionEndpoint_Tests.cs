@@ -5,9 +5,9 @@
   using System.Net;
   using System.Net.Http;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Connections;
-  using BlazorHosted.Server.Integration.Tests.Infrastructure;
-  using BlazorHosted.Server;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure;
+  using Hyperledger.Aries.OpenApi.Server;
   using Newtonsoft.Json;
   using System;
   using System.Net.Http.Json;

@@ -1,4 +1,4 @@
-namespace BlazorHosted.Features.BasicMessaging
+namespace Hyperledger.Aries.OpenApi.Features.BasicMessaging
 {
   using Hyperledger.Aries.Agents;
   using Hyperledger.Aries.Configuration;

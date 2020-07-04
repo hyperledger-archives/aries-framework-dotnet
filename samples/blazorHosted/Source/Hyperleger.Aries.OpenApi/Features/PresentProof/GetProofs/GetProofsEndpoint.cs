@@ -1,10 +1,10 @@
-namespace BlazorHosted.Features.PresentProofs
+namespace Hyperledger.Aries.OpenApi.Features.PresentProofs
 {
   using Microsoft.AspNetCore.Mvc;
   using Swashbuckle.AspNetCore.Annotations;
   using System.Net;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class GetProofsEndpoint : BaseEndpoint<GetProofsRequest, GetProofsResponse>
   {

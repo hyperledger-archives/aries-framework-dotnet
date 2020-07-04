@@ -1,7 +1,7 @@
-﻿namespace BlazorHosted.Infrastructure
+﻿namespace Hyperledger.Aries.OpenApi.Infrastructure
 {
   using AutoMapper;
-  using BlazorHosted.Features.Connections;
+  using Hyperledger.Aries.OpenApi.Features.Connections;
   using Hyperledger.Aries.Features.DidExchange;
 
   public class MappingProfile : Profile

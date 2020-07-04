@@ -1,5 +1,5 @@
 ﻿//#nullable enable
-//namespace BlazorHosted.Extensions
+//namespace Hyperledger.Aries.OpenApi.Extensions
 //{
 //  using System;
 //  using System.Collections.Generic;

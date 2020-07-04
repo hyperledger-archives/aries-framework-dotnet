@@ -1,1 +1,1 @@
-dotnet run --project .\Source\Server\ --no-build --launch-profile "BlazorHosted.Server Faber"
+dotnet run --project .\Source\Server\ --no-build --launch-profile "Hyperledger.Aries.OpenApi.Server Faber"

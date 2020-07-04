@@ -1,11 +1,11 @@
-namespace BlazorHosted.Features.Schemas
+namespace Hyperledger.Aries.OpenApi.Features.Schemas
 {
   using BlazorState;
   using MediatR;
   using System.Net.Http;
   using System.Threading;
   using System.Threading.Tasks;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
   using Newtonsoft.Json;
   using System.Linq;
 

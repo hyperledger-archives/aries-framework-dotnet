@@ -1,6 +1,6 @@
-namespace BlazorHosted.Features.Applications.Components
+namespace Hyperledger.Aries.OpenApi.Features.Applications.Components
 {
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public partial class SideBar: BaseComponent
   {

@@ -1,4 +1,4 @@
-namespace BlazorHosted.Server.Integration.Tests.Infrastructure
+namespace Hyperledger.Aries.OpenApi.Server.Integration.Tests.Infrastructure
 {
   using Fixie;
   using Microsoft.AspNetCore.Mvc.Testing;
@@ -6,7 +6,7 @@ namespace BlazorHosted.Server.Integration.Tests.Infrastructure
   using System;
   using System.Reflection;
   using System.Text.Json;
-  using BlazorHosted.Server;
+  using Hyperledger.Aries.OpenApi.Server;
   using Newtonsoft.Json;
 
   [NotTest]

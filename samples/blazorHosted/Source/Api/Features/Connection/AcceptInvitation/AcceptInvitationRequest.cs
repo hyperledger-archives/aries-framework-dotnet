@@ -1,7 +1,7 @@
-namespace BlazorHosted.Features.Connections
+namespace Hyperledger.Aries.OpenApi.Features.Connections
 {
   using MediatR;
-  using BlazorHosted.Features.Bases;
+  using Hyperledger.Aries.OpenApi.Features.Bases;
 
   public class AcceptInvitationRequest : BaseApiRequest, IRequest<AcceptInvitationResponse>
   {
