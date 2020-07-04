@@ -14,24 +14,29 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="options"></param>
+        /// <param name="delayProvisioning"></param>
         /// <returns></returns>
-        public static AriesFrameworkBuilder RegisterEdgeAgent(
+        public static AriesFrameworkBuilder RegisterEdgeAgent
+        (
             this AriesFrameworkBuilder builder,
             Action<AgentOptions> options,
             bool delayProvisioning = false)
-            => RegisterEdgeAgent<DefaultAgent>(builder, options, delayProvisioning);
+            => RegisterEdgeAgent<DefaultAgent>(builder, options, delayProvisioning
+        );
 
         /// <summary>
         /// Registers and provisions an agent with custom implementation
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="options"></param>
+        /// <param name="delayProvisioning"></param>
         /// <returns></returns>
-        public static AriesFrameworkBuilder RegisterEdgeAgent<T>(
+        public static AriesFrameworkBuilder RegisterEdgeAgent<T>
+        (
             this AriesFrameworkBuilder builder,
             Action<AgentOptions> options,
-            bool delayProvisioning = false)
-            where T : class, IAgent
+            bool delayProvisioning = false
+        ) where T : class, IAgent
         {
             builder.AddAgentProvider();
             builder.Services.AddDefaultMessageHandlers();
