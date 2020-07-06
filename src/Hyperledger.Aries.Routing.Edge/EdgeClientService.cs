@@ -120,7 +120,7 @@ namespace Hyperledger.Aries.Routing.Edge
                     await agentContext.Agent.ProcessAsync(agentContext, new PackedMessageContext(item.Data));
                     processedItems.Add(item.Id);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     unprocessedItem.Add(item);
                 }
