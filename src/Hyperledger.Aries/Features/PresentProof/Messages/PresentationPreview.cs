@@ -117,8 +117,9 @@ namespace Hyperledger.Aries.Features.PresentProof
         [JsonProperty("schema_id")]
         public string SchemaId { get; set; }
 
+        // Gets or sets the predicate operator (>, >=, <, <=)
         /// <summary>
-        /// Gets or sets the predicate operator (>, >=, <, <=)
+        /// Gets or sets the predicate operator (>, >=, &lt;, &lt;=) 
         /// </summary>
         [JsonProperty("predicate")]
         public string Predicate { get; set; }

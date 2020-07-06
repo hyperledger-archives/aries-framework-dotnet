@@ -186,8 +186,8 @@ namespace Hyperledger.TestHarness
             Console.WriteLine(requestorProofProposalRecord.ProposalJson);
             // Requestor sends a proof request
             var (requestorRequestMessage, requestorProofRequestRecord) = await proofService.CreateRequestFromProposalAsync(
-                requestorContext, 
-                new ProofRequestParameters 
+                requestorContext,
+                new ProofRequestParameters
                 {
                     Name = "Test",
                     Version = "1.0"
@@ -231,7 +231,7 @@ namespace Hyperledger.TestHarness
             Assert.Equal(ProofState.Requested, holderProofRecord.State);
             Console.WriteLine(holderProofRecord.RequestJson);
 
-            
+
             var holderProofRequest = JsonConvert.DeserializeObject<ProofRequest>(holderProofRecord.RequestJson);
 
             // Auto satisfy the proof with which ever credentials in the wallet are capable
@@ -268,8 +268,19 @@ namespace Hyperledger.TestHarness
         {
             // Create a schema and credential definition for this issuer
             var schemaId = await schemaService.CreateSchemaAsync(context, issuerDid,
-                $"Test-Schema-{Guid.NewGuid().ToString()}", "1.0", attributeValues);
-            return (await schemaService.CreateCredentialDefinitionAsync(context, schemaId, issuerDid, "Tag", false, 100, new Uri("http://mock/tails")), schemaId);
+                $"Test-Schema-{Guid.NewGuid()}", "1.0", attributeValues);
+            var credentialDefinitionConfiguration = new CredentialDefinitionConfiguration
+            {
+                SchemaId = schemaId,
+                EnableRevocation = false,
+                IssuerDid = issuerDid,
+                Tag = "Tag",
+            };
+            return
+            (
+                await schemaService.CreateCredentialDefinitionAsync(context, credentialDefinitionConfiguration),
+                schemaId
+            );
         }
 
         private static T FindContentMessage<T>(IEnumerable<AgentMessage> collection)
