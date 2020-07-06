@@ -109,7 +109,11 @@ namespace WebAgent.Controllers
             var issuer = await _provisionService.GetProvisioningAsync(context.Wallet);
             var connection = await _connectionService.GetAsync(context, model.ConnectionId);
             var values = JsonConvert.DeserializeObject<List<CredentialPreviewAttribute>>(model.CredentialAttributes);
-            values.Add(new CredentialPreviewAttribute("issuer", issuer.Owner.Name));
+
+            foreach (CredentialPreviewAttribute attr in values)
+            {
+                attr.MimeType = CredentialMimeTypes.ApplicationJsonMimeType;
+            }
 
             var (offer, _) = await _credentialService.CreateOfferAsync(context, new OfferConfiguration
                 {
