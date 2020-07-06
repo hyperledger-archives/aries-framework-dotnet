@@ -1,17 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Hyperledger.Aries.Routing.Edge.xml</DocumentationFile>
-  </PropertyGroup>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="EdgeClientService.Backup.cs">
-      <DependentUpon>EdgeClientService.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="EdgeClientService.Backup.cs">
+            <DependentUpon>EdgeClientService.cs</DependentUpon>
+        </Compile>
+    </ItemGroup>
 </Project>

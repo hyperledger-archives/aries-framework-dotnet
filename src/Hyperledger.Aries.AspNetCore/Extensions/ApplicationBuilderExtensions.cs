@@ -65,8 +65,8 @@
           }
         );
       }
-      aApplicationBuilder.UseRouting();
-      aApplicationBuilder.UseEndpoints(aEndpointRouteBuilder => aEndpointRouteBuilder.MapControllers());
+      //aApplicationBuilder.UseRouting();
+      //aApplicationBuilder.UseEndpoints(aEndpointRouteBuilder => aEndpointRouteBuilder.MapControllers());
     }
   }
 }

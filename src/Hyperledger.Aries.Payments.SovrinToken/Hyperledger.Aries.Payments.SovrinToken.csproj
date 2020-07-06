@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Hyperledger.Aries.Payments.SovrinToken.xml</DocumentationFile>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Hyperledger.Aries.Payments.SovrinToken.xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
+    </ItemGroup>
 </Project>

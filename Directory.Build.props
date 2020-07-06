@@ -22,6 +22,10 @@
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
     <!--Versions of packages used across the repository-->
     <PropertyGroup Label="Package Versions">
         <MicrosoftAspNetCoreHttpAbstractionsVersion>2.2.0</MicrosoftAspNetCoreHttpAbstractionsVersion>

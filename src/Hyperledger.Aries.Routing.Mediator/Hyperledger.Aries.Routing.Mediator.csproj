@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-      <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PropertyGroup>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Hyperledger.Aries.Routing.Mediator.xml</DocumentationFile>
-  </PropertyGroup>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
-    <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
-    <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
+        <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
+        <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
+    </ItemGroup>
 </Project>

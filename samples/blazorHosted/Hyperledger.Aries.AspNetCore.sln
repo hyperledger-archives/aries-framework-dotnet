@@ -66,6 +66,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.AspNetCor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyperledger.Aries.AspNetCore.Server.Integration.Tests", "Tests\Hyperledger.Aries.AspNetCore.Tests\Hyperledger.Aries.AspNetCore.Server.Integration.Tests.csproj", "{EB545F3D-9A3A-4FFB-8817-91B72F34AA01}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mediator.Web", "..\routing\MediatorAgentService\Mediator.Web.csproj", "{110C5080-549C-4EC0-A13C-F0B139DD7386}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edge.Console", "..\routing\EdgeConsoleClient\Edge.Console.csproj", "{550E3FE4-F676-4EB8-AAAE-8B792EE1E454}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,6 +136,14 @@ Global
 		{EB545F3D-9A3A-4FFB-8817-91B72F34AA01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB545F3D-9A3A-4FFB-8817-91B72F34AA01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB545F3D-9A3A-4FFB-8817-91B72F34AA01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{110C5080-549C-4EC0-A13C-F0B139DD7386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{110C5080-549C-4EC0-A13C-F0B139DD7386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{110C5080-549C-4EC0-A13C-F0B139DD7386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{110C5080-549C-4EC0-A13C-F0B139DD7386}.Release|Any CPU.Build.0 = Release|Any CPU
+		{550E3FE4-F676-4EB8-AAAE-8B792EE1E454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{550E3FE4-F676-4EB8-AAAE-8B792EE1E454}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{550E3FE4-F676-4EB8-AAAE-8B792EE1E454}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{550E3FE4-F676-4EB8-AAAE-8B792EE1E454}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +164,8 @@ Global
 		{D23F5308-83DC-4E8D-828C-4E404151BB23} = {F24DF9E5-4306-4C7A-BBFC-86FA68E74AD5}
 		{03A8BF33-52FD-4639-A6D3-B9A0BE33E668} = {F24DF9E5-4306-4C7A-BBFC-86FA68E74AD5}
 		{EB545F3D-9A3A-4FFB-8817-91B72F34AA01} = {2902FDFD-016E-4BF7-8B41-53D674FA53DD}
+		{110C5080-549C-4EC0-A13C-F0B139DD7386} = {EBE5E0DC-7649-4E99-B583-1923CEFD549F}
+		{550E3FE4-F676-4EB8-AAAE-8B792EE1E454} = {EBE5E0DC-7649-4E99-B583-1923CEFD549F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16FA64C2-4A0E-42D4-94E6-C8CFDE84597E}
