@@ -1,0 +1,41 @@
+﻿@namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs.Pages
+@inherits BaseComponent
+@page "/proofs"
+
+  <div data-qa="@TestId">
+    <br />
+    <h1>Proofs</h1>
+    <button class="btn btn-primary" @onclick=@CreateClick>Create</button>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>ConnectionId</th>
+          <th>State</th>
+          <th>CreatedAtUtc</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var proof in PresentProofState.ProofsAsList)
+        {
+          <tr>
+            <td>@proof?.Id</td>
+            <td>@proof?.ConnectionId</td>
+            <td>@proof?.State</td>
+            <td>@proof?.CreatedAtUtc</td>
+            <td>
+              <a href=@Pages.Details.GetRoute(proof.Id)>
+                Details
+              </a>
+              |
+              @*<a href=@Pages.Delete.GetRoute(connection.Id)>*@
+                Delete
+              @*</a>*@
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>

@@ -18,7 +18,7 @@ namespace Hyperledger.Aries.Tests.Decorators
 
             Assert.True(threadingBlock.ThreadId == inboundMessage.Id);
             Assert.True(threadingBlock.SenderOrder == 0);
-            Assert.True(threadingBlock.RecievedOrders.Count == 0);
+            Assert.True(threadingBlock.ReceivedOrders.Count == 0);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Hyperledger.Aries.Tests.Decorators
 
             Assert.True(threadingBlock.ThreadId == threadId);
             Assert.True(threadingBlock.SenderOrder == 0);
-            Assert.True(threadingBlock.RecievedOrders.Count == 0);
+            Assert.True(threadingBlock.ReceivedOrders.Count == 0);
         }
 
         [Fact]

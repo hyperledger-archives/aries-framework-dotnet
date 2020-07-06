@@ -1,5 +1,6 @@
 ﻿using Hyperledger.Aries.Features.PresentProof;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
@@ -13,6 +14,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <value>The credential object.</value>
         [JsonProperty("cred_info")]
+        [JsonPropertyName("cred_info")]
         public CredentialInfo CredentialInfo { get; set; }
 
         /// <summary>
@@ -20,6 +22,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <value>The non revocation interval.</value>
         [JsonProperty("interval")]
+        [JsonPropertyName("interval")]
         public RevocationInterval NonRevocationInterval { get; set; }
     }
 }

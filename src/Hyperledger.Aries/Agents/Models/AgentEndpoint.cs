@@ -7,12 +7,6 @@ namespace Hyperledger.Aries.Agents
     /// </summary>
     public class AgentEndpoint
     {
-        [JsonProperty("did")]
-        private string _did;
-        [JsonProperty("verkey")]
-        private string[] _verkey;
-        [JsonProperty("uri")]
-        private string _uri;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentEndpoint"/> class.
@@ -25,7 +19,10 @@ namespace Hyperledger.Aries.Agents
             Uri = copy.Uri;
         }
 
-        internal AgentEndpoint() { }
+        /// <summary>
+        /// Parameterless constructor required by System.Text.Json for Serialization 
+        /// </summary>
+        public AgentEndpoint() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentEndpoint"/> class.
@@ -46,12 +43,9 @@ namespace Hyperledger.Aries.Agents
         /// <value>
         /// The did of the agent.
         /// </value>
-        [JsonIgnore]
-        public string Did
-        {
-            get => _did;
-            internal set => _did = value;
-        }
+        [JsonProperty("did")]
+        public string Did { get; set; }
+
 
         /// <summary>
         /// Gets or sets the verkey of the agent.
@@ -59,12 +53,9 @@ namespace Hyperledger.Aries.Agents
         /// <value>
         /// The verkey of the agent.
         /// </value>
-        [JsonIgnore]
-        public string[] Verkey
-        {
-            get => _verkey;
-            internal set => _verkey = value;
-        }
+        [JsonProperty("verkey")]
+        public string[] Verkey { get; set; }
+
 
         /// <summary>
         /// Gets or sets the uri of the agent.
@@ -72,12 +63,9 @@ namespace Hyperledger.Aries.Agents
         /// <value>
         /// The uri of the agent.
         /// </value>
-        [JsonIgnore]
-        public string Uri
-        {
-            get => _uri;
-            internal set => _uri = value;
-        }
+        [JsonProperty("uri")]
+        public string Uri { get; set; }
+
 
         /// <inheritdoc />
         public override string ToString() =>

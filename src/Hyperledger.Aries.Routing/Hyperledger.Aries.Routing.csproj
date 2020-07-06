@@ -10,6 +10,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Multiformats.Base" Version="2.0.2" />
+    <PackageReference Include="Multiformats.Base" Version="$(MultiformatsBaseVersion)" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
 
@@ -28,6 +29,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <value></value>
         [JsonProperty("schema_id")]
+        [JsonPropertyName("schema_id")]
         public string SchemaId { get; set; }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <value></value>
         [JsonProperty("cred_def_id")]
+        [JsonPropertyName("cred_def_id")]
         public string CredentialDefinitionId { get; set; }
     }
 }

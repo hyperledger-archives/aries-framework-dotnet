@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -10,6 +11,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The type of the predicate.</value>
         [JsonProperty("p_type")]
+        [JsonPropertyName("p_type")]
         public string PredicateType { get; set; }
 
         /// <summary>
@@ -17,6 +19,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The predicate value.</value>
         [JsonProperty("p_value")]
+        [JsonPropertyName("p_value")]
         public int PredicateValue { get; set; }
         
         /// <inheritdoc />

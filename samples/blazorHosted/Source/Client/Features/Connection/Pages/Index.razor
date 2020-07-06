@@ -1,0 +1,42 @@
+@namespace Hyperledger.Aries.AspNetCore.Features.Connections.Pages
+@inherits BaseComponent
+@page "/connections"
+
+<div data-qa="@TestId">
+  <br />
+  <h1>Connection Items</h1>
+
+  <p>Current count: @ConnectionState.Connections.Count</p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Alias</th>
+        <th>Id</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var connection in ConnectionState.ConnectionsAsList)
+      {
+        <tr>
+          <td>@connection.Alias?.Name</td>
+          <td>@connection.Id</td>
+          <td>@connection.State</td>
+          <td>@connection.CreatedAtUtc</td>
+          <td>
+            <a href=@Pages.Details.GetRoute(connection.Id)>
+              Details
+            </a>
+            |
+            <a href=@Pages.Delete.GetRoute(connection.Id)>
+              Delete
+            </a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

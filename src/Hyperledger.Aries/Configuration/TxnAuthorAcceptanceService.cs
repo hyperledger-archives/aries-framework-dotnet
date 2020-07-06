@@ -27,21 +27,21 @@ namespace Hyperledger.Aries.Configuration
         /// <summary>
         /// Initializes a new instance of the <see cref="TxnAuthorAcceptanceService" /> class.
         /// </summary>
-        /// <param name="applicationLifetime"></param>
+        /// <param name="hostApplicationLifetime"></param>
         /// <param name="provisioningService"></param>
         /// <param name="recordService"></param>
         /// <param name="poolService"></param>
         /// <param name="agentProvider"></param>
         /// <param name="agentOptions"></param>
         public TxnAuthorAcceptanceService(
-            IApplicationLifetime applicationLifetime,
+            IHostApplicationLifetime hostApplicationLifetime,
             IProvisioningService provisioningService,
             IWalletRecordService recordService,
             IPoolService poolService,
             IAgentProvider agentProvider,
             IOptions<AgentOptions> agentOptions)
         {
-            applicationLifetime.ApplicationStarted.Register(AcceptTxnAuthorAgreement);
+            hostApplicationLifetime.ApplicationStarted.Register(AcceptTxnAuthorAgreement);
             this.provisioningService = provisioningService;
             this.recordService = recordService;
             _poolService = poolService;

@@ -1,5 +1,6 @@
 ﻿using Hyperledger.Aries.Payments;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Decorators.Payments
 {
@@ -20,6 +21,7 @@ namespace Hyperledger.Aries.Decorators.Payments
         /// The method.
         /// </value>
         [JsonProperty("methodData")]
+        [JsonPropertyName("methodData")]
         public PaymentMethod Method { get; set; }
 
         /// <summary>

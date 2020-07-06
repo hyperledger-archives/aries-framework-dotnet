@@ -1,0 +1,34 @@
+﻿@namespace Hyperledger.Aries.AspNetCore.Features.Schemas.Pages
+@inherits BaseComponent
+@page "/schemas"
+
+<div data-qa="@TestId">
+  <br />
+  <h1>Schemas</h1>
+  <button class="btn btn-primary" @onclick=@CreateClick>Create</button>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Version</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var schema in SchemaState.SchemasAsList)
+      {
+        <tr>
+          <td>@schema.Id</td>
+          <td>@schema.Name</td>
+          <td>@schema.Version</td>
+          <td>
+            Details | Delete
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+

@@ -1,0 +1,66 @@
+<Project>
+  <!-- Set common properties regarding assembly information and nuget packages -->
+  
+  <PropertyGroup>
+    <Authors>Steven T. Cramer</Authors>
+    <Product>Hyperledger.Aries.AspNetCore</Product>
+  </PropertyGroup>
+
+  <!-- Common compile parameters -->
+  <PropertyGroup>
+    <Nullable>disable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <!-- We use full (Windows PDBs) until cross platform support for source link will get better -->
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <TestProjectTargetFramework>netcoreapp3.1</TestProjectTargetFramework>
+  </PropertyGroup>
+
+  <!--Versions of packages used across the solution-->
+  <PropertyGroup Label="Package Versions">
+    <MicrosoftAspNetCoreBlazorVersion>3.2.0</MicrosoftAspNetCoreBlazorVersion>
+    <MicrosoftAspNetCoreVersion>3.1.5</MicrosoftAspNetCoreVersion>    
+    
+    <MicrosoftAspNetCoreBlazorHttpClientVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreBlazorHttpClientVersion>
+    <MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyBuildVersion>
+    <MicrosoftAspNetCoreComponentsWebAssemblyServerVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyServerVersion>
+    <MicrosoftAspNetCoreComponentsWebAssemblyVersion>$(MicrosoftAspNetCoreBlazorVersion)</MicrosoftAspNetCoreComponentsWebAssemblyVersion>
+    <MicrosoftAspNetCoreMvcTestingVersion>$(MicrosoftAspNetCoreVersion)</MicrosoftAspNetCoreMvcTestingVersion>
+    <MicrosoftCodeAnalysisFxCopAnalyzersVersion>3.0.0</MicrosoftCodeAnalysisFxCopAnalyzersVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.7.0</SystemConfigurationConfigurationManagerVersion>
+    <SystemNetHttpJsonVersion>3.2.1</SystemNetHttpJsonVersion>
+    <SystemTextJsonVersion>4.7.2</SystemTextJsonVersion>
+
+    <AutoMapperExtensionsMicrosoftDependencyInjectionVersion>7.0.0</AutoMapperExtensionsMicrosoftDependencyInjectionVersion>
+    <AutoMapperVersion>10.0.0</AutoMapperVersion>
+    <BlazorExtensionsLoggingVersion>0.4.0</BlazorExtensionsLoggingVersion>
+    <BlazorStateVersion>3.2.2</BlazorStateVersion>
+    <DawnGuardVersion>1.12.0</DawnGuardVersion>
+    <FixieConsoleVersion>2.2.1</FixieConsoleVersion>
+    <FixieVersion>2.2.1</FixieVersion>
+    <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
+    <FluentValidationAspNetCoreVersion>8.6.2</FluentValidationAspNetCoreVersion>
+    <FluentValidationVersion>8.6.2</FluentValidationVersion>
+    <JdenticonAspNetCoreVersion>2.2.1</JdenticonAspNetCoreVersion>
+    <JdenticonAspNetWebApiVersion>2.2.1</JdenticonAspNetWebApiVersion>
+    <Jdenticon-netVersion>2.2.1</Jdenticon-netVersion>
+    <MediatrExtensionsMicrosoftDependencyInjectionVersion>8.0.1</MediatrExtensionsMicrosoftDependencyInjectionVersion>
+    <MediatrVersion>8.0.2</MediatrVersion>
+    <MicroElementsSwashbuckleFluentValidationVersion>3.2.0</MicroElementsSwashbuckleFluentValidationVersion>
+    <MoqVersion>4.14.1</MoqVersion>
+    <PeterLeslieMorrisBlazorFluentValidationVersion>1.3.1</PeterLeslieMorrisBlazorFluentValidationVersion>
+    <ScrutorVersion>3.2.1</ScrutorVersion>
+    <SeleniumSupportVersion>3.141.0</SeleniumSupportVersion>
+    <SeleniumWebDriverVersion>3.141.0</SeleniumWebDriverVersion>
+    <SwashbuckleAspNetCoreAnnotationsVersion>5.5.1</SwashbuckleAspNetCoreAnnotationsVersion>
+    <SwashbuckleAspNetCoreFiltersVersion>5.1.2</SwashbuckleAspNetCoreFiltersVersion>
+    <SwashbuckleAspNetCoreSwaggerGenVersion>5.5.1</SwashbuckleAspNetCoreSwaggerGenVersion>
+    <SwashbuckleAspNetCoreSwaggerUIVersion>5.5.1</SwashbuckleAspNetCoreSwaggerUIVersion>
+    <SwashbuckleAspNetCoreSwaggerVersion>5.5.1</SwashbuckleAspNetCoreSwaggerVersion>
+  </PropertyGroup>
+</Project>

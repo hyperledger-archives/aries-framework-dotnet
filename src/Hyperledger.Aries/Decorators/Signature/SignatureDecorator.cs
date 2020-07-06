@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Decorators.Signature
 {
@@ -11,12 +12,14 @@ namespace Hyperledger.Aries.Decorators.Signature
         /// Signature type.
         /// </summary>
         [JsonProperty("@type")]
+        [JsonPropertyName("@type")]
         public string SignatureType { get; set; }
 
         /// <summary>
         /// Signature data.
         /// </summary>
         [JsonProperty("sig_data")]
+        [JsonPropertyName("sig_data")]
         public string SignatureData { get; set; }
 
         /// <summary>

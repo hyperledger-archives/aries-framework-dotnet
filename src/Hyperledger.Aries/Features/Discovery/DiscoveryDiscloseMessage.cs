@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.Discovery
 {
@@ -34,6 +35,7 @@ namespace Hyperledger.Aries.Features.Discovery
         /// Protocol Identifier.
         /// </summary>
         [JsonProperty("pid")]
+        [JsonPropertyName("pid")]
         public string ProtocolId { get; set; }
 
         /// <summary>

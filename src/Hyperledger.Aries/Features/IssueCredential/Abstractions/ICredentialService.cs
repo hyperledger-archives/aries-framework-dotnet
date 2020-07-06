@@ -86,7 +86,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// <summary>
         /// Create a new credential offer for the specified connection. If "connectionId" is 
-        /// <c>null</c> this offer mjust be delivered over connectionless transport.
+        /// <c>null</c> this offer must be delivered over connectionless transport.
         /// The credential data will be stored in a tag named "CredentialOfferData" that can be retrieved
         /// at a later stage.
         /// </summary>

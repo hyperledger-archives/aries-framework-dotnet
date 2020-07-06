@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
@@ -170,11 +171,13 @@ namespace Hyperledger.Aries.Utils
         /// <summary>Gets or sets the sender verkey.</summary>
         /// <value>The sender verkey.</value>
         [JsonProperty("sender_verkey")]
+        [JsonPropertyName("sender_verkey")]
         public string SenderVerkey { get; set; }
 
         /// <summary>Gets or sets the recipient verkey.</summary>
         /// <value>The recipient verkey.</value>
         [JsonProperty("recipient_verkey")]
+        [JsonPropertyName("recipient_verkey")]
         public string RecipientVerkey { get; set; }
     }
 }

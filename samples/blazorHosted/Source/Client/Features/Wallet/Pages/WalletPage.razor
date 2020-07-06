@@ -1,0 +1,19 @@
+@namespace Hyperledger.Aries.AspNetCore.Features.Wallets.Pages
+@page "/wallet"
+@inherits BaseComponent
+
+<br />
+<h1 data-qa="AgentHeader">Wallet / Agent Provisioning Configuration</h1>
+<Identicon Value=@Name Size=100 />
+<dl>
+  <dt>Uri</dt>
+  <dd>@Uri</dd>
+  <dt>Name</dt>
+  <dd>@Name</dd>
+  <dt>DID</dt>
+  <dd>@Did</dd>
+  <dt>VERKEY</dt>
+  <dd>@VerKey</dd>
+</dl>
+
+<button @onclick=ResetClick >Reset</button>

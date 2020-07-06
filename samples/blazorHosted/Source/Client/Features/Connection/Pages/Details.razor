@@ -1,0 +1,10 @@
+@namespace Hyperledger.Aries.AspNetCore.Features.Connections.Pages
+@inherits BaseComponent
+@page "/connections/details/{ConnectionId}"
+
+<br />
+<h1>Connection Item Details</h1>
+
+<Hyperledger.Aries.AspNetCore.Features.Connections.Components.Details ConnectionId=@ConnectionId />
+
+<button class="btn btn-primary" @onclick=@BackClick>Back To List</button>

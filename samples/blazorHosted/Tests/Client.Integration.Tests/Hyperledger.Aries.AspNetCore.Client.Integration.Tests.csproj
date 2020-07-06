@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(TestProjectTargetFramework)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fixie" Version="$(FixieVersion)" />
+    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(MicrosoftAspNetCoreMvcTestingVersion)" />
+    <PackageReference Include="Scrutor" Version="$(ScrutorVersion)" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="$(SystemConfigurationConfigurationManagerVersion)" />
+    <DotNetCliToolReference Include="Fixie.Console" Version="$(FixieConsoleVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\Client\Hyperledger.Aries.AspNetCore.Client.csproj" />
+    <ProjectReference Include="..\..\Source\Server\Hyperledger.Aries.AspNetCore.Server.csproj" />
+  </ItemGroup>
+</Project>
