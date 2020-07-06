@@ -9,7 +9,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.BasicMessaging
   public class SendMessageEndpoint : BaseEndpoint<SendMessageRequest, SendMessageResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Send a message to a connection
     /// </summary>
     /// <remarks>
     /// Longer Description

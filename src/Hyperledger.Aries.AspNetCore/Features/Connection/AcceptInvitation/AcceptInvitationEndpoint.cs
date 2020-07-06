@@ -9,7 +9,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
   public class AcceptInvitationEndpoint : BaseEndpoint<AcceptInvitationRequest, AcceptInvitationResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Accept a connection invitation
     /// </summary>
     /// <remarks>
     /// Longer Description

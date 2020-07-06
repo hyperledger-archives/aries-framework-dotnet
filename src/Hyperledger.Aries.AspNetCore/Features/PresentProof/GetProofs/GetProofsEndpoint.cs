@@ -9,7 +9,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs
   public class GetProofsEndpoint : BaseEndpoint<GetProofsRequest, GetProofsResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Get all Proof Request records
     /// </summary>
     /// <param name="aGetProofsRequest"><see cref="GetProofsRequest"/></param>
     /// <returns><see cref="GetProofsResponse"/></returns>

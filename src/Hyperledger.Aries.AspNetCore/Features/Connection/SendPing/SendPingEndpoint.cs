@@ -9,7 +9,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
   public class SendPingEndpoint : BaseEndpoint<SendPingRequest, SendPingResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Send a trust ping to a connection
     /// </summary>
     /// <remarks>
     /// Longer Description

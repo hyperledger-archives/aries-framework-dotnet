@@ -10,7 +10,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.IssueCredentials
   public class OfferCredentialEndpoint : BaseEndpoint<OfferCredentialRequest, OfferCredentialResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Send holder a credential offer, independent of any proposal
     /// </summary>
     /// <param name="aOfferCredentialRequest"><see cref="OfferCredentialRequest"/></param>
     /// <returns><see cref="OfferCredentialResponse"/></returns>

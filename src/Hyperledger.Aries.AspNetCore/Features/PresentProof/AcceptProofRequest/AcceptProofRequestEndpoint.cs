@@ -9,7 +9,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs
   public class AcceptProofRequestEndpoint : BaseEndpoint<AcceptProofRequestRequest, AcceptProofRequestResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Accept proof request
     /// </summary>
     /// <param name="aAcceptProofRequestRequest"><see cref="AcceptProofRequestRequest"/></param>
     /// <returns><see cref="AcceptProofRequestResponse"/></returns>

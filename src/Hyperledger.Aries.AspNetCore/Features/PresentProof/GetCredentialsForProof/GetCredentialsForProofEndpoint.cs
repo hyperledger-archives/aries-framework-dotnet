@@ -9,7 +9,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs
   public class GetCredentialsForProofEndpoint : BaseEndpoint<GetCredentialsForProofRequest, GetCredentialsForProofResponse>
   {
     /// <summary>
-    /// Your summary these comments will show in the Open API Docs
+    /// Get list of credentials for the specific proof request
     /// </summary>
     /// <param name="aGetCredentialsForProofRequest"><see cref="GetCredentialsForProofRequest"/></param>
     /// <returns><see cref="GetCredentialsForProofResponse"/></returns>
