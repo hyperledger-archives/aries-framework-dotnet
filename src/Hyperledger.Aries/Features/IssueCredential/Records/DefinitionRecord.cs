@@ -12,7 +12,6 @@ namespace Hyperledger.Aries.Models.Records
         /// Gets or sets the identifier of the schema the definition is derived from.
         /// </summary>
         /// <value>The schema identifier.</value>
-        [JsonIgnore]
         public string SchemaId
         {
             get => Get();

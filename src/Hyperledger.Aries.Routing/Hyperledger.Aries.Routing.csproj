@@ -1,15 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Hyperledger.Aries.Routing.xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Multiformats.Base" Version="2.0.2" />
-  </ItemGroup>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Multiformats.Base" Version="$(MultiformatsBaseVersion)" />
+    </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.DidExchange
 {
@@ -14,6 +15,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// The did.
         /// </value>
         [JsonProperty("DID")]
+        [JsonPropertyName("DID")]
         public string Did { get; set; }
 
         /// <summary>
@@ -23,6 +25,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// The did doc.
         /// </value>
         [JsonProperty("DIDDoc")]
+        [JsonPropertyName("DIDDoc")]
         public DidDoc DidDoc { get; set; }
     }
 }

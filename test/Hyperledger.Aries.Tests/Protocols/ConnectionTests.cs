@@ -120,7 +120,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         }
 
         [Fact]
-        public async Task CanRecieveRequestWithoutEndpoint()
+        public async Task CanReceiveRequestWithoutEndpoint()
         {
             var provisioningService = ServiceUtils.GetDefaultMockProvisioningService(null, "DefaultMasterSecret", null);
 

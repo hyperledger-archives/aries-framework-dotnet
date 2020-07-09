@@ -1,0 +1,36 @@
+﻿@namespace Hyperledger.Aries.AspNetCore.Features.CredentialDefinitions.Pages
+@inherits BaseComponent
+@page "/credential-definitions"
+
+<div data-qa="@TestId">
+  <br />
+  <h1>Credential Definitions</h1>
+  <button class="btn btn-primary" @onclick=@CreateClick>Create</button>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>SchemaId</th>
+        <th>Supports Revocation</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var credentialDefinition in CredentialDefinitionState.CredentialDefinitionsAsList)
+      {
+      <tr>
+        <td>@credentialDefinition.Id</td>
+        <td>@SchemaState.Schemas[credentialDefinition.SchemaId].Name</td>
+        <td>@credentialDefinition.SchemaId</td>
+        <td>@credentialDefinition.SupportsRevocation</td>
+        <td>
+          Details | Delete
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+

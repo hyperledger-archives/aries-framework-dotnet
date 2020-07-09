@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Features.PresentProof
@@ -14,6 +15,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The requested attributes.</value>
         [JsonProperty("requested_attributes")]
+        [JsonPropertyName("requested_attributes")]
         public Dictionary<string, RequestedAttribute> RequestedAttributes { get; set; } =
             new Dictionary<string, RequestedAttribute>();
 
@@ -22,6 +24,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The self attested attributes.</value>
         [JsonProperty("self_attested_attributes")]
+        [JsonPropertyName("self_attested_attributes")]
         public Dictionary<string, string> SelfAttestedAttributes { get; set; }
             = new Dictionary<string, string>();
 
@@ -30,6 +33,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The requested predicates.</value>
         [JsonProperty("requested_predicates")]
+        [JsonPropertyName("requested_predicates")]
         public Dictionary<string, RequestedAttribute> RequestedPredicates { get; set; }
             = new Dictionary<string, RequestedAttribute>();
 

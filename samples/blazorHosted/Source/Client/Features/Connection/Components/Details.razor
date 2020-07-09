@@ -1,0 +1,24 @@
+﻿@namespace Hyperledger.Aries.AspNetCore.Features.Connections.Components
+@inherits BaseComponent
+
+@if (Connection != null)
+{
+  <hr />
+  <img src=@Connection?.Alias?.ImageUrl />
+  <dl>
+    <dt>Alias</dt>
+    <dd>@Connection?.Alias?.Name</dd>
+    <dt>Status</dt>
+    <dd>@Connection?.State</dd>
+    <dt>Id</dt>
+    <dd>@Connection?.Id</dd>
+    <dt>MyDid</dt>
+    <dd>@Connection?.MyDid</dd>
+    <dt>MyVk</dt>
+    <dd>@Connection?.MyVk</dd>
+    <dt>TheirDid</dt>
+    <dd>@Connection?.TheirDid</dd>
+    <dt>TheirVk</dt>
+    <dd>@Connection?.TheirVk</dd>
+  </dl>
+}

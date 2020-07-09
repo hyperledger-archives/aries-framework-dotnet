@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Decorators.Attachments;
 using Newtonsoft.Json;
@@ -33,6 +34,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value></value>
         [JsonProperty("presentations~attach")]
+        [JsonPropertyName("presentations~attach")]
         public Attachment[] Presentations { get; set; }
     }
 }

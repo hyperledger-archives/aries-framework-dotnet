@@ -1,0 +1,74 @@
+﻿@namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs.Pages
+@inherits BaseComponent
+@page "/proofs/{ProofId}"
+
+
+<div id=@TestId>
+  <br />
+  <h1>Proof Details</h1>
+  <br />
+  <dl>
+    <dt>Id</dt>
+    <dd>@ProofRecord?.Id</dd>
+
+    <dt>ConnectionId</dt>
+    <dd>@ProofRecord?.ConnectionId</dd>
+
+    <dt>State</dt>
+    <dd>@ProofRecord?.State</dd>
+
+    <dt>Create At UTC</dt>
+    <dd>@ProofRecord?.CreatedAtUtc</dd>
+
+    @if (ProofRequest != null)
+    {
+      <h2>Proof Request</h2>
+
+      <dl>
+        <dt>Name</dt>
+        <dd>@ProofRequest?.Name</dd>
+        @if (ProofRequest?.RequestedAttributes != null)
+        {
+          <dt>Requested Attributes</dt>
+          <dd>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach (var requestedAttribute in ProofRequest?.RequestedAttributes)
+                {
+                  <tr>
+                    <td>@requestedAttribute.Key</td>
+                    <td>@requestedAttribute.Value?.Name</td>
+
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </dd>
+        }
+      </dl>
+    }
+    @if (PartialProof != null)
+    {
+      <dt>Partial Proof</dt>
+      <dd>
+        <dl>
+          <dd>Name</dd>
+          <dt>@ProofRequest?.Name</dt>
+          <dd>Requested Attributes</dd>
+          <dt>@ProofRequest?.RequestedAttributes?.Count</dt>
+          <dd>Requested Predicates</dd>
+          <dt>@ProofRequest?.RequestedPredicates?.Count</dt>
+        </dl>
+      </dd>
+    }
+  </dl>
+  <h2>Matching Credentials</h2>
+
+
+</div>

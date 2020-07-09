@@ -26,7 +26,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
         /// <summary>
         /// Initializes a new instance of the <see cref="SovrinTokenConfigurationService" /> class.
         /// </summary>
-        /// <param name="applicationLifetime"></param>
+        /// <param name="hostApplicationLifetime"></param>
         /// <param name="paymentService"></param>
         /// <param name="provisioningService"></param>
         /// <param name="agentProvider"></param>
@@ -34,7 +34,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
         /// <param name="addressOptions"></param>
         /// <param name="logger"></param>
         public SovrinTokenConfigurationService(
-            IApplicationLifetime applicationLifetime,
+            IHostApplicationLifetime hostApplicationLifetime,
             IPaymentService paymentService,
             IProvisioningService provisioningService,
             IAgentProvider agentProvider,
@@ -42,7 +42,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
             IOptions<AddressOptions> addressOptions,
             ILogger<SovrinTokenConfigurationService> logger)
         {
-            applicationLifetime.ApplicationStarted.Register(CreateDefaultPaymentAddress);
+            hostApplicationLifetime.ApplicationStarted.Register(CreateDefaultPaymentAddress);
             this.paymentService = paymentService;
             this.provisioningService = provisioningService;
             this.agentProvider = agentProvider;

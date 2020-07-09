@@ -164,6 +164,7 @@ namespace Hyperledger.Aries.Features.DidExchange
     /// Enumeration of possible connection states
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ConnectionState
     {
         /// <summary>

@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -14,6 +15,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// The sub proof index.
         /// </value>
         [JsonProperty("sub_proof_index")]
+        [JsonPropertyName("sub_proof_index")]
         public int SubProofIndex { get; set; }
 
         /// <summary>
