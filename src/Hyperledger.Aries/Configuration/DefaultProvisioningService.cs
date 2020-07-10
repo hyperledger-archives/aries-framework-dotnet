@@ -44,7 +44,7 @@ namespace Hyperledger.Aries.Configuration
         }
 
         /// <inheritdoc />
-        public async Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement)
+        public async Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement, string acceptanceMechanism = null)
         {
             var provisioning = await GetProvisioningAsync(wallet);
 
@@ -53,7 +53,8 @@ namespace Hyperledger.Aries.Configuration
                 Digest = GetDigest(txnAuthorAgreement),
                 Text = txnAuthorAgreement.Text,
                 Version = txnAuthorAgreement.Version,
-                AcceptanceDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                AcceptanceDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                AcceptanceMechanism = acceptanceMechanism
             };
 
             await RecordService.UpdateAsync(wallet, provisioning);
