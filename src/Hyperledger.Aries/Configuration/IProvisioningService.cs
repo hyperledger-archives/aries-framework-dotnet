@@ -44,7 +44,8 @@ namespace Hyperledger.Aries.Configuration
         /// </summary>
         /// <param name="wallet"></param>
         /// <param name="txnAuthorAgreement"></param>
+        /// <param name="acceptanceMechanism"></param>
         /// <returns></returns>
-        Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement);
+        Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement, string acceptanceMechanism);
     }
 }
