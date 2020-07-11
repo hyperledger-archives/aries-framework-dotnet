@@ -13,6 +13,12 @@ namespace Hyperledger.Aries.Ledger
         public string Digest { get; set; }
 
         /// <summary>
+        /// The taa acceptance mechanism
+        /// </summary>
+        /// <value></value>
+        public string AcceptanceMechanism { get; set; }
+
+        /// <summary>
         /// The acceptance timestap in Unix Epoch time format
         /// </summary>
         /// <value></value>
