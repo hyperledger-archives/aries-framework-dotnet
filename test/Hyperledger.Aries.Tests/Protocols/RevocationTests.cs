@@ -150,7 +150,9 @@ namespace Hyperledger.Aries.Tests.Protocols
                     {
                         { "id-verification", new RequestedAttribute
                             {
-                                CredentialId = availableCredentials.First().CredentialInfo.Referent,
+                                // Use the credential with definition without revocation support 
+                                CredentialId = availableCredentials.First(x => x.CredentialInfo.RevocationRegistryId == null)
+                                    .CredentialInfo.Referent,
                                 Revealed = true
                             }
                         }
@@ -197,7 +199,9 @@ namespace Hyperledger.Aries.Tests.Protocols
                     {
                         { "id-verification", new RequestedAttribute
                             {
-                                CredentialId = availableCredentials.First().CredentialInfo.Referent,
+                                // Use the credential with definition with revocation support 
+                                CredentialId = availableCredentials.First(x => x.CredentialInfo.RevocationRegistryId != null)
+                                    .CredentialInfo.Referent,
                                 Revealed = true
                             }
                         }
@@ -249,7 +253,9 @@ namespace Hyperledger.Aries.Tests.Protocols
                     {
                         { "id-verification", new RequestedAttribute
                             {
-                                CredentialId = availableCredentials.First().CredentialInfo.Referent,
+                            // Use the credential with definition with revocation support - should be revoked
+                                CredentialId = availableCredentials.First(x => x.CredentialInfo.RevocationRegistryId != null)
+                                    .CredentialInfo.Referent,
                                 Revealed = true
                             }
                         }
@@ -283,7 +289,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             // Find credential for Agent 2 and accept all offers
             credentials = await pair.Agent2.Provider.GetService<ICredentialService>()
                 .ListAsync(pair.Agent2.Context);
-            string latestCredentialId = null;
+            string nonRevokedCredentialId = null;
             foreach (var credential in credentials.Where(x => x.State == CredentialState.Offered))
             {
                 var (request, record1) = await pair.Agent2.Provider.GetService<ICredentialService>()
@@ -291,7 +297,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                 await pair.Agent2.Provider.GetService<IMessageService>()
                     .SendAsync(pair.Agent2.Context.Wallet, request, pair.Connection2);
 
-                latestCredentialId = record1.Id;
+                nonRevokedCredentialId = record1.Id;
                 break;
             }
 
@@ -336,7 +342,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     {
                         { "id-verification", new RequestedAttribute
                             {
-                                CredentialId = latestCredentialId,
+                                CredentialId = nonRevokedCredentialId,
                                 Revealed = true
                             }
                         }
@@ -346,6 +352,56 @@ namespace Hyperledger.Aries.Tests.Protocols
             proofRecordIssuer = await pair.Agent1.Provider.GetService<IProofService>()
                 .ProcessPresentationAsync(pair.Agent1.Context, presentationMessage);
 
+            valid = await pair.Agent1.Provider.GetService<IProofService>()
+                .VerifyProofAsync(pair.Agent1.Context, proofRecordIssuer.Id);
+
+            Assert.True(valid);
+
+            // Verification with revocation, using non-revokable credential
+            now = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
+
+            (requestPresentationMessage, proofRecordIssuer) = await pair.Agent1.Provider.GetService<IProofService>()
+                .CreateRequestAsync(pair.Agent1.Context, new ProofRequest
+                {
+                    Name = "Test Verification",
+                    Version = "1.0",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
+                    RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
+                    {
+                        { "id-verification", new ProofAttributeInfo { Names = new [] { "name", "age" } } }
+                    },
+                    NonRevoked = new RevocationInterval
+                    {
+                        From = now - 1,
+                        To = now
+                    }
+                });
+
+            proofRecordHolder = await pair.Agent2.Provider.GetService<IProofService>()
+                .ProcessRequestAsync(pair.Agent2.Context, requestPresentationMessage, pair.Connection2);
+
+            availableCredentials = await pair.Agent2.Provider.GetService<IProofService>()
+                .ListCredentialsForProofRequestAsync(pair.Agent2.Context, proofRecordHolder.RequestJson.ToObject<ProofRequest>(), "id-verification");
+
+            (presentationMessage, _) = await pair.Agent2.Provider.GetService<IProofService>()
+                .CreatePresentationAsync(pair.Agent2.Context, proofRecordHolder.Id, new RequestedCredentials
+                {
+                    RequestedAttributes = new Dictionary<string, RequestedAttribute>
+                    {
+                        { "id-verification", new RequestedAttribute
+                            {
+                                CredentialId = availableCredentials.First(x => x.CredentialInfo.RevocationRegistryId == null)
+                                    .CredentialInfo.Referent,
+                                Revealed = true
+                            }
+                        }
+                    }
+                });
+
+            proofRecordIssuer = await pair.Agent1.Provider.GetService<IProofService>()
+                .ProcessPresentationAsync(pair.Agent1.Context, presentationMessage);
+
+            Utils.EnableIndyLogging();
             valid = await pair.Agent1.Provider.GetService<IProofService>()
                 .VerifyProofAsync(pair.Agent1.Context, proofRecordIssuer.Id);
 
