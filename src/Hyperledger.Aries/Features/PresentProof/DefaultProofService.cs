@@ -253,18 +253,14 @@ namespace Hyperledger.Aries.Features.PresentProof
         public virtual async Task<List<Credential>> ListCredentialsForProofRequestAsync(IAgentContext agentContext,
             ProofRequest proofRequest, string attributeReferent)
         {
-            using (var search =
-                await AnonCreds.ProverSearchCredentialsForProofRequestAsync(agentContext.Wallet, proofRequest.ToJson()))
-            {
-                var searchResult = await search.NextAsync(attributeReferent, 100);
-                var result = JsonConvert.DeserializeObject<List<Credential>>(searchResult);
+            using var search = await AnonCreds.ProverSearchCredentialsForProofRequestAsync(
+                wallet: agentContext.Wallet,
+                proofRequestJson: proofRequest.ToJson());
 
-                if (proofRequest.NonRevoked != null)
-                {
-                    return result.Where(x => x.CredentialInfo.RevocationRegistryId != null).ToList();
-                }
-                return result;
-            }
+            var searchResult = await search.NextAsync(attributeReferent, 100);
+            var result = JsonConvert.DeserializeObject<List<Credential>>(searchResult);
+
+            return result;
         }
 
         #region Private Methods
