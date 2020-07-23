@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 
 namespace Hyperledger.Aries.Features.Discovery
@@ -14,6 +15,8 @@ namespace Hyperledger.Aries.Features.Discovery
         {
             _discoveryService = discoveryService;
         }
+
+        public override IEnumerable<MessageType> SupportedMessageTypes => new MessageType[] { MessageTypes.DiscoveryQueryMessageType, MessageTypesHttps.DiscoveryQueryMessageType };
 
         protected override Task<AgentMessage> ProcessAsync(DiscoveryQueryMessage message, IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
