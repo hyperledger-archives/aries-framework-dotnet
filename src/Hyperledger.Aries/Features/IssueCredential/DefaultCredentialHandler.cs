@@ -46,7 +46,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
         {
             MessageTypes.IssueCredentialNames.OfferCredential,
             MessageTypes.IssueCredentialNames.RequestCredential,
-            MessageTypes.IssueCredentialNames.IssueCredential
+            MessageTypes.IssueCredentialNames.IssueCredential,
+            MessageTypesHttps.IssueCredentialNames.OfferCredential,
+            MessageTypesHttps.IssueCredentialNames.RequestCredential,
+            MessageTypesHttps.IssueCredentialNames.IssueCredential
         };
 
         /// <summary>
@@ -61,6 +64,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             switch (messageContext.GetMessageType())
             {
                 // v1
+                case MessageTypesHttps.IssueCredentialNames.OfferCredential:
                 case MessageTypes.IssueCredentialNames.OfferCredential:
                     {
                         var offer = messageContext.GetMessage<CredentialOfferMessage>();
@@ -80,6 +84,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         return null;
                     }
 
+                case MessageTypesHttps.IssueCredentialNames.RequestCredential:
                 case MessageTypes.IssueCredentialNames.RequestCredential:
                     {
                         var request = messageContext.GetMessage<CredentialRequestMessage>();
@@ -107,6 +112,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         }
                     }
 
+                case MessageTypesHttps.IssueCredentialNames.IssueCredential:
                 case MessageTypes.IssueCredentialNames.IssueCredential:
                     {
                         var credential = messageContext.GetMessage<CredentialIssueMessage>();

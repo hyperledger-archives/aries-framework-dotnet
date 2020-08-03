@@ -28,11 +28,14 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <value>
         /// The supported message types.
         /// </value>
-        public IEnumerable<MessageType> SupportedMessageTypes => new[]
+        public IEnumerable<MessageType> SupportedMessageTypes => new MessageType[]
         {
-            new MessageType(MessageTypes.ConnectionInvitation),
-            new MessageType(MessageTypes.ConnectionRequest),
-            new MessageType(MessageTypes.ConnectionResponse)
+            MessageTypes.ConnectionInvitation,
+            MessageTypes.ConnectionRequest,
+            MessageTypes.ConnectionResponse,
+            MessageTypesHttps.ConnectionInvitation,
+            MessageTypesHttps.ConnectionRequest,
+            MessageTypesHttps.ConnectionResponse
         };
 
         /// <summary>
@@ -46,6 +49,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         {
             switch (messageContext.GetMessageType())
             {
+                case MessageTypesHttps.ConnectionInvitation:
                 case MessageTypes.ConnectionInvitation:
                     {
                         var invitation = messageContext.GetMessage<ConnectionInvitationMessage>();
@@ -53,6 +57,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                         return null;
                     }
 
+                case MessageTypesHttps.ConnectionRequest:
                 case MessageTypes.ConnectionRequest:
                     {
                         var request = messageContext.GetMessage<ConnectionRequestMessage>();
@@ -69,6 +74,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                         return null;
                     }
 
+                case MessageTypesHttps.ConnectionResponse:
                 case MessageTypes.ConnectionResponse:
                     {
                         var response = messageContext.GetMessage<ConnectionResponseMessage>();

@@ -11,7 +11,7 @@ namespace Hyperledger.Aries.Utils
     /// </summary>
     public static class MessageUtils
     {
-        private const string MessageTypeRegex = @"^(did:[a-z]+:[a-zA-z\d]+;spec)\/([a-z\S]+)\/([0-9].[0-9])\/([a-z\S]+)";
+        private const string MessageTypeRegex = @"^(https:\/\/didcomm.org|did:[a-z]+:[a-zA-z\d]+;spec)\/([a-z\S]+)\/([0-9].[0-9])\/([a-z\S]+)";
 
         /// <summary>
         /// The valid query parameters.

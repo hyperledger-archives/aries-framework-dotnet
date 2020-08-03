@@ -58,6 +58,10 @@
         /// <summary>
         /// The revocation interval is out of range
         /// </summary>
-        RevocationIntervalOutOfRange
+        RevocationIntervalOutOfRange,
+        /// <summary>
+        /// Item not found on ledger
+        /// </summary>
+        LedgerItemNotFound
     }
 }

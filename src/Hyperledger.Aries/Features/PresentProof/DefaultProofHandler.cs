@@ -23,7 +23,10 @@ namespace Hyperledger.Aries.Features.PresentProof
         {
             MessageTypes.PresentProofNames.ProposePresentation,
             MessageTypes.PresentProofNames.Presentation,
-            MessageTypes.PresentProofNames.RequestPresentation
+            MessageTypes.PresentProofNames.RequestPresentation,
+            MessageTypesHttps.PresentProofNames.ProposePresentation,
+            MessageTypesHttps.PresentProofNames.Presentation,
+            MessageTypesHttps.PresentProofNames.RequestPresentation
         };
 
         /// <summary>
@@ -38,6 +41,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             switch (messageContext.GetMessageType())
             {
                 // v1.0
+                case MessageTypesHttps.PresentProofNames.ProposePresentation:
                 case MessageTypes.PresentProofNames.ProposePresentation:
                 {
                     var message = messageContext.GetMessage<ProposePresentationMessage>();
@@ -47,6 +51,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                     break;
                 }
                 case MessageTypes.PresentProofNames.RequestPresentation:
+                case MessageTypesHttps.PresentProofNames.RequestPresentation:
                 {
                     var message = messageContext.GetMessage<RequestPresentationMessage>();
                     var record = await _proofService.ProcessRequestAsync(agentContext, message, messageContext.Connection);
@@ -55,6 +60,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                     break;
                 }
                 case MessageTypes.PresentProofNames.Presentation:
+                case MessageTypesHttps.PresentProofNames.Presentation:
                 {
                     var message = messageContext.GetMessage<PresentationMessage>();
                     var record = await _proofService.ProcessPresentationAsync(agentContext, message);

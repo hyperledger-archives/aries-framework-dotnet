@@ -27,6 +27,14 @@ namespace Hyperledger.Aries
         /// The message context record. 
         /// </value>
         public RecordBase ContextRecord { get; }
+
+        /// <summary>
+        /// Gets the context Record ID.
+        /// </summary>
+        /// <value>
+        /// The context record ID. 
+        /// </value>
+        public string ContextRecordId { get; }
         
         /// <summary>
         /// Gets the connection record.
@@ -91,6 +99,19 @@ namespace Hyperledger.Aries
             ErrorCode = errorCode;
             ContextRecord = contextRecord;
             ConnectionRecord = connectionRecord;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AriesFrameworkException"/> class.
+        /// </summary>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="contextRecordId">The record ID</param>
+        public AriesFrameworkException(ErrorCode errorCode, string message, string contextRecordId) :
+            base(message)
+        {
+            ErrorCode = errorCode;
+            ContextRecordId = contextRecordId;
         }
     }
 }
