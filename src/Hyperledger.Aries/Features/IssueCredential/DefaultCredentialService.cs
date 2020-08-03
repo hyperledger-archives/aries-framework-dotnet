@@ -22,6 +22,7 @@ using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Indy;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
@@ -309,7 +310,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             }
             catch (IndyException e) when (e.SdkErrorCode == 309)
             {
-                throw new AriesFrameworkException(ErrorCode.InvalidLedger, e.Message, credentialRecordId);
+                throw new AriesFrameworkException(ErrorCode.LedgerItemNotFound, e.Message, credentialRecordId);
             }
         }
 

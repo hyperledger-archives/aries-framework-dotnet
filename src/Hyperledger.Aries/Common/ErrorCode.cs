@@ -60,8 +60,8 @@
         /// </summary>
         RevocationIntervalOutOfRange,
         /// <summary>
-        /// Credential definition not found
+        /// Item not found on ledger
         /// </summary>
-        InvalidLedger
+        LedgerItemNotFound
     }
 }
