@@ -280,27 +280,36 @@ namespace Hyperledger.Aries.Features.IssueCredential
         public async Task<CredentialRecord> CreateCredentialAsync(IAgentContext agentContext,
             CredentialOfferMessage message)
         {
-            var service = message.GetDecorator<ServiceDecorator>(DecoratorNames.ServiceDecorator);
-            var credentialRecordId = await ProcessOfferAsync(agentContext, message, null);
-
-            var (request, record) = await CreateRequestAsync(agentContext, credentialRecordId);
-            var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
-
+            var credentialRecordId = "";
             try
             {
-                var credentialIssueMessage = await MessageService.SendReceiveAsync<CredentialIssueMessage>(
-                    wallet: agentContext.Wallet,
-                    message: request,
-                    recipientKey: service.RecipientKeys.First(),
-                    endpointUri: service.ServiceEndpoint,
-                    routingKeys: service.RoutingKeys.ToArray(),
-                    senderKey: provisioning.IssuerVerkey);
-                var recordId = await ProcessCredentialAsync(agentContext, credentialIssueMessage, null);
-                return await RecordService.GetAsync<CredentialRecord>(agentContext.Wallet, recordId);
+                var service = message.GetDecorator<ServiceDecorator>(DecoratorNames.ServiceDecorator);
+
+                credentialRecordId = await ProcessOfferAsync(agentContext, message, null);
+
+                var (request, record) = await CreateRequestAsync(agentContext, credentialRecordId);
+                var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
+
+                try
+                {
+                    var credentialIssueMessage = await MessageService.SendReceiveAsync<CredentialIssueMessage>(
+                        wallet: agentContext.Wallet,
+                        message: request,
+                        recipientKey: service.RecipientKeys.First(),
+                        endpointUri: service.ServiceEndpoint,
+                        routingKeys: service.RoutingKeys.ToArray(),
+                        senderKey: provisioning.IssuerVerkey);
+                    var recordId = await ProcessCredentialAsync(agentContext, credentialIssueMessage, null);
+                    return await RecordService.GetAsync<CredentialRecord>(agentContext.Wallet, recordId);
+                }
+                catch (AriesFrameworkException ex) when (ex.ErrorCode == ErrorCode.A2AMessageTransmissionError)
+                {
+                    throw new AriesFrameworkException(ex.ErrorCode, ex.Message, record, null);
+                }
             }
-            catch (AriesFrameworkException ex) when (ex.ErrorCode == ErrorCode.A2AMessageTransmissionError)
+            catch (IndyException e) when (e.SdkErrorCode == 309)
             {
-                throw new AriesFrameworkException(ex.ErrorCode, ex.Message, record, null);
+                throw new AriesFrameworkException(ErrorCode.InvalidLedger, e.Message, credentialRecordId);
             }
         }
 

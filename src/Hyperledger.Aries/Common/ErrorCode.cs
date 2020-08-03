@@ -58,6 +58,10 @@
         /// <summary>
         /// The revocation interval is out of range
         /// </summary>
-        RevocationIntervalOutOfRange
+        RevocationIntervalOutOfRange,
+        /// <summary>
+        /// Credential definition not found
+        /// </summary>
+        InvalidLedger
     }
 }
