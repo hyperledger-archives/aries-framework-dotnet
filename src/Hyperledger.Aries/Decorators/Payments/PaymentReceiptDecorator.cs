@@ -1,5 +1,6 @@
 ﻿using Hyperledger.Aries.Payments;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Decorators.Payments
 {
@@ -16,6 +17,7 @@ namespace Hyperledger.Aries.Decorators.Payments
         /// The request identifier.
         /// </value>
         [JsonProperty("request_id")]
+        [JsonPropertyName("request_id")]
         public string RequestId { get; set; }
 
         /// <summary>
@@ -25,6 +27,7 @@ namespace Hyperledger.Aries.Decorators.Payments
         /// The selected method.
         /// </value>
         [JsonProperty("selected_method")]
+        [JsonPropertyName("selected_method")]
         public string SelectedMethod { get; set; }
 
         /// <summary>
@@ -34,6 +37,7 @@ namespace Hyperledger.Aries.Decorators.Payments
         /// The transaction identifier.
         /// </value>
         [JsonProperty("transaction_id")]
+        [JsonPropertyName("transaction_id")]
         public string TransactionId { get; set; }
 
         /// <summary>

@@ -46,7 +46,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// Gets or sets the definition identifier of this credential.
         /// </summary>
         /// <value>The credential definition identifier.</value>
-        [JsonIgnore]
         public string CredentialDefinitionId
         {
             get => Get();
@@ -99,7 +98,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// Gets or sets the schema identifier.
         /// </summary>
         /// <value>The schema identifier.</value>
-        [JsonIgnore]
         public string SchemaId
         {
             get => Get();
@@ -110,7 +108,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// Gets or sets the connection identifier associated with this credential.
         /// </summary>
         /// <value>The connection identifier.</value>
-        [JsonIgnore]
         public string ConnectionId
         {
             get => Get();
@@ -133,7 +130,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// This field is only present in the holder wallet.
         /// </summary>
         /// <value>The credential identifier.</value>
-        [JsonIgnore]
         public string CredentialId
         {
             get => Get();

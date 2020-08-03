@@ -1,0 +1,51 @@
+﻿@namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs.Pages
+@inherits BaseComponent
+@using Hyperledger.Aries.Features.DidExchange
+@using Hyperledger.Aries.Models.Records
+@page "/proofs/create"
+
+<div data-qa=@TestId>
+  <br />
+  <h1>Create Proof Request</h1>
+
+  <EditForm Model=@CreateProofRequestRequest OnValidSubmit=@HandleValidSubmit>
+    <Validate />
+    <ValidationSummary />
+    <div class="form-group">
+      <label for="Connection">Connection</label>
+      <InputSelect @bind-Value=@CreateProofRequestRequest.ConnectionId class="form-control" id="Connection">
+        @foreach (ConnectionRecord connectionRecord in Connections)
+        {
+        <option value=@connectionRecord?.Id>@connectionRecord?.Alias?.Name : @connectionRecord?.Id</option>
+        }
+      </InputSelect>
+    </div>
+    <div class="form-group">
+      <label for="CredentialDefintion">Credential Defintion</label>
+      <InputSelect @bind-Value=@CredentialDefinitionId @onchange=@OnCredentialDefintionSelect class="form-control" id="CredentialDefintion">
+        @foreach (DefinitionRecord definitionRecord in CredentialDefintions)
+        {
+        <option value=@definitionRecord?.Id>@SchemaState?.Schemas[definitionRecord.SchemaId]?.Name</option>
+        }
+      </InputSelect>
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Save" />
+    <button class="btn btn-primary" @onclick=@CancelClick>Cancel</button>
+  </EditForm>
+
+  @if (PresentProofState.RequestPresentationMessage != null)
+  {
+    <div>
+      <h3 class="card-header">Proof request Details</h3>
+      <img class="card-img" src="@PresentProofState?.ProofRequestQrUri" />
+      <div class="card-body">
+        <span>@PresentProofState?.ProofRequestUrl</span>
+        <button type="button" class="btn btn-default" aria-label="Copy to Clipboard" @onclick=@CopyToClipboardAsync>
+          <span class="oi oi-clipboard" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  }
+
+</div>

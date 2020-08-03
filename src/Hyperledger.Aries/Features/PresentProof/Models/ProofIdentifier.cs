@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -14,6 +15,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// The schema identifier.
         /// </value>
         [JsonProperty("schema_id")]
+        [JsonPropertyName("schema_id")]
         public string SchemaId { get; set; }
 
         /// <summary>
@@ -23,6 +25,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// The credential definition identifier.
         /// </value>
         [JsonProperty("cred_def_id")]
+        [JsonPropertyName("cred_def_id")]
         public string CredentialDefintionId { get; set; }
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// The revocation registry identifier.
         /// </value>
         [JsonProperty("rev_reg_id")]
+        [JsonPropertyName("rev_reg_id")]
         public string RevocationRegistryId { get; set; }
 
         /// <summary>

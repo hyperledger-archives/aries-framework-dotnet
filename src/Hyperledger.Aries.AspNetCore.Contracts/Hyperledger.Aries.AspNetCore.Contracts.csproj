@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Api Library</Description>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dawn.Guard" Version="$(DawnGuardVersion)" />
+    <PackageReference Include="FluentValidation" Version="$(FluentValidationVersion)" />
+    <PackageReference Include="MediatR" Version="$(MediatrVersion)" />
+    <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="$(MicroElementsSwashbuckleFluentValidationVersion)" />
+    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleAspNetCoreAnnotationsVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(MicrosoftCodeAnalysisFxCopAnalyzersVersion)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
+  </ItemGroup>
+</Project>

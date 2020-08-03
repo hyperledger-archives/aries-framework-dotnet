@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using FluentValidation.AspNetCore;
 using Hyperledger.Aries.Storage;
 using Jdenticon.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -25,7 +26,11 @@ namespace WebAgent
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            // Aries Open Api Requires Fluent Validation
+            services
+                .AddMvc()
+                .AddFluentValidation()
+                .AddAriesOpenApi(a => a.UseSwaggerUi = true);
 
             services.AddLogging();
 
@@ -42,6 +47,7 @@ namespace WebAgent
                     c.PoolName = "TestPool";
                 });
             });
+
 
             // Register custom handlers with DI pipeline
             services.AddSingleton<BasicMessageHandler>();
@@ -64,6 +70,9 @@ namespace WebAgent
 
             // Register agent middleware
             app.UseAriesFramework();
+
+            // Configure OpenApi
+            app.UseAriesOpenApi();
 
             // fun identicons
             app.UseJdenticon();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Payments
@@ -24,6 +25,7 @@ namespace Hyperledger.Aries.Payments
         /// The items.
         /// </value>
         [JsonProperty("displayItems")]
+        [JsonPropertyName("displayItems")]
         public IList<PaymentItem> Items { get; set; }
 
         /// <summary>

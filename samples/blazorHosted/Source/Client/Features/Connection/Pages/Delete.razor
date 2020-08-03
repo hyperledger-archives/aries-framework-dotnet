@@ -1,0 +1,11 @@
+@namespace Hyperledger.Aries.AspNetCore.Features.Connections.Pages
+@inherits BaseComponent
+@page "/connections/delete/{ConnectionId}"
+
+<h1>Connection Delete Page</h1>
+
+<Hyperledger.Aries.AspNetCore.Features.Connections.Components.Details ConnectionId=@ConnectionId />
+<h3>Are you sure you want to delete this item?</h3>
+
+<button class="btn btn-danger" @onclick=@DeleteClick>Delete</button>
+<button class="btn btn-primary" @onclick=@CancelClick>Cancel</button>

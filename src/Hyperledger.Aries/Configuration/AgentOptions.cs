@@ -147,5 +147,25 @@ namespace Hyperledger.Aries.Configuration
         /// The backup directory.
         /// </value>
         public string BackupDirectory { get; set; } = Path.Combine(Path.GetTempPath(), "AriesBackups");
+
+        /// <summary>
+        /// Automatically respond to credential offers with a credential request. Default: false
+        /// </summary>
+        /// <value>The name of the pool.</value>
+        public bool AutoRespondCredentialOffer
+        {
+            get;
+            set;
+        } = false;
+
+        /// <summary>
+        /// Automatically respond to credential request with corresponding credentials. Default: false
+        /// </summary>
+        /// <value>The name of the pool.</value>
+        public bool AutoRespondCredentialRequest
+        {
+            get;
+            set;
+        } = false;
     }
 }

@@ -1,0 +1,30 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:60296/",
+      "sslPort": 44382
+    }
+  },
+  "profiles": {
+    "Hyperledger.Aries.AspNetCore.Server Faber": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5551;http://localhost:5550"
+    },
+    "Hyperledger.Aries.AspNetCore.Server Alice": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Alice"
+      },
+      "applicationUrl": "https://localhost:5553;http://localhost:5552"
+    }
+  }
+}

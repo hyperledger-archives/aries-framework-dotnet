@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Ledger
 {
@@ -14,6 +15,7 @@ namespace Hyperledger.Aries.Ledger
         /// The fee.
         /// </value>
         [JsonProperty("fees")]
+        [JsonPropertyName("fees")]
         public string Fee { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Decorators.Signature;
 using Newtonsoft.Json;
@@ -24,6 +25,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// The connection object.
         /// </value>
         [JsonProperty("connection~sig")]
+        [JsonPropertyName("connection~sig")]
         public SignatureDecorator ConnectionSig { get; set; }
     }
 }

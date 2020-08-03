@@ -20,22 +20,22 @@ namespace Hyperledger.Aries.Storage
         /// Gets the created at datetime of the record.
         /// </summary>
         /// <returns>The created datetime of the record.</returns>
-        [JsonIgnore]
+        //[JsonIgnore]
         public DateTime? CreatedAtUtc
         {
             get => GetDateTime();
-            internal set => Set(value, false);
+            set => Set(value, false);
         }
 
         /// <summary>
         /// Gets the last updated datetime of the record.
         /// </summary>
         /// <returns>The last updated datetime of the record.</returns>
-        [JsonIgnore]
+        //[JsonIgnore]
         public DateTime? UpdatedAtUtc
         {
             get => GetDateTime();
-            internal set => Set(value, false);
+            set => Set(value, false);
         }
 
         /// <summary>
