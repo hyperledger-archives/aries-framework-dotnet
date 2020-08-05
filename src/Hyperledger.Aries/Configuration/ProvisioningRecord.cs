@@ -46,14 +46,14 @@ namespace Hyperledger.Aries.Configuration
         /// Gets or sets the issuer did for the provisioned agent.
         /// </summary>
         /// <returns>The issuer did for the provisioned agent</returns>
-        //[Newtonsoft.Json.JsonIgnore]
-        //[JsonPropertyName("_issuerDid")]
+        [Newtonsoft.Json.JsonProperty("_issuerDid")]
         public virtual string IssuerDid { get; set; }
 
         /// <summary>
         /// Gets or sets the issuer verkey for the provisioned agent.
         /// </summary>
         /// <returns>The issuer verkey for the provisioned agent</returns>
+        [Newtonsoft.Json.JsonProperty("_issuerVerkey")]
         public virtual string IssuerVerkey { get; set; }
 
 
@@ -61,6 +61,7 @@ namespace Hyperledger.Aries.Configuration
         /// Gets or sets the master key identifier for the provisioned agent.
         /// </summary>
         /// <returns>The master key identifier for the provisioned agent</returns>
+        [Newtonsoft.Json.JsonProperty("_masterSecretId")]
         public virtual string MasterSecretId { get; set; }
 
 
@@ -68,6 +69,7 @@ namespace Hyperledger.Aries.Configuration
         /// Gets or sets the tails base uri for the provisioned agent.
         /// </summary>
         /// <returns>The tails base uri for the provisioned agent</returns>
+        [Newtonsoft.Json.JsonProperty("_tailsBaseUri")]
         public virtual string TailsBaseUri { get; set; }
 
 
