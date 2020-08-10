@@ -85,8 +85,7 @@ namespace Hyperledger.Aries.Routing
         Task<List<long>> ListBackupsAsync(IAgentContext context);
 
         /// <summary>
-        /// Restores the agent and wallet from backup. Removes the existing wallet and creates a new one with same
-        /// configuration
+        /// Restores the agent and wallet from backup with a given attachment
         /// </summary>
         /// <param name="edgeContext">The edge context.</param>
         /// <param name="seed">The seed.</param>
@@ -96,8 +95,8 @@ namespace Hyperledger.Aries.Routing
         Task RestoreFromBackupAsync(IAgentContext edgeContext, string seed, List<Attachment> backupData);
 
         /// <summary>
-        /// Restores the agent and wallet from backup. Removes the existing wallet and creates a new one with same
-        /// configuration
+        /// Restores the agent and wallet from backup. Imports the wallet with new configuration and restores
+        /// the data. Tries to remove the existing wallet.
         /// </summary>
         /// <param name="edgeContext">The edge context.</param>
         /// <param name="seed">The seed.</param>
