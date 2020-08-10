@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using Hyperledger.Indy.WalletApi;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy;
+using Hyperledger.Aries.Utils;
+using Hyperledger.Aries.Configuration;
+using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing.Edge
 {
@@ -128,14 +131,30 @@ namespace Hyperledger.Aries.Routing.Edge
             
             await Task.Run(() => File.WriteAllBytes(tempWalletPath, walletToRestoreInBytes));
             
-            var json = new { path = tempWalletPath, key = seed }.ToJson();
+            var oldAgentOptionsString = JsonConvert.SerializeObject(agentoptions);
 
-            await walletService.DeleteWalletAsync(agentoptions.WalletConfiguration, agentoptions.WalletCredentials);
+            var json = new { path = tempWalletPath, key = seed }.ToJson();
             
-            // Add 1 sec delay to allow filesystem to catch up
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            var newWalletCredKey = Utils.GenerateRandomAsync(32);
+            var newWalletConfigId = Guid.NewGuid().ToString();
+            agentoptions.WalletConfiguration.Id = newWalletConfigId;
+            agentoptions.WalletCredentials.Key = newWalletCredKey;
 
             await Wallet.ImportAsync(agentoptions.WalletConfiguration.ToJson(), agentoptions.WalletCredentials.ToJson(), json);
+
+            // Try delete the old wallet
+            try
+            {
+                var oldAgentOptions = JsonConvert.DeserializeObject<AgentOptions>(oldAgentOptionsString);
+                await walletService.DeleteWalletAsync(oldAgentOptions.WalletConfiguration,
+                    oldAgentOptions.WalletCredentials);
+                // Add 1 sec delay to allow filesystem to catch up
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Wallet could not be deleted");
+            }
 
             File.Delete(tempWalletPath);
         }
