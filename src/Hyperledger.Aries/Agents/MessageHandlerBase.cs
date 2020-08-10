@@ -22,7 +22,7 @@ namespace Hyperledger.Aries.Agents
         }
 
         /// <inheritdoc />
-        public IEnumerable<MessageType> SupportedMessageTypes => new[] { new MessageType(_supportedMessageType) };
+        public virtual IEnumerable<MessageType> SupportedMessageTypes => new[] { new MessageType(_supportedMessageType) };
 
         /// <summary>
         /// Processes the incoming <see cref="AgentMessage"/>

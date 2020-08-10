@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
 
@@ -32,6 +33,7 @@ namespace Hyperledger.Aries.Features.BasicMessage
         /// </summary>
         /// <value>The sent time.</value>
         [JsonProperty("sent_time")]
+        [JsonPropertyName("sent_time")]
         public string SentTime { get; set; }
     }
 }

@@ -25,7 +25,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-
+*.blob
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
@@ -336,4 +336,8 @@ ASALocalRun/
 docs/_build
 
 # vs code config
-.vscode/
+.vscode//samples/blazorHosted/Source/Client/Properties/launchSettings.json
+/samples/blazorHosted/Source/Client/Properties/launchSettings.json
+/.vscode/
+/samples/aspnetcore/.vscode/
+/docs/.vscode/

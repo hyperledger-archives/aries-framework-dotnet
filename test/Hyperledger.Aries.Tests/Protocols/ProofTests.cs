@@ -24,6 +24,8 @@ using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.Options;
+using Hyperledger.Aries.Extensions;
+using FluentAssertions;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -108,7 +110,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         }
 
         [Fact]
-        public async Task CredentialProofDemo()
+        public async Task RequestorInitiatedCredentialProofDemo()
         {
             var events = 0;
             _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
@@ -137,7 +139,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             var (holderRequestorConnection, requestorConnection) = await Scenarios.EstablishConnectionAsync(
                 _connectionService, _messages, _holderWallet, _requestorWallet);
 
-            await Scenarios.ProofProtocolAsync(_proofService, _messages, holderRequestorConnection, requestorConnection,
+            await Scenarios.RequestorInitiatedProofProtocolAsync(_proofService, _messages, holderRequestorConnection, requestorConnection,
                 _holderWallet, _requestorWallet, new ProofRequest()
                 {
                     Name = "ProofReq",
@@ -155,61 +157,423 @@ namespace Hyperledger.Aries.Tests.Protocols
         }
 
         [Fact]
-        public async Task SendProofRequestThrowsConnectionNotFound()
+        public async Task ProposerInitiatedCredentialProofDemo()
         {
-            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
-            {
-                Name = "Test",
-                Nonce = await AnonCreds.GenerateNonceAsync()
-            }, "bad-proof-id"));
+                    var events = 0;
+            _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(_ => (_.MessageType == MessageTypes.PresentProofNames.ProposePresentation ||
+                             _.MessageType == MessageTypes.PresentProofNames.RequestPresentation ||
+                             _.MessageType == MessageTypes.PresentProofNames.Presentation))
+                .Subscribe(_ =>
+                {
+                    events++;
+                });
 
-            Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
+            //Setup a connection and issue the credentials to the holder
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
+                _schemaService, _credentialService, _messages, issuerConnection,
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
+                {
+                    new CredentialPreviewAttribute("first_name", "Test"),
+                    new CredentialPreviewAttribute("last_name", "Holder")
+                });
+
+            _messages.Clear();
+
+            //Requestor initialize a connection with the holder
+            var (holderRequestorConnection, requestorConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _holderWallet, _requestorWallet);
+
+            var (holderProofRecord, requestorProofRecord) = await Scenarios.ProposerInitiatedProofProtocolAsync(_proofService, _messages, holderRequestorConnection, requestorConnection,
+                _holderWallet, _requestorWallet, new ProofProposal()
+                {
+                    Comment = "Hello, World",
+                    ProposedAttributes = new List<ProposedAttribute>
+                    {
+                        new ProposedAttribute 
+                        {
+                            Name = "first_name",
+                            CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                            Referent = "0",
+                            Value = "Test"
+                        }
+                    }
+                });
+
+            _messages.Clear();
+
+            Assert.True(events == 3);
+
         }
 
         [Fact]
-        public async Task SendProofRequestThrowsConnectionInvalidState()
+        public async Task CreateProofRequestFromProposal()
+        {
+            var events = 0;
+            _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(_ => (_.MessageType == MessageTypes.PresentProofNames.ProposePresentation ||
+                             _.MessageType == MessageTypes.PresentProofNames.RequestPresentation ||
+                             _.MessageType == MessageTypes.IssueCredentialNames.RequestCredential ||
+                             _.MessageType == MessageTypes.IssueCredentialNames.IssueCredential))
+                .Subscribe(_ =>
+                {
+                    events++;
+                });
+
+            // Setup secure connection between issuer and holder
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
+                _schemaService, _credentialService, _messages, issuerConnection,
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
+                {
+                     new CredentialPreviewAttribute("first_name", "Test"),
+                     new CredentialPreviewAttribute("last_name", "Test"),
+                     new CredentialPreviewAttribute("salary", "100000"),
+                     new CredentialPreviewAttribute("age", "25"),
+                     new CredentialPreviewAttribute("wellbeing", "100")
+                });
+
+           
+
+            Assert.Equal(issuerCredential.State, holderCredential.State);
+            Assert.Equal(CredentialState.Issued, issuerCredential.State);
+            var (message, record) = await _proofService.CreateProposalAsync(_holderWallet, new ProofProposal
+            {
+                Comment = "Hello, World",
+                ProposedAttributes = new List<ProposedAttribute>
+                 {
+                     new ProposedAttribute
+                     {
+                         Name = "first_name",
+                         CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                         Referent = "Proof of Name",
+                         Value = "Joe"
+                     },
+                     new ProposedAttribute
+                     {
+                         Name = "last_name",
+                         CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                         Referent = "Proof of Name",
+                         Value = "Shmoe"
+                     },
+                     new ProposedAttribute
+                     {
+                         Name = "age",
+                         CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                         Referent = "Proof of Age",
+                         Value = "Shmoe"
+                     }
+                },
+                ProposedPredicates = new List<ProposedPredicate>
+                {
+                    new ProposedPredicate
+                    {
+                        Name = "salary",
+                        CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                        Predicate = ">",
+                        Threshold = 99999,
+                        Referent = "Proof of Salary > $99,999"
+
+                    },
+                    new ProposedPredicate
+                     {
+                         Name = "wellbeing",
+                         CredentialDefinitionId = holderCredential.CredentialDefinitionId,
+                         Referent = "Proof of Wellbeing",
+                         Predicate = "<",
+                         Threshold = 99999
+                     }
+                }
+            }, holderConnection.Id);
+            Assert.NotNull(message);
+
+            // Process Proposal 
+            record = await _proofService.ProcessProposalAsync(_issuerWallet, message, issuerConnection);
+
+            // 
+            RequestPresentationMessage requestMessage;
+
+            (requestMessage, record) = await _proofService.CreateRequestFromProposalAsync(_issuerWallet, new ProofRequestParameters
+            {
+                Name = "Test",
+                Version = "1.0",
+                NonRevoked = null
+            }, record.Id, issuerConnection.Id);
+
+            Assert.NotNull(requestMessage);
+            Assert.NotNull(record);
+
+            var actualProofRequest = record.RequestJson.ToObject<ProofRequest>();
+            var expectedProofRequest = new ProofRequest
+            {
+                Name = "Test",
+                Version = "1.0",
+                Nonce = actualProofRequest.Nonce,
+                RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
+                {
+                    {
+                        "Proof of Name",new ProofAttributeInfo
+                        {
+                            Name=null,
+                            Names= new string[] {"first_name", "last_name" },
+                            NonRevoked=null,
+                            Restrictions=new List<AttributeFilter>
+                            {
+                                new AttributeFilter
+                                {
+                                    CredentialDefinitionId = holderCredential.CredentialDefinitionId
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "Proof of Age", new ProofAttributeInfo
+                        {
+                            Name="age",
+                            Names=null,
+                            NonRevoked=null,
+                            Restrictions=new List<AttributeFilter>
+                            {
+                                new AttributeFilter
+                                {
+                                    CredentialDefinitionId = holderCredential.CredentialDefinitionId
+                                }
+                            }
+                        }
+                    }
+                },
+                RequestedPredicates = new Dictionary<string, ProofPredicateInfo>
+                {
+                    {
+                        "Proof of Salary > $99,999", new ProofPredicateInfo
+                        {
+                            Name = "salary",
+                            Names = null,
+                            NonRevoked = null,
+                            PredicateType = ">",
+                            PredicateValue = 99999,
+                            Restrictions=new List<AttributeFilter>
+                            {
+                                new AttributeFilter
+                                {
+                                    CredentialDefinitionId = holderCredential.CredentialDefinitionId
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "Proof of Wellbeing", new ProofPredicateInfo
+                        {
+                            Name = "wellbeing",
+                            Names = null,
+                            NonRevoked = null,
+                            PredicateType = "<",
+                            PredicateValue = 99999,
+                            Restrictions=new List<AttributeFilter>
+                            {
+                                new AttributeFilter
+                                {
+                                    CredentialDefinitionId = holderCredential.CredentialDefinitionId
+                                }
+                            }
+                        }
+                    }
+                }
+            };   
+            var expectedProofRecord = new ProofRecord
+            {
+                State = ProofState.Requested,
+                RequestJson = expectedProofRequest.ToJson(),
+            };
+           
+            actualProofRequest.Should().BeEquivalentTo(expectedProofRequest);
+        }
+
+        [Fact]
+        public async Task SendProofProposalThrowsConnectionInvalidState()
         {
             var connectionId = Guid.NewGuid().ToString();
 
             await _connectionService.CreateInvitationAsync(_issuerWallet,
                 new InviteConfiguration { ConnectionId = connectionId });
 
-            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateProposalAsync(_issuerWallet, new ProofProposal
             {
-                Name = "Test",
-                Nonce = await AnonCreds.GenerateNonceAsync()
+                Comment = "Hello, World",
+                ProposedAttributes = new List<ProposedAttribute>
+                {
+                    new ProposedAttribute() 
+                    {
+                        Name = "first_name",
+                        CredentialDefinitionId = "asdf",
+                        Referent = "asdf",
+                        Value = "Joe"
+                    }
+                }
             }, connectionId));
 
             Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
         }
 
         [Fact]
-        public async Task CreateProofRequestConnectionNotFound()
+        public async Task CreateProofProposalSuccesfully()
         {
-            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
+            var proposedAttributes = new List<ProposedAttribute>
             {
-                Name = "Test",
-                Nonce = await AnonCreds.GenerateNonceAsync()
-            }, "bad-connection-id"));
+                new ProposedAttribute
+                {
+                    Name = "first_name",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Name",
+                    Value = "Joe"
+                },
+                new ProposedAttribute
+                {
 
-            Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
+                    Name = "second_name",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Name",
+                    Value = "Joe"
+                },
+                new ProposedAttribute
+                {
+
+                    Name = "age",
+                    CredentialDefinitionId = "1",
+                    SchemaId = "1",
+                    IssuerDid ="1",
+                    Referent = "Proof of Age",
+                    Value = "Joe"
+                }
+            };
+            var proposedPredicates =
+            new List<ProposedPredicate>
+            {
+                new ProposedPredicate
+                {
+                    Name = "salary",
+                    CredentialDefinitionId = "1",
+                    Predicate = ">",
+                    Threshold = 99999,
+                    Referent = "Proof of Salary > $99,999"
+
+                },
+                new ProposedPredicate
+                {
+                    Name = "test",
+                    CredentialDefinitionId = "1",
+                    Predicate = ">",
+                    Threshold = 99999,
+                    Referent = "Proof of Test > $99,999"
+
+                }
+
+            };
+
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+               _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            var proofProposal = new ProofProposal
+            {
+                Comment = "Hello, World",
+                ProposedAttributes = proposedAttributes,
+                ProposedPredicates = proposedPredicates
+            };
+
+            var (message, record) = await _proofService.CreateProposalAsync(_holderWallet, proofProposal, holderConnection.Id);
+
+            var expectedMessage = new ProposePresentationMessage
+            {
+                Id = message.Id,
+                Comment = "Hello, World",
+                PresentationPreviewMessage = new PresentationPreviewMessage
+                {
+                    Id = message.PresentationPreviewMessage.Id,
+                    ProposedAttributes = proposedAttributes.ToArray(),
+                    ProposedPredicates = proposedPredicates.ToArray()
+                }
+            };
+
+            message.Should().BeEquivalentTo(expectedMessage);
+
         }
 
         [Fact]
-        public async Task CreateProofRequestConnectionInvalidState()
+        public async Task CreateProofProposalThrowsInvalidParameterFormat()
         {
-            var connectionId = Guid.NewGuid().ToString();
+            // Setup secure connection between issuer and holder
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _issuerWallet, _holderWallet);
 
-            await _connectionService.CreateInvitationAsync(_issuerWallet,
-                new InviteConfiguration { ConnectionId = connectionId });
-
-            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _proofService.CreateRequestAsync(_issuerWallet, new ProofRequest
+            var proofProposal = new ProofProposal
             {
-                Name = "Test",
-                Nonce = await AnonCreds.GenerateNonceAsync()
-            }, connectionId));
+                Comment = "Hello, World",
+                ProposedAttributes = new List<ProposedAttribute>
+                 {
+                     new ProposedAttribute
+                     {
+                         Name = "first_name",
+                         CredentialDefinitionId = "1",
+                         SchemaId = "1",
+                         IssuerDid ="1",
+                         Referent = "Proof of First Name",
+                         Value = "Joe"
+                     },
+                     new ProposedAttribute
+                     {
 
-            Assert.True(ex.ErrorCode == ErrorCode.RecordInInvalidState);
+                         Name = "second_name",
+                         CredentialDefinitionId = "2",
+                         SchemaId = "2",
+                         IssuerDid ="2",
+                         Referent = "Proof of First Name",
+                         Value = "Joe"
+                     }
+                 },
+                ProposedPredicates = new List<ProposedPredicate>
+                {
+                    new ProposedPredicate
+                    {
+                        Name = "salary",
+                        CredentialDefinitionId = "1",
+                        Predicate = ">",
+                        Threshold = 99999,
+                        Referent = "Proof of Salary > $99,999"
+
+                    }
+                }
+            };
+      
+            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () =>
+                await _proofService.CreateProposalAsync(_holderWallet, proofProposal, holderConnection.Id));
+
+            Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
+
+            var len = proofProposal.ProposedAttributes.Count - 1;
+            proofProposal.ProposedAttributes.Remove(proofProposal.ProposedAttributes[len]);
+            proofProposal.ProposedPredicates.Add(new ProposedPredicate
+            {
+                Name = "name",
+                CredentialDefinitionId = "2",
+                Predicate = ">",
+                Threshold = 99999,
+                Referent = "Proof of Salary > $99,999"
+
+            });
+
+            ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () =>
+              await _proofService.CreateProposalAsync(_holderWallet, proofProposal, holderConnection.Id));
+            Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
+            
         }
 
         [Fact]
@@ -265,11 +629,11 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             // Holder accepts the proof requests and builds a proof
             {
-                //Holder retrives proof request message from their cloud agent
+                // Holder retrieves proof request message from their cloud agent
                 var proofRequest = FindContentMessage<RequestPresentationMessage>();
                 Assert.NotNull(proofRequest);
 
-                //Holder stores the proof request
+                // Holder stores the proof request
                 var holderProofRequestId = await _proofService.ProcessRequestAsync(_holderWallet, proofRequest, holderConnection);
                 var holderProofRecord = await _proofService.GetAsync(_holderWallet, holderProofRequestId.Id);
                 var holderProofObject =

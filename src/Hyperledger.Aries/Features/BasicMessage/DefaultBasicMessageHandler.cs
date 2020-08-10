@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Storage;
@@ -21,6 +22,8 @@ namespace Hyperledger.Aries.Features.BasicMessage
         {
             _recordService = recordService;
         }
+
+        public override IEnumerable<MessageType> SupportedMessageTypes => new MessageType[] { MessageTypes.BasicMessageType, MessageTypesHttps.BasicMessageType };
 
         /// <summary>
         /// Processes the incoming <see cref="AgentMessage" />

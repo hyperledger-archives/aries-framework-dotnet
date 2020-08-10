@@ -1,10 +1,67 @@
 <Project>
- <PropertyGroup>
-   <Version>1.2.10</Version>
-   <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Company>Hyperledger</Company>
-    <Authors>Hyperledger Aries Dotnet Maintainers</Authors>
-    <PackageProjectUrl>https://github.com/hyperledger/aries-framework-dotnet</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/hyperledger/aries-framework-dotnet</RepositoryUrl>
- </PropertyGroup>
+    <!-- Set common properties regarding assembly information and nuget packages -->
+    <PropertyGroup>
+        <Authors>Hyperledger Aries Dotnet Maintainers</Authors>
+        <Company>Hyperledger</Company>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/hyperledger/aries-framework-dotnet</PackageProjectUrl>
+        <PackageTags>Hyperledger Aries Self-Sovereign-Identity</PackageTags>
+        <Product>Hyperledger Aries Dotnet</Product>
+        <RepositoryUrl>https://github.com/hyperledger/aries-framework-dotnet.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Version>1.3.2</Version>
+    </PropertyGroup>
+
+    <!-- Common compile parameters -->
+    <PropertyGroup>
+        <!-- We use full (Windows PDBs) until cross platform support for source link will get better -->
+        <DebugType>full</DebugType>
+        <LangVersion>latest</LangVersion>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <Nullable>disable</Nullable>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <!--Versions of packages used across the repository-->
+    <PropertyGroup Label="Package Versions">
+        <MicrosoftAspNetCoreHttpAbstractionsVersion>2.2.0</MicrosoftAspNetCoreHttpAbstractionsVersion>
+        <MicrosoftAspNetCoreHttpExtensionsVersion>2.2.0</MicrosoftAspNetCoreHttpExtensionsVersion>
+        <MicrosoftAspNetCoreHttpVersion>2.2.2</MicrosoftAspNetCoreHttpVersion>
+        <MicrosoftCodeAnalysisFxCopAnalyzersVersion>3.0.0</MicrosoftCodeAnalysisFxCopAnalyzersVersion>
+        <MicrosoftExtensionsHostingVersion>3.1.5</MicrosoftExtensionsHostingVersion>
+        <MicrosoftExtensionsHttpVersion>3.1.5</MicrosoftExtensionsHttpVersion>
+        <MicrosoftExtensionsLoggingVersion>3.1.5</MicrosoftExtensionsLoggingVersion>
+        <MicrosoftNETTestSdkVersion>16.6.1</MicrosoftNETTestSdkVersion>
+        <SystemReactiveLinqVersion>4.4.1</SystemReactiveLinqVersion>
+        <SystemTextJsonVersion>4.7.2</SystemTextJsonVersion>
+
+        <AutofacExtensionsDependencyInjectionVersion>6.0.0</AutofacExtensionsDependencyInjectionVersion>
+        <DawnGuardVersion>1.12.0</DawnGuardVersion>
+        <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
+        <FluentValidationAspNetCoreVersion>8.6.2</FluentValidationAspNetCoreVersion>
+        <FluentValidationVersion>8.6.2</FluentValidationVersion>
+        <FlurlVersion>2.8.2</FlurlVersion>
+        <HyperledgerIndySdkVersion>1.11.1</HyperledgerIndySdkVersion>
+        <MediatrExtensionsMicrosoftDependencyInjectionVersion>8.0.1</MediatrExtensionsMicrosoftDependencyInjectionVersion>
+        <MediatrVersion>8.0.2</MediatrVersion>
+        <MicroElementsSwashbuckleFluentValidationVersion>3.2.0</MicroElementsSwashbuckleFluentValidationVersion>
+        <MoqVersion>4.14.5</MoqVersion>
+        <MultiformatsBaseVersion>2.0.2</MultiformatsBaseVersion>
+        <NewtonsoftJsonVersion>12.0.3</NewtonsoftJsonVersion>
+        <NLogConfigVersion>4.7.2</NLogConfigVersion>
+        <PollyVersion>7.2.1</PollyVersion>
+        <StatelessVersion>5.1.2</StatelessVersion>
+        <SwashbuckleAspNetCoreAnnotationsVersion>5.5.1</SwashbuckleAspNetCoreAnnotationsVersion>
+        <SwashbuckleAspNetCoreFiltersVersion>5.1.2</SwashbuckleAspNetCoreFiltersVersion>
+        <SwashbuckleAspNetCoreSwaggerGenVersion>5.5.1</SwashbuckleAspNetCoreSwaggerGenVersion>
+        <SwashbuckleAspNetCoreSwaggerUIVersion>5.5.1</SwashbuckleAspNetCoreSwaggerUIVersion>
+        <SwashbuckleAspNetCoreSwaggerVersion>5.5.1</SwashbuckleAspNetCoreSwaggerVersion>
+        <XunitRunnerVisualstudioVersion>2.4.2</XunitRunnerVisualstudioVersion>
+        <XunitVersion>2.4.1</XunitVersion>
+    </PropertyGroup>
+
 </Project>

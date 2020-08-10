@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -9,26 +10,32 @@ namespace Hyperledger.Aries.Features.PresentProof
     {
         /// <summary>The schema identifier</summary>
         [JsonProperty("schema_id", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("schema_id")]
         public string SchemaId { get; set; }
 
         /// <summary>The schema issuer did</summary>
         [JsonProperty("schema_issuer_did", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("schema_issuer_did")]
         public string SchemaIssuerDid { get; set; }
 
         /// <summary>The schema name</summary>
         [JsonProperty("schema_name", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("schema_name")]
         public string SchemaName { get; set; }
 
         /// <summary>The schema version</summary>
         [JsonProperty("schema_version", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("schema_version")]
         public string SchemaVersion { get; set; }
 
         /// <summary>The issuer did</summary>
         [JsonProperty("issuer_did", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("issuer_did")]
         public string IssuerDid { get; set; }
 
         /// <summary>The credential definition identifier</summary>
         [JsonProperty("cred_def_id", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("cred_def_id")]
         public string CredentialDefinitionId { get; set; }
 
         /// <summary>
@@ -133,6 +140,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// The non revoked.
         /// </value>
         [JsonProperty("non_revoked", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("non_revoked")]
         public RevocationInterval NonRevoked { get; set; }
     }
 }

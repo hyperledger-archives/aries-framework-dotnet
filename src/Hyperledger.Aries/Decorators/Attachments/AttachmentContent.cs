@@ -23,7 +23,7 @@ namespace Hyperledger.Aries.Decorators.Attachments
         /// The sha26.
         /// </value>
         [JsonProperty("sha256", NullValueHandling = NullValueHandling.Ignore)]
-        public string Sha26 { get; set; }
+        public string Sha256 { get; set; }
 
         /// <summary>
         /// Gets or sets the links.

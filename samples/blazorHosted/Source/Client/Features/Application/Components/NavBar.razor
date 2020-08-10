@@ -1,0 +1,43 @@
+@namespace Hyperledger.Aries.AspNetCore.Features.Applications.Components
+
+@using Hyperledger.Aries.AspNetCore.Features.Bases
+@using Microsoft.AspNetCore.Components.Routing
+
+@inherits BaseComponent
+<!-- A grey horizontal navbar that becomes vertical on small screens -->
+<header class="navbar fixed-top navbar-dark navbar-expand-sm bg-primary py-0">
+  <!-- Brand/logo -->
+  <a class="navbar-brand" href="#">
+    <img src="@ApplicationState.Logo" alt="logo" style="width:200px; background:white">
+  </a>
+  <!-- Toggler -->
+  <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <!-- Links -->
+  <div class="@NavMenuCssClass navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <NavLink class="nav-link" href="">
+          Home
+        </NavLink>
+      </li>
+      <li class="nav-item">
+        <NavLink class="nav-link" target="_blank" href="https://github.com/hyperledger/aries-framework-dotnet">
+          Aries Framework for .NET GitHub
+        </NavLink>
+      </li>
+      <li class="nav-item">
+        <NavLink class="nav-link" href="">
+          About Us
+        </NavLink>
+      </li>
+      <li class="nav-item">
+        <NavLink class="nav-link" href="">
+          Contact
+        </NavLink>
+      </li>
+    </ul>
+    <AccountMenu />
+  </div>
+</header>

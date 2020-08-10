@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Storage
 {
@@ -19,6 +20,7 @@ namespace Hyperledger.Aries.Storage
         /// </summary>
         /// <value>The new key.</value>
         [JsonProperty("rekey", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("rekey")]
         public string NewKey { get; set; }
 
         /// <summary>
@@ -28,6 +30,7 @@ namespace Hyperledger.Aries.Storage
         /// </summary>
         /// <value>The key derivation method.</value>
         [JsonProperty("key_derivation_method", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("key_derivation_method")]
         public string KeyDerivationMethod { get; set; }
 
         /// <summary>
@@ -35,6 +38,7 @@ namespace Hyperledger.Aries.Storage
         /// </summary>
         /// <value>The storage credentials.</value>
         [JsonProperty("storage_credentials", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("storage_credentials")]
         public object StorageCredentials { get; set; }
 
         /// <inheritdoc />

@@ -86,7 +86,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// <summary>
         /// Create a new credential offer for the specified connection. If "connectionId" is 
-        /// <c>null</c> this offer mjust be delivered over connectionless transport.
+        /// <c>null</c> this offer must be delivered over connectionless transport.
         /// The credential data will be stored in a tag named "CredentialOfferData" that can be retrieved
         /// at a later stage.
         /// </summary>
@@ -133,7 +133,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             CredentialRequestMessage credentialRequest, ConnectionRecord connection);
 
         /// <summary>
-        /// Creates and sends a credential with the given credential identifier
+        /// Creates a credential with the given credential identifier
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialId">The credential identifier.</param>
@@ -141,7 +141,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         Task<(CredentialIssueMessage, CredentialRecord)> CreateCredentialAsync(IAgentContext agentContext, string credentialId);
 
         /// <summary>
-        /// Creates and sends a credential with the given credential identifier. 
+        /// Creates a credential with the given credential identifier. 
         /// The credential is issued with the attributeValues provided.
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>

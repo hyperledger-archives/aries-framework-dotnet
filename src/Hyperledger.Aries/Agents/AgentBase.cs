@@ -97,7 +97,7 @@ namespace Hyperledger.Aries.Agents
         /// <returns></returns>
         /// <exception cref="Exception">Expected inner message to be of type 'ForwardMessage'</exception>
         /// <exception cref="AriesFrameworkException">Couldn't locate a message handler for type {messageType}</exception>
-        /// TODO should recieve a message context and return a message context.
+        /// TODO should receive a message context and return a message context.
         public async Task<MessageContext> ProcessAsync(IAgentContext context, MessageContext messageContext)
         {
             EnsureConfigured();
@@ -137,7 +137,15 @@ namespace Hyperledger.Aries.Agents
                     inboundMessageContext.Payload.GetUTF8String());
 
                 // Process message in handler
-                var response = await messageHandler.ProcessAsync(agentContext, inboundMessageContext);
+                AgentMessage response;
+                try
+                {
+                    response = await messageHandler.ProcessAsync(agentContext, inboundMessageContext);
+                }
+                catch (AriesFrameworkException e)
+                {
+                    throw new AriesFrameworkException(e.ErrorCode,e.Message,inboundMessageContext.ContextRecord,inboundMessageContext.Connection);
+                }
 
                 // Process message with any registered middlewares
                 foreach (var middleware in Middlewares)

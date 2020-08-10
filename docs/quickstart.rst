@@ -5,7 +5,7 @@ Configuration and provisioning
 Services overview
 =================
 
-- ``IProvisioningService`` - used to provision new agents and access the provisioning configuration that contains endpoint data, ownerhip info, service endpoints, etc.
+- ``IProvisioningService`` - used to provision new agents and access the provisioning configuration that contains endpoint data, ownership info, service endpoints, etc.
 - ``IConnectionService`` - manage connection records, create and accept invitations
 - ``ICredentialService`` - manage credential records, create offer, issue, revoke and store credentials
 - ``IProofService`` - send proof requests, provide and verify proofs
@@ -16,7 +16,7 @@ Dependency injection
 ====================
 
 When using ASP.NET Core, you can use the extension methods to configure the agent. This will add all required dependencies to the service provider.
-Additionaly, the AgentFramework depends on the Logging extensions. These need to be added as well.
+Additionally, the AgentFramework depends on the Logging extensions. These need to be added as well.
 
 If using other tool, you will have to add each required service or message handler manually.
 

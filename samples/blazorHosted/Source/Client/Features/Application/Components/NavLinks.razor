@@ -1,0 +1,61 @@
+@namespace Hyperledger.Aries.AspNetCore.Features.Applications.Components
+@using Hyperledger.Aries.AspNetCore.Pages
+@using Microsoft.AspNetCore.Components.Routing
+
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+      <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+        <span class="oi oi-home" aria-hidden="true"></span> Home
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@CounterPage.GetRoute()">
+        <span class="oi oi-plus" aria-hidden="true"></span> Counter
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="aries/swagger/" target="_blank">
+        <span class="oi oi-external-link" aria-hidden="true"></span> API Docs
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@Features.Wallets.Pages.WalletPage.GetRoute()">
+        <Identicon Value="Wallet" Size=@IconSize />  Wallet
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@Features.Connections.Pages.Index.GetRoute()">
+        <Identicon Value="Connections" Size=@IconSize /> Connections
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@Features.Connections.Pages.Create.GetRoute()">
+        <Identicon Value="Create Invitation" Size=@IconSize /> Create Invitation
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@Features.Connections.Pages.Invitation.GetRoute()">
+        <Identicon Value="View Invitation" Size=@IconSize /> View Invitation
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@Features.Schemas.Pages.Index.GetRoute()">
+        <Identicon Value="Schemas" Size=@IconSize /> Schemas
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@Features.CredentialDefinitions.Pages.Index.GetRoute()">
+        <Identicon Value="Credential Definitions" Size=@IconSize /> Credential Definitions
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@Features.Credentials.Pages.Index.GetRoute()">
+        <Identicon Value="Credentials" Size=@IconSize /> Credentials
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="@Features.PresentProofs.Pages.Index.GetRoute()">
+        <Identicon Value="Proofs" Size=@IconSize /> Proofs
+      </NavLink>
+    </li>
+  </ul>

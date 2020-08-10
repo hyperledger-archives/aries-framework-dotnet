@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
 
@@ -34,6 +35,7 @@ namespace Hyperledger.Aries.Features.TrustPing
         /// The comment.
         /// </value>
         [JsonProperty("response_requested")]
+        [JsonPropertyName("response_requested")]
         public bool ResponseRequested { get; set; }
     }
 }

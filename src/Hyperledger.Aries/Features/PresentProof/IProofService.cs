@@ -12,6 +12,43 @@ namespace Hyperledger.Aries.Features.PresentProof
     /// </summary>
     public interface IProofService
     {
+
+        /// <summary>
+        /// Creates a proof proposal.
+        /// </summary>
+        /// <returns>The proof proposal.</returns>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="proofProposal">The proof proposal that will be created</param>
+        /// <param name="connectionId">Connection identifier of who the proof request will be sent to.</param>
+        /// <returns>Proof Request message and identifier.</returns>
+        Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext,
+            ProofProposal proofProposal, string connectionId);
+
+
+        /// <summary>
+        /// Creates a proof request from a proof proposal.
+        /// </summary>
+        /// <returns>The proof request.</returns>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="requestParameters">The parameters requested to be proven</param>
+        /// <param name="proofRecordId">proposal Id</param>
+        /// <param name="connectionId">Connection identifier of who the proof proposal will be sent to.</param>
+        /// <returns>Proof Request message and identifier.</returns>
+        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext, ProofRequestParameters requestParameters,
+            string proofRecordId, string connectionId);
+
+
+        /// <summary>
+        /// Processes a proof proposal and stores it for a given connection.
+        /// </summary>
+        /// <returns>The identifier for the stored proof proposal.</returns>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="proposePresentationMessage">A proof proposal.</param>
+        /// <param name="connection">Connection.</param>
+        /// <returns>Proof identifier.</returns>
+        Task<ProofRecord> ProcessProposalAsync(IAgentContext agentContext, ProposePresentationMessage proposePresentationMessage, ConnectionRecord connection);
+
+
         /// <summary>
         /// Creates a proof request.
         /// </summary>
@@ -73,7 +110,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </returns>
         Task<string> CreatePresentationAsync(
             IAgentContext agentContext,
-            ProofRequest proofRequest, 
+            ProofRequest proofRequest,
             RequestedCredentials requestedCredentials);
 
         /// <summary>
@@ -157,7 +194,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </returns>
         Task<List<Credential>> ListCredentialsForProofRequestAsync(
             IAgentContext agentContext,
-            ProofRequest proofRequest, 
+            ProofRequest proofRequest,
             string attributeReferent);
     }
 }

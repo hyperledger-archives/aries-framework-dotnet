@@ -40,10 +40,12 @@ namespace Hyperledger.Aries.Features.TrustPing
         /// <value>
         /// The supported message types.
         /// </value>
-        public IEnumerable<MessageType> SupportedMessageTypes => new[]
+        public IEnumerable<MessageType> SupportedMessageTypes => new MessageType[]
         {
-            new MessageType(MessageTypes.TrustPingMessageType),
-            new MessageType(MessageTypes.TrustPingResponseMessageType)
+            MessageTypes.TrustPingMessageType,
+            MessageTypes.TrustPingResponseMessageType,
+            MessageTypesHttps.TrustPingMessageType,
+            MessageTypesHttps.TrustPingResponseMessageType
         };
 
         /// <summary>
@@ -58,6 +60,7 @@ namespace Hyperledger.Aries.Features.TrustPing
             switch (messageContext.GetMessageType())
             {
                 case MessageTypes.TrustPingMessageType:
+                case MessageTypesHttps.TrustPingMessageType:
                     {
                         var pingMessage = messageContext.GetMessage<TrustPingMessage>();
 
@@ -74,6 +77,7 @@ namespace Hyperledger.Aries.Features.TrustPing
                         break;
                     }
                 case MessageTypes.TrustPingResponseMessageType:
+                case MessageTypesHttps.TrustPingResponseMessageType:
                     {
                         var pingMessage = messageContext.GetMessage<TrustPingMessage>();
 

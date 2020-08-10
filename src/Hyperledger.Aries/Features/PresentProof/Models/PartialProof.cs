@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Features.PresentProof
@@ -24,6 +25,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// The requested proof.
         /// </value>
         [JsonProperty("requested_proof")]
+        [JsonPropertyName("requested_proof")]
         public RequestedProof RequestedProof { get; set; }
     }
 }

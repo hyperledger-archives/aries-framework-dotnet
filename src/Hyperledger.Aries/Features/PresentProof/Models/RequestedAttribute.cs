@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -12,6 +13,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <value>The credential identifier.</value>
         [JsonProperty("cred_id")]
+        [JsonPropertyName("cred_id")]
         public string CredentialId { get; set; }
 
         /// <summary>

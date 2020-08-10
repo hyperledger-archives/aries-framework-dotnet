@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -33,6 +34,7 @@ namespace Hyperledger.Aries.Features.Routing
         /// The content.
         /// </value>
         [JsonProperty("msg")]
+        [JsonPropertyName("msg")]
         public JObject Message { get; set; }
     }
 }

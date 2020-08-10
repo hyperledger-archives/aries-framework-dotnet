@@ -3,28 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Options;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
     internal class DefaultCredentialHandler : IMessageHandler
     {
+        private readonly AgentOptions _agentOptions;
         private readonly ICredentialService _credentialService;
         private readonly IWalletRecordService _recordService;
         private readonly IMessageService _messageService;
 
         /// <summary>Initializes a new instance of the <see cref="DefaultCredentialHandler"/> class.</summary>
+        /// <param name="agentOptions">The agent options.</param>
         /// <param name="credentialService">The credential service.</param>
         /// <param name="recordService">The wallet record service.</param>
         /// <param name="messageService">The message service.</param>
         public DefaultCredentialHandler(
+            IOptions<AgentOptions> agentOptions,
             ICredentialService credentialService,
             IWalletRecordService recordService,
             IMessageService messageService)
         {
+            _agentOptions = agentOptions.Value;
             _credentialService = credentialService;
             _recordService = recordService;
             _messageService = messageService;
@@ -40,7 +46,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
         {
             MessageTypes.IssueCredentialNames.OfferCredential,
             MessageTypes.IssueCredentialNames.RequestCredential,
-            MessageTypes.IssueCredentialNames.IssueCredential
+            MessageTypes.IssueCredentialNames.IssueCredential,
+            MessageTypesHttps.IssueCredentialNames.OfferCredential,
+            MessageTypesHttps.IssueCredentialNames.RequestCredential,
+            MessageTypesHttps.IssueCredentialNames.IssueCredential
         };
 
         /// <summary>
@@ -55,6 +64,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             switch (messageContext.GetMessageType())
             {
                 // v1
+                case MessageTypesHttps.IssueCredentialNames.OfferCredential:
                 case MessageTypes.IssueCredentialNames.OfferCredential:
                     {
                         var offer = messageContext.GetMessage<CredentialOfferMessage>();
@@ -63,9 +73,18 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
                         messageContext.ContextRecord = await _credentialService.GetAsync(agentContext, recordId);
 
+                        // Auto request credential if set in the agent option
+                        if (_agentOptions.AutoRespondCredentialOffer == true)
+                        {
+                            var (message, record) = await _credentialService.CreateRequestAsync(agentContext, recordId);
+                            messageContext.ContextRecord = record;
+                            return message;
+                        }
+
                         return null;
                     }
 
+                case MessageTypesHttps.IssueCredentialNames.RequestCredential:
                 case MessageTypes.IssueCredentialNames.RequestCredential:
                     {
                         var request = messageContext.GetMessage<CredentialRequestMessage>();
@@ -81,11 +100,19 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         }
                         else
                         {
+                            // Auto create credential if set in the agent option
+                            if (_agentOptions.AutoRespondCredentialRequest == true)
+                            {
+                                var (message, record) = await _credentialService.CreateCredentialAsync(agentContext, recordId);
+                                messageContext.ContextRecord = record;
+                                return message;
+                            }
                             messageContext.ContextRecord = await _credentialService.GetAsync(agentContext, recordId);
                             return null;
                         }
                     }
 
+                case MessageTypesHttps.IssueCredentialNames.IssueCredential:
                 case MessageTypes.IssueCredentialNames.IssueCredential:
                     {
                         var credential = messageContext.GetMessage<CredentialIssueMessage>();

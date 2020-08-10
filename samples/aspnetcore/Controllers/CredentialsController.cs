@@ -67,7 +67,7 @@ namespace WebAgent.Controllers
             var context = await _agentContextProvider.GetContextAsync();
             var issuer = await _provisionService.GetProvisioningAsync(context.Wallet);
             var Trustee = await Did.CreateAndStoreMyDidAsync(context.Wallet,
-                new { seed = "000000000000000000000000Trustee1" }.ToJson());
+                new { seed = "000000000000000000000000Steward1" }.ToJson());
             await Ledger.SignAndSubmitRequestAsync(await context.Pool, context.Wallet, Trustee.Did,
                 await Ledger.BuildNymRequestAsync(Trustee.Did, issuer.IssuerDid, issuer.IssuerVerkey, null, "ENDORSER"));
 
@@ -109,7 +109,11 @@ namespace WebAgent.Controllers
             var issuer = await _provisionService.GetProvisioningAsync(context.Wallet);
             var connection = await _connectionService.GetAsync(context, model.ConnectionId);
             var values = JsonConvert.DeserializeObject<List<CredentialPreviewAttribute>>(model.CredentialAttributes);
-            values.Add(new CredentialPreviewAttribute("issuer", issuer.Owner.Name));
+
+            foreach (CredentialPreviewAttribute attr in values)
+            {
+                attr.MimeType = CredentialMimeTypes.ApplicationJsonMimeType;
+            }
 
             var (offer, _) = await _credentialService.CreateOfferAsync(context, new OfferConfiguration
                 {

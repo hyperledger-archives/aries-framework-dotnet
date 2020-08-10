@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Ledger
@@ -24,6 +25,7 @@ namespace Hyperledger.Aries.Ledger
         ///   <c>true</c> if [must be owner]; otherwise, <c>false</c>.
         /// </value>
         [JsonProperty("need_to_be_owner")]
+        [JsonPropertyName("need_to_be_owner")]
         public bool MustBeOwner { get; set; }
 
         /// <summary>
@@ -33,6 +35,7 @@ namespace Hyperledger.Aries.Ledger
         /// The signature count.
         /// </value>
         [JsonProperty("sig_count")]
+        [JsonPropertyName("sig_count")]
         public int SignatureCount { get; set; }
 
         /// <summary>
@@ -51,6 +54,7 @@ namespace Hyperledger.Aries.Ledger
         /// The constraint identifier.
         /// </value>
         [JsonProperty("constraint_id")]
+        [JsonPropertyName("constraint_id")]
         public string ConstraintId { get; set; }
 
         /// <summary>
@@ -60,6 +64,7 @@ namespace Hyperledger.Aries.Ledger
         /// The constraints.
         /// </value>
         [JsonProperty("auth_constraints")]
+        [JsonPropertyName("auth_constraints")]
         public IList<AuthorizationConstraint> Constraints { get; set; }
     }
 }

@@ -1,0 +1,26 @@
+﻿@namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs.Pages
+@inherits BaseComponent
+@page "/proofs/view"
+
+<h1>View Proof Request</h1>
+
+<input @bind-value=EncodedProofRequestMessage autocomplete="off" name="InvitationDetails" id="invitation-details" class="form-control mr-sm-2" type="search" placeholder="Invitation Details" aria-label="View" />
+<button class="btn btn-outline-success my-2 my-sm-0" type="submit" @onclick=@OnViewClickAsync>View</button>
+
+@if (RequestPresentationMessage != null)
+{
+  <div class="card text-center mt-2 w-50">
+    <div class="card-header">
+      Request Presentation Message
+    </div>
+    <div class="card-body">
+      <dl>
+        <dt>Comment</dt>
+        <dd>@RequestPresentationMessage?.Comment</dd>
+        <dt></dt>
+        <dd>@RequestPresentationMessage?.Requests?.Length</dd>
+      </dl>
+      <button class="btn btn-primary" @onclick=@OnAcceptClickAsync>Accept Invitation</button>
+    </div>
+  </div>
+}

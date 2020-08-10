@@ -2,6 +2,7 @@
 using WebAgent.Messages;
 using Newtonsoft.Json;
 using Hyperledger.Aries.Agents;
+using System.Text.Json.Serialization;
 
 namespace WebAgent.Protocols.BasicMessage
 {
@@ -17,6 +18,7 @@ namespace WebAgent.Protocols.BasicMessage
         public string Content { get; set; }
 
         [JsonProperty("sent_time")]
+        [JsonPropertyName("sent_time")]
         public string SentTime { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hyperledger.Aries.Ledger
 {
@@ -14,6 +15,7 @@ namespace Hyperledger.Aries.Ledger
         /// The type of the transaction.
         /// </value>
         [JsonProperty("auth_type")]
+        [JsonPropertyName("auth_type")]
         public string TransactionType { get; set; }
 
         /// <summary>
@@ -23,6 +25,7 @@ namespace Hyperledger.Aries.Ledger
         /// The new value.
         /// </value>
         [JsonProperty("new_value")]
+        [JsonPropertyName("new_value")]
         public string NewValue { get; set; }
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace Hyperledger.Aries.Ledger
         /// The old value.
         /// </value>
         [JsonProperty("old_value")]
+        [JsonPropertyName("old_value")]
         public string OldValue { get; set; }
 
         /// <summary>
@@ -50,6 +54,7 @@ namespace Hyperledger.Aries.Ledger
         /// The action.
         /// </value>
         [JsonProperty("auth_action")]
+        [JsonPropertyName("auth_action")]
         public string Action { get; set; }
 
         /// <summary>

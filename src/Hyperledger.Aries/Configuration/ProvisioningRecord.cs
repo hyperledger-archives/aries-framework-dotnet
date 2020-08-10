@@ -1,7 +1,6 @@
 ﻿using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Storage;
-using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Configuration
 {
@@ -11,15 +10,6 @@ namespace Hyperledger.Aries.Configuration
     /// <seealso cref="RecordBase" />
     public class ProvisioningRecord : RecordBase
     {
-        [JsonProperty]
-        private string _tailsBaseUri;
-        [JsonProperty]
-        private string _masterSecretId;
-        [JsonProperty]
-        private string _issuerVerkey;
-        [JsonProperty]
-        private string _issuerDid;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ProvisioningRecord"/> class.
         /// </summary>
@@ -44,70 +34,49 @@ namespace Hyperledger.Aries.Configuration
         /// Gets or sets the endpoint information for the provisioned agent.
         /// </summary>
         /// <returns>The endpoint information for the provisioned agent</returns>
-        public virtual AgentEndpoint Endpoint
-        {
-            get;
-            internal set;
-        }
+        public virtual AgentEndpoint Endpoint { get; set; }
 
         /// <summary>
         /// Gets or sets the owner information for the provisioned agent.
         /// </summary>
         /// <returns>The owner information for the provisioned agent</returns>
-        public virtual AgentOwner Owner
-        {
-            get;
-            internal set;
-        }
+        public virtual AgentOwner Owner { get; set; }
 
         /// <summary>
         /// Gets or sets the issuer did for the provisioned agent.
         /// </summary>
         /// <returns>The issuer did for the provisioned agent</returns>
-        [JsonIgnore]
-        public virtual string IssuerDid
-        {
-            get => _issuerDid;
-            internal set => _issuerDid = value;
-        }
+        [Newtonsoft.Json.JsonProperty("_issuerDid")]
+        public virtual string IssuerDid { get; set; }
 
         /// <summary>
         /// Gets or sets the issuer verkey for the provisioned agent.
         /// </summary>
         /// <returns>The issuer verkey for the provisioned agent</returns>
-        [JsonIgnore]
-        public virtual string IssuerVerkey
-        {
-            get => _issuerVerkey;
-            internal set => _issuerVerkey = value;
-        }
+        [Newtonsoft.Json.JsonProperty("_issuerVerkey")]
+        public virtual string IssuerVerkey { get; set; }
+
 
         /// <summary>
         /// Gets or sets the master key identifier for the provisioned agent.
         /// </summary>
         /// <returns>The master key identifier for the provisioned agent</returns>
-        [JsonIgnore]
-        public virtual string MasterSecretId
-        {
-            get => _masterSecretId;
-            internal set => _masterSecretId = value;
-        }
+        [Newtonsoft.Json.JsonProperty("_masterSecretId")]
+        public virtual string MasterSecretId { get; set; }
+
 
         /// <summary>
         /// Gets or sets the tails base uri for the provisioned agent.
         /// </summary>
         /// <returns>The tails base uri for the provisioned agent</returns>
-        [JsonIgnore]
-        public virtual string TailsBaseUri
-        {
-            get => _tailsBaseUri;
-            internal set => _tailsBaseUri = value;
-        }
+        [Newtonsoft.Json.JsonProperty("_tailsBaseUri")]
+        public virtual string TailsBaseUri { get; set; }
+
 
         /// <summary>
         /// Gets or sets the default payment address
         /// </summary>
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public string DefaultPaymentAddressId
         {
             get => Get();

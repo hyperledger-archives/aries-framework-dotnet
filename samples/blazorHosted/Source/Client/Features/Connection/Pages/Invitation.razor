@@ -1,0 +1,24 @@
+﻿@namespace Hyperledger.Aries.AspNetCore.Features.Connections.Pages
+@using Hyperledger.Aries.AspNetCore.Features.Bases
+@inherits BaseComponent
+@page "/connections/invitation"
+
+<h1>View Invitation</h1>
+
+<input @bind-value=InvitationDetails autocomplete="off" name="InvitationDetails" id="invitation-details" class="form-control mr-sm-2" type="search" placeholder="Invitation Details" aria-label="View" />
+<button class="btn btn-outline-success my-2 my-sm-0" type="submit" @onclick=@OnViewClickAsync>View</button>
+
+@if (ConnectionInvitationMessage != null)
+{
+  <div class="card text-center mt-2 w-50">
+    <div class="card-header">
+      Agent Provisioning Configuration
+    </div>
+    <div class="card-body">
+      <Identicon Value=@ConnectionInvitationMessage.Label Size=100 />
+      <h5 class="card-title mt-2">@ConnectionInvitationMessage.Label</h5>
+      <p><small class="text-muted">@ConnectionInvitationMessage.ServiceEndpoint</small></p>
+      <button class="btn btn-primary" @onclick=@OnAcceptClickAsync>Accept Invitation</button>
+    </div>
+  </div>
+}
