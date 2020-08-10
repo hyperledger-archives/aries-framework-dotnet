@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Hyperledger.Indy.WalletApi;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy;
+using Hyperledger.Aries.Configuration;
+using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing.Edge
 {
@@ -116,35 +118,51 @@ namespace Hyperledger.Aries.Routing.Edge
             var response = await messageService.SendReceiveAsync<RetrieveBackupResponseAgentMessage>(context.Wallet, retrieveBackupResponseMessage, connection).ConfigureAwait(false);
             return response.Payload;
         }
-        
+
         /// <inheritdoc />
-        public async Task RestoreFromBackupAsync(IAgentContext sourceContext,
-            string seed, 
+        public async Task<AgentOptions> RestoreFromBackupAsync(IAgentContext sourceContext,
+            string seed,
             List<Attachment> backupData)
         {
             var tempWalletPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             var walletBase64 = backupData.First().Data.Base64;
             var walletToRestoreInBytes = walletBase64.GetBytesFromBase64();
-            
+
             await Task.Run(() => File.WriteAllBytes(tempWalletPath, walletToRestoreInBytes));
-            
+
+            var oldAgentOptionsString = JsonConvert.SerializeObject(agentoptions);
+
             var json = new { path = tempWalletPath, key = seed }.ToJson();
 
-            await walletService.DeleteWalletAsync(agentoptions.WalletConfiguration, agentoptions.WalletCredentials);
-            
-            // Add 1 sec delay to allow filesystem to catch up
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            agentoptions.WalletConfiguration.Id = Guid.NewGuid().ToString();
+            agentoptions.WalletCredentials.Key = Utils.GenerateRandomAsync(32);
 
             await Wallet.ImportAsync(agentoptions.WalletConfiguration.ToJson(), agentoptions.WalletCredentials.ToJson(), json);
 
+            // Try delete the old wallet
+            try
+            {
+                var oldAgentOptions = JsonConvert.DeserializeObject<AgentOptions>(oldAgentOptionsString);
+                await walletService.DeleteWalletAsync(oldAgentOptions.WalletConfiguration,
+                    oldAgentOptions.WalletCredentials);
+                // Add 1 sec delay to allow filesystem to catch up
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Wallet could not be deleted");
+            }
+
             File.Delete(tempWalletPath);
+
+            return agentoptions;
         }
 
         /// <inheritdoc />
         public async Task<List<long>> ListBackupsAsync(IAgentContext context)
         {
             var publicKey = await Did.KeyForLocalDidAsync(context.Wallet, InternalBackupDid);
-            
+
             var listBackupsMessage = new ListBackupsAgentMessage()
             {
                 BackupId = publicKey,
@@ -159,10 +177,10 @@ namespace Hyperledger.Aries.Routing.Edge
         }
 
         /// <inheritdoc />
-        public async Task RestoreFromBackupAsync(IAgentContext context, string seed)
+        public async Task<AgentOptions> RestoreFromBackupAsync(IAgentContext context, string seed)
         {
             var backupAttachments = await RetrieveBackupAsync(context, seed);
-            await RestoreFromBackupAsync(context, seed, backupAttachments);
+            return await RestoreFromBackupAsync(context, seed, backupAttachments);
         }
     }
 }
