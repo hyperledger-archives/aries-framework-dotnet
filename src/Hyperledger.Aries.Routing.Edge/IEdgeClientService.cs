@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Decorators.Attachments;
 
 namespace Hyperledger.Aries.Routing
@@ -69,7 +70,7 @@ namespace Hyperledger.Aries.Routing
         Task<string> CreateBackupAsync(IAgentContext context, string seed);
 
         /// <summary>
-        /// Retrieves the latest available backup.
+        /// Retrieves the latest available backup that matches the seed.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="seed">The seed.</param>
@@ -85,23 +86,26 @@ namespace Hyperledger.Aries.Routing
         Task<List<long>> ListBackupsAsync(IAgentContext context);
 
         /// <summary>
-        /// Restores the agent and wallet from backup. Removes the existing wallet and creates a new one with same
-        /// configuration
+        /// Restores the agent and wallet from backup by creating another wallet with new configuration and imports its content.
+        /// Tries to remove the existing wallet.
+        /// The client should safely store the returned AgentOptions and use its configuration to open the wallet.
         /// </summary>
         /// <param name="edgeContext">The edge context.</param>
         /// <param name="seed">The seed.</param>
         /// <param name="backupData">The backup(Attachments) data.</param>
-        /// <returns></returns>
+        /// <returns>AgentOptions configuration for the newly imported wallet</returns>
         [Obsolete("This method is obsolete.")]
-        Task RestoreFromBackupAsync(IAgentContext edgeContext, string seed, List<Attachment> backupData);
+        Task<AgentOptions> RestoreFromBackupAsync(IAgentContext edgeContext, string seed, List<Attachment> backupData);
 
         /// <summary>
-        /// Restores the agent and wallet from backup. Removes the existing wallet and creates a new one with same
-        /// configuration
+        /// Retrieves the backup matching the given seed.
+        /// Restores the agent and wallet from backup by creating another wallet with new configuration and imports its content.
+        /// Tries to remove the existing wallet.
+        /// The client should safely store the returned AgentOptions and use its configuration to open the wallet.
         /// </summary>
         /// <param name="edgeContext">The edge context.</param>
         /// <param name="seed">The seed.</param>
-        /// <returns></returns>
-        Task RestoreFromBackupAsync(IAgentContext edgeContext, string seed);
+        /// <returns>AgentOptions configuration for the newly imported wallet</returns>
+        Task<AgentOptions> RestoreFromBackupAsync(IAgentContext edgeContext, string seed);
     }
 }
