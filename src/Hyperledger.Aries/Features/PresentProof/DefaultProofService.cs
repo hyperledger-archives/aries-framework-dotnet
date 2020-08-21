@@ -330,16 +330,16 @@ namespace Hyperledger.Aries.Features.PresentProof
                     blobStorageReader: tailsReader,
                     revRegDef: registryDefinition.ObjectJson,
                     revRegDelta: delta.ObjectJson,
-                    timestamp: (long)proofRequest.NonRevoked.To,
+                    timestamp: (long)delta.Timestamp,
                     credRevId: credential.CredentialRevocationId);
 
                 if (!result.ContainsKey(credential.RevocationRegistryId))
                     result.Add(credential.RevocationRegistryId, new Dictionary<string, JObject>());
 
-                requestedCredential.Timestamp = (long)proofRequest.NonRevoked.To;
-                if (!result[credential.RevocationRegistryId].ContainsKey($"{proofRequest.NonRevoked.To}"))
+                requestedCredential.Timestamp = (long)delta.Timestamp;
+                if (!result[credential.RevocationRegistryId].ContainsKey($"{delta.Timestamp}"))
                 {
-                    result[credential.RevocationRegistryId].Add($"{proofRequest.NonRevoked.To}", JObject.Parse(state));
+                    result[credential.RevocationRegistryId].Add($"{delta.Timestamp}", JObject.Parse(state));
                 }
             }
 
