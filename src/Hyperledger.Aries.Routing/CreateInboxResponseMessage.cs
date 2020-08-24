@@ -5,6 +5,15 @@ namespace Hyperledger.Aries.Routing
     public class CreateInboxResponseMessage : AgentMessage
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="CreateInboxResponseMessage"/> class.
+        /// </summary>
+        public CreateInboxResponseMessage()
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = RoutingTypeNames.CreateInboxResponseMessage;
+        }
+
+        /// <summary>
         /// Gets or sets the inbox identifier.
         /// </summary>
         /// <value>
