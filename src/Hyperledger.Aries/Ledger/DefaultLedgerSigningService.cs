@@ -20,12 +20,19 @@ namespace Hyperledger.Aries.Ledger
         /// <inheritdoc />
         public async Task<string> SignRequestAsync(IAgentContext context, string submitterDid, string requestJson)
         {
-            var provisioning = await provisioningService.GetProvisioningAsync(context.Wallet);
-
-            if (provisioning.TaaAcceptance != null)
+            try
             {
-                requestJson = await IndyLedger.AppendTxnAuthorAgreementAcceptanceToRequestAsync(requestJson, provisioning.TaaAcceptance.Text,
-                    provisioning.TaaAcceptance.Version, provisioning.TaaAcceptance.Digest, "service_agreement", (ulong)DateTimeOffset.Now.ToUnixTimeSeconds());
+                var provisioning = await provisioningService.GetProvisioningAsync(context.Wallet);
+
+                if (provisioning?.TaaAcceptance != null)
+                {
+                    requestJson = await IndyLedger.AppendTxnAuthorAgreementAcceptanceToRequestAsync(requestJson, provisioning.TaaAcceptance.Text,
+                        provisioning.TaaAcceptance.Version, provisioning.TaaAcceptance.Digest, provisioning.TaaAcceptance.AcceptanceMechanism, (ulong)DateTimeOffset.Now.ToUnixTimeSeconds());
+                }
+            }
+            catch (AriesFrameworkException ex) when (ex.ErrorCode == ErrorCode.RecordNotFound)
+            {
+                // OK, used in unit tests and scenarios when we want to simply send ledger commands
             }
             return await SignRequestAsync(context.Wallet, submitterDid, requestJson);
         }
