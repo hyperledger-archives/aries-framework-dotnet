@@ -92,7 +92,7 @@ The default agent middleware is a simple implementation. You can `create your mi
     app.UseAgent<CustomAgentMiddlware>("http://localhost:5000/agent");
 
 See `AgentMiddleware.cs
-<https://github.com/hyperledger/aries-framework-dotnet/blob/master/src/AgentFramework.AspNetCore/Middleware/AgentMiddleware.cs>`_ for example implementation.
+<https://github.com/hyperledger/aries-framework-dotnet/blob/master/src/Hyperledger.Aries.AspNetCore/AgentMiddleware.cs>`_ for example implementation.
 
 .. tip:: In ASP.NET Core, the order of middleware registration is important, so you might want to add the agent middleware before any other middlewares, like MVC.
 
