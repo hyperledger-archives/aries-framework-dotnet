@@ -44,7 +44,7 @@ namespace Hyperledger.Aries.Configuration
         }
 
         /// <inheritdoc />
-        public async Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement, string acceptanceMechanism = null)
+        public async Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement, string acceptanceMechanism = "service_agreement")
         {
             var provisioning = await GetProvisioningAsync(wallet);
 

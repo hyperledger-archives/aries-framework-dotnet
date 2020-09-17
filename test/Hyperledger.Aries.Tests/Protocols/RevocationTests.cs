@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +22,11 @@ namespace Hyperledger.Aries.Tests.Protocols
         public async Task TestCredentialIssuanceV1()
         {
             var pair = await InProcAgent.CreatePairedAsync(true);
+
+            var credentialService1 = pair.Agent1.Provider.GetService<ICredentialService>();
+            var credentialService2 = pair.Agent2.Provider.GetService<ICredentialService>();
+            var proofService1 = pair.Agent1.Provider.GetService<IProofService>();
+            var proofService2 = pair.Agent2.Provider.GetService<IProofService>();
 
             // Configure agent1 as issuer
             var issuerConfiguration = await pair.Agent1.Provider.GetRequiredService<IProvisioningService>()
@@ -59,7 +64,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     });
 
             // Send offer for two credentials
-            var (offer, record) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
+            var (offer, record) = await credentialService1
                 .CreateOfferAsync(pair.Agent1.Context, new OfferConfiguration
                 {
                     CredentialDefinitionId = definitionWithRevocationId,
@@ -75,7 +80,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             var issuerCredentialWithRevocationId = record.Id;
 
-            (offer, record) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
+            (offer, record) = await credentialService1
                .CreateOfferAsync(pair.Agent1.Context, new OfferConfiguration
                {
                    CredentialDefinitionId = definitionId,
@@ -101,11 +106,11 @@ namespace Hyperledger.Aries.Tests.Protocols
             }
 
             // Issue credential
-            credentials = await pair.Agent1.Provider.GetService<ICredentialService>()
+            credentials = await credentialService1
                 .ListRequestsAsync(pair.Agent1.Context);
             foreach (var credential in credentials)
             {
-                var (issue, _) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
+                var (issue, _) = await credentialService1
                 .CreateCredentialAsync(pair.Agent1.Context, credential.Id);
                 await pair.Agent1.Provider.GetService<IMessageService>()
                     .SendAsync(pair.Agent1.Context.Wallet, issue, pair.Connection1);
@@ -125,7 +130,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
 
             // Verification - without revocation
-            var (requestPresentationMessage, proofRecordIssuer) = await pair.Agent1.Provider.GetService<IProofService>()
+            var (requestPresentationMessage, proofRecordIssuer) = await proofService1
                 .CreateRequestAsync(pair.Agent1.Context, new ProofRequest
                 {
                     Name = "Test Verification",
@@ -137,13 +142,13 @@ namespace Hyperledger.Aries.Tests.Protocols
                     }
                 });
 
-            var proofRecordHolder = await pair.Agent2.Provider.GetService<IProofService>()
+            var proofRecordHolder = await proofService2
                 .ProcessRequestAsync(pair.Agent2.Context, requestPresentationMessage, pair.Connection2);
 
-            var availableCredentials = await pair.Agent2.Provider.GetService<IProofService>()
+            var availableCredentials = await proofService2
                 .ListCredentialsForProofRequestAsync(pair.Agent2.Context, proofRecordHolder.RequestJson.ToObject<ProofRequest>(), "id-verification");
             
-            var (presentationMessage, _) = await pair.Agent2.Provider.GetService<IProofService>()
+            var (presentationMessage, _) = await proofService2
                 .CreatePresentationAsync(pair.Agent2.Context, proofRecordHolder.Id, new RequestedCredentials
                 {
                     RequestedAttributes = new Dictionary<string, RequestedAttribute>
@@ -157,10 +162,10 @@ namespace Hyperledger.Aries.Tests.Protocols
                     }
                 });
 
-            proofRecordIssuer = await pair.Agent1.Provider.GetService<IProofService>()
+            proofRecordIssuer = await proofService1
                 .ProcessPresentationAsync(pair.Agent1.Context, presentationMessage);
 
-            var valid = await pair.Agent1.Provider.GetService<IProofService>()
+            var valid = await proofService1
                 .VerifyProofAsync(pair.Agent1.Context, proofRecordIssuer.Id);
 
             Assert.True(valid);
@@ -168,7 +173,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             // Verification - with revocation
             var now = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
 
-            (requestPresentationMessage, proofRecordIssuer) = await pair.Agent1.Provider.GetService<IProofService>()
+            (requestPresentationMessage, proofRecordIssuer) = await proofService1
                 .CreateRequestAsync(pair.Agent1.Context, new ProofRequest
                 {
                     Name = "Test Verification",
@@ -180,17 +185,17 @@ namespace Hyperledger.Aries.Tests.Protocols
                     },
                     NonRevoked = new RevocationInterval
                     {
-                        From = 0,
+                        From = now,
                         To = now
                     }
                 });
 
-            proofRecordHolder = await pair.Agent2.Provider.GetService<IProofService>()
+            proofRecordHolder = await proofService2
                 .ProcessRequestAsync(pair.Agent2.Context, requestPresentationMessage, pair.Connection2);
-            availableCredentials = await pair.Agent2.Provider.GetService<IProofService>()
+            availableCredentials = await proofService2
                 .ListCredentialsForProofRequestAsync(pair.Agent2.Context, proofRecordHolder.RequestJson.ToObject<ProofRequest>(), "id-verification");
 
-            (presentationMessage, _) = await pair.Agent2.Provider.GetService<IProofService>()
+            (presentationMessage, _) = await proofService2
                 .CreatePresentationAsync(pair.Agent2.Context, proofRecordHolder.Id, new RequestedCredentials
                 {
                     RequestedAttributes = new Dictionary<string, RequestedAttribute>
@@ -204,10 +209,10 @@ namespace Hyperledger.Aries.Tests.Protocols
                     }
                 });
 
-            proofRecordIssuer = await pair.Agent1.Provider.GetService<IProofService>()
+            proofRecordIssuer = await proofService1
                 .ProcessPresentationAsync(pair.Agent1.Context, presentationMessage);
 
-            valid = await pair.Agent1.Provider.GetService<IProofService>()
+            valid = await proofService1
                 .VerifyProofAsync(pair.Agent1.Context, proofRecordIssuer.Id);
 
             Assert.True(valid);
@@ -220,7 +225,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             now = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
 
-            (requestPresentationMessage, proofRecordIssuer) = await pair.Agent1.Provider.GetService<IProofService>()
+            (requestPresentationMessage, proofRecordIssuer) = await proofService1
                 .CreateRequestAsync(pair.Agent1.Context, new ProofRequest
                 {
                     Name = "Test Verification",
@@ -232,17 +237,17 @@ namespace Hyperledger.Aries.Tests.Protocols
                     },
                     NonRevoked = new RevocationInterval
                     {
-                        From = now - 1,
+                        From = now,
                         To = now
                     }
                 });
 
-            proofRecordHolder = await pair.Agent2.Provider.GetService<IProofService>()
+            proofRecordHolder = await proofService2
                 .ProcessRequestAsync(pair.Agent2.Context, requestPresentationMessage, pair.Connection2);
-            availableCredentials = await pair.Agent2.Provider.GetService<IProofService>()
+            availableCredentials = await proofService2
                 .ListCredentialsForProofRequestAsync(pair.Agent2.Context, proofRecordHolder.RequestJson.ToObject<ProofRequest>(), "id-verification");
 
-            (presentationMessage, _) = await pair.Agent2.Provider.GetService<IProofService>()
+            (presentationMessage, _) = await proofService2
                 .CreatePresentationAsync(pair.Agent2.Context, proofRecordHolder.Id, new RequestedCredentials
                 {
                     RequestedAttributes = new Dictionary<string, RequestedAttribute>
@@ -256,17 +261,17 @@ namespace Hyperledger.Aries.Tests.Protocols
                     }
                 });
 
-            proofRecordIssuer = await pair.Agent1.Provider.GetService<IProofService>()
+            proofRecordIssuer = await proofService1
                 .ProcessPresentationAsync(pair.Agent1.Context, presentationMessage);
 
-            valid = await pair.Agent1.Provider.GetService<IProofService>()
+            valid = await proofService1
                 .VerifyProofAsync(pair.Agent1.Context, proofRecordIssuer.Id);
 
             Assert.False(valid);
 
             // Issue new credential
             {
-                (offer, record) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
+                (offer, record) = await credentialService1
                 .CreateOfferAsync(pair.Agent1.Context, new OfferConfiguration
                 {
                     CredentialDefinitionId = definitionWithRevocationId,
@@ -281,12 +286,13 @@ namespace Hyperledger.Aries.Tests.Protocols
                     .SendAsync(pair.Agent1.Context.Wallet, offer, pair.Connection1);
 
                 string holderCredentialId = null;
-                credentials = await pair.Agent2.Provider.GetService<ICredentialService>()
+                
+                credentials = await credentialService2
                 .ListAsync(pair.Agent2.Context);
 
                 foreach (var credential in credentials.Where(x => x.State == CredentialState.Offered))
                 {
-                    var (request, _) = await pair.Agent2.Provider.GetService<ICredentialService>()
+                    var (request, _) = await credentialService2
                     .CreateRequestAsync(pair.Agent2.Context, credential.Id);
                     holderCredentialId = credential.Id;
 
@@ -295,55 +301,57 @@ namespace Hyperledger.Aries.Tests.Protocols
                 }
 
                 // Issue credential
-                credentials = await pair.Agent1.Provider.GetService<ICredentialService>()
+
+                credentials = await credentialService1
                     .ListRequestsAsync(pair.Agent1.Context);
                 foreach (var credential in credentials)
                 {
-                    var (issue, _) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
+                    var (issue, _) = await credentialService1
                     .CreateCredentialAsync(pair.Agent1.Context, credential.Id);
                     await pair.Agent1.Provider.GetService<IMessageService>()
                         .SendAsync(pair.Agent1.Context.Wallet, issue, pair.Connection1);
                 }
 
                 now = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
-                (requestPresentationMessage, proofRecordIssuer) = await pair.Agent1.Provider.GetService<IProofService>()
-                .CreateRequestAsync(pair.Agent1.Context, new ProofRequest
-                {
-                    Name = "Test Verification",
-                    Version = "1.0",
-                    Nonce = await AnonCreds.GenerateNonceAsync(),
-                    RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
-                    {
-                        { "id-verification", new ProofAttributeInfo { Names = new [] { "name", "age" } } }
-                    },
-                    NonRevoked = new RevocationInterval
-                    {
-                        From = now - 1,
-                        To = now
-                    }
-                });
 
-                proofRecordHolder = await pair.Agent2.Provider.GetService<IProofService>()
+                (requestPresentationMessage, proofRecordIssuer) = await proofService1
+                    .CreateRequestAsync(pair.Agent1.Context, new ProofRequest
+                    {
+                        Name = "Test Verification",
+                        Version = "1.0",
+                        Nonce = await AnonCreds.GenerateNonceAsync(),
+                        RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
+                        {
+                            { "id-verification", new ProofAttributeInfo { Names = new [] { "name", "age" } } }
+                        },
+                        NonRevoked = new RevocationInterval
+                        {
+                            From = now,
+                            To = now
+                        }
+                    });
+
+                proofRecordHolder = await proofService2
                     .ProcessRequestAsync(pair.Agent2.Context, requestPresentationMessage, pair.Connection2);
                 
-                (presentationMessage, _) = await pair.Agent2.Provider.GetService<IProofService>()
+                (presentationMessage, _) = await proofService2
                     .CreatePresentationAsync(pair.Agent2.Context, proofRecordHolder.Id, new RequestedCredentials
                     {
                         RequestedAttributes = new Dictionary<string, RequestedAttribute>
                         {
-                        { "id-verification", new RequestedAttribute
-                            {
-                                CredentialId = holderCredentialId,
-                                Revealed = true
+                            { "id-verification", new RequestedAttribute
+                                {
+                                    CredentialId = holderCredentialId,
+                                    Revealed = true
+                                }
                             }
-                        }
                         }
                     });
 
-                proofRecordIssuer = await pair.Agent1.Provider.GetService<IProofService>()
+                proofRecordIssuer = await proofService1
                     .ProcessPresentationAsync(pair.Agent1.Context, presentationMessage);
 
-                valid = await pair.Agent1.Provider.GetService<IProofService>()
+                valid = await proofService1
                     .VerifyProofAsync(pair.Agent1.Context, proofRecordIssuer.Id);
 
                 Assert.True(valid);

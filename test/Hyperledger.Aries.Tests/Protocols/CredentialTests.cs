@@ -24,6 +24,7 @@ using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.Options;
+using Hyperledger.Aries.Configuration;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -51,7 +52,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         public CredentialTests()
         {
             var recordService = new DefaultWalletRecordService();
-            var ledgerService = new DefaultLedgerService(new DefaultLedgerSigningService());
+            var ledgerService = new DefaultLedgerService(new DefaultLedgerSigningService(new DefaultProvisioningService(recordService, new DefaultWalletService(), Options.Create(new AgentOptions()))));
 
             var messageService = new DefaultMessageService(new Mock<ILogger<DefaultMessageService>>().Object, new IMessageDispatcher[] { });
 
