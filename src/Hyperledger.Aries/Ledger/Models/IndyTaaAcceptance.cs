@@ -16,7 +16,7 @@ namespace Hyperledger.Aries.Ledger
         /// The taa acceptance mechanism
         /// </summary>
         /// <value></value>
-        public string AcceptanceMechanism { get; set; }
+        public string AcceptanceMechanism { get; set; } = "service_agreement";
 
         /// <summary>
         /// The acceptance timestap in Unix Epoch time format

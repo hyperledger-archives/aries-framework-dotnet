@@ -320,7 +320,9 @@ namespace Hyperledger.Aries.Features.PresentProof
                 var delta = await LedgerService.LookupRevocationRegistryDeltaAsync(
                     agentContext: agentContext,
                     revocationRegistryId: credential.RevocationRegistryId,
-                    from: proofRequest.NonRevoked.From,
+                    // Ledger will not return correct revocation state if the 'from' field
+                    // is other than 0
+                    from: 0, //proofRequest.NonRevoked.From,
                     to: proofRequest.NonRevoked.To);
 
                 var tailsfile = await TailsService.EnsureTailsExistsAsync(agentContext, credential.RevocationRegistryId);

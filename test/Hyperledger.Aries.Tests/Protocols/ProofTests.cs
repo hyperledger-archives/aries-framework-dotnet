@@ -26,6 +26,7 @@ using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.Options;
 using Hyperledger.Aries.Extensions;
 using FluentAssertions;
+using Hyperledger.Aries.Configuration;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -57,7 +58,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         public ProofTests()
         {
             var recordService = new DefaultWalletRecordService();
-            var ledgerService = new DefaultLedgerService(new DefaultLedgerSigningService());
+            var ledgerService = new DefaultLedgerService(new DefaultLedgerSigningService(new DefaultProvisioningService(recordService, new DefaultWalletService(), Options.Create(new AgentOptions()))));
 
             _eventAggregator = new EventAggregator();
 

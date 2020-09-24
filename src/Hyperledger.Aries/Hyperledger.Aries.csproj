@@ -17,5 +17,6 @@
         <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
         <PackageReference Include="Polly" Version="$(PollyVersion)" />
         <PackageReference Include="Stateless" Version="$(StatelessVersion)" />
+        <PackageReference Include="Multiformats.Base" Version="2.0.2" />
     </ItemGroup>
 </Project>

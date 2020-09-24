@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
@@ -12,6 +13,7 @@ using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.BlobStorageApi;
 using Hyperledger.Indy.PoolApi;
 using Microsoft.Extensions.Options;
+using Multiformats.Base;
 using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Features.IssueCredential
@@ -94,6 +96,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var tailsFileName = JObject.Parse(revocationRegistry.ObjectJson)["value"]["tailsHash"].ToObject<string>();
 
             var tailsfile = Path.Combine(AgentOptions.RevocationRegistryDirectory, tailsFileName);
+            var hash = Multibase.Base58.Decode(tailsFileName);
 
             if (!Directory.Exists(AgentOptions.RevocationRegistryDirectory))
             {
@@ -104,9 +107,20 @@ namespace Hyperledger.Aries.Features.IssueCredential
             {
                 if (!File.Exists(tailsfile))
                 {
+                    var bytes = await HttpClient.GetByteArrayAsync(new Uri(tailsUri));
+
+                    // Check hash
+                    using var sha256 = SHA256.Create();
+                    var computedHash = sha256.ComputeHash(bytes);
+
+                    if (!computedHash.SequenceEqual(hash))
+                    {
+                        throw new Exception("Tails file hash didn't match");
+                    }
+
                     File.WriteAllBytes(
                         path: tailsfile,
-                        bytes: await HttpClient.GetByteArrayAsync(new Uri(tailsUri)));
+                        bytes: bytes);
                 }
             }
             catch (Exception e)
