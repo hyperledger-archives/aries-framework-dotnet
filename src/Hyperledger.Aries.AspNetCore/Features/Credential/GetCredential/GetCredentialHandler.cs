@@ -28,12 +28,8 @@ namespace Hyperledger.Aries.AspNetCore.Features.Credentials
     {
 
       IAgentContext agentContext = await AgentProvider.GetContextAsync();
-      List<CredentialRecord> credentialRecords = await CredentialService.ListAsync(agentContext);
-
-      CredentialRecord credentialRecord =
-        credentialRecords
-          .FirstOrDefault(aCredentialRecord => aCredentialRecord.CredentialId == aGetCredentialRequest.CredentialId);
-
+      CredentialRecord credentialRecord = await CredentialService.GetAsync(agentContext, aGetCredentialRequest.CredentialId);
+      
       var response = new GetCredentialResponse(aGetCredentialRequest.CorrelationId, credentialRecord);
 
       return response;
