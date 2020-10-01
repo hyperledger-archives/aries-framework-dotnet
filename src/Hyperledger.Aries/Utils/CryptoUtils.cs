@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Utils
 {
-    internal class CryptoUtils
+    public class CryptoUtils
     {
         /// <summary>Packs a message</summary>
         /// <param name="wallet">The wallet.</param>
