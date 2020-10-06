@@ -9,3 +9,9 @@ root = false
 # CS0618: Type or member is obsolete
 # we still need to test obsolete items until they are removed
 dotnet_diagnostic.CS0618.severity = none
+
+# Default severity for analyzer diagnostics with category 'Style'
+dotnet_analyzer_diagnostic.category-Style.severity = none
+
+# CS1701: Assuming assembly reference matches identity
+dotnet_diagnostic.CS1701.severity = none
