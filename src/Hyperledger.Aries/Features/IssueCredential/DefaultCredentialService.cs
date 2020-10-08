@@ -234,7 +234,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public async Task<string> ProcessOfferAsync(IAgentContext agentContext, CredentialOfferMessage credentialOffer,
+        public virtual async Task<string> ProcessOfferAsync(IAgentContext agentContext, CredentialOfferMessage credentialOffer,
             ConnectionRecord connection)
         {
             var offerAttachment = credentialOffer.Offers.FirstOrDefault(x => x.Id == "libindy-cred-offer-0")
@@ -376,7 +376,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public async Task<string> ProcessCredentialAsync(IAgentContext agentContext, CredentialIssueMessage credential,
+        public virtual async Task<string> ProcessCredentialAsync(IAgentContext agentContext, CredentialIssueMessage credential,
             ConnectionRecord connection)
         {
             var credentialAttachment = credential.Credentials.FirstOrDefault(x => x.Id == "libindy-cred-0")
@@ -532,7 +532,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public async Task<string> ProcessCredentialRequestAsync(IAgentContext agentContext, CredentialRequestMessage
+        public virtual async Task<string> ProcessCredentialRequestAsync(IAgentContext agentContext, CredentialRequestMessage
             credentialRequest, ConnectionRecord connection)
         {
             Logger.LogInformation(LoggingEvents.StoreCredentialRequest, "Type {0},", credentialRequest.Type);
