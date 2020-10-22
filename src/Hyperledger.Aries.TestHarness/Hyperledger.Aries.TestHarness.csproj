@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <TargetFramework>netcoreapp3.1</TargetFramework>
       <IsPackable>false</IsPackable>
     <Description>A Test Harness for testing AgentFramework</Description>
   </PropertyGroup>
@@ -12,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
     <ProjectReference Include="..\Hyperledger.Aries.Routing.Edge\Hyperledger.Aries.Routing.Edge.csproj" />
     <ProjectReference Include="..\Hyperledger.Aries.Routing.Mediator\Hyperledger.Aries.Routing.Mediator.csproj" />
     <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
