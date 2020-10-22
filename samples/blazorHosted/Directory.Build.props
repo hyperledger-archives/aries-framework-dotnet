@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <TestProjectTargetFramework>netcoreapp3.1</TestProjectTargetFramework>
   </PropertyGroup>
 
