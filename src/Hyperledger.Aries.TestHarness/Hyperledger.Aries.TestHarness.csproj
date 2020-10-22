@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <IsPackable>false</IsPackable>
+    <IsPackable>false</IsPackable>
     <Description>A Test Harness for testing AgentFramework</Description>
   </PropertyGroup>
 
