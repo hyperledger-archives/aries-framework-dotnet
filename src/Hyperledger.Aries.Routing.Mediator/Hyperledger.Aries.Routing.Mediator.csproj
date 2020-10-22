@@ -1,12 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Hyperledger.Aries.Routing.Mediator.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
         <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
     </ItemGroup>
