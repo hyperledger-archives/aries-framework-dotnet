@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
     <ProjectReference Include="..\Hyperledger.Aries.Routing.Edge\Hyperledger.Aries.Routing.Edge.csproj" />
     <ProjectReference Include="..\Hyperledger.Aries.Routing.Mediator\Hyperledger.Aries.Routing.Mediator.csproj" />
     <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />

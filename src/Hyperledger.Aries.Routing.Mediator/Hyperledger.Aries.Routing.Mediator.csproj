@@ -5,7 +5,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Hyperledger.Aries.AspNetCore\Hyperledger.Aries.AspNetCore.csproj" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\Hyperledger.Aries.Routing\Hyperledger.Aries.Routing.csproj" />
         <ProjectReference Include="..\Hyperledger.Aries\Hyperledger.Aries.csproj" />
     </ItemGroup>

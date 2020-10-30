@@ -9,7 +9,7 @@
         <Product>Hyperledger Aries Dotnet</Product>
         <RepositoryUrl>https://github.com/hyperledger/aries-framework-dotnet.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <Version>1.3.4</Version>
+        <Version>1.4.0</Version>
     </PropertyGroup>
 
     <!-- Common compile parameters -->
@@ -42,13 +42,13 @@
         <AutofacExtensionsDependencyInjectionVersion>6.0.0</AutofacExtensionsDependencyInjectionVersion>
         <DawnGuardVersion>1.12.0</DawnGuardVersion>
         <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
-        <FluentValidationAspNetCoreVersion>8.6.2</FluentValidationAspNetCoreVersion>
-        <FluentValidationVersion>8.6.2</FluentValidationVersion>
+        <FluentValidationAspNetCoreVersion>9.2.0</FluentValidationAspNetCoreVersion>
+        <FluentValidationVersion>9.2.0</FluentValidationVersion>
         <FlurlVersion>2.8.2</FlurlVersion>
         <HyperledgerIndySdkVersion>1.11.1</HyperledgerIndySdkVersion>
         <MediatrExtensionsMicrosoftDependencyInjectionVersion>8.0.1</MediatrExtensionsMicrosoftDependencyInjectionVersion>
         <MediatrVersion>8.0.2</MediatrVersion>
-        <MicroElementsSwashbuckleFluentValidationVersion>3.2.0</MicroElementsSwashbuckleFluentValidationVersion>
+        <MicroElementsSwashbuckleFluentValidationVersion>4.0.0</MicroElementsSwashbuckleFluentValidationVersion>
         <MoqVersion>4.14.5</MoqVersion>
         <MultiformatsBaseVersion>2.0.2</MultiformatsBaseVersion>
         <NewtonsoftJsonVersion>12.0.3</NewtonsoftJsonVersion>
