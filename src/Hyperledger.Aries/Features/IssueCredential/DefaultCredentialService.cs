@@ -23,6 +23,7 @@ using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy;
+using Polly;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
@@ -245,10 +246,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var definitionId = offer["cred_def_id"].ToObject<string>();
             var schemaId = offer["schema_id"].ToObject<string>();
 
+            var threadId = credentialOffer.GetThreadId() ?? Guid.NewGuid().ToString();
             // Write offer record to local wallet
             var credentialRecord = new CredentialRecord
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = threadId,
                 OfferJson = offerJson,
                 ConnectionId = connection?.Id,
                 CredentialDefinitionId = definitionId,
@@ -263,7 +265,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 State = CredentialState.Offered
             };
             credentialRecord.SetTag(TagConstants.Role, TagConstants.Holder);
-            credentialRecord.SetTag(TagConstants.LastThreadId, credentialOffer.GetThreadId());
+            credentialRecord.SetTag(TagConstants.LastThreadId, threadId);
 
             await RecordService.AddAsync(agentContext.Wallet, credentialRecord);
 
@@ -271,7 +273,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             {
                 RecordId = credentialRecord.Id,
                 MessageType = credentialOffer.Type,
-                ThreadId = credentialOffer.GetThreadId()
+                ThreadId = threadId
             });
 
             return credentialRecord.Id;
@@ -387,7 +389,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var definitionId = credentialJobj["cred_def_id"].ToObject<string>();
             var revRegId = credentialJobj["rev_reg_id"]?.ToObject<string>();
 
-            var credentialRecord = await this.GetByThreadIdAsync(agentContext, credential.GetThreadId());
+            var credentialRecord = await Policy.Handle<AriesFrameworkException>()
+                .RetryAsync(3, async (ex, retry) => { await Task.Delay((int)Math.Pow(retry, 2) * 100); })
+                .ExecuteAsync(() => this.GetByThreadIdAsync(agentContext, credential.GetThreadId()));
+
             if (credentialRecord.State != CredentialState.Requested)
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credentialRecord.State}'");
@@ -456,7 +461,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             // Write offer record to local wallet
             var credentialRecord = new CredentialRecord
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = threadId,
                 CredentialDefinitionId = config.CredentialDefinitionId,
                 OfferJson = offerJson,
                 ConnectionId = connectionId,
@@ -538,7 +543,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
             Logger.LogInformation(LoggingEvents.StoreCredentialRequest, "Type {0},", credentialRequest.Type);
 
             // TODO Handle case when no thread is included
-            var credential = await this.GetByThreadIdAsync(agentContext, credentialRequest.GetThreadId());
+            //var credential = await this.GetByThreadIdAsync(agentContext, credentialRequest.GetThreadId());
+
+            var credential = await Policy.Handle<AriesFrameworkException>()
+                .RetryAsync(3, async (ex, retry) => { await Task.Delay((int)Math.Pow(retry, 2) * 100); })
+                .ExecuteAsync(() => this.GetByThreadIdAsync(agentContext, credentialRequest.GetThreadId()));
 
             var credentialAttachment = credentialRequest.Requests.FirstOrDefault(x => x.Id == "libindy-cred-request-0")
                                        ?? throw new ArgumentException("Credential request attachment not found.");
