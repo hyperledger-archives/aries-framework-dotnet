@@ -69,7 +69,7 @@ namespace Hyperledger.Aries.Routing.Edge
             File.Delete(path);
 
             await messageService
-                .SendReceiveAsync<StoreBackupResponseAgentMessage>(context.Wallet, backupMessage, connection)
+                .SendReceiveAsync<StoreBackupResponseAgentMessage>(context, backupMessage, connection)
                 .ConfigureAwait(false);
             return backupVerkey;
         }
@@ -115,7 +115,7 @@ namespace Hyperledger.Aries.Routing.Edge
             if (connection == null)
                 throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
 
-            var response = await messageService.SendReceiveAsync<RetrieveBackupResponseAgentMessage>(context.Wallet, retrieveBackupResponseMessage, connection).ConfigureAwait(false);
+            var response = await messageService.SendReceiveAsync<RetrieveBackupResponseAgentMessage>(context, retrieveBackupResponseMessage, connection).ConfigureAwait(false);
             return response.Payload;
         }
 
@@ -172,7 +172,7 @@ namespace Hyperledger.Aries.Routing.Edge
             if (connection == null)
                 throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Couldn't locate a connection to mediator agent");
 
-            var response = await messageService.SendReceiveAsync<ListBackupsResponseAgentMessage>(context.Wallet, listBackupsMessage, connection).ConfigureAwait(false);
+            var response = await messageService.SendReceiveAsync<ListBackupsResponseAgentMessage>(context, listBackupsMessage, connection).ConfigureAwait(false);
             return response.BackupList.ToList();
         }
 

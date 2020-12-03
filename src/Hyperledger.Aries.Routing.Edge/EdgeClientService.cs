@@ -56,7 +56,7 @@ namespace Hyperledger.Aries.Routing.Edge
             if (connection != null)
             {
                 var createInboxMessage = new AddRouteMessage { RouteDestination = routeDestination };
-                await messageService.SendAsync(agentContext.Wallet, createInboxMessage, connection);
+                await messageService.SendAsync(agentContext, createInboxMessage, connection);
             }
         }
 
@@ -70,7 +70,7 @@ namespace Hyperledger.Aries.Routing.Edge
             var connection = await GetMediatorConnectionAsync(agentContext);
 
             var createInboxMessage = new CreateInboxMessage { Metadata = metadata };
-            var response = await messageService.SendReceiveAsync<CreateInboxResponseMessage>(agentContext.Wallet, createInboxMessage, connection);
+            var response = await messageService.SendReceiveAsync<CreateInboxResponseMessage>(agentContext, createInboxMessage, connection);
 
             provisioning.SetTag(MediatorInboxIdTagName, response.InboxId);
             provisioning.SetTag(MediatorInboxKeyTagName, response.InboxKey);
@@ -109,7 +109,7 @@ namespace Hyperledger.Aries.Routing.Edge
             }
 
             var createInboxMessage = new GetInboxItemsMessage();
-            var response = await messageService.SendReceiveAsync<GetInboxItemsResponseMessage>(agentContext.Wallet, createInboxMessage, connection);
+            var response = await messageService.SendReceiveAsync<GetInboxItemsResponseMessage>(agentContext, createInboxMessage, connection);
 
             var processedItems = new List<string>();
             var unprocessedItem = new List<InboxItemMessage>();
@@ -128,7 +128,7 @@ namespace Hyperledger.Aries.Routing.Edge
 
             if (processedItems.Any())
             {
-                await messageService.SendAsync(agentContext.Wallet, new DeleteInboxItemsMessage { InboxItemIds = processedItems }, connection);
+                await messageService.SendAsync(agentContext, new DeleteInboxItemsMessage { InboxItemIds = processedItems }, connection);
             }
 
             return (processedItems.Count, unprocessedItem);
@@ -139,7 +139,7 @@ namespace Hyperledger.Aries.Routing.Edge
             var connection = await GetMediatorConnectionAsync(agentContext);
             if (connection != null)
             {
-                await messageService.SendAsync(agentContext.Wallet, message, connection);
+                await messageService.SendAsync(agentContext, message, connection);
             }
         }
     }

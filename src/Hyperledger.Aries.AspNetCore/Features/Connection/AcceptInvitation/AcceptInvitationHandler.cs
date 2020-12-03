@@ -40,7 +40,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
       (ConnectionRequestMessage connectionRequestMessage, ConnectionRecord connectionRecord)
         = await ConnectionService.CreateRequestAsync(agentContext, connectionInvitationMessage);
 
-      await MessageService.SendAsync(agentContext.Wallet, connectionRequestMessage, connectionRecord);
+      await MessageService.SendAsync(agentContext, connectionRequestMessage, connectionRecord);
 
       var response = new AcceptInvitationResponse(aAcceptInvitationRequest.CorrelationId);
 

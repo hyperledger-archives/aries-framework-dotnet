@@ -41,6 +41,14 @@ namespace Hyperledger.Aries.Agents
         public string Type { get; set; }
 
         /// <summary>
+        /// Gets or sets if to use https messages.
+        /// </summary>
+        /// <value>
+        /// If to use https messages.
+        /// </value>
+        public bool UseMessageTypesHttps { get; set; }
+
+        /// <summary>
         /// Gets the decorators on the message.
         /// </summary>
         /// <returns>The decorators as a JObject.</returns>

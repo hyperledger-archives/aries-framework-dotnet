@@ -61,7 +61,8 @@ namespace Hyperledger.Aries.AspNetCore.Features.BasicMessaging
       var basicMessage = new BasicMessage
       {
         Content = aSendMessageRequest.Message,
-        SentTime = sentTime.ToString("s", CultureInfo.InvariantCulture)
+        SentTime = sentTime.ToString("s", CultureInfo.InvariantCulture),
+        UseMessageTypesHttps = defaultAgentContext.Agent.UseMessageTypesHttps
       };
 
       ConnectionRecord connectionRecord =
@@ -71,7 +72,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.BasicMessaging
       await WalletRecordService.AddAsync(defaultAgentContext.Wallet, messageRecord);
 
       // Send an agent message using the secure connection
-      await MessageService.SendAsync(defaultAgentContext.Wallet, basicMessage, connectionRecord);
+      await MessageService.SendAsync(defaultAgentContext, basicMessage, connectionRecord);
 
       var response = new SendMessageResponse(aSendMessageRequest.CorrelationId);
 

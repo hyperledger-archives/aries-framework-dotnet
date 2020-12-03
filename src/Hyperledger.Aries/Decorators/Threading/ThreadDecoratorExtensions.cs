@@ -17,9 +17,10 @@ namespace Hyperledger.Aries.Decorators.Threading
         /// Created a new threaded message response
         /// </summary>
         /// <param name="message">The message to thread from.</param>
-        public static T CreateThreadedReply<T>(this AgentMessage message) where T : AgentMessage, new ()
+        /// <param name="useMessageTypesHttps"></param>
+        public static T CreateThreadedReply<T>(this AgentMessage message, bool useMessageTypesHttps = false) where T : AgentMessage, new ()
         {
-            var newMsg = new T();
+            var newMsg = new T() { UseMessageTypesHttps = useMessageTypesHttps };
             newMsg.ThreadMessage(message);
             return newMsg;
         }
