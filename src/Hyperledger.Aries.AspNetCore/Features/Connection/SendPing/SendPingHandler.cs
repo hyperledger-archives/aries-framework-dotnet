@@ -65,11 +65,10 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
       ConnectionRecord connectionRecord =
         await ConnectionService.GetAsync(agentContext, aSendPingRequest.ConnectionId);
 
-      var trustPingMessage = new TrustPingMessage
+      var trustPingMessage = new TrustPingMessage(agentContext.UseMessageTypesHttps)
       {
         ResponseRequested = true,
-        Comment = "Hello",
-        UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+        Comment = "Hello"
       };
 
       var semaphoreSlim = new SemaphoreSlim(0, 1);

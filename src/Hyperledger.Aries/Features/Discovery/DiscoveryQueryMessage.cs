@@ -10,7 +10,14 @@ namespace Hyperledger.Aries.Features.Discovery
     public class DiscoveryQueryMessage : AgentMessage
     {
         /// <inheritdoc />
-        public DiscoveryQueryMessage()
+        public DiscoveryQueryMessage() : base()
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.DiscoveryQueryMessageType : MessageTypes.DiscoveryQueryMessageType;
+        }
+
+        /// <inheritdoc />
+        public DiscoveryQueryMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
         {
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps ? MessageTypesHttps.DiscoveryQueryMessageType : MessageTypes.DiscoveryQueryMessageType;

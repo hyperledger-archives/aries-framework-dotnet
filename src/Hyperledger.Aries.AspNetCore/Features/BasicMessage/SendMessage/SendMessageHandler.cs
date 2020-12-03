@@ -58,11 +58,10 @@ namespace Hyperledger.Aries.AspNetCore.Features.BasicMessaging
         ConnectionId = aSendMessageRequest.ConnectionId
       };
 
-      var basicMessage = new BasicMessage
+      var basicMessage = new BasicMessage(defaultAgentContext.UseMessageTypesHttps)
       {
         Content = aSendMessageRequest.Message,
-        SentTime = sentTime.ToString("s", CultureInfo.InvariantCulture),
-        UseMessageTypesHttps = defaultAgentContext.UseMessageTypesHttps
+        SentTime = sentTime.ToString("s", CultureInfo.InvariantCulture)
       };
 
       ConnectionRecord connectionRecord =

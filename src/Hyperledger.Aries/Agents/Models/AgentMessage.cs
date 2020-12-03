@@ -14,6 +14,24 @@ namespace Hyperledger.Aries.Agents
     /// </summary>
     public abstract class AgentMessage
     {
+        public AgentMessage()
+        {
+            UseMessageTypesHttps = false;
+        }
+
+        public AgentMessage(bool useMessageTypesHttps)
+        {
+            UseMessageTypesHttps = useMessageTypesHttps;
+        }
+
+        /// <summary>
+        /// Gets or sets if to use https messages.
+        /// </summary>
+        /// <value>
+        /// If to use https messages.
+        /// </value>
+        protected bool UseMessageTypesHttps { get; set; }
+
         /// <summary>
         /// Internal JObject representation of an agent message.
         /// </summary>
@@ -39,14 +57,6 @@ namespace Hyperledger.Aries.Agents
         [JsonProperty("@type")]
         [JsonPropertyName("@type")]
         public string Type { get; set; }
-
-        /// <summary>
-        /// Gets or sets if to use https messages.
-        /// </summary>
-        /// <value>
-        /// If to use https messages.
-        /// </value>
-        public bool UseMessageTypesHttps { get; set; }
 
         /// <summary>
         /// Gets the decorators on the message.

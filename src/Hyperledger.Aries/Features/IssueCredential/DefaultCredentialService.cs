@@ -354,7 +354,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             await RecordService.UpdateAsync(agentContext.Wallet, credential);
             var threadId = credential.GetTag(TagConstants.LastThreadId);
 
-            var response = new CredentialRequestMessage
+            var response = new CredentialRequestMessage(agentContext.UseMessageTypesHttps)
             {
                 // The comment was required by Aca-py, even though it is declared optional in RFC-0036
                 // Was added for interoperability
@@ -370,8 +370,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                             Base64 = request.CredentialRequestJson.GetUTF8Bytes().ToBase64String()
                         }
                     }
-                },
-                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+                }
             };
 
             response.ThreadFrom(threadId);
@@ -483,7 +482,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 }
 
             await RecordService.AddAsync(agentContext.Wallet, credentialRecord);
-            return (new CredentialOfferMessage
+            return (new CredentialOfferMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = threadId,
                 Offers = new Attachment[]
@@ -499,7 +498,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                     }
                 },
                 CredentialPreview = credentialRecord.CredentialAttributesValues != null
-                    ? new CredentialPreviewMessage
+                    ? new CredentialPreviewMessage(agentContext.UseMessageTypesHttps)
                     {
                         Attributes = credentialRecord.CredentialAttributesValues.Select(x =>
                             new CredentialPreviewAttribute
@@ -507,11 +506,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
                                 Name = x.Name,
                                 MimeType = x.MimeType,
                                 Value = x.Value?.ToString()
-                            }).ToArray(),
-                        UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+                            }).ToArray()
                     }
-                    : null,
-                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+                    : null
             }, credentialRecord);
         }
 
@@ -632,7 +629,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             await RecordService.UpdateAsync(agentContext.Wallet, credentialRecord);
             var threadId = credentialRecord.GetTag(TagConstants.LastThreadId);
 
-            var credentialMsg = new CredentialIssueMessage
+            var credentialMsg = new CredentialIssueMessage(agentContext.UseMessageTypesHttps)
             {
                 Credentials = new[]
                 {
@@ -647,8 +644,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                                 .ToBase64String()
                         }
                     }
-                },
-                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+                }
             };
 
             credentialMsg.ThreadFrom(threadId);

@@ -12,7 +12,14 @@ namespace Hyperledger.Aries.Features.DidExchange
     public class ConnectionResponseMessage : AgentMessage
     {
         /// <inheritdoc />
-        public ConnectionResponseMessage()
+        public ConnectionResponseMessage() : base()
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.ConnectionResponse : MessageTypes.ConnectionResponse;
+        }
+
+        /// <inheritdoc />
+        public ConnectionResponseMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
         {
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps ? MessageTypesHttps.ConnectionResponse : MessageTypes.ConnectionResponse;

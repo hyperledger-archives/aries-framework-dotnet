@@ -72,7 +72,7 @@ namespace Hyperledger.Aries.Features.TrustPing
 
                         if (pingMessage.ResponseRequested)
                         {
-                            return pingMessage.CreateThreadedReply<TrustPingResponseMessage>(agentContext.UseMessageTypesHttps);
+                            return pingMessage.CreateThreadedReply<TrustPingResponseMessage>();
                         }
                         break;
                     }

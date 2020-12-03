@@ -12,7 +12,14 @@ namespace Hyperledger.Aries.Features.IssueCredential
     public class CredentialIssueMessage : AgentMessage
     {
         /// <inheritdoc />
-        public CredentialIssueMessage()
+        public CredentialIssueMessage() : base()
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.IssueCredentialNames.IssueCredential : MessageTypes.IssueCredentialNames.IssueCredential;
+        }
+
+        /// <inheritdoc />
+        public CredentialIssueMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
         {
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps ? MessageTypesHttps.IssueCredentialNames.IssueCredential : MessageTypes.IssueCredentialNames.IssueCredential;

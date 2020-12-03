@@ -12,7 +12,14 @@ namespace Hyperledger.Aries.Features.Routing
     public class ForwardMessage : AgentMessage
     {
         /// <inheritdoc />
-        public ForwardMessage()
+        public ForwardMessage() : base()
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.Forward : MessageTypes.Forward;
+        }
+
+        /// <inheritdoc />
+        public ForwardMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
         {
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps ? MessageTypesHttps.Forward : MessageTypes.Forward;

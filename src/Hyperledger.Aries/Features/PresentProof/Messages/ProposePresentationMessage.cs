@@ -13,7 +13,16 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// <summary>
         /// Initializes a new instance of <see cref="ProposePresentationMessage"/> class.
         /// </summary>
-        public ProposePresentationMessage()
+        public ProposePresentationMessage() : base()
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.PresentProofNames.ProposePresentation : MessageTypes.PresentProofNames.ProposePresentation;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ProposePresentationMessage"/> class.
+        /// </summary>
+        public ProposePresentationMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
         {
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps ? MessageTypesHttps.PresentProofNames.ProposePresentation : MessageTypes.PresentProofNames.ProposePresentation;

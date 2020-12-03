@@ -13,7 +13,16 @@ namespace Hyperledger.Aries.Features.BasicMessage
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AgentFramework.Core.Messages.Common.BasicMessage"/> class.
         /// </summary>
-        public BasicMessage()
+        public BasicMessage() : base()
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.BasicMessageType : MessageTypes.BasicMessageType;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:AgentFramework.Core.Messages.Common.BasicMessage"/> class.
+        /// </summary>
+        public BasicMessage(bool useMessageTypesHttps = false) : base (useMessageTypesHttps)
         {
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps ? MessageTypesHttps.BasicMessageType : MessageTypes.BasicMessageType;

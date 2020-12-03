@@ -44,7 +44,8 @@ namespace Hyperledger.TestHarness.Mock
                 {
                     Wallet = await provider.GetService<IWalletService>().GetWalletAsync(configuration, credentials),
                     Pool = new PoolAwaitable(PoolUtils.GetPoolAsync),
-                    SupportedMessages = AgentUtils.GetDefaultMessageTypes()
+                    SupportedMessages = AgentUtils.GetDefaultMessageTypes(),
+                    UseMessageTypesHttps = useMessageTypesHttps
                 },
                 ServiceProvider = provider
             };

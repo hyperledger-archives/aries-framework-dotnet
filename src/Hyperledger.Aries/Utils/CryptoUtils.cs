@@ -131,7 +131,7 @@ namespace Hyperledger.Aries.Utils
                 foreach (var routingKey in routingKeys)
                 {
                     // Anonpack
-                    msg = await PackAsync(agentContext.Wallet, routingKey, new ForwardMessage { Message = JObject.Parse(msg.GetUTF8String()), To = previousKey, UseMessageTypesHttps = agentContext.UseMessageTypesHttps });
+                    msg = await PackAsync(agentContext.Wallet, routingKey, new ForwardMessage(agentContext.UseMessageTypesHttps) { Message = JObject.Parse(msg.GetUTF8String()), To = previousKey});
                     previousKey = routingKey;
                 }
             }

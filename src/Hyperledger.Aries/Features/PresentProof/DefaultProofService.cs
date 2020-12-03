@@ -301,17 +301,15 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             await RecordService.AddAsync(agentContext.Wallet, proofRecord);
 
-            var message = new ProposePresentationMessage
+            var message = new ProposePresentationMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = threadId,
                 Comment = proofProposal.Comment,
-                PresentationPreviewMessage = new PresentationPreviewMessage()
+                PresentationPreviewMessage = new PresentationPreviewMessage(agentContext.UseMessageTypesHttps)
                 {
                     ProposedAttributes = proofProposal.ProposedAttributes.ToArray(),
-                    ProposedPredicates = proofProposal.ProposedPredicates.ToArray(),
-                    UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+                    ProposedPredicates = proofProposal.ProposedPredicates.ToArray()
                 },
-                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             };
             message.ThreadFrom(threadId);
             return (message, proofRecord);
@@ -453,7 +451,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             await proofRecord.TriggerAsync(ProofTrigger.Request);
             await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
 
-            var message = new RequestPresentationMessage
+            var message = new RequestPresentationMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = proofRecord.Id,
                 Requests = new[]
@@ -470,8 +468,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                                 .ToBase64String()
                         }
                     }
-                },
-                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+                }
             };
             message.ThreadFrom(proofRecord.GetTag(TagConstants.LastThreadId));
             return (message, proofRecord);
@@ -516,7 +513,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             proofRecord.SetTag(TagConstants.LastThreadId, threadId);
             await RecordService.AddAsync(agentContext.Wallet, proofRecord);
 
-            var message = new RequestPresentationMessage
+            var message = new RequestPresentationMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = threadId,
                 Requests = new[]
@@ -532,8 +529,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                                 .ToBase64String()
                         }
                     }
-                },
-                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+                }
             };
             message.ThreadFrom(threadId);
             return (message, proofRecord);
@@ -655,7 +651,7 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             var threadId = record.GetTag(TagConstants.LastThreadId);
 
-            var proofMsg = new PresentationMessage
+            var proofMsg = new PresentationMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = Guid.NewGuid().ToString(),
                 Presentations = new[]
@@ -671,8 +667,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                                 .ToBase64String()
                         }
                     }
-                },
-                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
+                }
             };
             proofMsg.ThreadFrom(threadId);
 

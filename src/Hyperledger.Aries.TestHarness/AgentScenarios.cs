@@ -251,11 +251,7 @@ namespace Hyperledger.TestHarness
 
         public static string CreateBasicMessageWithLegacyType(MockAgent LegacyMessageAgent)
         {
-
-            var basicMessage = new BasicMessage()
-            {
-                UseMessageTypesHttps = LegacyMessageAgent.Context.UseMessageTypesHttps
-            };
+            var basicMessage = new BasicMessage(LegacyMessageAgent.Context.UseMessageTypesHttps);
 
             Assert.Equal(MessageTypes.BasicMessageType, basicMessage.Type);
 
@@ -265,10 +261,7 @@ namespace Hyperledger.TestHarness
         public static string CreateBasicMessageWithHttpsType(MockAgent HttpsMessageAgent)
         {
 
-            var basicMessage = new BasicMessage()
-            {
-                UseMessageTypesHttps = HttpsMessageAgent.Context.UseMessageTypesHttps
-            };
+            var basicMessage = new BasicMessage(HttpsMessageAgent.Context.UseMessageTypesHttps);
 
             Assert.Equal(MessageTypesHttps.BasicMessageType, basicMessage.Type);
 

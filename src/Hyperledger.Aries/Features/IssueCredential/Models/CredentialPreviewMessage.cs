@@ -9,7 +9,14 @@ namespace Hyperledger.Aries.Features.IssueCredential
     public class CredentialPreviewMessage : AgentMessage
     {
         /// <inheritdoc />
-        public CredentialPreviewMessage()
+        public CredentialPreviewMessage() : base()
+        {
+            Id = null;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.IssueCredentialNames.PreviewCredential : MessageTypes.IssueCredentialNames.PreviewCredential;
+        }
+
+        /// <inheritdoc />
+        public CredentialPreviewMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
         {
             Id = null;
             Type = UseMessageTypesHttps ? MessageTypesHttps.IssueCredentialNames.PreviewCredential : MessageTypes.IssueCredentialNames.PreviewCredential;
