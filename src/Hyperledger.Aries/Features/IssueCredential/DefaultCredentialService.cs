@@ -371,7 +371,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         }
                     }
                 },
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             };
 
             response.ThreadFrom(threadId);
@@ -508,10 +508,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
                                 MimeType = x.MimeType,
                                 Value = x.Value?.ToString()
                             }).ToArray(),
-                        UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                        UseMessageTypesHttps = agentContext.UseMessageTypesHttps
                     }
                     : null,
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             }, credentialRecord);
         }
 
@@ -648,7 +648,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         }
                     }
                 },
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             };
 
             credentialMsg.ThreadFrom(threadId);

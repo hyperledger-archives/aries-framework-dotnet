@@ -309,9 +309,9 @@ namespace Hyperledger.Aries.Features.PresentProof
                 {
                     ProposedAttributes = proofProposal.ProposedAttributes.ToArray(),
                     ProposedPredicates = proofProposal.ProposedPredicates.ToArray(),
-                    UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                    UseMessageTypesHttps = agentContext.UseMessageTypesHttps
                 },
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             };
             message.ThreadFrom(threadId);
             return (message, proofRecord);
@@ -471,7 +471,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                         }
                     }
                 },
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             };
             message.ThreadFrom(proofRecord.GetTag(TagConstants.LastThreadId));
             return (message, proofRecord);
@@ -533,7 +533,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                         }
                     }
                 },
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             };
             message.ThreadFrom(threadId);
             return (message, proofRecord);
@@ -672,7 +672,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                         }
                     }
                 },
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             };
             proofMsg.ThreadFrom(threadId);
 

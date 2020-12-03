@@ -10,12 +10,6 @@ namespace Hyperledger.Aries.Agents
     public interface IAgent
     {
         /// <summary>
-        /// Gets or sets the value for UseMessageTypesHttps.
-        /// </summary>
-        /// <value>True if to use HttpsMessagetypes.</value>
-        bool UseMessageTypesHttps { get; set; }
-
-        /// <summary>
         /// Gets the service provider used by this agent instance
         /// </summary>
         IServiceProvider Provider { get; }

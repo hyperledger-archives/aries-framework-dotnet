@@ -44,12 +44,6 @@ namespace Hyperledger.Aries.Agents
         public IList<IMessageHandler> Handlers { get; }
 
         /// <summary>
-        /// Gets or sets the value for UseMessageTypesHttps.
-        /// </summary>
-        /// <value>True if to use UseMessageTypesHttps.</value>
-        public bool UseMessageTypesHttps { get; set; }
-
-        /// <summary>
         /// Gets a collecrion of registered agent middlewares
         /// </summary>
         protected IEnumerable<IAgentMiddleware> Middlewares { get; }

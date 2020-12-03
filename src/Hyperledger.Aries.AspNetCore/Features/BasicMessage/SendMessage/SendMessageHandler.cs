@@ -62,7 +62,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.BasicMessaging
       {
         Content = aSendMessageRequest.Message,
         SentTime = sentTime.ToString("s", CultureInfo.InvariantCulture),
-        UseMessageTypesHttps = defaultAgentContext.Agent.UseMessageTypesHttps
+        UseMessageTypesHttps = defaultAgentContext.UseMessageTypesHttps
       };
 
       ConnectionRecord connectionRecord =

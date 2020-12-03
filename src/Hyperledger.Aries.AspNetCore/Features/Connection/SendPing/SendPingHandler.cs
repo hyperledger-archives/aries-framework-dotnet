@@ -69,7 +69,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
       {
         ResponseRequested = true,
         Comment = "Hello",
-        UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+        UseMessageTypesHttps = agentContext.UseMessageTypesHttps
       };
 
       var semaphoreSlim = new SemaphoreSlim(0, 1);

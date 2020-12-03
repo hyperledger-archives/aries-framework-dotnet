@@ -104,7 +104,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                 RecipientKeys = new[] { connectionKey },
                 Label = config.MyAlias.Name ?? provisioning.Owner.Name,
                 ImageUrl = config.MyAlias.ImageUrl ?? provisioning.Owner.ImageUrl,
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             }, connection);
         }
 
@@ -161,7 +161,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                 },
                 Label = provisioning.Owner?.Name,
                 ImageUrl = provisioning.Owner?.ImageUrl,
-                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                UseMessageTypesHttps = agentContext.UseMessageTypesHttps
             };
 
             // also set image as attachment
@@ -303,7 +303,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             var sigData = await SignatureUtils.SignDataAsync(agentContext, connectionData, connection.GetTag(TagConstants.ConnectionKey));
             var threadId = connection.GetTag(TagConstants.LastThreadId);
 
-            var response = new ConnectionResponseMessage { ConnectionSig = sigData, UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps };
+            var response = new ConnectionResponseMessage { ConnectionSig = sigData, UseMessageTypesHttps = agentContext.UseMessageTypesHttps };
             response.ThreadFrom(threadId);
 
             return (response, connection);
