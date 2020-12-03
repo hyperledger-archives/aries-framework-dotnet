@@ -72,6 +72,12 @@ namespace Hyperledger.Aries.Configuration
         [Newtonsoft.Json.JsonProperty("_tailsBaseUri")]
         public virtual string TailsBaseUri { get; set; }
 
+        /// <summary>
+        /// Gets or sets the UseMessageTypesHttps property for the provisioned agent.
+        /// </summary>
+        /// <returns>The tails base uri for the provisioned agent</returns>
+        [Newtonsoft.Json.JsonProperty("_useMessageTypesHttps")]
+        public virtual bool UseMessageTypesHttps { get; set; }
 
         /// <summary>
         /// Gets or sets the default payment address

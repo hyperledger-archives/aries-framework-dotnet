@@ -53,7 +53,8 @@ namespace Hyperledger.Aries.Agents
                     poolName: _agentOptions.PoolName,
                     protocolVersion: _agentOptions.ProtocolVersion)),
                 SupportedMessages = agent.GetSupportedMessageTypes(),
-                Agent = await GetAgentAsync(args)
+                Agent = await GetAgentAsync(args),
+                UseMessageTypesHttps = _agentOptions.UseMessageTypesHttps
             };
         }
     }

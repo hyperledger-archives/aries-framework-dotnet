@@ -167,5 +167,11 @@ namespace Hyperledger.Aries.Configuration
             get;
             set;
         } = false;
+
+        /// <summary>
+        /// Gets or sets the value for UseMessageTypesHttps.
+        /// </summary>
+        /// <value>True if to use UseMessageTypesHttps.</value>
+        public bool UseMessageTypesHttps { get; set; } = false;
     }
 }

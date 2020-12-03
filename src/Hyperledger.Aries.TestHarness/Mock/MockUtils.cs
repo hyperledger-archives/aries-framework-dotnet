@@ -11,7 +11,7 @@ namespace Hyperledger.TestHarness.Mock
 {
     public class MockUtils
     {
-        public static async Task<MockAgent> CreateAsync(string agentName, WalletConfiguration configuration, WalletCredentials credentials, MockAgentHttpHandler handler, string issuerSeed = null)
+        public static async Task<MockAgent> CreateAsync(string agentName, WalletConfiguration configuration, WalletCredentials credentials, MockAgentHttpHandler handler, string issuerSeed = null, bool useMessageTypesHttps = false)
         {
             var services = new ServiceCollection();
 
@@ -21,10 +21,10 @@ namespace Hyperledger.TestHarness.Mock
             services.AddSingleton<MockAgentMessageProcessor>();
             services.AddSingleton<IHttpClientFactory>(new InProcAgent.InProcFactory(handler));
 
-            return await CreateAsync(agentName, configuration, credentials, services, issuerSeed);
+            return await CreateAsync(agentName, configuration, credentials, services, issuerSeed, useMessageTypesHttps);
         }
 
-        public static async Task<MockAgent> CreateAsync(string agentName, WalletConfiguration configuration, WalletCredentials credentials, ServiceCollection services, string issuerSeed = null)
+        public static async Task<MockAgent> CreateAsync(string agentName, WalletConfiguration configuration, WalletCredentials credentials, ServiceCollection services, string issuerSeed = null, bool useMessageTypesHttps = false)
         {
             var provider = services.BuildServiceProvider();
 
@@ -35,6 +35,7 @@ namespace Hyperledger.TestHarness.Mock
                     IssuerKeySeed = issuerSeed,
                     WalletConfiguration = configuration,
                     WalletCredentials = credentials,
+                    UseMessageTypesHttps = useMessageTypesHttps
                 });
 
             return new MockAgent(agentName, provider)

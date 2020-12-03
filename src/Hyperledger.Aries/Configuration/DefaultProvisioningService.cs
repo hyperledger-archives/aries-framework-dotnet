@@ -165,6 +165,8 @@ namespace Hyperledger.Aries.Configuration
                 ? new Uri(new Uri(agentOptions.EndpointUri), "tails/").ToString()
                 : null;
 
+            record.UseMessageTypesHttps = agentOptions.UseMessageTypesHttps;
+
             record.SetTag("AgentKeySeed", agentOptions.AgentKeySeed);
             record.SetTag("IssuerKeySeed", agentOptions.IssuerKeySeed);
 

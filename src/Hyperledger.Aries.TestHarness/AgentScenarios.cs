@@ -8,6 +8,7 @@ using Hyperledger.Aries;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.BasicMessage;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
@@ -246,6 +247,32 @@ namespace Hyperledger.TestHarness
                 return discoveryMsg;
             }
             throw new InvalidOperationException("The response was not of the expected type");
+        }
+
+        public static string CreateBasicMessageWithLegacyType(MockAgent LegacyMessageAgent)
+        {
+
+            var basicMessage = new BasicMessage()
+            {
+                UseMessageTypesHttps = LegacyMessageAgent.Context.UseMessageTypesHttps
+            };
+
+            Assert.Equal(MessageTypes.BasicMessageType, basicMessage.Type);
+
+            return basicMessage.Type;
+        }
+
+        public static string CreateBasicMessageWithHttpsType(MockAgent HttpsMessageAgent)
+        {
+
+            var basicMessage = new BasicMessage()
+            {
+                UseMessageTypesHttps = HttpsMessageAgent.Context.UseMessageTypesHttps
+            };
+
+            Assert.Equal(MessageTypesHttps.BasicMessageType, basicMessage.Type);
+
+            return basicMessage.Type;
         }
     }
 }
