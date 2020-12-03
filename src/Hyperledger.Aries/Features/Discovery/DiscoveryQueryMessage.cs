@@ -13,7 +13,7 @@ namespace Hyperledger.Aries.Features.Discovery
         public DiscoveryQueryMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.DiscoveryQueryMessageType;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.DiscoveryQueryMessageType : MessageTypes.DiscoveryQueryMessageType;
         }
 
         /// <summary>

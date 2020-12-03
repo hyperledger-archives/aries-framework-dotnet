@@ -97,13 +97,14 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             await RecordService.AddAsync(agentContext.Wallet, connection);
 
-            return (new ConnectionInvitationMessage
+            return (new ConnectionInvitationMessage()
             {
                 ServiceEndpoint = provisioning.Endpoint.Uri,
                 RoutingKeys = provisioning.Endpoint.Verkey != null ? provisioning.Endpoint.Verkey : null,
                 RecipientKeys = new[] { connectionKey },
                 Label = config.MyAlias.Name ?? provisioning.Owner.Name,
-                ImageUrl = config.MyAlias.ImageUrl ?? provisioning.Owner.ImageUrl
+                ImageUrl = config.MyAlias.ImageUrl ?? provisioning.Owner.ImageUrl,
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             }, connection);
         }
 
@@ -159,7 +160,8 @@ namespace Hyperledger.Aries.Features.DidExchange
                     DidDoc = connection.MyDidDoc(provisioning)
                 },
                 Label = provisioning.Owner?.Name,
-                ImageUrl = provisioning.Owner?.ImageUrl
+                ImageUrl = provisioning.Owner?.ImageUrl,
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             };
 
             // also set image as attachment
@@ -301,7 +303,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             var sigData = await SignatureUtils.SignDataAsync(agentContext, connectionData, connection.GetTag(TagConstants.ConnectionKey));
             var threadId = connection.GetTag(TagConstants.LastThreadId);
 
-            var response = new ConnectionResponseMessage { ConnectionSig = sigData };
+            var response = new ConnectionResponseMessage { ConnectionSig = sigData, UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps };
             response.ThreadFrom(threadId);
 
             return (response, connection);

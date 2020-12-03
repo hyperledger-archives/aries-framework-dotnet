@@ -50,7 +50,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     CredentialAttributeValues = new [] { new CredentialPreviewAttribute("name", "random") }
                 });
             await pair.Agent1.Provider.GetRequiredService<IMessageService>()
-                .SendAsync(pair.Agent1.Context.Wallet, offer, pair.Connection1);
+                .SendAsync(pair.Agent1.Context, offer, pair.Connection1);
 
             // Find credential for Agent 2
             var credentials = await pair.Agent2.Provider.GetService<ICredentialService>()
@@ -61,13 +61,13 @@ namespace Hyperledger.Aries.Tests.Protocols
             var (request, _) = await pair.Agent2.Provider.GetService<ICredentialService>()
                 .CreateRequestAsync(pair.Agent2.Context, credential.Id);
             await pair.Agent2.Provider.GetService<IMessageService>()
-                .SendAsync(pair.Agent2.Context.Wallet, request, pair.Connection2);
+                .SendAsync(pair.Agent2.Context, request, pair.Connection2);
 
             // Issue credential
             var (issue, _) = await pair.Agent1.Provider.GetRequiredService<ICredentialService>()
                 .CreateCredentialAsync(pair.Agent1.Context, record.Id);
             await pair.Agent1.Provider.GetService<IMessageService>()
-                .SendAsync(pair.Agent1.Context.Wallet, issue, pair.Connection1);
+                .SendAsync(pair.Agent1.Context, issue, pair.Connection1);
 
             // Assert
             var credentialHolder = await pair.Agent2.Provider.GetService<ICredentialService>()

@@ -15,7 +15,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         public ConnectionResponseMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.ConnectionResponse;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.ConnectionResponse : MessageTypes.ConnectionResponse;
         }
         
         /// <summary>

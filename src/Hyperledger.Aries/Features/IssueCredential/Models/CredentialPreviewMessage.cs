@@ -12,7 +12,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         public CredentialPreviewMessage()
         {
             Id = null;
-            Type = MessageTypes.IssueCredentialNames.PreviewCredential;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.IssueCredentialNames.PreviewCredential : MessageTypes.IssueCredentialNames.PreviewCredential;
         }
 
         /// <summary>

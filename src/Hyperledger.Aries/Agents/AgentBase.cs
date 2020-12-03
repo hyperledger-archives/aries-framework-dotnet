@@ -44,6 +44,12 @@ namespace Hyperledger.Aries.Agents
         public IList<IMessageHandler> Handlers { get; }
 
         /// <summary>
+        /// Gets or sets the value for UseMessageTypesHttps.
+        /// </summary>
+        /// <value>True if to use UseMessageTypesHttps.</value>
+        public bool UseMessageTypesHttps { get; set; }
+
+        /// <summary>
         /// Gets a collecrion of registered agent middlewares
         /// </summary>
         protected IEnumerable<IAgentMiddleware> Middlewares { get; }
@@ -164,7 +170,7 @@ namespace Hyperledger.Aries.Agents
                     }
                     if (inboundMessageContext.Connection != null)
                     {
-                        await MessageService.SendAsync(agentContext.Wallet, response, inboundMessageContext.Connection);
+                        await MessageService.SendAsync(agentContext, response, inboundMessageContext.Connection);
                     }
                     else
                     {

@@ -50,7 +50,7 @@ namespace Hyperledger.Aries.Agents
         }
 
         /// <inheritdoc />
-        public virtual async Task SendAsync(Wallet wallet, AgentMessage message, string recipientKey,
+        public virtual async Task SendAsync(IAgentContext agentContext, AgentMessage message, string recipientKey,
             string endpointUri, string[] routingKeys = null, string senderKey = null)
         {
             Logger.LogInformation(LoggingEvents.SendMessage, "Recipient {0} Endpoint {1}", recipientKey,
@@ -72,13 +72,13 @@ namespace Hyperledger.Aries.Agents
             if (dispatcher == null)
                 throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, $"No registered dispatcher for transport scheme : {uri.Scheme}");
 
-            var wireMsg = await CryptoUtils.PrepareAsync(wallet, message, recipientKey, routingKeys, senderKey);
+            var wireMsg = await CryptoUtils.PrepareAsync(agentContext, message, recipientKey, routingKeys, senderKey);
 
             await dispatcher.DispatchAsync(uri, new PackedMessageContext(wireMsg));
         }
 
         /// <inheritdoc />
-        public async Task<MessageContext> SendReceiveAsync(Wallet wallet, AgentMessage message, string recipientKey,
+        public async Task<MessageContext> SendReceiveAsync(IAgentContext agentContext, AgentMessage message, string recipientKey,
             string endpointUri, string[] routingKeys = null, string senderKey = null)
         {
             Logger.LogInformation(LoggingEvents.SendMessage, "Recipient {0} Endpoint {1}", recipientKey,
@@ -101,12 +101,12 @@ namespace Hyperledger.Aries.Agents
                 throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, $"No registered dispatcher for transport scheme : {uri.Scheme}");
 
             message.AddReturnRouting();
-            var wireMsg = await CryptoUtils.PrepareAsync(wallet, message, recipientKey, routingKeys, senderKey);
+            var wireMsg = await CryptoUtils.PrepareAsync(agentContext, message, recipientKey, routingKeys, senderKey);
 
             var response = await dispatcher.DispatchAsync(uri, new PackedMessageContext(wireMsg));
             if (response is PackedMessageContext responseContext)
             {
-                return await UnpackAsync(wallet, responseContext, senderKey);
+                return await UnpackAsync(agentContext.Wallet, responseContext, senderKey);
             }
             throw new InvalidOperationException("Invalid or empty response");
         }

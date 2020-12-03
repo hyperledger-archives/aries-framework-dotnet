@@ -151,7 +151,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             var (presentationMessage, proofRecord) = await CreatePresentationAsync(agentContext, record.Id, requestedCredentials);
 
             await MessageService.SendAsync(
-                wallet: agentContext.Wallet,
+                agentContext: agentContext,
                 message: presentationMessage,
                 recipientKey: service.RecipientKeys.First(),
                 endpointUri: service.ServiceEndpoint,
@@ -308,8 +308,10 @@ namespace Hyperledger.Aries.Features.PresentProof
                 PresentationPreviewMessage = new PresentationPreviewMessage()
                 {
                     ProposedAttributes = proofProposal.ProposedAttributes.ToArray(),
-                    ProposedPredicates = proofProposal.ProposedPredicates.ToArray()
-                }
+                    ProposedPredicates = proofProposal.ProposedPredicates.ToArray(),
+                    UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
+                },
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             };
             message.ThreadFrom(threadId);
             return (message, proofRecord);
@@ -468,7 +470,8 @@ namespace Hyperledger.Aries.Features.PresentProof
                                 .ToBase64String()
                         }
                     }
-                }
+                },
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             };
             message.ThreadFrom(proofRecord.GetTag(TagConstants.LastThreadId));
             return (message, proofRecord);
@@ -529,7 +532,8 @@ namespace Hyperledger.Aries.Features.PresentProof
                                 .ToBase64String()
                         }
                     }
-                }
+                },
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             };
             message.ThreadFrom(threadId);
             return (message, proofRecord);
@@ -667,7 +671,8 @@ namespace Hyperledger.Aries.Features.PresentProof
                                 .ToBase64String()
                         }
                     }
-                }
+                },
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             };
             proofMsg.ThreadFrom(threadId);
 

@@ -15,11 +15,11 @@ namespace Hyperledger.Aries.Agents
         /// Sends the agent message to the endpoint asynchronously.
         /// </summary>
         /// <param name="service"></param>
-        /// <param name="wallet"></param>
+        /// <param name="agentContext"></param>
         /// <param name="message"></param>
         /// <param name="connection"></param>
         /// <returns></returns>
-        public static async Task SendAsync(this IMessageService service, Wallet wallet, AgentMessage message, ConnectionRecord connection)
+        public static async Task SendAsync(this IMessageService service, IAgentContext agentContext, AgentMessage message, ConnectionRecord connection)
         {
             var routingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0];
             var recipientKey = connection.TheirVk ?? connection.GetTag("InvitationKey") ?? throw new InvalidOperationException("Cannot locate a recipient key");
@@ -27,7 +27,7 @@ namespace Hyperledger.Aries.Agents
             if (connection.Endpoint?.Uri == null)
                 throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot send to connection that does not have endpoint information specified");
 
-            await service.SendAsync(wallet, message, recipientKey, connection.Endpoint.Uri, routingKeys, connection.MyVk);
+            await service.SendAsync(agentContext, message, recipientKey, connection.Endpoint.Uri, routingKeys, connection.MyVk);
         }
 
         /// <summary>
@@ -35,11 +35,11 @@ namespace Hyperledger.Aries.Agents
         /// according to the Routing RFC.
         /// </summary>
         /// <param name="service"></param>
-        /// <param name="wallet"></param>
+        /// <param name="agentContext"></param>
         /// <param name="message"></param>
         /// <param name="connection"></param>
         /// <returns></returns>
-        public static async Task<MessageContext> SendReceiveAsync(this IMessageService service, Wallet wallet, AgentMessage message, ConnectionRecord connection)
+        public static async Task<MessageContext> SendReceiveAsync(this IMessageService service, IAgentContext agentContext, AgentMessage message, ConnectionRecord connection)
         {
             var routingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0];
             var recipientKey = connection.TheirVk ?? connection.GetTag("InvitationKey") ?? throw new InvalidOperationException("Cannot locate a recipient key");
@@ -47,7 +47,7 @@ namespace Hyperledger.Aries.Agents
             if (connection.Endpoint?.Uri == null)
                 throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot send to connection that does not have endpoint information specified");
 
-            return await service.SendReceiveAsync(wallet, message, recipientKey, connection.Endpoint.Uri, routingKeys, connection.MyVk);
+            return await service.SendReceiveAsync(agentContext, message, recipientKey, connection.Endpoint.Uri, routingKeys, connection.MyVk);
         }
 
         /// <summary>
@@ -56,15 +56,15 @@ namespace Hyperledger.Aries.Agents
         /// type of <see cref="AgentMessage" />
         /// </summary>
         /// <param name="service"></param>
-        /// <param name="wallet"></param>
+        /// <param name="agentContext"></param>
         /// <param name="message"></param>
         /// <param name="connection"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static async Task<T> SendReceiveAsync<T>(this IMessageService service, Wallet wallet, AgentMessage message, ConnectionRecord connection)
+        public static async Task<T> SendReceiveAsync<T>(this IMessageService service, IAgentContext agentContext, AgentMessage message, ConnectionRecord connection)
             where T : AgentMessage, new()
         {
-            var response = await service.SendReceiveAsync(wallet, message, connection);
+            var response = await service.SendReceiveAsync(agentContext, message, connection);
             if (response is UnpackedMessageContext unpackedContext)
             {
                 return unpackedContext.GetMessage<T>();
@@ -78,7 +78,7 @@ namespace Hyperledger.Aries.Agents
         /// type of <see cref="AgentMessage" />
         /// </summary>
         /// <param name="service"></param>
-        /// <param name="wallet"></param>
+        /// <param name="agentContext"></param>
         /// <param name="message"></param>
         /// <param name="recipientKey"></param>
         /// <param name="endpointUri"></param>
@@ -86,11 +86,11 @@ namespace Hyperledger.Aries.Agents
         /// <param name="senderKey"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static async Task<T> SendReceiveAsync<T>(this IMessageService service, Wallet wallet, AgentMessage message, string recipientKey,
+        public static async Task<T> SendReceiveAsync<T>(this IMessageService service, IAgentContext agentContext, AgentMessage message, string recipientKey,
             string endpointUri, string[] routingKeys = null, string senderKey = null)
             where T : AgentMessage, new()
         {
-            var response = await service.SendReceiveAsync(wallet, message, recipientKey, endpointUri, routingKeys, senderKey);
+            var response = await service.SendReceiveAsync(agentContext, message, recipientKey, endpointUri, routingKeys, senderKey);
             if (response is UnpackedMessageContext unpackedContext)
             {
                 return unpackedContext.GetMessage<T>();

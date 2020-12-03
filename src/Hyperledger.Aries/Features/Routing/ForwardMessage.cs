@@ -15,7 +15,7 @@ namespace Hyperledger.Aries.Features.Routing
         public ForwardMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.Forward;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.Forward : MessageTypes.Forward;
         }
 
         /// <summary>

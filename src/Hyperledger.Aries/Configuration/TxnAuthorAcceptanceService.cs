@@ -60,7 +60,7 @@ namespace Hyperledger.Aries.Configuration
 
                 if (provisioning.TaaAcceptance == null || provisioning.TaaAcceptance.Digest != digest)
                 {
-                    await _provisioningService.AcceptTxnAuthorAgreementAsync(context.Wallet, taa);
+                    await _provisioningService.AcceptTxnAuthorAgreementAsync(context, taa);
                 }
             }
         }

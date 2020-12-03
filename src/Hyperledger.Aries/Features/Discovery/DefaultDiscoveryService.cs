@@ -44,7 +44,8 @@ namespace Hyperledger.Aries.Features.Discovery
 
             return new DiscoveryQueryMessage
             {
-                Query = query
+                Query = query,
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             };
         }
 
@@ -68,7 +69,7 @@ namespace Hyperledger.Aries.Features.Discovery
 
             supportedMessages ??= new List<MessageType>();
 
-            var disclosureMessage = message.CreateThreadedReply<DiscoveryDiscloseMessage>();
+            var disclosureMessage = message.CreateThreadedReply<DiscoveryDiscloseMessage>(agentContext.Agent.UseMessageTypesHttps);
             foreach (var supportedMessage in supportedMessages.GroupBy(_ => _.MessageFamilyUri).Select(g => g.First()))
             {
                 disclosureMessage.Protocols.Add(new DisclosedMessageProtocol
@@ -76,6 +77,8 @@ namespace Hyperledger.Aries.Features.Discovery
                     ProtocolId = supportedMessage.MessageFamilyUri
                 });
             }
+
+            disclosureMessage.UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps;
 
             return disclosureMessage;
         }

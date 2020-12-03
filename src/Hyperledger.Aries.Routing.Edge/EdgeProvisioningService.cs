@@ -71,7 +71,7 @@ namespace Hyperledger.Aries.Agents.Edge
             if (provisioning.GetTag(MediatorConnectionIdTagName) == null)
             {
                 var (request, record) = await connectionService.CreateRequestAsync(agentContext, discovery.Invitation);
-                var response = await messageService.SendReceiveAsync<ConnectionResponseMessage>(agentContext.Wallet, request, record);
+                var response = await messageService.SendReceiveAsync<ConnectionResponseMessage>(agentContext, request, record);
 
                 await connectionService.ProcessResponseAsync(agentContext, response, record);
 

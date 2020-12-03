@@ -14,7 +14,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         public ConnectionInvitationMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.ConnectionInvitation;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.ConnectionInvitation : MessageTypes.ConnectionInvitation;
         }
         
         /// <summary>

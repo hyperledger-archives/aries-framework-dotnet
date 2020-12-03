@@ -16,7 +16,7 @@ namespace Hyperledger.Aries.Features.TrustPing
         public TrustPingMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.TrustPingMessageType;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.TrustPingMessageType : MessageTypes.TrustPingMessageType;
         }
 
         /// <summary>

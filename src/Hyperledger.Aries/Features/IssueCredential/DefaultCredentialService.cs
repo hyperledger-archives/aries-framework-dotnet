@@ -296,7 +296,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 try
                 {
                     var credentialIssueMessage = await MessageService.SendReceiveAsync<CredentialIssueMessage>(
-                        wallet: agentContext.Wallet,
+                        agentContext: agentContext,
                         message: request,
                         recipientKey: service.RecipientKeys.First(),
                         endpointUri: service.ServiceEndpoint,
@@ -370,7 +370,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
                             Base64 = request.CredentialRequestJson.GetUTF8Bytes().ToBase64String()
                         }
                     }
-                }
+                },
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             };
 
             response.ThreadFrom(threadId);
@@ -506,9 +507,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
                                 Name = x.Name,
                                 MimeType = x.MimeType,
                                 Value = x.Value?.ToString()
-                            }).ToArray()
+                            }).ToArray(),
+                        UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
                     }
-                    : null
+                    : null,
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             }, credentialRecord);
         }
 
@@ -644,7 +647,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
                                 .ToBase64String()
                         }
                     }
-                }
+                },
+                UseMessageTypesHttps = agentContext.Agent.UseMessageTypesHttps
             };
 
             credentialMsg.ThreadFrom(threadId);

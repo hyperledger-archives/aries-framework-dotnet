@@ -15,7 +15,7 @@ namespace Hyperledger.Aries.Features.Discovery
         public DiscoveryDiscloseMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.DiscoveryDiscloseMessageType;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.DiscoveryDiscloseMessageType : MessageTypes.DiscoveryDiscloseMessageType;
             Protocols = new List<DisclosedMessageProtocol>();
         }
 

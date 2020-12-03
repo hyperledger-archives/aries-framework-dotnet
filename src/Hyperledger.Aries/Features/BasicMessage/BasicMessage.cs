@@ -16,7 +16,7 @@ namespace Hyperledger.Aries.Features.BasicMessage
         public BasicMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.BasicMessageType;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.BasicMessageType : MessageTypes.BasicMessageType;
         }
 
         /// <summary>

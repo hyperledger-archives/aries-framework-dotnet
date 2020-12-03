@@ -15,7 +15,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         public CredentialOfferMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.IssueCredentialNames.OfferCredential;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.IssueCredentialNames.OfferCredential : MessageTypes.IssueCredentialNames.OfferCredential;
         }
 
         /// <summary>

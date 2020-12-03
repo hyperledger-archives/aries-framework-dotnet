@@ -17,7 +17,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         public PresentationMessage()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.PresentProofNames.Presentation;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.PresentProofNames.Presentation : MessageTypes.PresentProofNames.Presentation;
         }
 
         /// <summary>
