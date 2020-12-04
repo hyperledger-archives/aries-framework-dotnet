@@ -42,10 +42,10 @@ namespace Hyperledger.Aries.Configuration
         /// <summary>
         /// Accepts the transaction author agreement
         /// </summary>
-        /// <param name="wallet"></param>
+        /// <param name="agentContext"></param>
         /// <param name="txnAuthorAgreement"></param>
         /// <param name="acceptanceMechanism"></param>
         /// <returns></returns>
-        Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement, string acceptanceMechanism = null);
+        Task AcceptTxnAuthorAgreementAsync(IAgentContext agentContext, IndyTaa txnAuthorAgreement, string acceptanceMechanism = null);
     }
 }

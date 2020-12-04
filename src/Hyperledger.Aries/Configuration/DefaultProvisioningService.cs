@@ -44,9 +44,9 @@ namespace Hyperledger.Aries.Configuration
         }
 
         /// <inheritdoc />
-        public async Task AcceptTxnAuthorAgreementAsync(Wallet wallet, IndyTaa txnAuthorAgreement, string acceptanceMechanism = "service_agreement")
+        public async Task AcceptTxnAuthorAgreementAsync(IAgentContext agentContext, IndyTaa txnAuthorAgreement, string acceptanceMechanism = "service_agreement")
         {
-            var provisioning = await GetProvisioningAsync(wallet);
+            var provisioning = await GetProvisioningAsync(agentContext.Wallet);
 
             provisioning.TaaAcceptance = new IndyTaaAcceptance
             {
@@ -57,7 +57,7 @@ namespace Hyperledger.Aries.Configuration
                 AcceptanceMechanism = acceptanceMechanism
             };
 
-            await RecordService.UpdateAsync(wallet, provisioning);
+            await RecordService.UpdateAsync(agentContext.Wallet, provisioning);
         }
 
         private string GetDigest(IndyTaa taa)
@@ -164,6 +164,8 @@ namespace Hyperledger.Aries.Configuration
             record.TailsBaseUri = agentOptions.EndpointUri != null
                 ? new Uri(new Uri(agentOptions.EndpointUri), "tails/").ToString()
                 : null;
+
+            record.UseMessageTypesHttps = agentOptions.UseMessageTypesHttps;
 
             record.SetTag("AgentKeySeed", agentOptions.AgentKeySeed);
             record.SetTag("IssuerKeySeed", agentOptions.IssuerKeySeed);

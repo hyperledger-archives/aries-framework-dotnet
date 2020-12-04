@@ -296,7 +296,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 try
                 {
                     var credentialIssueMessage = await MessageService.SendReceiveAsync<CredentialIssueMessage>(
-                        wallet: agentContext.Wallet,
+                        agentContext: agentContext,
                         message: request,
                         recipientKey: service.RecipientKeys.First(),
                         endpointUri: service.ServiceEndpoint,
@@ -354,7 +354,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             await RecordService.UpdateAsync(agentContext.Wallet, credential);
             var threadId = credential.GetTag(TagConstants.LastThreadId);
 
-            var response = new CredentialRequestMessage
+            var response = new CredentialRequestMessage(agentContext.UseMessageTypesHttps)
             {
                 // The comment was required by Aca-py, even though it is declared optional in RFC-0036
                 // Was added for interoperability
@@ -482,7 +482,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 }
 
             await RecordService.AddAsync(agentContext.Wallet, credentialRecord);
-            return (new CredentialOfferMessage
+            return (new CredentialOfferMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = threadId,
                 Offers = new Attachment[]
@@ -498,7 +498,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                     }
                 },
                 CredentialPreview = credentialRecord.CredentialAttributesValues != null
-                    ? new CredentialPreviewMessage
+                    ? new CredentialPreviewMessage(agentContext.UseMessageTypesHttps)
                     {
                         Attributes = credentialRecord.CredentialAttributesValues.Select(x =>
                             new CredentialPreviewAttribute
@@ -629,7 +629,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
             await RecordService.UpdateAsync(agentContext.Wallet, credentialRecord);
             var threadId = credentialRecord.GetTag(TagConstants.LastThreadId);
 
-            var credentialMsg = new CredentialIssueMessage
+            var credentialMsg = new CredentialIssueMessage(agentContext.UseMessageTypesHttps)
             {
                 Credentials = new[]
                 {

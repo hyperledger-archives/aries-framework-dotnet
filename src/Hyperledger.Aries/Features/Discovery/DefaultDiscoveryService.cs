@@ -42,7 +42,7 @@ namespace Hyperledger.Aries.Features.Discovery
 
             //TODO validate this is a valid query????
 
-            return new DiscoveryQueryMessage
+            return new DiscoveryQueryMessage(agentContext.UseMessageTypesHttps)
             {
                 Query = query
             };

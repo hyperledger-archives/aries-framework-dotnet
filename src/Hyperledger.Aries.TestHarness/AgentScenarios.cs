@@ -8,6 +8,7 @@ using Hyperledger.Aries;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.BasicMessage;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
@@ -40,7 +41,7 @@ namespace Hyperledger.TestHarness
 
             (var request, var inviteeConnection) =
                 await connectionService.CreateRequestAsync(inviter.Context, invitation);
-            await messsageService.SendAsync(inviter.Context.Wallet, request, inviteeConnection);
+            await messsageService.SendAsync(inviter.Context, request, inviteeConnection);
 
             // Wait for connection to be established or continue after 30 sec timeout
             await slim.WaitAsync(TimeSpan.FromSeconds(30));
@@ -77,7 +78,7 @@ namespace Hyperledger.TestHarness
 
             (var request, var inviteeConnection) =
                 await connectionService.CreateRequestAsync(inviter.Context, invitation);
-            var response = await messsageService.SendReceiveAsync<ConnectionResponseMessage>(inviter.Context.Wallet, request, inviteeConnection);
+            var response = await messsageService.SendReceiveAsync<ConnectionResponseMessage>(inviter.Context, request, inviteeConnection);
 
             Assert.NotNull(response);
             await connectionService.ProcessResponseAsync(inviter.Context, response, inviteeConnection);
@@ -126,7 +127,7 @@ namespace Hyperledger.TestHarness
                     CredentialAttributeValues = credentialAttributes,
                 },
                 connectionId: issuerConnection.Id);
-            await messsageService.SendAsync(issuer.Context.Wallet, offer, issuerConnection);
+            await messsageService.SendAsync(issuer.Context, offer, issuerConnection);
 
             await offerSlim.WaitAsync(TimeSpan.FromSeconds(30));
 
@@ -147,7 +148,7 @@ namespace Hyperledger.TestHarness
             
             Assert.True(holderCredentialRecord.CredentialAttributesValues.Count() == 2);
 
-            await messsageService.SendAsync(holder.Context.Wallet, request, holderConnection);
+            await messsageService.SendAsync(holder.Context, request, holderConnection);
 
             await requestSlim.WaitAsync(TimeSpan.FromSeconds(30));
 
@@ -160,7 +161,7 @@ namespace Hyperledger.TestHarness
             (var cred, _) = await credentialService.CreateCredentialAsync(
                 agentContext: issuer.Context,
                 credentialId: issuerCredentialRecord.Id);
-            await messsageService.SendAsync(issuer.Context.Wallet, cred, issuerConnection);
+            await messsageService.SendAsync(issuer.Context, cred, issuerConnection);
 
             await credentialSlim.WaitAsync(TimeSpan.FromSeconds(30));
 
@@ -188,7 +189,7 @@ namespace Hyperledger.TestHarness
                 .Subscribe(x => requestSlim.Release());
 
             var (requestMsg, requestorRecord) = await proofService.CreateRequestAsync(requestor.Context, proofRequest, requestorConnection.Id);
-            await messageService.SendAsync(requestor.Context.Wallet, requestMsg, requestorConnection);
+            await messageService.SendAsync(requestor.Context, requestMsg, requestorConnection);
 
             await requestSlim.WaitAsync(TimeSpan.FromSeconds(30));
 
@@ -211,7 +212,7 @@ namespace Hyperledger.TestHarness
                     request);
 
             var (proofMsg, holderRecord) = await proofService.CreatePresentationAsync(holder.Context, record.Id, requestedCredentials);
-            await messageService.SendAsync(holder.Context.Wallet, proofMsg, holderConnection);
+            await messageService.SendAsync(holder.Context, proofMsg, holderConnection);
 
             await proofSlim.WaitAsync(TimeSpan.FromSeconds(30));
 
@@ -233,7 +234,7 @@ namespace Hyperledger.TestHarness
 
             //Ask for all protocols
             var msg = discoveryService.CreateQuery(requestor.Context, "*");
-            var rsp = await messageService.SendReceiveAsync(requestor.Context.Wallet, msg, requestorConnection);
+            var rsp = await messageService.SendReceiveAsync(requestor.Context, msg, requestorConnection);
 
             Assert.NotNull(rsp);
 
@@ -246,6 +247,25 @@ namespace Hyperledger.TestHarness
                 return discoveryMsg;
             }
             throw new InvalidOperationException("The response was not of the expected type");
+        }
+
+        public static string CreateBasicMessageWithLegacyType(MockAgent LegacyMessageAgent)
+        {
+            var basicMessage = new BasicMessage(LegacyMessageAgent.Context.UseMessageTypesHttps);
+
+            Assert.Equal(MessageTypes.BasicMessageType, basicMessage.Type);
+
+            return basicMessage.Type;
+        }
+
+        public static string CreateBasicMessageWithHttpsType(MockAgent HttpsMessageAgent)
+        {
+
+            var basicMessage = new BasicMessage(HttpsMessageAgent.Context.UseMessageTypesHttps);
+
+            Assert.Equal(MessageTypesHttps.BasicMessageType, basicMessage.Type);
+
+            return basicMessage.Type;
         }
     }
 }

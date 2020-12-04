@@ -151,7 +151,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             var (presentationMessage, proofRecord) = await CreatePresentationAsync(agentContext, record.Id, requestedCredentials);
 
             await MessageService.SendAsync(
-                wallet: agentContext.Wallet,
+                agentContext: agentContext,
                 message: presentationMessage,
                 recipientKey: service.RecipientKeys.First(),
                 endpointUri: service.ServiceEndpoint,
@@ -301,15 +301,15 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             await RecordService.AddAsync(agentContext.Wallet, proofRecord);
 
-            var message = new ProposePresentationMessage
+            var message = new ProposePresentationMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = threadId,
                 Comment = proofProposal.Comment,
-                PresentationPreviewMessage = new PresentationPreviewMessage()
+                PresentationPreviewMessage = new PresentationPreviewMessage(agentContext.UseMessageTypesHttps)
                 {
                     ProposedAttributes = proofProposal.ProposedAttributes.ToArray(),
                     ProposedPredicates = proofProposal.ProposedPredicates.ToArray()
-                }
+                },
             };
             message.ThreadFrom(threadId);
             return (message, proofRecord);
@@ -451,7 +451,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             await proofRecord.TriggerAsync(ProofTrigger.Request);
             await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
 
-            var message = new RequestPresentationMessage
+            var message = new RequestPresentationMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = proofRecord.Id,
                 Requests = new[]
@@ -513,7 +513,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             proofRecord.SetTag(TagConstants.LastThreadId, threadId);
             await RecordService.AddAsync(agentContext.Wallet, proofRecord);
 
-            var message = new RequestPresentationMessage
+            var message = new RequestPresentationMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = threadId,
                 Requests = new[]
@@ -651,7 +651,7 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             var threadId = record.GetTag(TagConstants.LastThreadId);
 
-            var proofMsg = new PresentationMessage
+            var proofMsg = new PresentationMessage(agentContext.UseMessageTypesHttps)
             {
                 Id = Guid.NewGuid().ToString(),
                 Presentations = new[]

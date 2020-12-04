@@ -97,7 +97,7 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             await RecordService.AddAsync(agentContext.Wallet, connection);
 
-            return (new ConnectionInvitationMessage
+            return (new ConnectionInvitationMessage(agentContext.UseMessageTypesHttps)
             {
                 ServiceEndpoint = provisioning.Endpoint.Uri,
                 RoutingKeys = provisioning.Endpoint.Verkey != null ? provisioning.Endpoint.Verkey : null,
@@ -151,7 +151,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             await connection.TriggerAsync(ConnectionTrigger.InvitationAccept);
 
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
-            var request = new ConnectionRequestMessage
+            var request = new ConnectionRequestMessage(agentContext.UseMessageTypesHttps)
             {
                 Connection = new Connection
                 {
@@ -301,7 +301,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             var sigData = await SignatureUtils.SignDataAsync(agentContext, connectionData, connection.GetTag(TagConstants.ConnectionKey));
             var threadId = connection.GetTag(TagConstants.LastThreadId);
 
-            var response = new ConnectionResponseMessage { ConnectionSig = sigData };
+            var response = new ConnectionResponseMessage(agentContext.UseMessageTypesHttps) { ConnectionSig = sigData };
             response.ThreadFrom(threadId);
 
             return (response, connection);

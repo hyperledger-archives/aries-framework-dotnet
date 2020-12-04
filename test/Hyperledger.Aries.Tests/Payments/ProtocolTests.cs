@@ -67,7 +67,7 @@ namespace Hyperledger.Aries.Tests.Payments
             Assert.NotNull(decorator);
 
             // Send the message to agent 2
-            await agents.Agent1.Messages.SendAsync(agents.Agent1.Context.Wallet, basicMessage, agents.Connection1);
+            await agents.Agent1.Messages.SendAsync(agents.Agent1.Context, basicMessage, agents.Connection1);
 
             // Find the payment record in the context of agent 2
             var search = await agents.Agent2.Records.SearchAsync<PaymentRecord>(
@@ -104,7 +104,7 @@ namespace Hyperledger.Aries.Tests.Payments
             agents.Agent2.Payments.AttachPaymentReceipt(agents.Agent2.Context, message2, paymentRecord2);
 
             // Send the message to agent 1
-            await agents.Agent2.Messages.SendAsync(agents.Agent2.Context.Wallet, message2, agents.Connection2);
+            await agents.Agent2.Messages.SendAsync(agents.Agent2.Context, message2, agents.Connection2);
 
             // Fetch payment record 1 again, to refresh state
             paymentRecord1 = await agents.Agent1.Records.GetAsync<PaymentRecord>(agents.Agent1.Context.Wallet, paymentRecord1.Id);

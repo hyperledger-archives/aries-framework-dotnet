@@ -151,7 +151,7 @@ namespace Hyperledger.TestHarness.Mock
 
             var (request, agent2Connection) = await agent2.Provider.GetService<IConnectionService>().CreateRequestAsync(agent2.Context, invitation);
             await agent2.Provider.GetService<IMessageService>().SendAsync(
-                wallet: agent2.Context.Wallet,
+                agentContext: agent2.Context,
                 message: request,
                 recipientKey: invitation.RecipientKeys.First(),
                 endpointUri: agent2Connection.Endpoint.Uri,
