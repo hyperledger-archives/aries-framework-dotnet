@@ -322,11 +322,11 @@ namespace Hyperledger.Aries.Features.DidExchange
 
         /// <inheritdoc />
         public virtual Task<List<ConnectionRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null,
-            int count = 100)
+            int count = 100, int skip = 0)
         {
             Logger.LogTrace(LoggingEvents.ListConnections, "List Connections");
 
-            return RecordService.SearchAsync<ConnectionRecord>(agentContext.Wallet, query, null, count);
+            return RecordService.SearchAsync<ConnectionRecord>(agentContext.Wallet, query, null, count, skip);
         }
 
         /// <inheritdoc />

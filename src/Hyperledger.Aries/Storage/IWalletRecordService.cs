@@ -26,8 +26,9 @@ namespace Hyperledger.Aries.Storage
         /// <param name="query">Query.</param>
         /// <param name="options">Options.</param>
         /// <param name="count">The number of items to return</param>
+        /// <param name="skip">The number of items to skip</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        Task<List<T>> SearchAsync<T>(Wallet wallet, ISearchQuery query = null, SearchOptions options = null, int count = 10) where T : RecordBase, new();
+        Task<List<T>> SearchAsync<T>(Wallet wallet, ISearchQuery query = null, SearchOptions options = null, int count = 10, int skip = 0) where T : RecordBase, new();
 
         /// <summary>
         /// Updates the record async.

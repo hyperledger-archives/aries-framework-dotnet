@@ -130,8 +130,8 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
         /// <inheritdoc />
         public virtual Task<List<CredentialRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null,
-            int count = 100) =>
-            RecordService.SearchAsync<CredentialRecord>(agentContext.Wallet, query, null, count);
+            int count = 100, int skip = 0) =>
+            RecordService.SearchAsync<CredentialRecord>(agentContext.Wallet, query, null, count, skip);
 
         /// <inheritdoc />
         public virtual async Task RejectOfferAsync(IAgentContext agentContext, string credentialId)

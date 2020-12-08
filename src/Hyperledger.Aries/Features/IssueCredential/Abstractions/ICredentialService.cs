@@ -26,8 +26,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="query">The query.</param>
         /// <param name="count">The number of items to return</param>
+        /// <param name="skip">The number of items to skip</param>
         /// <returns>A list of credential records matching the search criteria</returns>
-        Task<List<CredentialRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null, int count = 100);
+        Task<List<CredentialRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null, int count = 100, int skip = 0);
 
         /// <summary>
         /// Process the offer and stores in the designated wallet asynchronous.
