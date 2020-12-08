@@ -47,15 +47,17 @@ namespace Hyperledger.Aries.Storage
         }
 
         /// <inheritdoc />
-        public virtual async Task<List<T>> SearchAsync<T>(Wallet wallet, ISearchQuery query, SearchOptions options, int count)
+        public virtual async Task<List<T>> SearchAsync<T>(Wallet wallet, ISearchQuery query, SearchOptions options, int count, int skip)
             where T : RecordBase, new()
         {
             using (var search = await NonSecrets.OpenSearchAsync(wallet, new T().TypeName,
                 (query ?? SearchQuery.Empty).ToJson(),
                 (options ?? new SearchOptions()).ToJson()))
             {
+                if(skip > 0) {
+                    await search.NextAsync(wallet, skip);
+                }
                 var result = JsonConvert.DeserializeObject<SearchResult>(await search.NextAsync(wallet, count), _jsonSettings);
-                // TODO: Add support for pagination
 
                 return result.Records?
                            .Select(x =>
