@@ -121,7 +121,7 @@ namespace WebAgent.Controllers
                     IssuerDid = issuer.IssuerDid,
                     CredentialAttributeValues = values
                 });
-            await _messageService.SendAsync(context.Wallet, offer, connection);
+            await _messageService.SendAsync(context, offer, connection);
 
             return RedirectToAction("Index");
         }
