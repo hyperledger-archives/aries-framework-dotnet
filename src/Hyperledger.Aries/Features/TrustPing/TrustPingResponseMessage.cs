@@ -13,10 +13,20 @@ namespace Hyperledger.Aries.Features.TrustPing
         /// Initializes a new instance of the
         /// <see cref="TrustPingResponseMessage"/> class.
         /// </summary>
-        public TrustPingResponseMessage()
+        public TrustPingResponseMessage() : base()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.TrustPingResponseMessageType;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.TrustPingResponseMessageType : MessageTypes.TrustPingResponseMessageType;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="TrustPingResponseMessage"/> class.
+        /// </summary>
+        public TrustPingResponseMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.TrustPingResponseMessageType : MessageTypes.TrustPingResponseMessageType;
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Hyperledger.Aries.Tests
             throw new System.NotImplementedException();
         }
 
-        public Task<List<ConnectionRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null, int count = 100)
+        public Task<List<ConnectionRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null, int count = 100, int skip = 0)
         {
             throw new System.NotImplementedException();
         }

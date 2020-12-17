@@ -81,7 +81,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     }
                 });
             
-            await messageService1.SendAsync(context1.Wallet, offer, pair.Connection1);
+            await messageService1.SendAsync(context1, offer, pair.Connection1);
 
             var issuerCredentialWithRevocationId = record.Id;
 
@@ -97,7 +97,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                    }
                });
             await messageService1
-                .SendAsync(context1.Wallet, offer, pair.Connection1);
+                .SendAsync(context1, offer, pair.Connection1);
 
             // Find credential for Agent 2 and accept all offers
 
@@ -106,7 +106,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             {
                 var (request, _) = await credentialService2.CreateRequestAsync(context2, credential.Id);
                 
-                await messageService2.SendAsync(context2.Wallet, request, pair.Connection2);
+                await messageService2.SendAsync(context2, request, pair.Connection2);
             }
 
             // Issue credential
@@ -115,7 +115,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             foreach (var credential in credentials)
             {
                 var (issue, _) = await credentialService1.CreateCredentialAsync(context1, credential.Id);
-                await messageService1.SendAsync(context1.Wallet, issue, pair.Connection1);
+                await messageService1.SendAsync(context1, issue, pair.Connection1);
             }
 
             // Assert
@@ -278,7 +278,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                         new CredentialPreviewAttribute("age", "22")
                     }
                 });
-                await messageService1.SendAsync(context1.Wallet, offer, pair.Connection1);
+                await messageService1.SendAsync(context1, offer, pair.Connection1);
 
                 string holderCredentialId = null;
                 
@@ -289,7 +289,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                     var (request, _) = await credentialService2.CreateRequestAsync(context2, credential.Id);
                     holderCredentialId = credential.Id;
 
-                    await messageService2.SendAsync(context2.Wallet, request, pair.Connection2);
+                    await messageService2.SendAsync(context2, request, pair.Connection2);
                 }
 
                 // Issue credential
@@ -298,7 +298,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                 foreach (var credential in credentials)
                 {
                     var (issue, _) = await credentialService1.CreateCredentialAsync(context1, credential.Id);
-                    await messageService1.SendAsync(context1.Wallet, issue, pair.Connection1);
+                    await messageService1.SendAsync(context1, issue, pair.Connection1);
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(15));

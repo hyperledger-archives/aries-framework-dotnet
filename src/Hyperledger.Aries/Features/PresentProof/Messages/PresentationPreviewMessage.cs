@@ -12,14 +12,22 @@ namespace Hyperledger.Aries.Features.PresentProof
     public class PresentationPreviewMessage : AgentMessage
     {
         /// <summary>
-		/// Initializes a new instance of the <see cref="PresentationPreviewMessage" /> class.
-		/// </summary>
-        public PresentationPreviewMessage()
+        /// Initializes a new instance of the <see cref="PresentationPreviewMessage" /> class.
+        /// </summary>
+        public PresentationPreviewMessage() : base()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.PresentProofNames.PresentationPreview;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.PresentProofNames.PresentationPreview : MessageTypes.PresentProofNames.PresentationPreview;
         }
 
+        /// <summary>
+		/// Initializes a new instance of the <see cref="PresentationPreviewMessage" /> class.
+		/// </summary>
+        public PresentationPreviewMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.PresentProofNames.PresentationPreview : MessageTypes.PresentProofNames.PresentationPreview;
+        }
 
         /// <summary>
         /// Gets or sets the attribute previews for the PresentationPreviewMessage.

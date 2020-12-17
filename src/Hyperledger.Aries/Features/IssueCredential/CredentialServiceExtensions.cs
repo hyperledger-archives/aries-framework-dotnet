@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
+using Polly;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
@@ -71,6 +73,16 @@ namespace Hyperledger.Aries.Features.IssueCredential
         public static async Task<CredentialRecord> GetByThreadIdAsync(
             this ICredentialService credentialService, IAgentContext context, string threadId)
         {
+            CredentialRecord record = null;
+            try
+            {
+                record = await credentialService.GetAsync(context, threadId);
+                return record;
+            }
+            catch (AriesFrameworkException)
+            {
+                // Record was not found, thread ID didn't match record ID. This is OK
+            }
             var search = await credentialService.ListAsync(context, SearchQuery.Equal(TagConstants.LastThreadId, threadId), 100);
 
             if (search.Count == 0)
@@ -79,7 +91,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
             if (search.Count > 1)
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState, $"Multiple credential records found by thread id : {threadId}");
 
-            return search.Single();
+            record = search.Single();
+
+            return record;
         }
     }
 }

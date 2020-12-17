@@ -164,7 +164,7 @@ namespace Hyperledger.Aries.Agents
                     }
                     if (inboundMessageContext.Connection != null)
                     {
-                        await MessageService.SendAsync(agentContext.Wallet, response, inboundMessageContext.Connection);
+                        await MessageService.SendAsync(agentContext, response, inboundMessageContext.Connection);
                     }
                     else
                     {

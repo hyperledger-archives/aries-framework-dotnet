@@ -65,7 +65,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
       ConnectionRecord connectionRecord =
         await ConnectionService.GetAsync(agentContext, aSendPingRequest.ConnectionId);
 
-      var trustPingMessage = new TrustPingMessage
+      var trustPingMessage = new TrustPingMessage(agentContext.UseMessageTypesHttps)
       {
         ResponseRequested = true,
         Comment = "Hello"
@@ -86,7 +86,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
         .Subscribe(_ => { success = true; semaphoreSlim.Release(); })
       )
       {
-        await MessageService.SendAsync(agentContext.Wallet, trustPingMessage, connectionRecord);
+        await MessageService.SendAsync(agentContext, trustPingMessage, connectionRecord);
 
         await semaphoreSlim.WaitAsync(TimeSpan.FromSeconds(5));
       }

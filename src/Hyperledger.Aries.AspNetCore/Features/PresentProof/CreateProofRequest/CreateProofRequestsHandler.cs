@@ -47,7 +47,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs
       (RequestPresentationMessage requestPresentationMessage, ProofRecord proofRecord) =
         await ProofService.CreateRequestAsync(agentContext, aCreateProofRequestRequest.ProofRequest, aCreateProofRequestRequest.ConnectionId);
 
-      await MessageService.SendAsync(agentContext.Wallet, requestPresentationMessage, connectionRecord);
+      await MessageService.SendAsync(agentContext, requestPresentationMessage, connectionRecord);
 
       //(requestPresentationMessage, proofRecord) =
       //  await ProofService.CreateRequestAsync(agentContext, aSendRequestForProofRequest.ProofRequest);   

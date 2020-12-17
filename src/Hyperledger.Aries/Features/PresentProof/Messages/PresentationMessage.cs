@@ -10,14 +10,23 @@ namespace Hyperledger.Aries.Features.PresentProof
     /// Proof Presentation message
     /// </summary>
     public class PresentationMessage : AgentMessage
-    {
+    {        
         /// <summary>
         /// Initializes a new instace of the <see cref="PresentationMessage" /> class.
         /// </summary>
-        public PresentationMessage()
+        public PresentationMessage() : base()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.PresentProofNames.Presentation;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.PresentProofNames.Presentation : MessageTypes.PresentProofNames.Presentation;
+        }
+
+        /// <summary>
+        /// Initializes a new instace of the <see cref="PresentationMessage" /> class.
+        /// </summary>
+        public PresentationMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.PresentProofNames.Presentation : MessageTypes.PresentProofNames.Presentation;
         }
 
         /// <summary>

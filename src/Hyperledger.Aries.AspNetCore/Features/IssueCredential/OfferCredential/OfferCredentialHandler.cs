@@ -54,7 +54,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.IssueCredentials
           }
         );
 
-      await MessageService.SendAsync(agentContext.Wallet, credentialOfferMessage, connectionRecord);
+      await MessageService.SendAsync(agentContext, credentialOfferMessage, connectionRecord);
 
       var response = new OfferCredentialResponse(aOfferCredentialRequest.CorrelationId);
 

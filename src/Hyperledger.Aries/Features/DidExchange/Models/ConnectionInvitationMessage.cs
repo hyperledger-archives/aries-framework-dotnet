@@ -11,10 +11,17 @@ namespace Hyperledger.Aries.Features.DidExchange
     public class ConnectionInvitationMessage : AgentMessage
     {
         /// <inheritdoc />
-        public ConnectionInvitationMessage()
+        public ConnectionInvitationMessage() : base()
         {
             Id = Guid.NewGuid().ToString();
-            Type = MessageTypes.ConnectionInvitation;
+            Type = UseMessageTypesHttps ? MessageTypesHttps.ConnectionInvitation : MessageTypes.ConnectionInvitation;
+        }
+
+        /// <inheritdoc />
+        public ConnectionInvitationMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = UseMessageTypesHttps ? MessageTypesHttps.ConnectionInvitation : MessageTypes.ConnectionInvitation;
         }
         
         /// <summary>

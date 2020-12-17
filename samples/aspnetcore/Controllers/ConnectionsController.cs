@@ -80,7 +80,7 @@ namespace WebAgent.Controllers
 
             var invite = MessageUtils.DecodeMessageFromUrlFormat<ConnectionInvitationMessage>(model.InvitationDetails);
             var (request, record) = await _connectionService.CreateRequestAsync(context, invite);
-            await _messageService.SendAsync(context.Wallet, request, record);
+            await _messageService.SendAsync(context, request, record);
 
             return RedirectToAction("Index");
         }
@@ -118,7 +118,7 @@ namespace WebAgent.Controllers
                 .Where(_ => _.MessageType == CustomMessageTypes.TrustPingResponseMessageType)
                 .Subscribe(_ => { success = true; slim.Release(); }))
             {
-                await _messageService.SendAsync(context.Wallet, message, connection);
+                await _messageService.SendAsync(context, message, connection);
 
                 await slim.WaitAsync(TimeSpan.FromSeconds(5));
 
@@ -177,7 +177,7 @@ namespace WebAgent.Controllers
             await _recordService.AddAsync(context.Wallet, messageRecord);
 
             // Send an agent message using the secure connection
-            await _messageService.SendAsync(context.Wallet, message, connection);
+            await _messageService.SendAsync(context, message, connection);
 
             return RedirectToAction("Details", new {id = connectionId});
         }

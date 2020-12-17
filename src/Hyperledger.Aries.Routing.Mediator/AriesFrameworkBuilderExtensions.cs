@@ -1,12 +1,10 @@
 ﻿using System;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Agents.Edge;
-using Hyperledger.Aries.AspNetCore;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Routing;
 using Hyperledger.Aries.Routing.Mediator.Storage;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
