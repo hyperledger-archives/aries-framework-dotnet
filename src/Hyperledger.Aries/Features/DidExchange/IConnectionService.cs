@@ -27,7 +27,8 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="query">The query used to filter the search results.</param>
         /// <param name="count">The maximum item count of items to return to return.</param>
-        Task<List<ConnectionRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null, int count = 100);
+        /// <param name="skip">The number of items to skip.</param>
+        Task<List<ConnectionRecord>> ListAsync(IAgentContext agentContext, ISearchQuery query = null, int count = 100, int skip = 0);
 
         /// <summary>
         /// Creates the invitation asynchronous.
