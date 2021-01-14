@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Utils
 {
-    internal class CryptoUtils
+    public class CryptoUtils
     {
         /// <summary>Packs a message</summary>
         /// <param name="wallet">The wallet.</param>
@@ -131,7 +131,7 @@ namespace Hyperledger.Aries.Utils
                 foreach (var routingKey in routingKeys)
                 {
                     // Anonpack
-                    msg = await PackAsync(agentContext.Wallet, routingKey, new ForwardMessage(agentContext.UseMessageTypesHttps) { Message = JObject.Parse(msg.GetUTF8String()), To = previousKey});
+                    msg = await PackAsync(agentContext.Wallet, routingKey, new ForwardMessage(agentContext.UseMessageTypesHttps) { Message = JObject.Parse(msg.GetUTF8String()), To = previousKey });
                     previousKey = routingKey;
                 }
             }
