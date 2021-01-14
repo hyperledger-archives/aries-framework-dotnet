@@ -90,10 +90,10 @@ namespace Hyperledger.Aries.Configuration
         }
 
         /// <inheritdoc />
-        public Task ProvisionAgentAsync() => ProvisionAgentAsync(AgentOptions);
+        public virtual Task ProvisionAgentAsync() => ProvisionAgentAsync(AgentOptions);
 
         /// <inheritdoc />
-        public async Task ProvisionAgentAsync(AgentOptions agentOptions)
+        public async virtual Task ProvisionAgentAsync(AgentOptions agentOptions)
         {
             if (agentOptions is null)
             {
