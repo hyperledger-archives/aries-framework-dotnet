@@ -24,6 +24,7 @@ using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy;
 using Polly;
+using Hyperledger.Aries.Features.PresentProof;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
