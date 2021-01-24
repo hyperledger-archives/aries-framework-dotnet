@@ -151,6 +151,34 @@ namespace Hyperledger.Aries.Features.PresentProof
         Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRecordId);
 
         /// <summary>
+        /// Check if a credential has been revoked by validating against the revocation state
+        /// on the ledger.
+        /// </summary>
+        /// <remarks>
+        /// This method can be used as a holder, to check if a credential thay own has been
+        /// revoked by the issuer. If a credential doesn't support revocation, this method will
+        /// always return <c>false</c>
+        /// </remarks>
+        /// <param name="context"></param>
+        /// <param name="record"></param>
+        /// <returns></returns>
+        Task<bool> IsRevokedAsync(IAgentContext context, CredentialRecord record);
+
+        /// <summary>
+        /// Check if a credential has been revoked by validating against the revocation state
+        /// on the ledger.
+        /// </summary>
+        /// <remarks>
+        /// This method can be used as a holder, to check if a credential thay own has been
+        /// revoked by the issuer. If a credential doesn't support revocation, this method will
+        /// always return <c>false</c>
+        /// </remarks>
+        /// <param name="context"></param>
+        /// <param name="credentialRecordId"></param>
+        /// <returns></returns>
+        Task<bool> IsRevokedAsync(IAgentContext context, string credentialRecordId);
+
+        /// <summary>
         /// Verifies a proof.
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>

@@ -174,6 +174,53 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
+        public async Task<bool> IsRevokedAsync(IAgentContext context, string credentialRecordId)
+        {
+            return await IsRevokedAsync(context, await RecordService.GetAsync<CredentialRecord>(context.Wallet, credentialRecordId));
+        }
+
+        /// <inheritdoc />
+        public async Task<bool> IsRevokedAsync(IAgentContext context, CredentialRecord record)
+        {
+            if (record.RevocationRegistryId == null) return false;
+            if (record.State == CredentialState.Offered || record.State == CredentialState.Requested) return false;
+            if (record.State == CredentialState.Revoked || record.State == CredentialState.Rejected) return true;
+
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var proofRequest = new ProofRequest
+            {
+                RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
+                {
+                    { "referent1", new ProofAttributeInfo { Name = record.CredentialAttributesValues.First().Name } }
+                }, NonRevoked = new RevocationInterval
+                {
+                    From = (uint)now,
+                    To = (uint)now
+                }
+            };
+
+            var proof = await CreateProofAsync(context, proofRequest, new RequestedCredentials
+            {
+                RequestedAttributes = new Dictionary<string, RequestedAttribute>
+                {
+                    { "referent1", new RequestedAttribute { CredentialId = record.CredentialId } }
+                }
+            });
+
+            var isValid = await VerifyProofAsync(context, proofRequest.ToJson(), proof);
+
+            if (!isValid)
+            {
+                await record.TriggerAsync(CredentialTrigger.Revoke);
+
+                record.SetTag("LastRevocationCheck", now.ToString());
+                await RecordService.UpdateAsync(context.Wallet, record);
+            }
+
+            return isValid;
+        }
+
+        /// <inheritdoc />
         public virtual async Task<bool> VerifyProofAsync(IAgentContext agentContext, string proofRequestJson, string proofJson, bool validateEncoding = true)
         {
             var proof = JsonConvert.DeserializeObject<PartialProof>(proofJson);
