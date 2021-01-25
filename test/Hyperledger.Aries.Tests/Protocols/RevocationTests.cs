@@ -213,6 +213,8 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             Assert.True(valid);
 
+            Assert.False(await proofService2.IsRevokedAsync(context2, availableCredentials.First().CredentialInfo.Referent));
+
             // Revoke the credential
             await pair.Agent1.Provider.GetService<ICredentialService>()
                .RevokeCredentialAsync(context1, issuerCredentialWithRevocationId);
@@ -264,6 +266,8 @@ namespace Hyperledger.Aries.Tests.Protocols
                 .VerifyProofAsync(context1, proofRecordIssuer.Id);
 
             Assert.False(valid);
+
+            Assert.True(await proofService2.IsRevokedAsync(context2, availableCredentials.First().CredentialInfo.Referent));
 
             // Issue new credential after revoking previous one
             {
