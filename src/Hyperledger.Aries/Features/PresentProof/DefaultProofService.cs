@@ -189,6 +189,9 @@ namespace Hyperledger.Aries.Features.PresentProof
             var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var proofRequest = new ProofRequest
             {
+                Name = "revocation check",
+                Version = "1.0",
+                Nonce = await AnonCreds.GenerateNonceAsync(),
                 RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
                 {
                     { "referent1", new ProofAttributeInfo { Name = record.CredentialAttributesValues.First().Name } }
@@ -203,7 +206,7 @@ namespace Hyperledger.Aries.Features.PresentProof
             {
                 RequestedAttributes = new Dictionary<string, RequestedAttribute>
                 {
-                    { "referent1", new RequestedAttribute { CredentialId = record.CredentialId } }
+                    { "referent1", new RequestedAttribute { CredentialId = record.CredentialId, Timestamp = now, Revealed = true } }
                 }
             });
 
@@ -217,7 +220,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 await RecordService.UpdateAsync(context.Wallet, record);
             }
 
-            return isValid;
+            return !isValid;
         }
 
         /// <inheritdoc />
