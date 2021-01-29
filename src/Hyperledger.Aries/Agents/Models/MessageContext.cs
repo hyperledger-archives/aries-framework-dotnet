@@ -68,7 +68,7 @@ namespace Hyperledger.Aries.Agents
         /// Gets the connection associated to the message.
         /// </summary>
         /// <returns>The associated connection to the message.</returns>
-        public ConnectionRecord Connection { get; }
+        public ConnectionRecord Connection { get; set; }
 
         /// <summary>
         /// Gets the record associated with this message context.
