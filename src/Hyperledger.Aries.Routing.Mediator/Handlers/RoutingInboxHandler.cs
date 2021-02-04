@@ -176,6 +176,14 @@ namespace Hyperledger.Aries.Routing
                 configuration: inboxRecord.WalletConfiguration,
                 credentials: inboxRecord.WalletCredentials);
 
+            if (createInboxMessage.Metadata != null)
+            {
+                foreach (var metadata in createInboxMessage.Metadata)
+                {
+                    inboxRecord.SetTag(metadata.Key, metadata.Value);
+                }
+            }
+
             await recordService.AddAsync(agentContext.Wallet, inboxRecord);
             await recordService.UpdateAsync(agentContext.Wallet, connection);
 
