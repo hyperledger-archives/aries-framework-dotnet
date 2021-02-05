@@ -30,12 +30,51 @@ namespace Hyperledger.Aries.Storage
             [JsonProperty("wallet_scheme")]
             public string WalletScheme { get; set; }
 
+            /// <summary>
+            /// Gets or sets the database name.
+            /// </summary>
+            /// <value>The database name.</value>
+            [JsonProperty("database_name")]
+            public string DatabaseName { get; set; }
+
+            /// <summary>
+            /// Gets or sets the tls.
+            /// </summary>
+            /// <value>tls (on|off).</value>
+            [JsonProperty("tls")]
+            public string Tls { get; set; } = "off";
+
+            /// <summary>
+            /// Gets or sets max connections.
+            /// </summary>
+            /// <value>The max connections.</value>
+            [JsonProperty("max_connections")]
+            public int MaxConnections { get; set; } = 5;
+
+            /// <summary>
+            /// Gets or sets minimum idle count.
+            /// </summary>
+            /// <value>The minimum idle count.</value>
+            [JsonProperty("min_idle_count")]
+            public int MinIdleCount { get; set; } = 0;
+
+            /// <summary>
+            /// Gets or sets connection timeout.
+            /// </summary>
+            /// <value>The conncection timeout.</value>
+            [JsonProperty("connection_timeout")]
+            public int ConnectionTimeout { get; set; } = 5;
+
             /// <inheritdoc />
             public override string ToString() =>
                 $"{GetType().Name}: " +
                 $"Path={Path}" +
                 $"Url={Url}" +
-                $"WalletScheme={WalletScheme}";
+                $"WalletScheme={WalletScheme}" +
+				$"DatabaseName={DatabaseName}" +
+				$"MaxConnections={MaxConnections}" +
+				$"MinIdleCount={MinIdleCount}" +
+				$"ConnectionTimeout={ConnectionTimeout}";
         }
     }
 }

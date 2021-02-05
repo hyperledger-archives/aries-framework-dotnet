@@ -26,9 +26,12 @@ namespace Hyperledger.Aries.Tests.Storage.Models
             walletStorageConfiguration.ToString().Should().Be(
                 "WalletStorageConfiguration: " +
                 $"Path={Path}" +
-                $"Path={Path}" +
                 $"Url={Url}" +
-                $"WalletScheme={WalletScheme}");
+                $"WalletScheme={WalletScheme}" +
+                $"DatabaseName={DatabaseName}" +
+                $"MaxConnections={MaxConnections}" +
+                $"MinIdleCount={MinIdleCount}" +
+                $"ConnectionTimeout={ConnectionTimeout}";);
         }
     }
 }
