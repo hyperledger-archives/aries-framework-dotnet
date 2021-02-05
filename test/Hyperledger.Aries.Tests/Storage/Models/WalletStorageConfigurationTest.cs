@@ -52,19 +52,5 @@ namespace Hyperledger.Aries.Tests.Storage.Models
                 $"MinIdleCount={MinIdleCount}" +
                 $"ConnectionTimeout={ConnectionTimeout}");
         }
-
-        [Fact(DisplayName = "Wallet configuration model should use default values if they are not specified")]
-        public void WalletStorageConfigurationModelDefaults()
-        {
-            WalletConfiguration.WalletStorageConfiguration walletStorageConfiguration = new WalletConfiguration.WalletStorageConfiguration();
-
-            walletStorageConfiguration.Should().BeEquivalentTo(new
-            {
-                Tls = "off",
-                MaxConnections = 5,
-                MinIdleCount = 0,
-                ConnectionTimeout = 5
-            });
-        }
     }
 }

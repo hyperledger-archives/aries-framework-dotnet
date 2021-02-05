@@ -49,21 +49,21 @@ namespace Hyperledger.Aries.Storage
             /// </summary>
             /// <value>The max connections.</value>
             [JsonProperty("max_connections")]
-            public int MaxConnections { get; set; } = 5;
+            public int? MaxConnections { get; set; }
 
             /// <summary>
             /// Gets or sets minimum idle count.
             /// </summary>
             /// <value>The minimum idle count.</value>
             [JsonProperty("min_idle_count")]
-            public int MinIdleCount { get; set; } = 0;
+            public int? MinIdleCount { get; set; }
 
             /// <summary>
             /// Gets or sets connection timeout.
             /// </summary>
             /// <value>The conncection timeout.</value>
             [JsonProperty("connection_timeout")]
-            public int ConnectionTimeout { get; set; } = 5;
+            public int? ConnectionTimeout { get; set; }
 
             /// <inheritdoc />
             public override string ToString() =>
