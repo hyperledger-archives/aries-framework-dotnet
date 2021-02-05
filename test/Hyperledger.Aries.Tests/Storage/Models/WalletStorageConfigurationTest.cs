@@ -60,6 +60,7 @@ namespace Hyperledger.Aries.Tests.Storage.Models
 
             walletStorageConfiguration.Should().BeEquivalentTo(new
             {
+                Tls = "off",
                 MaxConnections = 5,
                 MinIdleCount = 0,
                 ConnectionTimeout = 5
