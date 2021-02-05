@@ -70,6 +70,7 @@ namespace Hyperledger.Aries.Storage
                 $"{GetType().Name}: " +
                 $"Path={Path}" +
                 $"Url={Url}" +
+				$"Tls={Tls}" +
                 $"WalletScheme={WalletScheme}" +
 				$"DatabaseName={DatabaseName}" +
 				$"MaxConnections={MaxConnections}" +

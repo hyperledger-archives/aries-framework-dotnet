@@ -9,29 +9,61 @@ namespace Hyperledger.Aries.Tests.Storage.Models
         private const string Path = "Path";
         private const string Url = "Url";
         private const string WalletScheme = "WalletScheme";
+        private const string DatabaseName = "DatabaseName";
+        private const string Tls = "on";
+        private const int MaxConnections = 10;
+        private const int MinIdleCount = 10;
+        private const int ConnectionTimeout = 10;
 
         [Fact(DisplayName = "Wallet configuration model should correctly set and stringify all parameters")]
         public void WalletStorageConfigurationModel()
         {
-            WalletConfiguration.WalletStorageConfiguration walletStorageConfiguration = new WalletConfiguration.WalletStorageConfiguration()
+            WalletConfiguration.WalletStorageConfiguration walletStorageConfiguration = new WalletConfiguration.WalletStorageConfiguration
             {
                 Path = Path,
                 Url = Url,
-                WalletScheme = WalletScheme
+                WalletScheme = WalletScheme,
+                DatabaseName = DatabaseName,
+                Tls = Tls,
+                MaxConnections = MaxConnections,
+                MinIdleCount = MinIdleCount,
+                ConnectionTimeout = ConnectionTimeout
             };
 
-            walletStorageConfiguration.Path.Should().Be(Path);
-            walletStorageConfiguration.Url.Should().Be(Url);
-            walletStorageConfiguration.WalletScheme.Should().Be(WalletScheme);
+            walletStorageConfiguration.Should().BeEquivalentTo(new
+            {
+                Path,
+                Url,
+                WalletScheme,
+                DatabaseName,
+                Tls,
+                MaxConnections,
+                MinIdleCount,
+                ConnectionTimeout
+            });
             walletStorageConfiguration.ToString().Should().Be(
                 "WalletStorageConfiguration: " +
                 $"Path={Path}" +
                 $"Url={Url}" +
+                $"Tls={Tls}" +
                 $"WalletScheme={WalletScheme}" +
                 $"DatabaseName={DatabaseName}" +
                 $"MaxConnections={MaxConnections}" +
                 $"MinIdleCount={MinIdleCount}" +
-                $"ConnectionTimeout={ConnectionTimeout}";);
+                $"ConnectionTimeout={ConnectionTimeout}");
+        }
+
+        [Fact(DisplayName = "Wallet configuration model should use default parameters if they are not specified")]
+        public void WalletStorageConfigurationModelDefaults()
+        {
+            WalletConfiguration.WalletStorageConfiguration walletStorageConfiguration = new WalletConfiguration.WalletStorageConfiguration();
+
+            walletStorageConfiguration.Should().BeEquivalentTo(new
+            {
+                MaxConnections = 5,
+                MinIdleCount = 0,
+                ConnectionTimeout = 5
+            });
         }
     }
 }
