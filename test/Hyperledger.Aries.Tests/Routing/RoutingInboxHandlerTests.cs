@@ -95,15 +95,13 @@ namespace Hyperledger.Aries.Tests.Routing
                     StorageCredentials = storageCredentials
                 }
             } );
-
-            routingInboxHandler = new RoutingInboxHandler(recordService.Object, walletService.Object, routingStore.Object, options, logger.Object);
-
             UnpackedMessageContext unpackedMessage = new UnpackedMessageContext(
                 new CreateInboxMessage(),
                 new ConnectionRecord()
                 {
                     State = ConnectionState.Connected,
                 });
+            routingInboxHandler = new RoutingInboxHandler(recordService.Object, walletService.Object, routingStore.Object, options, logger.Object);
 
             CreateInboxResponseMessage agentMessage = (CreateInboxResponseMessage) await routingInboxHandler.ProcessAsync(agentContext.Object, unpackedMessage);
 
