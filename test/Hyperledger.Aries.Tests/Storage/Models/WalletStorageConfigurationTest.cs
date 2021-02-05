@@ -9,9 +9,9 @@ namespace Hyperledger.Aries.Tests.Storage.Models
         private const string Path = "Path";
         private const string Url = "Url";
         private const string WalletScheme = "WalletScheme";
-        
-        [Fact(DisplayName = "Create wallet configuration model should correctly set and stringify all parameters")]
-        public void CreateInboxRecordAsync()
+
+        [Fact(DisplayName = "Wallet configuration model should correctly set and stringify all parameters")]
+        public void WalletStorageConfigurationModel()
         {
             WalletConfiguration.WalletStorageConfiguration walletStorageConfiguration = new WalletConfiguration.WalletStorageConfiguration()
             {
@@ -25,7 +25,7 @@ namespace Hyperledger.Aries.Tests.Storage.Models
             walletStorageConfiguration.WalletScheme.Should().Be(WalletScheme);
             walletStorageConfiguration.ToString().Should().Be(
                 "WalletStorageConfiguration: " +
-                $"Path={Path}" + 
+                $"Path={Path}" +
                 $"Url={Url}" +
                 $"WalletScheme={WalletScheme}");
         }
