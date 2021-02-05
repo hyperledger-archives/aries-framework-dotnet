@@ -53,7 +53,7 @@ namespace Hyperledger.Aries.Tests.Storage.Models
                 $"ConnectionTimeout={ConnectionTimeout}");
         }
 
-        [Fact(DisplayName = "Wallet configuration model should use default parameters if they are not specified")]
+        [Fact(DisplayName = "Wallet configuration model should use default values if they are not specified")]
         public void WalletStorageConfigurationModelDefaults()
         {
             WalletConfiguration.WalletStorageConfiguration walletStorageConfiguration = new WalletConfiguration.WalletStorageConfiguration();
