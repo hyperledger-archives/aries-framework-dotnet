@@ -45,8 +45,8 @@ namespace Hyperledger.Aries.Routing
 
         public async Task<AgentMessage> ProcessAsync(IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
-            if (messageContext.Connection == null || 
-                messageContext.Connection.MultiPartyInvitation || 
+            if (messageContext.Connection == null ||
+                messageContext.Connection.MultiPartyInvitation ||
                 messageContext.Connection.State != ConnectionState.Connected)
             {
                 throw new InvalidOperationException("Connection is missing or invalid");
@@ -166,9 +166,14 @@ namespace Hyperledger.Aries.Routing
                 WalletConfiguration = new WalletConfiguration
                 {
                     Id = inboxId,
-                    StorageType = options.WalletConfiguration?.StorageType ?? "default"
+                    StorageType = options.WalletConfiguration?.StorageType ?? "default",
+                    StorageConfiguration = options.WalletConfiguration?.StorageConfiguration
                 },
-                WalletCredentials = new WalletCredentials { Key = inboxKey }
+                WalletCredentials = new WalletCredentials
+                {
+                    Key = inboxKey,
+                    StorageCredentials = options.WalletCredentials?.StorageCredentials
+                }
             };
             connection.SetTag("InboxId", inboxId);
 
