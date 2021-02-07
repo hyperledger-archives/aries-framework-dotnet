@@ -22,7 +22,7 @@ namespace Hyperledger.Aries.Tests.Routing
         private readonly Mock<IRoutingStore> routingStore;
         private readonly Mock<IAgentContext> agentContext;
         private readonly Mock<ILogger<RoutingInboxHandler>> logger;
-        private readonly RoutingInboxHandler routingInboxHandler;
+        private RoutingInboxHandler routingInboxHandler;
 
         public RoutingInboxHandlerTests()
         {
@@ -75,6 +75,44 @@ namespace Hyperledger.Aries.Tests.Routing
             walletService.Verify(w => w.CreateWalletAsync(It.Is<WalletConfiguration>(wc => wc.Id == agentMessage.InboxId), It.Is<WalletCredentials>(wc => wc.Key == agentMessage.InboxKey)));
             recordService.Verify(m => m.AddAsync(agentContext.Object.Wallet, It.Is<InboxRecord>(i => i.GetTag(key) == value)), Times.Once());
             recordService.Verify(m => m.UpdateAsync(agentContext.Object.Wallet, It.Is<ConnectionRecord>(c => c.GetTag("InboxId") == agentMessage.InboxId)));
+        }
+
+        [Fact(DisplayName = "Create inbox method should create wallet record with storage configuration and credentials")]
+        public async Task CreateInboxRecordWithStorageConfigurationAndCredentialsAsync()
+        {
+            object storageCredentials = new {};
+            WalletConfiguration.WalletStorageConfiguration storageConfiguration = new WalletConfiguration.WalletStorageConfiguration();
+            string storageType = "postgres_storage";
+            IOptions<AgentOptions> options = Options.Create<AgentOptions>(new AgentOptions()
+            {
+                WalletConfiguration = new WalletConfiguration()
+                {
+                    StorageType = storageType,
+                    StorageConfiguration = storageConfiguration
+                },
+                WalletCredentials = new WalletCredentials()
+                {
+                    StorageCredentials = storageCredentials
+                }
+            } );
+            UnpackedMessageContext unpackedMessage = new UnpackedMessageContext(
+                    new CreateInboxMessage(),
+                    new ConnectionRecord()
+                    {
+                        State = ConnectionState.Connected,
+                    });
+            routingInboxHandler = new RoutingInboxHandler(recordService.Object, walletService.Object, routingStore.Object, options, logger.Object);
+
+            CreateInboxResponseMessage agentMessage = (CreateInboxResponseMessage) await routingInboxHandler.ProcessAsync(agentContext.Object, unpackedMessage);
+
+            walletService.Verify(w => w.CreateWalletAsync(It.Is<WalletConfiguration>(wc =>
+                wc.Id == agentMessage.InboxId
+                && wc.StorageConfiguration == storageConfiguration
+                && wc.StorageType == storageType
+                ), It.Is<WalletCredentials>(wc =>
+                wc.Key == agentMessage.InboxKey
+                && wc.StorageCredentials == storageCredentials
+            )));
         }
     }
 }
