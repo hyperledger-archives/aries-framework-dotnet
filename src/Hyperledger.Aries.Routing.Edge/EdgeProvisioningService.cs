@@ -85,7 +85,7 @@ namespace Hyperledger.Aries.Agents.Edge
                 await recordService.UpdateAsync(agentContext.Wallet, provisioning);
             }
 
-            await edgeClientService.CreateInboxAsync(agentContext);
+            await edgeClientService.CreateInboxAsync(agentContext, options.MetaData);
         }
 
         public Task ProvisionAsync(CancellationToken cancellationToken = default) => ProvisionAsync(options, cancellationToken);
