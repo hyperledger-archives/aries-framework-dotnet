@@ -27,13 +27,13 @@ namespace Hyperledger.Aries.Storage
 
             if (wallet == null)
             {
-                wallet = await OpenNewWalletAsync(configuration, credentials);
+                wallet = await OpenWalletWithMutexAsync(configuration, credentials);
             }
 
             return wallet;
         }
 
-        private async Task<Wallet> OpenNewWalletAsync(WalletConfiguration configuration, WalletCredentials credentials)
+        private async Task<Wallet> OpenWalletWithMutexAsync(WalletConfiguration configuration, WalletCredentials credentials)
         {
             Wallet wallet;
 
