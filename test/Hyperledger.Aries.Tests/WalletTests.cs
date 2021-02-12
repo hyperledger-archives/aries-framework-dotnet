@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.WalletApi;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Indy.WalletApi;
@@ -14,6 +15,11 @@ namespace Hyperledger.Aries.Storage
         protected static readonly ConcurrentDictionary<string, Wallet> Wallets =
             new ConcurrentDictionary<string, Wallet>();
 
+        /// <summary>
+        /// Mutex semaphore for opening a new (not cached) wallet
+        /// </summary>
+        private static readonly SemaphoreSlim OpenWalletSemaphore = new SemaphoreSlim(1,1);
+
         /// <inheritdoc />
         public virtual async Task<Wallet> GetWalletAsync(WalletConfiguration configuration, WalletCredentials credentials)
         {
@@ -24,12 +30,29 @@ namespace Hyperledger.Aries.Storage
 
             try
             {
-                wallet = await Wallet.OpenWalletAsync(configuration.ToJson(), credentials.ToJson());
-                Wallets.TryAdd(configuration.Id, wallet);
+                wallet = await OpenNewWalletAsync(configuration, credentials);
             }
             catch (WalletAlreadyOpenedException)
             {
                 wallet = GetWalletFromCache(configuration);
+            }
+
+            return wallet;
+        }
+
+        private async Task<Wallet> OpenNewWalletAsync(WalletConfiguration configuration, WalletCredentials credentials)
+        {
+            Wallet wallet;
+
+            await OpenWalletSemaphore.WaitAsync();
+            try
+            {
+                wallet = await Wallet.OpenWalletAsync(configuration.ToJson(), credentials.ToJson());
+                Wallets.TryAdd(configuration.Id, wallet);
+            }
+            finally
+            {
+                OpenWalletSemaphore.Release();
             }
 
             return wallet;
