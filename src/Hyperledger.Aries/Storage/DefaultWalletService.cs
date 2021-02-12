@@ -25,16 +25,9 @@ namespace Hyperledger.Aries.Storage
         {
             var wallet = GetWalletFromCache(configuration);
 
-            if (wallet != null)
-                return wallet;
-
-            try
+            if (wallet == null)
             {
                 wallet = await OpenNewWalletAsync(configuration, credentials);
-            }
-            catch (WalletAlreadyOpenedException)
-            {
-                wallet = GetWalletFromCache(configuration);
             }
 
             return wallet;
@@ -47,8 +40,13 @@ namespace Hyperledger.Aries.Storage
             await OpenWalletSemaphore.WaitAsync();
             try
             {
-                wallet = await Wallet.OpenWalletAsync(configuration.ToJson(), credentials.ToJson());
-                Wallets.TryAdd(configuration.Id, wallet);
+                wallet = GetWalletFromCache(configuration);
+
+                if (wallet == null)
+                {
+                    wallet = await Wallet.OpenWalletAsync(configuration.ToJson(), credentials.ToJson());
+                    Wallets.TryAdd(configuration.Id, wallet);
+                }
             }
             finally
             {
