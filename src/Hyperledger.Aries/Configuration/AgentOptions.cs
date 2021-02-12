@@ -1,6 +1,7 @@
 ﻿using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Hyperledger.Aries.Configuration
@@ -175,5 +176,12 @@ namespace Hyperledger.Aries.Configuration
         /// </summary>
         /// <value>True if to use UseMessageTypesHttps.</value>
         public bool UseMessageTypesHttps { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value for Metadata dictionary.
+        /// This dictionary can be used with InboxCreation on the mediator agent.
+        /// Data is stored under InboxRecord tags on the mediator agent.
+        /// </summary>
+        public Dictionary<string, string> MetaData { get; set; }
     }
 }

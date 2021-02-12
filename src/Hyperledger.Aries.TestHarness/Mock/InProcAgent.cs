@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -96,13 +97,13 @@ namespace Hyperledger.TestHarness.Mock
             return result;
         }
 
-        public static async Task<PairedAgents> CreatePairedWithRoutingAsync()
+        public static async Task<PairedAgents> CreatePairedWithRoutingAsync(Dictionary<string, string> metaData = null)
         {
             var handler1 = new InProcMessageHandler();
             var handler2 = new InProcMessageHandler();
 
             var agent1 = CreateMediator(handler1);
-            var agent2 = CreateEdge(handler2);
+            var agent2 = CreateEdge(handler2, metaData);
 
             handler1.TargetAgent = agent2;
             handler2.TargetAgent = agent1;
@@ -186,7 +187,7 @@ namespace Hyperledger.TestHarness.Mock
                     services.AddMessageHandler<RetrieveBackupHandler>();
                 }).Build());
 
-        private static InProcAgent CreateEdge(HttpMessageHandler handler) =>
+        private static InProcAgent CreateEdge(HttpMessageHandler handler, Dictionary<string, string> metaData = null) =>
             new InProcAgent(new HostBuilder()
                 .ConfigureServices(services =>
                 {
@@ -200,6 +201,7 @@ namespace Hyperledger.TestHarness.Mock
                             options.WalletConfiguration.Id = Guid.NewGuid().ToString();
                             options.WalletCredentials.Key = "test";
                             options.EndpointUri = "http://test";
+                            options.MetaData = metaData;
                         }));
                     services.AddSingleton<IHttpClientFactory>(new InProcFactory(handler));
                 }).Build());
