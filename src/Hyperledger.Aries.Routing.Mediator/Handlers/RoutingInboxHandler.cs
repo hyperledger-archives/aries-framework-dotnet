@@ -19,6 +19,7 @@ namespace Hyperledger.Aries.Routing
         private readonly IRoutingStore routingStore;
         private readonly AgentOptions options;
         private readonly ILogger<RoutingInboxHandler> logger;
+        private const string IndySdkDefaultOptions = "{}";
 
         public RoutingInboxHandler(
             IWalletRecordService recordService,
@@ -157,8 +158,8 @@ namespace Hyperledger.Aries.Routing
                 throw new InvalidOperationException("Can't create inbox if connection is not in final state");
             }
 
-            var inboxId = $"Edge{Guid.NewGuid().ToString("N")}";
-            var inboxKey = Guid.NewGuid().ToString();
+            string inboxId = $"Edge{Guid.NewGuid().ToString("N")}";
+            string inboxKey = await Wallet.GenerateWalletKeyAsync(IndySdkDefaultOptions);
 
             var inboxRecord = new InboxRecord
             {
@@ -172,6 +173,7 @@ namespace Hyperledger.Aries.Routing
                 WalletCredentials = new WalletCredentials
                 {
                     Key = inboxKey,
+                    KeyDerivationMethod = options.WalletCredentials?.KeyDerivationMethod,
                     StorageCredentials = options.WalletCredentials?.StorageCredentials
                 }
             };
