@@ -3,14 +3,12 @@ using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Routing;
 using Hyperledger.Aries.Storage;
-using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace Hyperledger.Aries.Tests.Routing
@@ -30,9 +28,9 @@ namespace Hyperledger.Aries.Tests.Routing
             walletService = new Mock<IWalletService>();
             routingStore = new Mock<IRoutingStore>();
             agentContext = new Mock<IAgentContext>();
-            IOptions<AgentOptions> ooptions = Options.Create<AgentOptions>(new AgentOptions());
+            IOptions<AgentOptions> options = Options.Create<AgentOptions>(new AgentOptions());
             logger = new Mock<ILogger<RoutingInboxHandler>>();
-            routingInboxHandler = new RoutingInboxHandler(recordService.Object, walletService.Object, routingStore.Object, ooptions, logger.Object);
+            routingInboxHandler = new RoutingInboxHandler(recordService.Object, walletService.Object, routingStore.Object, options, logger.Object);
         }
         [Fact(DisplayName = "Create inbox method should create inbox record and wallet record")]
         public async Task CreateInboxRecordAsync()
@@ -72,6 +70,7 @@ namespace Hyperledger.Aries.Tests.Routing
 
             CreateInboxResponseMessage agentMessage = (CreateInboxResponseMessage)await routingInboxHandler.ProcessAsync(agentContext.Object, unpackedMessage);
 
+            agentMessage.InboxKey.Should().HaveLength(44);
             walletService.Verify(w => w.CreateWalletAsync(It.Is<WalletConfiguration>(wc => wc.Id == agentMessage.InboxId), It.Is<WalletCredentials>(wc => wc.Key == agentMessage.InboxKey)));
             recordService.Verify(m => m.AddAsync(agentContext.Object.Wallet, It.Is<InboxRecord>(i => i.GetTag(key) == value)), Times.Once());
             recordService.Verify(m => m.UpdateAsync(agentContext.Object.Wallet, It.Is<ConnectionRecord>(c => c.GetTag("InboxId") == agentMessage.InboxId)));
@@ -80,6 +79,7 @@ namespace Hyperledger.Aries.Tests.Routing
         [Fact(DisplayName = "Create inbox method should create wallet record with storage configuration and credentials")]
         public async Task CreateInboxRecordWithStorageConfigurationAndCredentialsAsync()
         {
+            string keyDerivationMethod = "RAW";
             object storageCredentials = new {};
             WalletConfiguration.WalletStorageConfiguration storageConfiguration = new WalletConfiguration.WalletStorageConfiguration();
             string storageType = "postgres_storage";
@@ -92,6 +92,7 @@ namespace Hyperledger.Aries.Tests.Routing
                 },
                 WalletCredentials = new WalletCredentials()
                 {
+                    KeyDerivationMethod = keyDerivationMethod,
                     StorageCredentials = storageCredentials
                 }
             } );
@@ -111,6 +112,7 @@ namespace Hyperledger.Aries.Tests.Routing
                 && wc.StorageType == storageType
                 ), It.Is<WalletCredentials>(wc =>
                 wc.Key == agentMessage.InboxKey
+                && wc.KeyDerivationMethod == keyDerivationMethod
                 && wc.StorageCredentials == storageCredentials
             )));
         }

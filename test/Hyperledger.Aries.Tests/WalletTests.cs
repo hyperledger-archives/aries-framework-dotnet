@@ -47,6 +47,26 @@ namespace Hyperledger.Aries.Tests
             Assert.True(wallet.IsOpen);
         }
 
+        [Fact(DisplayName = "Should create wallet with RAW key derivation")]
+        public async Task CanCreateWallet_WhenRawKeyDerivationIsUsed()
+        {
+            var config = new WalletConfiguration { Id = Guid.NewGuid().ToString() };
+            var creds = new WalletCredentials
+            {
+                Key = await Wallet.GenerateWalletKeyAsync("{}"),
+                KeyDerivationMethod = "RAW",
+            };
+
+            var walletService = new DefaultWalletService();
+
+            await walletService.CreateWalletAsync(config, creds);
+
+            var wallet = await walletService.GetWalletAsync(config, creds);
+
+            Assert.NotNull(wallet);
+            Assert.True(wallet.IsOpen);
+        }
+
         [Fact]
         public async Task CanCreateGetAndCloseWallet()
         {
@@ -107,7 +127,7 @@ namespace Hyperledger.Aries.Tests
 
             Assert.NotNull(wallet);
             Assert.True(wallet.IsOpen);
-            
+
             await walletService.DeleteWalletAsync(config, creds);
 
             await Assert.ThrowsAsync<WalletNotFoundException>(() => walletService.GetWalletAsync(config, creds));
