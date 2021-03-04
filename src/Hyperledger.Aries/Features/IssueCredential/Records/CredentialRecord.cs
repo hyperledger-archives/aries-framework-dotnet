@@ -46,6 +46,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// Gets or sets the definition identifier of this credential.
         /// </summary>
         /// <value>The credential definition identifier.</value>
+        [JsonIgnore]
         public string CredentialDefinitionId
         {
             get => Get();
@@ -56,10 +57,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// Gets or sets the credential request json.
         /// </summary>
         /// <value>The request json.</value>
+        [JsonIgnore]
         public string RequestJson
         {
-            get;
-            set;
+            get => Get();
+            set => Set(value);
         }
 
         /// <summary>
@@ -76,10 +78,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// Gets or sets the credential offer json.
         /// </summary>
         /// <value>The offer json.</value>
+        [JsonIgnore]
         public string OfferJson
         {
-            get;
-            set;
+            get => Get();
+            set => Set(value);
         }
 
         /// <summary>
