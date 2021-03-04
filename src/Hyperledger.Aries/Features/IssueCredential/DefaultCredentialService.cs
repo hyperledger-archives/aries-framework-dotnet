@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -419,6 +419,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
             credentialRecord.CredentialId = credentialId;
             await credentialRecord.TriggerAsync(CredentialTrigger.Issue);
+
             await RecordService.UpdateAsync(agentContext.Wallet, credentialRecord);
             EventAggregator.Publish(new ServiceMessageProcessingEvent
             {
@@ -558,6 +559,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
             credential.RequestJson = credentialAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
             credential.ConnectionId = connection?.Id;
             await credential.TriggerAsync(CredentialTrigger.Request);
+
+            credential.RemoveTag("OfferData");
+
             await RecordService.UpdateAsync(agentContext.Wallet, credential);
             EventAggregator.Publish(new ServiceMessageProcessingEvent
             {
