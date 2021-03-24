@@ -179,7 +179,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
             if (credentialRecord.State != CredentialState.Issued)
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
-                    $"Credential state was invalid. Expected '{CredentialState.Requested}', found '{credentialRecord.State}'");
+                    $"Credential state was invalid. Expected '{CredentialState.Issued}', found '{credentialRecord.State}'");
 
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
 
