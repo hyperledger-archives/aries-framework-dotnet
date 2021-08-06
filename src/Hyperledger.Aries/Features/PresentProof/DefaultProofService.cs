@@ -11,7 +11,6 @@ using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.AnonCredsApi;
-using Hyperledger.Indy.PoolApi;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -20,7 +19,7 @@ using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Decorators.Service;
-using System.Diagnostics;
+using Hyperledger.Aries.Attachments.Abstractions;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -71,6 +70,11 @@ namespace Hyperledger.Aries.Features.PresentProof
         protected readonly IMessageService MessageService;
 
         /// <summary>
+        /// Message Service
+        /// </summary>
+        private readonly IAttachmentService AttachmentService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DefaultProofService"/> class.
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
@@ -89,11 +93,14 @@ namespace Hyperledger.Aries.Features.PresentProof
             ILedgerService ledgerService,
             ITailsService tailsService,
             IMessageService messageService,
-            ILogger<DefaultProofService> logger)
+            IAttachmentService attachmentService,
+            ILogger<DefaultProofService> logger
+        )
         {
             EventAggregator = eventAggregator;
             TailsService = tailsService;
             MessageService = messageService;
+            AttachmentService = attachmentService;
             ConnectionService = connectionService;
             RecordService = recordService;
             ProvisioningService = provisioningService;
@@ -651,6 +658,10 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             var requestAttachment = presentationMessage.Presentations.FirstOrDefault(x => x.Id == "libindy-presentation-0")
                 ?? throw new ArgumentException("Presentation attachment not found.");
+
+            //var attachment = presentationMessage.GetAttachment("Nickname");
+            //var id = await AttachmentService.Create(agentContext, presentationMessage, proofRecord.Id, "Nickname");
+            //var f = await AttachmentService.GetAsync(agentContext, attachment.Id);
 
             var proofJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
 
