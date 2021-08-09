@@ -635,11 +635,12 @@ namespace Hyperledger.Aries.Features.PresentProof
             }
             else
             {
+                if (requestPresentationMessage.Comment != null)
+                    proofRecord.SetTag(TagConstants.Comment, requestPresentationMessage.Comment);
                 await proofRecord.TriggerAsync(ProofTrigger.Request);
                 proofRecord.RequestJson = requestJson;
                 await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
             }
-
 
             EventAggregator.Publish(new ServiceMessageProcessingEvent
             {

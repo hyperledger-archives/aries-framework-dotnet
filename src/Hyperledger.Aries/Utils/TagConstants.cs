@@ -28,6 +28,8 @@
         public const string Requestor = "requestor";
         
         public const string LastThreadId = "threadId";
+
+        public const string Comment = "comment";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
     }
