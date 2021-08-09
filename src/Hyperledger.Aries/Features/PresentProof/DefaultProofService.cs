@@ -631,12 +631,12 @@ namespace Hyperledger.Aries.Features.PresentProof
                 };
                 proofRecord.SetTag(TagConstants.LastThreadId, requestPresentationMessage.GetThreadId());
                 proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
+                if (requestPresentationMessage.Comment != null)
+                    proofRecord.SetTag(TagConstants.Comment, requestPresentationMessage.Comment);
                 await RecordService.AddAsync(agentContext.Wallet, proofRecord);
             }
             else
             {
-                if (requestPresentationMessage.Comment != null)
-                    proofRecord.SetTag(TagConstants.Comment, requestPresentationMessage.Comment);
                 await proofRecord.TriggerAsync(ProofTrigger.Request);
                 proofRecord.RequestJson = requestJson;
                 await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
