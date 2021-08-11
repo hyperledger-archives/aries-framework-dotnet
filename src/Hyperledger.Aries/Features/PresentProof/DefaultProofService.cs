@@ -20,6 +20,7 @@ using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Decorators.Service;
 using Hyperledger.Aries.Attachments.Abstractions;
+using Hyperledger.Aries.Attachments;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -660,9 +661,9 @@ namespace Hyperledger.Aries.Features.PresentProof
             var requestAttachment = presentationMessage.Presentations.FirstOrDefault(x => x.Id == "libindy-presentation-0")
                 ?? throw new ArgumentException("Presentation attachment not found.");
 
-            //var attachment = presentationMessage.GetAttachment("Nickname");
-            //var id = await AttachmentService.Create(agentContext, presentationMessage, proofRecord.Id, "Nickname");
-            //var f = await AttachmentService.GetAsync(agentContext, attachment.Id);
+            var attachment = presentationMessage.GetAttachment(Nicknames.File);
+            if (attachment != null)
+                await AttachmentService.Create(agentContext, presentationMessage, proofRecord.Id, Nicknames.File);
 
             var proofJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
 
