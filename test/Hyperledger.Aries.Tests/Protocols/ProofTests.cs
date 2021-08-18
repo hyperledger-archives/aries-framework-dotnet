@@ -100,6 +100,7 @@ namespace Hyperledger.Aries.Tests.Protocols
                 ledgerService,
                 tailsService,
                 messageService,
+                null,
                 new Mock<ILogger<DefaultProofService>>().Object);
         }
 

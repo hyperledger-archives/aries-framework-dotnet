@@ -9,6 +9,7 @@ using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.Routing;
+using Hyperledger.Aries.Features.Statistic;
 using Hyperledger.Aries.Features.TrustPing;
 using Hyperledger.Aries.Utils;
 using Microsoft.Extensions.DependencyInjection;
@@ -79,6 +80,9 @@ namespace Hyperledger.Aries.Agents
 
         /// <summary>Adds a default discovery handler.</summary>
         protected void AddDiscoveryHandler() => Handlers.Add(Provider.GetRequiredService<DefaultDiscoveryHandler>());
+
+        /// <summary>Adds a default statistic handler.</summary>
+        protected void AddStatisticHandler() => Handlers.Add(Provider.GetRequiredService<DefaultStatisticHandler>());
 
         /// <summary>Adds a custom the handler using dependency injection.</summary>
         /// <typeparam name="T"></typeparam>

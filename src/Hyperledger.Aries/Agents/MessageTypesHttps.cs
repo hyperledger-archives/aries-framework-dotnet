@@ -106,5 +106,16 @@
             /// </summary>
             public const string PresentationPreview = "https://didcomm.org/present-proof/1.0/presentation-preview";
         }
+
+        /// <summary>
+        /// Type names for Statistic Protocol
+        /// </summary>
+        public class StatisticNames
+        {
+            /// <summary>
+            /// Proof Presentation Message Type Name
+            /// </summary>
+            public const string ProofPresentation = "https://didcomm.org/statistic/1.0/proof-presentation";
+        }
     }
 }
