@@ -5,10 +5,10 @@
 name: $(SourceBranchName)-$(Date:yyyyMMdd)$(Rev:.rrr)
 
 trigger:
-  - master
+  - main
 
 pr:
-  - master
+  - main
 
 jobs:
   - job: buildWindows
