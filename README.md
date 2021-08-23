@@ -101,10 +101,17 @@ Follow the build instructions for your OS on the [Hyperledger Indy SDK](https://
 For macOS, if you get a `'indy' DLL not found exception`, move the built `libindy.dylib` file to the `test/Hyperledger.Aries.Tests/bin/Debug/netcoreapp3.1/` directory to explicitly add it to the path. 
 
 
-### Run an indy node pool
+### Run an indy node pool on localhost
 ```
-docker build -f docker/indy-pool.dockerfile -t indy_pool docker/
+docker build --build-arg pool_ip=127.0.0.1 -f docker/indy-pool.dockerfile -t indy_pool docker/
 docker run -itd -p 9701-9709:9701-9709 indy_pool
+```
+
+### Run an indy node pool on server
+```
+# replace <ip_address> with server IP address
+docker build --build-arg pool_ip=<ip_address> -f docker/indy-pool.dockerfile -t indy_pool docker/
+docker run -itd -p <ip_address>:9701-9709:9701-9709 indy_pool
 ```
 
 ### Run the tests
