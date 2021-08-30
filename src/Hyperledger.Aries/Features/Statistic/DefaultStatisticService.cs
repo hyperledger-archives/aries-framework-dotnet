@@ -54,7 +54,7 @@ namespace Hyperledger.Aries.Features.Statistic
         {
             var presentProof = new PresentProofRecord
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = message.Id,
                 ProofId = message.ProofId,
                 CredentialDefinitions = message.CredentialDefinitions,
                 HolderDid = message.HolderDid,
