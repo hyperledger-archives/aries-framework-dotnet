@@ -4,6 +4,7 @@ using Hyperledger.Aries.Attachments.Records;
 using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Storage;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Hyperledger.Aries.Attachments
@@ -36,6 +37,14 @@ namespace Hyperledger.Aries.Attachments
         {
             return await _recordService.GetAsync<AttachmentRecord>(agentContext.Wallet, id) ??
                    throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Attachment record not found");
+        }
+
+        public async Task<AttachmentRecord> GetByRecordIdAsync(IAgentContext agentContext, string id)
+        {
+            var request = SearchQuery.Equal(nameof(AttachmentRecord.RecordId), id);
+            var result = await _recordService.SearchAsync<AttachmentRecord>(agentContext.Wallet, request);
+            var attachment = result.FirstOrDefault();
+            return  attachment ?? throw new AriesFrameworkException(ErrorCode.RecordNotFound, "Attachment record not found");
         }
     }
 }

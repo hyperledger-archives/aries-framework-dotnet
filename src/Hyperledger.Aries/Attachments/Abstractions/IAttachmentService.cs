@@ -20,5 +20,7 @@ namespace Hyperledger.Aries.Attachments.Abstractions
         /// Create attachment.
         /// </summary>
         Task<string> Create(IAgentContext context, AgentMessage message, string recordId, string nickname);
+
+        Task<AttachmentRecord> GetByRecordIdAsync(IAgentContext agentContext, string id);
     }
 }

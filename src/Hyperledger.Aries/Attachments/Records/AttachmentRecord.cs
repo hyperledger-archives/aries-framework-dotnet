@@ -1,11 +1,15 @@
 ﻿using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Storage;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 
 namespace Hyperledger.Aries.Attachments.Records
 {
     public class AttachmentRecord : RecordBase
     {
+        private string _recordId;
+
         /// <summary>
         /// Gets or sets the nickname.
         /// </summary>
@@ -44,7 +48,11 @@ namespace Hyperledger.Aries.Attachments.Records
         /// <value></value>
         public AttachmentContent Data { get; set; }
 
-        public string RecordId { get; set; }
+        public string RecordId
+        {
+            get => _recordId;
+            set => Set(value);
+        }
 
         public override string TypeName => "AF.AttachmentRecord";
     }
