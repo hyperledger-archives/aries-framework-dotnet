@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Hyperledger.Aries</id>
+    <version>0.0.0</version>
+    <authors>Hyperledger Aries Dotnet Maintainers</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">Apache-2.0</license>
+    <licenseUrl>https://licenses.nuget.org/Apache-2.0</licenseUrl>
+    <projectUrl>https://github.com/itfintech/aries-framework-dotnet</projectUrl>
+    <description>.NET Core tools for building agent services</description>
+    <tags>Hyperledger Aries Self-Sovereign-Identity</tags>
+    <repository type="git" url="https://github.com/itfintech/aries-framework-dotnet.git" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Flurl" version="2.8.2" exclude="Build,Analyzers" />
+        <dependency id="Hyperledger.Indy.Sdk" version="1.11.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Hosting" version="3.1.5" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Http" version="3.1.5" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging" version="3.1.5" exclude="Build,Analyzers" />
+        <dependency id="Multiformats.Base" version="2.0.2" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+        <dependency id="Polly" version="7.2.1" exclude="Build,Analyzers" />
+        <dependency id="Stateless" version="5.1.2" exclude="Build,Analyzers" />
+        <dependency id="System.Reactive.Linq" version="4.4.1" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="4.7.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
