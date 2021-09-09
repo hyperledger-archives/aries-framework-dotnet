@@ -24,7 +24,8 @@ using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy;
 using Polly;
-using Hyperledger.Aries.Features.PresentProof;
+using Hyperledger.Aries.Attachments;
+using Hyperledger.Aries.Attachments.Abstractions;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
@@ -82,6 +83,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
         protected readonly ILogger<DefaultCredentialService> Logger;
 
         /// <summary>
+        /// Attachment Service
+        /// </summary>
+        private readonly IAttachmentService AttachmentService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DefaultCredentialService"/> class.
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
@@ -104,7 +110,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
             IProvisioningService provisioningService,
             IPaymentService paymentService,
             IMessageService messageService,
-            ILogger<DefaultCredentialService> logger)
+            ILogger<DefaultCredentialService> logger,
+            IAttachmentService attachmentService
+        )
         {
             EventAggregator = eventAggregator;
             LedgerService = ledgerService;
@@ -114,8 +122,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
             TailsService = tailsService;
             ProvisioningService = provisioningService;
             PaymentService = paymentService;
-            this.MessageService = messageService;
+            MessageService = messageService;
             Logger = logger;
+            AttachmentService = attachmentService;
         }
 
         /// <inheritdoc />
@@ -270,6 +279,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
             await RecordService.AddAsync(agentContext.Wallet, credentialRecord);
 
+            var attachment = credentialOffer.GetAttachment(Nicknames.File);
+            if (attachment != null)
+                await AttachmentService.Create(agentContext, credentialOffer, credentialRecord.Id, Nicknames.File);
+
             EventAggregator.Publish(new ServiceMessageProcessingEvent
             {
                 RecordId = credentialRecord.Id,
@@ -326,7 +339,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 throw new AriesFrameworkException(ErrorCode.RecordInInvalidState,
                     $"Credential state was invalid. Expected '{CredentialState.Offered}', found '{credential.State}'");
 
-            string proverDid = null;
+            string proverDid;
             if (credential.ConnectionId != null)
             {
                 var connection = await ConnectionService.GetAsync(agentContext, credential.ConnectionId);
