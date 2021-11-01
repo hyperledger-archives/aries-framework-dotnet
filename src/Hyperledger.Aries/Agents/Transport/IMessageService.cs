@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Hyperledger.Indy.WalletApi;
+using Hyperledger.Aries.Decorators.Transport;
 
 namespace Hyperledger.Aries.Agents
 {
@@ -25,15 +25,16 @@ namespace Hyperledger.Aries.Agents
         /// Sends the message and receives a response by adding return routing decorator
         /// according to the Routing RFC.
         /// </summary>
-        /// <param name="agentContext"></param>
-        /// <param name="message"></param>
-        /// <param name="recipientKey"></param>
-        /// <param name="endpointUri"></param>
-        /// <param name="routingKeys"></param>
-        /// <param name="senderKey"></param>
+        /// <param name="agentContext">The agentContext.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="recipientKey">The recipients key.</param>
+        /// <param name="endpointUri">The destination endpoint.</param>
+        /// <param name="routingKeys">The routing keys.</param>
+        /// <param name="senderKey">The senders key.</param>
+        /// <param name="returnType">The type of return routing.</param>
         /// <returns></returns>
         Task<MessageContext> SendReceiveAsync(IAgentContext agentContext, AgentMessage message, string recipientKey,
-            string endpointUri, string[] routingKeys = null, string senderKey = null);
+            string endpointUri, string[] routingKeys = null, string senderKey = null, ReturnRouteTypes returnType = ReturnRouteTypes.all);
 
     }
 }
