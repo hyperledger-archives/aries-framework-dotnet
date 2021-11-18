@@ -203,8 +203,8 @@ Finally, to get this program to run we will need to add a couple of utility file
 
 First, add a Utils folder. Add these two files to the Utils folder (Open these links in new tabs): 
 
-`NameGenerator.cs <https://raw.githubusercontent.com/streetcred-id/agent-framework/master/samples/aspnetcore/Utils/NameGenerator.cs>`_
-`Extensions.cs <https://raw.githubusercontent.com/streetcred-id/agent-framework/master/samples/aspnetcore/Utils/Extensions.cs>`_
+`NameGenerator.cs <https://raw.githubusercontent.com/trinsic-id/agent-framework/master/samples/aspnetcore/Utils/NameGenerator.cs>`_
+`Extensions.cs <https://raw.githubusercontent.com/trinsic-id/agent-framework/master/samples/aspnetcore/Utils/Extensions.cs>`_
 
 
 --------------
