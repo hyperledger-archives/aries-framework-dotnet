@@ -14,7 +14,6 @@ using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.CryptoApi;
 using Hyperledger.Indy.DidApi;
-using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Logging;
 
 namespace Hyperledger.Aries.Features.DidExchange
@@ -69,7 +68,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             config = config ?? new InviteConfiguration();
 
             Logger.LogInformation(LoggingEvents.CreateInvitation, "ConnectionId {0}", connectionId);
-
+            
             var connectionKey = await Crypto.CreateKeyAsync(agentContext.Wallet, "{}");
 
             var connection = new ConnectionRecord { Id = connectionId };
@@ -97,11 +96,22 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             await RecordService.AddAsync(agentContext.Wallet, connection);
 
+            IList<string> routingKeys = null;
+            if (provisioning.Endpoint.Verkey != null)
+            {
+                routingKeys = (config.UseDidKeyFormat
+                    ? provisioning.Endpoint.Verkey
+                        .Where(DidUtils.IsFullVerkey)
+                        .Select(DidUtils.ConvertVerkeyToDidKey)
+                    : provisioning.Endpoint.Verkey).ToList();
+            }
+            
             return (new ConnectionInvitationMessage(agentContext.UseMessageTypesHttps)
             {
                 ServiceEndpoint = provisioning.Endpoint.Uri,
-                RoutingKeys = provisioning.Endpoint.Verkey != null ? provisioning.Endpoint.Verkey : null,
-                RecipientKeys = new[] { connectionKey },
+                RoutingKeys = routingKeys,
+                // Bookmark: Replace recipient key with did:key here
+                RecipientKeys = new[] { config.UseDidKeyFormat ? DidUtils.ConvertVerkeyToDidKey(connectionKey) : connectionKey },
                 Label = config.MyAlias.Name ?? provisioning.Owner.Name,
                 ImageUrl = config.MyAlias.ImageUrl ?? provisioning.Owner.ImageUrl
             }, connection);
@@ -125,12 +135,17 @@ namespace Hyperledger.Aries.Features.DidExchange
             Logger.LogInformation(LoggingEvents.AcceptInvitation, "Key {0}, Endpoint {1}",
                 invitation.RecipientKeys[0], invitation.ServiceEndpoint);
 
+            bool useDidKeyFormat = DidUtils.IsDidKey(invitation.RecipientKeys.FirstOrDefault());
+
+            // Bookmark: Find out if it is possible to rename the DID 
             var my = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");
 
             var connection = new ConnectionRecord
             {
+                // Bookmark: Allow Routing Keys to be replaced by did:key
                 Endpoint = new AgentEndpoint(invitation.ServiceEndpoint, null, invitation.RoutingKeys != null && invitation.RoutingKeys.Count != 0 ? invitation.RoutingKeys.ToArray() : null),
-                MyDid = my.Did,
+                // Bookmark: Set did as Did Key
+                MyDid = useDidKeyFormat ? DidUtils.ConvertVerkeyToDidKey(my.VerKey) : my.Did,
                 MyVk = my.VerKey,
                 Id = Guid.NewGuid().ToString().ToLowerInvariant()
             };
@@ -156,7 +171,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                 Connection = new Connection
                 {
                     Did = connection.MyDid,
-                    DidDoc = connection.MyDidDoc(provisioning)
+                    DidDoc = connection.MyDidDoc(provisioning, useDidKeyFormat: useDidKeyFormat)
                 },
                 Label = provisioning.Owner?.Name,
                 ImageUrl = provisioning.Owner?.ImageUrl
@@ -197,7 +212,7 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             connection.TheirDid = request.Connection.Did;
             connection.TheirVk = request.Connection.DidDoc.Keys[0].PublicKeyBase58;
-            connection.MyDid = my.Did;
+            connection.MyDid = DidUtils.IsDidKey(request.Connection.Did) ? DidUtils.ConvertVerkeyToDidKey(my.VerKey) : my.Did;
             connection.MyVk = my.VerKey;
 
             connection.SetTag(TagConstants.LastThreadId, request.Id);

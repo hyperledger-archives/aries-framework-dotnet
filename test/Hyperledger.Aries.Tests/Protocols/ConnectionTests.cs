@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Runtime;
+using Hyperledger.Aries.Storage;
+using Hyperledger.Indy.WalletApi;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Utils;
-using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -58,11 +59,27 @@ namespace Hyperledger.Aries.Tests.Protocols
         {
             var connectionId = Guid.NewGuid().ToString();
 
-            await _connectionService.CreateInvitationAsync(_issuerWallet,
+            var (msg , record) = await _connectionService.CreateInvitationAsync(_issuerWallet,
                 new InviteConfiguration { ConnectionId = connectionId });
 
             var connection = await _connectionService.GetAsync(_issuerWallet, connectionId);
 
+            Assert.False(connection.MultiPartyInvitation);
+            Assert.Equal(ConnectionState.Invited, connection.State);
+            Assert.Equal(connectionId, connection.Id);
+        }
+        
+        [Fact]
+        public async Task CanCreateInvitationWithDidKeyFormatAsync()
+        {
+            var connectionId = Guid.NewGuid().ToString();
+
+            var (msg, record) = await _connectionService.CreateInvitationAsync(_issuerWallet,
+                new InviteConfiguration { ConnectionId = connectionId, UseDidKeyFormat = true});
+
+            var connection = await _connectionService.GetAsync(_issuerWallet, connectionId);
+
+            Assert.True(DidUtils.IsDidKey(msg.RecipientKeys.First()));
             Assert.False(connection.MultiPartyInvitation);
             Assert.Equal(ConnectionState.Invited, connection.State);
             Assert.Equal(connectionId, connection.Id);
@@ -241,8 +258,10 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
         }
 
-        [Fact]
-        public async Task CanEstablishConnectionAsync()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CanEstablishConnectionAsync(bool useDidKeyFormat)
         {
             var events = 0;
             _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
@@ -255,7 +274,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
 
             var (connectionIssuer, connectionHolder) = await Scenarios.EstablishConnectionAsync(
-                _connectionService, _messages, _issuerWallet, _holderWallet);
+                _connectionService, _messages, _issuerWallet, _holderWallet, useDidKeyFormat: useDidKeyFormat);
 
             Assert.True(events == 2);
 

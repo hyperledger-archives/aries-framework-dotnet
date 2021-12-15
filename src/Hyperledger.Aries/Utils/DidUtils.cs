@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using Multiformats.Base;
 
 namespace Hyperledger.Aries.Utils
 {
@@ -10,6 +12,10 @@ namespace Hyperledger.Aries.Utils
         private const string FULL_VERKEY_REGEX = @"^[1-9A-HJ-NP-Za-km-z]{44}$";
         private const string ABREVIATED_VERKEY_REGEX = @"^~[1-9A-HJ-NP-Za-km-z]{22}$";
         private const string DID_REGEX = @"^did:([a-z]+):([a-zA-z\d]+)";
+        private const string DID_KEY_REGEX = @"^did:key:([1-9A-HJ-NP-Za-km-z]+)";
+        private const string DIDKEY_PREFIX = "did:key:";
+        private const string BASE58_PREFIX = "z";
+        private static readonly byte[] MULTICODEC_PREFIX_ED25519 = { 0xed, 0x01 };
 
         /// <summary>
         /// Sovrin DID method spec.
@@ -71,6 +77,58 @@ namespace Hyperledger.Aries.Utils
         public static bool IsVerkey(string verkey)
         {
             return IsAbbreviatedVerkey(verkey)|| IsFullVerkey(verkey);
+        }
+
+        /// <summary>
+        /// Check if a given string is a valid did:key representation
+        /// </summary>
+        /// <param name="didKey">Given string to check for did:key</param>
+        /// <returns>Boolean indicating if the string is a valid did:key</returns>
+        public static bool IsDidKey(string didKey)
+        {
+            return Regex.Matches(didKey, DID_KEY_REGEX).Count == 1;
+        }
+        
+        /// <summary>
+        /// Converts a base58 encoded ed25519 verkey into its did:key representation
+        /// </summary>
+        /// <param name="verkey">Base58 encoded string representation of a verkey</param>
+        /// <returns>The did:key representation of a verkey as string</returns>
+        public static string ConvertVerkeyToDidKey(string verkey)
+        {
+            if (IsFullVerkey(verkey))
+            {
+                var bytes = Multibase.Base58.Decode(verkey);
+                byte[] codec = { 0xed, 0x01 };
+                bytes = codec.Concat(bytes).ToArray();
+                string base58PublicKey = Multibase.Base58.Encode(bytes);
+
+                return $"{DIDKEY_PREFIX}{BASE58_PREFIX}{base58PublicKey}";
+            }
+
+            return null;
+        }
+        
+        /// <summary>
+        /// Converts a did:key of a ed25519 public key into a plain base58 representation 
+        /// </summary>
+        /// <param name="didKey">A did:key representation of a ed25519 as string</param>
+        /// <returns>A plain base58 representation of that public key</returns>
+        public static string ConvertDidKeyToVerkey(string didKey)
+        {
+            if (IsDidKey(didKey))
+            {
+                string base58EncodedKey = didKey.Substring($"{DIDKEY_PREFIX}{BASE58_PREFIX}".Length);
+                var bytes = Multibase.Base58.Decode(base58EncodedKey);
+                var codec = bytes.Take(MULTICODEC_PREFIX_ED25519.Length).ToArray();
+                if (codec.SequenceEqual(MULTICODEC_PREFIX_ED25519))
+                {
+                    bytes = bytes.Skip(MULTICODEC_PREFIX_ED25519.Length).ToArray();
+                    return Multibase.Base58.Encode(bytes);
+                }
+            }
+
+            return null;
         }
     }
 }
