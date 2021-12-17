@@ -86,6 +86,9 @@ namespace Hyperledger.Aries.Utils
         /// <returns>Boolean indicating if the string is a valid did:key</returns>
         public static bool IsDidKey(string didKey)
         {
+            if (didKey == null) 
+                return false;
+            
             return Regex.Matches(didKey, DID_KEY_REGEX).Count == 1;
         }
         
