@@ -578,14 +578,14 @@ namespace Hyperledger.Aries.Features.PresentProof
             message.ThreadFrom(threadId);
             return (message, proofRecord);
         }
-
+        
         /// <inheritdoc />
-        public virtual async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, ProofRequest proofRequest)
+        public virtual async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, ProofRequest proofRequest, bool useDidKeyFormat = false)
         {
             var (message, record) = await CreateRequestAsync(agentContext, proofRequest, null);
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
 
-            message.AddDecorator(provisioning.ToServiceDecorator(), DecoratorNames.ServiceDecorator);
+            message.AddDecorator(provisioning.ToServiceDecorator(useDidKeyFormat), DecoratorNames.ServiceDecorator);
             record.SetTag("RequestData", message.ToByteArray().ToBase64UrlString());
 
             return (message, record);

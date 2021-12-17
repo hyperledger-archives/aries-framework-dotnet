@@ -29,5 +29,10 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// Controls the tags that are persisted against the offer record.
         /// </summary>
         public Dictionary<string, string> Tags { get; set; }
+
+        /// <summary>
+        /// Indicates if a connectionless offer should use did:key format
+        /// </summary>
+        public bool UseDidKeyFormat { get; set; } = false;
     }
 }
