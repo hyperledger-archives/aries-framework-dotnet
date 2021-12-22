@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Storage;
@@ -94,5 +95,14 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <param name="connectionId">Connection Identifier.</param>
         /// <returns>The response async with a boolean indicating if deletion occured successfully</returns>
         Task<bool> DeleteAsync(IAgentContext agentContext, string connectionId);
+
+        /// <summary>
+        /// Retrieves a <see cref="ConnectionRecord"/> by key.
+        /// </summary>
+        /// <returns>The connection record.</returns>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="myKey">My verkey.</param>
+        /// <exception cref="ArgumentNullException"/>
+        Task<ConnectionRecord> ResolveByMyKeyAsync(IAgentContext agentContext, string myKey);
     }
 }
