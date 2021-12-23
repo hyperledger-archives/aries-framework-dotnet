@@ -48,6 +48,11 @@ namespace Hyperledger.Aries.Tests
             throw new System.NotImplementedException();
         }
 
+        public Task<ConnectionRecord> ResolveByMyKeyAsync(IAgentContext agentContext, string myKey)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<string> ProcessResponseAsync(IAgentContext agentContext, ConnectionResponseMessage response, ConnectionRecord connection)
         {
             throw new System.NotImplementedException();
