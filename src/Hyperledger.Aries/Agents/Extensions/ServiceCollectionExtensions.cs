@@ -4,6 +4,7 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
+using Hyperledger.Aries.Features.ProblemReport;
 using Hyperledger.Aries.Features.Routing;
 using Hyperledger.Aries.Features.Statistic;
 using Hyperledger.Aries.Features.TrustPing;
@@ -28,6 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
             collection.AddTransient<DefaultDiscoveryHandler>();
             collection.AddTransient<DefaultBasicMessageHandler>();
             collection.AddTransient<DefaultStatisticHandler>();
+            collection.AddTransient<DefaultProblemReportHandler>();
         }
 
         /// <summary>
