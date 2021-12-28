@@ -90,7 +90,8 @@ namespace Hyperledger.Aries.Tests.Protocols
                 provisioning,
                 paymentService,
                 messageService,
-                new Mock<ILogger<DefaultCredentialService>>().Object);
+                new Mock<ILogger<DefaultCredentialService>>().Object,
+                null);
 
             _proofService = new DefaultProofService(
                 _eventAggregator,
