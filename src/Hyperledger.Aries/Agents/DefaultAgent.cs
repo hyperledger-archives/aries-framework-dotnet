@@ -28,6 +28,7 @@ namespace Hyperledger.Aries.Agents
             AddForwardHandler();
             AddTrustPingHandler();
             AddStatisticHandler();
+            AddProblemReportHandler();
         }
     }
 }

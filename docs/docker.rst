@@ -14,7 +14,7 @@ Usage
     FROM streetcred/dotnet-indy:latest
 
 The images are based on `ubuntu:16.04`. You can check `the docker repo
-<https://github.com/streetcred-id/docker>`_ if you want to build your own image or require specific version of .NET Core or libindy.
+<https://github.com/trinsic-id/docker>`_ if you want to build your own image or require specific version of .NET Core or libindy.
 
 Example build
 =============
