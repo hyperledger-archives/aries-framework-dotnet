@@ -100,6 +100,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="paymentService">The payment service.</param>
         /// <param name="messageService">The message service</param>
         /// <param name="logger">The logger.</param>
+        /// <param name="attachmentService">The attachment service.</param>
         public DefaultCredentialService(
             IEventAggregator eventAggregator,
             ILedgerService ledgerService,
