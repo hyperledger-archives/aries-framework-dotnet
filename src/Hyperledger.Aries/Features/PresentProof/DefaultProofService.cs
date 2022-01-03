@@ -663,7 +663,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 proofRecord.RequestJson = requestJson;
                 await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
             }
-
+            
             EventAggregator.Publish(new ServiceMessageProcessingEvent
             {
                 RecordId = proofRecord.Id,
