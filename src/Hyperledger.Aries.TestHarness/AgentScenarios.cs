@@ -179,6 +179,10 @@ namespace Hyperledger.Aries.TestHarness
             Assert.Equal(CredentialState.Issued, issuerCredRecord.State);
             Assert.Equal(CredentialState.Issued, holderCredRecord.State);
 
+            var ackMessage =
+                await credentialService.CreateAcknowledgementMessageAsync(holder.Context, holderCredentialRecord.Id);
+            await messageService.SendAsync(holder.Context, ackMessage, holderConnection);
+
             Assert.Equal(
                 issuerCredRecord.GetTag(TagConstants.LastThreadId),
                 holderCredRecord.GetTag(TagConstants.LastThreadId));
