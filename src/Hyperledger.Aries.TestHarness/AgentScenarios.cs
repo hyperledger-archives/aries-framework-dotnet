@@ -177,6 +177,10 @@ namespace Hyperledger.TestHarness
             Assert.Equal(CredentialState.Issued, issuerCredRecord.State);
             Assert.Equal(CredentialState.Issued, holderCredRecord.State);
 
+            var ackMessage =
+                await credentialService.CreateAcknowledgementMessageAsync(holder.Context, holderCredentialRecord.Id);
+            await messageService.SendAsync(holder.Context, ackMessage, holderConnection);
+
             Assert.Equal(
                 issuerCredRecord.GetTag(TagConstants.LastThreadId),
                 holderCredRecord.GetTag(TagConstants.LastThreadId));
@@ -380,12 +384,16 @@ namespace Hyperledger.TestHarness
             var requestorProofRecord = await proofService.GetAsync(requestor.Context, requestorRecord.Id);
             var holderProofRecord = await proofService.GetAsync(holder.Context, holderRecord.Id);
 
-            Assert.True(requestorProofRecord.State == ProofState.Accepted);
+            Assert.True(requesterProofRecord.State == ProofState.Accepted);
             Assert.True(holderProofRecord.State == ProofState.Accepted);
 
-            var isProofValid = await proofService.VerifyProofAsync(requestor.Context, requestorProofRecord.Id);
-
+            var isProofValid = await proofService.VerifyProofAsync(requester.Context, requesterProofRecord.Id);
             Assert.True(isProofValid);
+            
+            var acknowledgeMessage = await proofService.CreateAcknowledgeMessageAsync(requester.Context, requesterProofRecord.Id);
+            await messageService.SendAsync(requester.Context, acknowledgeMessage, requesterConnection);
+
+            await proofSlim.WaitAsync(TimeSpan.FromSeconds(30));
         }
 
         public static async Task<DiscoveryDiscloseMessage> DiscoveryProtocolWithReturnRoutingAsync(MockAgent requestor, MockAgent holder, ConnectionRecord requestorConnection, ConnectionRecord holderConnection)
