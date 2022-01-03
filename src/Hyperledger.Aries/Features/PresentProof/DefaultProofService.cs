@@ -654,7 +654,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 proofRecord.SetTag(TagConstants.LastThreadId, requestPresentationMessage.GetThreadId());
                 proofRecord.SetTag(TagConstants.Role, TagConstants.Holder);
                 await RecordService.AddAsync(agentContext.Wallet, proofRecord);
-            }
+            }    
             else
             {
                 await proofRecord.TriggerAsync(ProofTrigger.Request);
