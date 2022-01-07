@@ -105,13 +105,13 @@ namespace Hyperledger.Aries.Features.DidExchange
                         .Select(DidUtils.ConvertVerkeyToDidKey)
                     : provisioning.Endpoint.Verkey).ToList();
             }
+            string recipientKey = config.UseDidKeyFormat ? DidUtils.ConvertVerkeyToDidKey(connectionKey) : connectionKey;
             
             return (new ConnectionInvitationMessage(agentContext.UseMessageTypesHttps)
             {
                 ServiceEndpoint = provisioning.Endpoint.Uri,
                 RoutingKeys = routingKeys,
-                // Bookmark: Replace recipient key with did:key here
-                RecipientKeys = new[] { config.UseDidKeyFormat ? DidUtils.ConvertVerkeyToDidKey(connectionKey) : connectionKey },
+                RecipientKeys = new[] { recipientKey },
                 Label = config.MyAlias.Name ?? provisioning.Owner.Name,
                 ImageUrl = config.MyAlias.ImageUrl ?? provisioning.Owner.ImageUrl
             }, connection);
@@ -134,18 +134,13 @@ namespace Hyperledger.Aries.Features.DidExchange
         {
             Logger.LogInformation(LoggingEvents.AcceptInvitation, "Key {0}, Endpoint {1}",
                 invitation.RecipientKeys[0], invitation.ServiceEndpoint);
-
-            bool useDidKeyFormat = DidUtils.IsDidKey(invitation.RecipientKeys.FirstOrDefault());
-
-            // Bookmark: Find out if it is possible to rename the DID 
+            
             var my = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");
 
             var connection = new ConnectionRecord
             {
-                // Bookmark: Allow Routing Keys to be replaced by did:key
                 Endpoint = new AgentEndpoint(invitation.ServiceEndpoint, null, invitation.RoutingKeys != null && invitation.RoutingKeys.Count != 0 ? invitation.RoutingKeys.ToArray() : null),
-                // Bookmark: Set did as Did Key
-                MyDid = useDidKeyFormat ? DidUtils.ConvertVerkeyToDidKey(my.VerKey) : my.Did,
+                MyDid = my.Did,
                 MyVk = my.VerKey,
                 Id = Guid.NewGuid().ToString().ToLowerInvariant()
             };
@@ -196,9 +191,9 @@ namespace Hyperledger.Aries.Features.DidExchange
         public virtual async Task<string> ProcessRequestAsync(IAgentContext agentContext, ConnectionRequestMessage request, ConnectionRecord connection)
         {
             Logger.LogInformation(LoggingEvents.ProcessConnectionRequest, "Did {0}", request.Connection.Did);
-
+            
             var my = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");
-
+            
             //TODO throw exception or a problem report if the connection request features a did doc that has no indy agent did doc convention featured
             //i.e there is no way for this agent to respond to messages. And or no keys specified
             await Did.StoreTheirDidAsync(agentContext.Wallet, new { did = request.Connection.Did, verkey = request.Connection.DidDoc.Keys[0].PublicKeyBase58 }.ToJson());
@@ -212,7 +207,7 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             connection.TheirDid = request.Connection.Did;
             connection.TheirVk = request.Connection.DidDoc.Keys[0].PublicKeyBase58;
-            connection.MyDid = DidUtils.IsDidKey(request.Connection.Did) ? DidUtils.ConvertVerkeyToDidKey(my.VerKey) : my.Did;
+            connection.MyDid = my.Did;
             connection.MyVk = my.VerKey;
 
             connection.SetTag(TagConstants.LastThreadId, request.Id);

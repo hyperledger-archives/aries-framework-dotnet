@@ -80,6 +80,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             var connection = await _connectionService.GetAsync(_issuerWallet, connectionId);
 
             Assert.True(DidUtils.IsDidKey(msg.RecipientKeys.First()));
+            Assert.True(DidUtils.IsDidKey(msg.RoutingKeys.First()));
             Assert.False(connection.MultiPartyInvitation);
             Assert.Equal(ConnectionState.Invited, connection.State);
             Assert.Equal(connectionId, connection.Id);

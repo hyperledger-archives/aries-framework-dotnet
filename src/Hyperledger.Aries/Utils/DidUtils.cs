@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Multiformats.Base;
 
@@ -9,11 +10,11 @@ namespace Hyperledger.Aries.Utils
     /// </summary>
     public static class DidUtils
     {
-        private const string FULL_VERKEY_REGEX = @"^[1-9A-HJ-NP-Za-km-z]{44}$";
+        private const string FULL_VERKEY_REGEX = @"^[1-9A-HJ-NP-Za-km-z]{43,44}$";
         private const string ABREVIATED_VERKEY_REGEX = @"^~[1-9A-HJ-NP-Za-km-z]{22}$";
         private const string DID_REGEX = @"^did:([a-z]+):([a-zA-z\d]+)";
         private const string DID_KEY_REGEX = @"^did:key:([1-9A-HJ-NP-Za-km-z]+)";
-        private const string DIDKEY_PREFIX = "did:key:";
+        private const string DIDKEY_PREFIX = "did:key";
         private const string BASE58_PREFIX = "z";
         private static readonly byte[] MULTICODEC_PREFIX_ED25519 = { 0xed, 0x01 };
 
@@ -99,17 +100,16 @@ namespace Hyperledger.Aries.Utils
         /// <returns>The did:key representation of a verkey as string</returns>
         public static string ConvertVerkeyToDidKey(string verkey)
         {
-            if (IsFullVerkey(verkey))
+            if (IsFullVerkey(verkey) == false)
             {
-                var bytes = Multibase.Base58.Decode(verkey);
-                byte[] codec = { 0xed, 0x01 };
-                bytes = codec.Concat(bytes).ToArray();
-                string base58PublicKey = Multibase.Base58.Encode(bytes);
-
-                return $"{DIDKEY_PREFIX}{BASE58_PREFIX}{base58PublicKey}";
+                throw new ArgumentException($"Value {verkey} is no verkey", nameof(verkey));
             }
 
-            return null;
+            var bytes = Multibase.Base58.Decode(verkey);
+            bytes = MULTICODEC_PREFIX_ED25519.Concat(bytes).ToArray();
+            string base58PublicKey = Multibase.Base58.Encode(bytes);
+
+            return $"{DIDKEY_PREFIX}:{BASE58_PREFIX}{base58PublicKey}";
         }
         
         /// <summary>
@@ -119,19 +119,21 @@ namespace Hyperledger.Aries.Utils
         /// <returns>A plain base58 representation of that public key</returns>
         public static string ConvertDidKeyToVerkey(string didKey)
         {
-            if (IsDidKey(didKey))
+            if (IsDidKey(didKey) == false)
             {
-                string base58EncodedKey = didKey.Substring($"{DIDKEY_PREFIX}{BASE58_PREFIX}".Length);
-                var bytes = Multibase.Base58.Decode(base58EncodedKey);
-                var codec = bytes.Take(MULTICODEC_PREFIX_ED25519.Length).ToArray();
-                if (codec.SequenceEqual(MULTICODEC_PREFIX_ED25519))
-                {
-                    bytes = bytes.Skip(MULTICODEC_PREFIX_ED25519.Length).ToArray();
-                    return Multibase.Base58.Encode(bytes);
-                }
+                throw new ArgumentException($"Value {didKey} is no did:key", nameof(didKey));
             }
 
-            return null;
+            string base58EncodedKey = didKey.Substring($"{DIDKEY_PREFIX}:{BASE58_PREFIX}".Length);
+            var bytes = Multibase.Base58.Decode(base58EncodedKey);
+            var codec = bytes.Take(MULTICODEC_PREFIX_ED25519.Length).ToArray();
+            if (codec.SequenceEqual(MULTICODEC_PREFIX_ED25519))
+            {
+                bytes = bytes.Skip(MULTICODEC_PREFIX_ED25519.Length).ToArray();
+                return Multibase.Base58.Encode(bytes);
+            }
+
+            throw new ArgumentException($"Value {didKey} has missing ED25519 multicodec prefix", nameof(didKey));
         }
     }
 }

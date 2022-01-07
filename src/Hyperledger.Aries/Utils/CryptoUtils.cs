@@ -119,10 +119,7 @@ namespace Hyperledger.Aries.Utils
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (recipientKey == null) throw new ArgumentNullException(nameof(recipientKey));
             
-            // Bookmark: Transform recipientKey and routingKeys in did:key format into verkeys here
-            recipientKey = DidUtils.IsDidKey(recipientKey)
-                ? DidUtils.ConvertDidKeyToVerkey(recipientKey)
-                : recipientKey;
+            recipientKey = DidUtils.IsDidKey(recipientKey) ? DidUtils.ConvertDidKeyToVerkey(recipientKey) : recipientKey;
 
             // Pack application level message
             var msg = await PackAsync(agentContext.Wallet, recipientKey, message.ToByteArray(), senderKey);
@@ -135,12 +132,10 @@ namespace Hyperledger.Aries.Utils
                 // or pass all keys to the PackAsync function as array?
                 foreach (var routingKey in routingKeys)
                 {
-                    var aRoutingKey = DidUtils.IsDidKey(routingKey)
-                        ? DidUtils.ConvertDidKeyToVerkey(routingKey)
-                        : routingKey;
+                    var verkey = DidUtils.IsDidKey(routingKey) ? DidUtils.ConvertDidKeyToVerkey(routingKey) : routingKey;
                     // Anonpack
-                    msg = await PackAsync(agentContext.Wallet, aRoutingKey, new ForwardMessage(agentContext.UseMessageTypesHttps) { Message = JObject.Parse(msg.GetUTF8String()), To = previousKey });
-                    previousKey = routingKey;
+                    msg = await PackAsync(agentContext.Wallet, verkey, new ForwardMessage(agentContext.UseMessageTypesHttps) { Message = JObject.Parse(msg.GetUTF8String()), To = previousKey });
+                    previousKey = verkey;
                 }
             }
 
