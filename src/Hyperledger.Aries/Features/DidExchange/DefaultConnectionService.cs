@@ -346,5 +346,34 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             return await RecordService.DeleteAsync<ConnectionRecord>(agentContext.Wallet, connectionId);
         }
+
+        public virtual async Task<ConnectionRecord> ResolveByMyKeyAsync(IAgentContext agentContext, string myKey)
+        {
+            if (string.IsNullOrEmpty(myKey))
+                throw new ArgumentNullException(nameof(myKey));
+
+            if (agentContext == null)
+                throw new ArgumentNullException(nameof(agentContext));
+
+            var record =
+                // Check if key is part of a connection
+                (await ListAsync(agentContext,
+                    SearchQuery.Equal(nameof(ConnectionRecord.MyVk), myKey), 5))
+                .SingleOrDefault()
+
+                // Check if key is part of a multiparty invitation
+                ?? (await ListAsync(agentContext,
+                    SearchQuery.And(
+                        SearchQuery.Equal(TagConstants.ConnectionKey, myKey),
+                        SearchQuery.Equal(nameof(ConnectionRecord.MultiPartyInvitation), "True")), 5))
+                .SingleOrDefault()
+
+                // Check if key is part of a single party invitation
+                ?? (await ListAsync(agentContext,
+                    SearchQuery.Equal(TagConstants.ConnectionKey, myKey), 5))
+                .SingleOrDefault();
+            
+            return record;
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
@@ -63,49 +62,6 @@ namespace Hyperledger.Aries.Features.DidExchange
             => connectionService.ListAsync(agentContext,
                 SearchQuery.And(SearchQuery.Equal(nameof(ConnectionRecord.State), ConnectionState.Invited.ToString("G")),
                     SearchQuery.Equal(nameof(ConnectionRecord.MultiPartyInvitation), true.ToString())), count);
-
-        /// <summary>
-        /// Retrieves a <see cref="ConnectionRecord"/> by key.
-        /// </summary>
-        /// <returns>The connection record.</returns>
-        /// <param name="connectionService">Connection service.</param>
-        /// <param name="agentContext">Agent Context.</param>
-        /// <param name="myKey">My key.</param>
-        /// <exception cref="ArgumentNullException"/>
-        /// <exception cref="AriesFrameworkException">Throw with error code 'RecordNotFound' if a connection record for the key was not found</exception>
-        public static async Task<ConnectionRecord> ResolveByMyKeyAsync(
-            this IConnectionService connectionService, IAgentContext agentContext, string myKey)
-        {
-            if (string.IsNullOrEmpty(myKey))
-                throw new ArgumentNullException(nameof(myKey));
-
-            if (agentContext == null)
-                throw new ArgumentNullException(nameof(agentContext));
-
-            var record =
-                // Check if key is part of a connection
-                (await connectionService.ListAsync(agentContext,
-                SearchQuery.Equal(nameof(ConnectionRecord.MyVk), myKey), 5))
-                .SingleOrDefault()
-
-                // Check if key is part of a multiparty invitation
-                ?? (await connectionService.ListAsync(agentContext,
-                SearchQuery.And(
-                    SearchQuery.Equal(TagConstants.ConnectionKey, myKey),
-                    SearchQuery.Equal(nameof(ConnectionRecord.MultiPartyInvitation), "True")), 5))
-                .SingleOrDefault()
-
-                // Check if key is part of a single party invitation
-                ?? (await connectionService.ListAsync(agentContext,
-                SearchQuery.Equal(TagConstants.ConnectionKey, myKey), 5))
-                .SingleOrDefault();
-
-            // Connection can be null if protocol uses connectionless transport
-            //if (record == null)
-            //    throw new AgentFrameworkException(ErrorCode.RecordNotFound, $"Connection Record not found for key {myKey}");
-
-            return record;
-        }
 
         /// <summary>
         /// Retrieves a connection record by its thread id.
