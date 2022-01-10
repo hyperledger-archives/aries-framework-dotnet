@@ -10,6 +10,7 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Runtime;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.WalletApi;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Utils;

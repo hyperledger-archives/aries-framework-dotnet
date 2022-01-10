@@ -166,7 +166,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                 Connection = new Connection
                 {
                     Did = connection.MyDid,
-                    DidDoc = connection.MyDidDoc(provisioning, useDidKeyFormat: useDidKeyFormat)
+                    DidDoc = connection.MyDidDoc(provisioning)
                 },
                 Label = provisioning.Owner?.Name,
                 ImageUrl = provisioning.Owner?.ImageUrl
