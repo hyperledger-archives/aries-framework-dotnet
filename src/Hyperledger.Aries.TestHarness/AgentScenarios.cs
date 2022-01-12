@@ -238,7 +238,7 @@ namespace Hyperledger.Aries.TestHarness
                 issuerCredRecord.GetTag(TagConstants.LastThreadId),
                 holderCredRecord.GetTag(TagConstants.LastThreadId));
         }
-        
+
         public static async Task ProofProtocolAsync(MockAgent requester, MockAgent holder,
             ConnectionRecord requesterConnection, ConnectionRecord holderConnection, ProofRequest proofRequest)
         {
