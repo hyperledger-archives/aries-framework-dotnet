@@ -12,7 +12,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// Default key type.
         /// </summary>
         public const string DefaultKeyType = "Ed25519VerificationKey2018";
-        
+
         /// <summary>
         /// Constructs my DID doc in a pairwise relationship from a connection record and the agents provisioning record.
         /// </summary>

@@ -3,17 +3,17 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
-using Hyperledger.TestHarness.Utils;
+using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.PoolApi;
+using Hyperledger.TestHarness.Utils;
 using Newtonsoft.Json;
 using Xunit;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.IssueCredential;
-using Hyperledger.Aries.Features.PresentProof;
 
 namespace Hyperledger.TestHarness
 {
@@ -25,7 +25,8 @@ namespace Hyperledger.TestHarness
             IAgentContext firstContext,
             IAgentContext secondContext,
             ConnectionInvitationMessage inviteMessage = null,
-            string inviteeconnectionId = null)
+            string inviteeconnectionId = null,
+            bool useDidKeyFormat = false)
         {
             // Create invitation by the issuer
             var connectionSecondId = Guid.NewGuid().ToString();
@@ -42,7 +43,8 @@ namespace Hyperledger.TestHarness
                 {
                     Name = "Holder",
                     ImageUrl = "www.holderdomain.com/profilephoto"
-                }
+                },
+                UseDidKeyFormat = useDidKeyFormat
             };
 
             if (inviteMessage == null)

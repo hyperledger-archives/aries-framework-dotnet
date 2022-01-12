@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hyperledger.TestHarness;
-using Hyperledger.TestHarness.Mock;
-using Hyperledger.Indy.AnonCredsApi;
-using Xunit;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Indy.AnonCredsApi;
+using Hyperledger.TestHarness;
+using Hyperledger.TestHarness.Mock;
+using Xunit;
 
 namespace Hyperledger.Aries.Tests.Integration
 {
@@ -62,6 +62,31 @@ namespace Hyperledger.Aries.Tests.Integration
                         {"first-name-requirement", new ProofAttributeInfo {Name = "first_name"}}
                     }
                 });
+        }
+        
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CanPerformProofProtocolConnectionless(bool useDidKeyFormat)
+        {
+            (var issuerConnection, var holderConnection)  = await AgentScenarios.EstablishConnectionAsync(_issuerAgent, _holderAgent);
+
+            await AgentScenarios.IssueCredentialAsync(_issuerAgent, _holderAgent, issuerConnection, holderConnection, new List<CredentialPreviewAttribute>
+            {
+                new CredentialPreviewAttribute("first_name", "Test"),
+                new CredentialPreviewAttribute("last_name", "Holder")
+            });
+            
+            await AgentScenarios.ProofProtocolConnectionlessAsync(_requestorAgent, _holderAgent, new ProofRequest()
+                {
+                    Name = "ProofReq",
+                    Version = "1.0",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
+                    RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
+                    {
+                        {"first-name-requirement", new ProofAttributeInfo {Name = "first_name"}}
+                    }
+                }, useDidKeyFormat);
         }
 
         public async Task DisposeAsync()

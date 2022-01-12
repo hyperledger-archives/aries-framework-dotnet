@@ -1,5 +1,7 @@
+using System.Linq;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Decorators.Service;
+using Hyperledger.Aries.Utils;
 
 namespace System
 {
@@ -12,14 +14,15 @@ namespace System
         /// Get a service decorator representation for this provisioning record
         /// </summary>
         /// <param name="record"></param>
+        /// <param name="useDidKeyFormat"></param>
         /// <returns></returns>
-        public static ServiceDecorator ToServiceDecorator(this ProvisioningRecord record)
+        public static ServiceDecorator ToServiceDecorator(this ProvisioningRecord record, bool useDidKeyFormat = false)
         {
             return new ServiceDecorator
             {
                 ServiceEndpoint = record.Endpoint.Uri,
-                RoutingKeys = record.Endpoint.Verkey,
-                RecipientKeys = new [] { record.IssuerVerkey }
+                RoutingKeys = useDidKeyFormat ? record.Endpoint.Verkey.Select(DidUtils.ConvertVerkeyToDidKey) : record.Endpoint.Verkey,
+                RecipientKeys = new [] { useDidKeyFormat ? DidUtils.ConvertVerkeyToDidKey(record.IssuerVerkey) : record.IssuerVerkey }
             };
         }
     }

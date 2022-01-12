@@ -66,8 +66,9 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <param name="agentContext"></param>
         /// <param name="proofRequest"></param>
+        /// <param name="useDidKeyFormat"></param>
         /// <returns></returns>
-        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, ProofRequest proofRequest);
+        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, ProofRequest proofRequest, bool useDidKeyFormat = false);
 
         /// <summary>
         /// Creates a proof request.

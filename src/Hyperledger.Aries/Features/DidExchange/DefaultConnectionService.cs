@@ -68,7 +68,7 @@ namespace Hyperledger.Aries.Features.DidExchange
             config = config ?? new InviteConfiguration();
 
             Logger.LogInformation(LoggingEvents.CreateInvitation, "ConnectionId {0}", connectionId);
-
+            
             var connectionKey = await Crypto.CreateKeyAsync(agentContext.Wallet, "{}");
 
             var connection = new ConnectionRecord { Id = connectionId };
@@ -96,11 +96,22 @@ namespace Hyperledger.Aries.Features.DidExchange
 
             await RecordService.AddAsync(agentContext.Wallet, connection);
 
+            IList<string> routingKeys = null;
+            if (provisioning.Endpoint.Verkey != null)
+            {
+                routingKeys = (config.UseDidKeyFormat
+                    ? provisioning.Endpoint.Verkey
+                        .Where(DidUtils.IsFullVerkey)
+                        .Select(DidUtils.ConvertVerkeyToDidKey)
+                    : provisioning.Endpoint.Verkey).ToList();
+            }
+            string recipientKey = config.UseDidKeyFormat ? DidUtils.ConvertVerkeyToDidKey(connectionKey) : connectionKey;
+            
             return (new ConnectionInvitationMessage(agentContext.UseMessageTypesHttps)
             {
                 ServiceEndpoint = provisioning.Endpoint.Uri,
-                RoutingKeys = provisioning.Endpoint.Verkey != null ? provisioning.Endpoint.Verkey : null,
-                RecipientKeys = new[] { connectionKey },
+                RoutingKeys = routingKeys,
+                RecipientKeys = new[] { recipientKey },
                 Label = config.MyAlias.Name ?? provisioning.Owner.Name,
                 ImageUrl = config.MyAlias.ImageUrl ?? provisioning.Owner.ImageUrl
             }, connection);
@@ -123,7 +134,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         {
             Logger.LogInformation(LoggingEvents.AcceptInvitation, "Key {0}, Endpoint {1}",
                 invitation.RecipientKeys[0], invitation.ServiceEndpoint);
-
+            
             var my = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");
 
             var connection = new ConnectionRecord
@@ -180,9 +191,9 @@ namespace Hyperledger.Aries.Features.DidExchange
         public virtual async Task<string> ProcessRequestAsync(IAgentContext agentContext, ConnectionRequestMessage request, ConnectionRecord connection)
         {
             Logger.LogInformation(LoggingEvents.ProcessConnectionRequest, "Did {0}", request.Connection.Did);
-
+            
             var my = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");
-
+            
             //TODO throw exception or a problem report if the connection request features a did doc that has no indy agent did doc convention featured
             //i.e there is no way for this agent to respond to messages. And or no keys specified
             await Did.StoreTheirDidAsync(agentContext.Wallet, new { did = request.Connection.Did, verkey = request.Connection.DidDoc.Keys[0].PublicKeyBase58 }.ToJson());

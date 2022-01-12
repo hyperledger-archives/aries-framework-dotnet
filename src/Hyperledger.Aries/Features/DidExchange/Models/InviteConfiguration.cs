@@ -38,6 +38,11 @@ namespace Hyperledger.Aries.Features.DidExchange
         public bool AutoAcceptConnection { get; set; }
 
         /// <summary>
+        /// Indicator if this invitation/connection record should use the did:key exchange format
+        /// </summary>
+        public bool UseDidKeyFormat { get; set; } = false;
+
+        /// <summary>
         /// Controls the tags that are persisted against the invite/connection record.
         /// </summary>
         public Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();

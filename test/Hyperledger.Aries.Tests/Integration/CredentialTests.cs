@@ -42,6 +42,18 @@ namespace Hyperledger.Aries.Tests.Integration
                 new CredentialPreviewAttribute("last_name", "Holder")
             });
         }
+        
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CanIssueCredentialConnectionless(bool useDidKeyFormat)
+        {
+            await AgentScenarios.IssueCredentialConnectionlessAsync(_issuerAgent, _holderAgent, new List<CredentialPreviewAttribute>
+            {
+                new CredentialPreviewAttribute("first_name", "Test"),
+                new CredentialPreviewAttribute("last_name", "Holder")
+            }, useDidKeyFormat);
+        }
 
         public async Task DisposeAsync()
         {

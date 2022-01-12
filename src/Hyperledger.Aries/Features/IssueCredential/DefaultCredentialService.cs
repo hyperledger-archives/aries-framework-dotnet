@@ -530,7 +530,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
 
             var (message, record) = await CreateOfferAsync(agentContext, config, null);
             var provisioning = await ProvisioningService.GetProvisioningAsync(agentContext.Wallet);
-            message.AddDecorator(provisioning.ToServiceDecorator(), DecoratorNames.ServiceDecorator);
+            message.AddDecorator(provisioning.ToServiceDecorator(config.UseDidKeyFormat), DecoratorNames.ServiceDecorator);
 
             await RecordService.UpdateAsync(agentContext.Wallet, record);
             return (message, record);
