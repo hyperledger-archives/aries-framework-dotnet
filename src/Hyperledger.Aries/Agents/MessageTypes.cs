@@ -89,6 +89,12 @@
             /// Issue Credential Message Type Name
             /// </summary>
             public const string IssueCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/issue-credential";
+            
+            /// <summary>
+            /// Revocation Notification Message Type.
+            /// </summary>
+            public const string RevocationNotification =
+                "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/revocation_notification/1.0/revoke";
         }
 
         /// <summary>

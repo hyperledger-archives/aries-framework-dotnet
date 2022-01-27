@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Storage;
-using Hyperledger.TestHarness;
+using Hyperledger.Aries.TestHarness;
 using Hyperledger.TestHarness.Mock;
 using Xunit;
 

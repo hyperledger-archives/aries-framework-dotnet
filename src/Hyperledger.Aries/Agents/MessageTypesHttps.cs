@@ -89,12 +89,18 @@
             /// Issue Credential Message Type Name
             /// </summary>
             public const string IssueCredential = "https://didcomm.org/issue-credential/1.0/issue-credential";
+            
+            /// <summary>
+            /// Revocation Notification Message Type.
+            /// </summary>
+            public const string RevocationNotification =
+                "https://didcomm.org/revocation_notification/1.0/revoke";
         }
 
         /// <summary>
         /// Type names for Present Proof Protocol
         /// </summary>
-        public class PresentProofNames
+        public static class PresentProofNames
         {
             /// <summary>
             /// Acknowledge Presentation Message Type Name

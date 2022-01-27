@@ -15,12 +15,13 @@ using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Utils;
+using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Mock;
 using Hyperledger.TestHarness.Utils;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Hyperledger.TestHarness
+namespace Hyperledger.Aries.TestHarness
 {
     public static class AgentScenarios
     {

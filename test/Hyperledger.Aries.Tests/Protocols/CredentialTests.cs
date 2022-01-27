@@ -25,6 +25,7 @@ using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.Options;
 using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.TestHarness;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {

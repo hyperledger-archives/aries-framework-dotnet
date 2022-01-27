@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.TestHarness;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Mock;
