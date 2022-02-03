@@ -177,6 +177,15 @@ namespace Hyperledger.TestHarness
             Assert.Equal(CredentialState.Issued, issuerCredRecord.State);
             Assert.Equal(CredentialState.Issued, holderCredRecord.State);
 
+            Assert.Equal(
+                issuerCredRecord.GetTag(TagConstants.LastThreadId),
+                holderCredRecord.GetTag(TagConstants.LastThreadId));
+            
+            var ackSlim = new SemaphoreSlim(0, 1);
+            holder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(x => x.MessageType == MessageTypes.IssueCredentialNames.AcknowledgeCredential)
+                .Subscribe(x => ackSlim.Release());
+            
             var ackMessage =
                 await credentialService.CreateAcknowledgementMessageAsync(holder.Context, holderCredentialRecord.Id);
             await messageService.SendAsync(holder.Context, ackMessage, holderConnection);
@@ -198,80 +207,6 @@ namespace Hyperledger.TestHarness
             
             Assert.Equal(ackMessage.Id, 
                 issuerCredRecord.GetTag(TagConstants.LastThreadId));
-        }
-        
-        public static async Task IssueCredentialConnectionlessAsync(MockAgent issuer, MockAgent holder, List<CredentialPreviewAttribute> credentialAttributes, bool useDidKeyFormat)
-        {
-            var credentialService = issuer.GetService<ICredentialService>();
-            var schemaService = issuer.GetService<ISchemaService>();
-            var provisionService = issuer.GetService<IProvisioningService>();
-
-            var issuerProv = await provisionService.GetProvisioningAsync(issuer.Context.Wallet);
-
-            var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(issuer.Context, schemaService,
-                issuerProv.IssuerDid, credentialAttributes.Select(_ => _.Name).ToArray());
-
-            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferAsync(
-                agentContext: issuer.Context,
-                config: new OfferConfiguration
-                {
-                    IssuerDid = issuerProv.IssuerDid,
-                    CredentialDefinitionId = definitionId,
-                    CredentialAttributeValues = credentialAttributes,
-                    UseDidKeyFormat = useDidKeyFormat
-                });
-
-            var holderCredentialRecord = await credentialService.CreateCredentialAsync(holder.Context, offer);
-
-            Assert.NotNull(holderCredentialRecord.CredentialAttributesValues);
-            Assert.True(holderCredentialRecord.CredentialAttributesValues.Count() == 2);
-            
-            var issuerCredRecord = await credentialService.GetAsync(issuer.Context, issuerCredentialRecord.Id);
-            var holderCredRecord = await credentialService.GetAsync(holder.Context, holderCredentialRecord.Id);
-
-            Assert.Equal(CredentialState.Issued, issuerCredRecord.State);
-            Assert.Equal(CredentialState.Issued, holderCredRecord.State);
-
-            Assert.Equal(
-                issuerCredRecord.GetTag(TagConstants.LastThreadId),
-                holderCredRecord.GetTag(TagConstants.LastThreadId));
-        }
-        
-        public static async Task IssueCredentialConnectionlessAsync(MockAgent issuer, MockAgent holder, List<CredentialPreviewAttribute> credentialAttributes, bool useDidKeyFormat)
-        {
-            var credentialService = issuer.GetService<ICredentialService>();
-            var schemaService = issuer.GetService<ISchemaService>();
-            var provisionService = issuer.GetService<IProvisioningService>();
-
-            var issuerProv = await provisionService.GetProvisioningAsync(issuer.Context.Wallet);
-
-            var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(issuer.Context, schemaService,
-                issuerProv.IssuerDid, credentialAttributes.Select(_ => _.Name).ToArray());
-
-            (var offer, var issuerCredentialRecord) = await credentialService.CreateOfferAsync(
-                agentContext: issuer.Context,
-                config: new OfferConfiguration
-                {
-                    IssuerDid = issuerProv.IssuerDid,
-                    CredentialDefinitionId = definitionId,
-                    CredentialAttributeValues = credentialAttributes,
-                    UseDidKeyFormat = useDidKeyFormat
-                });
-
-            var holderCredentialRecord = await credentialService.CreateCredentialAsync(holder.Context, offer);
-
-            Assert.NotNull(holderCredentialRecord.CredentialAttributesValues);
-            Assert.True(holderCredentialRecord.CredentialAttributesValues.Count() == 2);
-            
-            var issuerCredRecord = await credentialService.GetAsync(issuer.Context, issuerCredentialRecord.Id);
-            var holderCredRecord = await credentialService.GetAsync(holder.Context, holderCredentialRecord.Id);
-
-            Assert.Equal(CredentialState.Issued, issuerCredRecord.State);
-            Assert.Equal(CredentialState.Issued, holderCredRecord.State);
-
-            Assert.Equal(
-                issuerCredRecord.GetTag(TagConstants.LastThreadId),
-                holderCredRecord.GetTag(TagConstants.LastThreadId));
         }
         
         public static async Task IssueCredentialConnectionlessAsync(MockAgent issuer, MockAgent holder, List<CredentialPreviewAttribute> credentialAttributes, bool useDidKeyFormat)
@@ -369,68 +304,6 @@ namespace Hyperledger.TestHarness
             await messageService.SendAsync(requester.Context, acknowledgeMessage, requesterConnection);
 
             await ackSlim.WaitAsync(TimeSpan.FromSeconds(30));
-        }
-        
-        public static async Task ProofProtocolConnectionlessAsync(MockAgent requestor, MockAgent holder, ProofRequest proofRequest, bool useDidKeyFormat)
-        {
-            var proofService = requestor.GetService<IProofService>();
-
-            var (requestMsg, requestorRecord) = await proofService.CreateRequestAsync(requestor.Context, proofRequest, useDidKeyFormat: useDidKeyFormat);
-
-            var requestAttachment = requestMsg.Requests.FirstOrDefault(x => x.Id == "libindy-request-presentation-0")
-                                    ?? throw new ArgumentException("Presentation request attachment not found.");
-            
-            var requestJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
-            var request = JsonConvert.DeserializeObject<ProofRequest>(requestJson);
-
-            var requestedCredentials =
-                await ProofServiceUtils.GetAutoRequestedCredentialsForProofCredentials(holder.Context, proofService,
-                    request);
-
-            var holderRecord = await proofService.CreatePresentationAsync(holder.Context, requestMsg, requestedCredentials);
-
-            var requestorProofRecord = await proofService.GetAsync(requestor.Context, requestorRecord.Id);
-            var holderProofRecord = await proofService.GetAsync(holder.Context, holderRecord.Id);
-
-            Assert.True(requestorProofRecord.State == ProofState.Accepted);
-            Assert.True(holderProofRecord.State == ProofState.Accepted);
-
-            var isProofValid = await proofService.VerifyProofAsync(requestor.Context, requestorProofRecord.Id);
-
-            Assert.True(isProofValid);
-        }
-        
-        public static async Task ProofProtocolConnectionlessAsync(MockAgent requestor, MockAgent holder, ProofRequest proofRequest, bool useDidKeyFormat)
-        {
-            var proofService = requestor.GetService<IProofService>();
-
-            var (requestMsg, requestorRecord) = await proofService.CreateRequestAsync(requestor.Context, proofRequest, useDidKeyFormat: useDidKeyFormat);
-
-            var requestAttachment = requestMsg.Requests.FirstOrDefault(x => x.Id == "libindy-request-presentation-0")
-                                    ?? throw new ArgumentException("Presentation request attachment not found.");
-            
-            var requestJson = requestAttachment.Data.Base64.GetBytesFromBase64().GetUTF8String();
-            var request = JsonConvert.DeserializeObject<ProofRequest>(requestJson);
-
-            var requestedCredentials =
-                await ProofServiceUtils.GetAutoRequestedCredentialsForProofCredentials(holder.Context, proofService,
-                    request);
-
-            var holderRecord = await proofService.CreatePresentationAsync(holder.Context, requestMsg, requestedCredentials);
-
-            var requestorProofRecord = await proofService.GetAsync(requestor.Context, requestorRecord.Id);
-            var holderProofRecord = await proofService.GetAsync(holder.Context, holderRecord.Id);
-
-            Assert.True(requesterProofRecord.State == ProofState.Accepted);
-            Assert.True(holderProofRecord.State == ProofState.Accepted);
-
-            var isProofValid = await proofService.VerifyProofAsync(requester.Context, requesterProofRecord.Id);
-            Assert.True(isProofValid);
-            
-            var acknowledgeMessage = await proofService.CreateAcknowledgeMessageAsync(requester.Context, requesterProofRecord.Id);
-            await messageService.SendAsync(requester.Context, acknowledgeMessage, requesterConnection);
-
-            await proofSlim.WaitAsync(TimeSpan.FromSeconds(30));
         }
         
         public static async Task ProofProtocolConnectionlessAsync(MockAgent requestor, MockAgent holder, ProofRequest proofRequest, bool useDidKeyFormat)
