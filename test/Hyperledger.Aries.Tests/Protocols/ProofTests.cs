@@ -28,6 +28,7 @@ using FluentAssertions;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.TestHarness;
+using Hyperledger.Aries.Common;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
