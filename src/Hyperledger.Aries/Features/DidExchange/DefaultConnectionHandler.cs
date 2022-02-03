@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.DidExchange.Models;
 using Hyperledger.Aries.Utils;
 
 namespace Hyperledger.Aries.Features.DidExchange
@@ -8,17 +9,13 @@ namespace Hyperledger.Aries.Features.DidExchange
     internal class DefaultConnectionHandler : IMessageHandler
     {
         private readonly IConnectionService _connectionService;
-        private readonly IMessageService _messageService;
 
         /// <summary>Initializes a new instance of the <see cref="DefaultConnectionHandler"/> class.</summary>
         /// <param name="connectionService">The connection service.</param>
-        /// <param name="messageService">The message service.</param>
         public DefaultConnectionHandler(
-            IConnectionService connectionService,
-            IMessageService messageService)
+            IConnectionService connectionService)
         {
             _connectionService = connectionService;
-            _messageService = messageService;
         }
 
         /// <inheritdoc />
@@ -30,9 +27,11 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// </value>
         public IEnumerable<MessageType> SupportedMessageTypes => new MessageType[]
         {
+            MessageTypes.ConnectionAcknowledgement, 
             MessageTypes.ConnectionInvitation,
             MessageTypes.ConnectionRequest,
             MessageTypes.ConnectionResponse,
+            MessageTypesHttps.ConnectionAcknowledgement,
             MessageTypesHttps.ConnectionInvitation,
             MessageTypesHttps.ConnectionRequest,
             MessageTypesHttps.ConnectionResponse
@@ -49,6 +48,14 @@ namespace Hyperledger.Aries.Features.DidExchange
         {
             switch (messageContext.GetMessageType())
             {
+                case MessageTypesHttps.ConnectionAcknowledgement:
+                case MessageTypes.ConnectionAcknowledgement:
+                    {
+                        var acknowledgementMessage = messageContext.GetMessage<ConnectionAcknowledgeMessage>();
+                        await _connectionService.ProcessAcknowledgementMessageAsync(agentContext, acknowledgementMessage);
+                        return null;
+                    }
+                
                 case MessageTypesHttps.ConnectionInvitation:
                 case MessageTypes.ConnectionInvitation:
                     {

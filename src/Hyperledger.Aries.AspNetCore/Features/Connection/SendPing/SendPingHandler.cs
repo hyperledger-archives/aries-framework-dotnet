@@ -1,22 +1,17 @@
-namespace Hyperledger.Aries.AspNetCore.Features.Connections
+namespace Hyperledger.Aries.AspNetCore.Features.Connection.SendPing
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Configuration;
-  using Hyperledger.Aries.Contracts;
-  using Hyperledger.Aries.Features.DidExchange;
-  using Hyperledger.Aries.Features.TrustPing;
-  using Hyperledger.Aries.Models.Events;
-  using Hyperledger.Aries.Storage;
+  using Agents;
+  using Aries.Features.DidExchange;
+  using Aries.Features.TrustPing;
+  using Common;
+  using Connections;
+  using Contracts;
   using MediatR;
-  using Microsoft.Extensions.Options;
   using System;
-  using System.Collections.Generic;
-  using System.Reactive.Subjects;
-  using System.Linq;
   using System.Reactive.Linq;
   using System.Threading;
   using System.Threading.Tasks;
-  
+
   public class SendPingHandler : IRequestHandler<SendPingRequest, SendPingResponse>
   {
     /// <summary>
@@ -25,32 +20,23 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
     public const string TrustPingResponseMessageType = 
       "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/trust_ping/1.0/ping_response";
 
-    private readonly IAgentProvider AgentProvider;
-    private readonly IEventAggregator EventAggregator;
-    private readonly IWalletService WalletService;
-    private readonly IConnectionService ConnectionService;
-    private readonly IWalletRecordService WalletRecordService;
-    private readonly IMessageService MessageService;
-    private readonly AgentOptions AgentOptions;
+    private readonly IAgentProvider _agentProvider;
+    private readonly IEventAggregator _eventAggregator;
+    private readonly IConnectionService _connectionService;
+    private readonly IMessageService _messageService;
 
     public SendPingHandler
     (
       IAgentProvider aAgentProvider,
       IEventAggregator aEventAggregator,
-      IWalletService aWalletService,
-      IOptions<AgentOptions> aAgentOptions,
       IConnectionService aConnectionService,
-      IWalletRecordService aWalletRecordService,
       IMessageService aMessageService
     )
     {
-      AgentProvider = aAgentProvider;
-      EventAggregator = aEventAggregator;
-      WalletService = aWalletService;
-      ConnectionService = aConnectionService;
-      WalletRecordService = aWalletRecordService;
-      MessageService = aMessageService;
-      AgentOptions = aAgentOptions.Value;
+      _agentProvider = aAgentProvider;
+      _eventAggregator = aEventAggregator;
+      _connectionService = aConnectionService;
+      _messageService = aMessageService;
     }
 
 
@@ -60,10 +46,10 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
       CancellationToken aCancellationToken
     )
     {
-      IAgentContext agentContext = await AgentProvider.GetContextAsync();
+      IAgentContext agentContext = await _agentProvider.GetContextAsync();
 
       ConnectionRecord connectionRecord =
-        await ConnectionService.GetAsync(agentContext, aSendPingRequest.ConnectionId);
+        await _connectionService.GetAsync(agentContext, aSendPingRequest.ConnectionId);
 
       var trustPingMessage = new TrustPingMessage(agentContext.UseMessageTypesHttps)
       {
@@ -77,7 +63,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
 
       using
       (
-        IDisposable subscription = EventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+        _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
         .Where
         (
           aServiceMessageProcessingEvent =>
@@ -86,13 +72,11 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
         .Subscribe(_ => { success = true; semaphoreSlim.Release(); })
       )
       {
-        await MessageService.SendAsync(agentContext, trustPingMessage, connectionRecord);
-
-        await semaphoreSlim.WaitAsync(TimeSpan.FromSeconds(5));
+        await _messageService.SendAsync(agentContext, trustPingMessage, connectionRecord);
+        await semaphoreSlim.WaitAsync(TimeSpan.FromSeconds(5), aCancellationToken);
       }
 
       var response = new SendPingResponse(aSendPingRequest.CorrelationId, success);
-
       return response;
     }
   }

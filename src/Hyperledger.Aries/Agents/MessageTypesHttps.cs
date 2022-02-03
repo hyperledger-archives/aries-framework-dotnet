@@ -6,6 +6,11 @@
     public static class MessageTypesHttps
     {
         /// <summary>
+        /// The connection acknowledgement.
+        /// </summary>
+        public const string ConnectionAcknowledgement = "https://didcomm.org/connections/1.0/ack";
+        
+        /// <summary>
         /// The connection invitation.
         /// </summary>
         public const string ConnectionInvitation = "https://didcomm.org/connections/1.0/invitation";
@@ -56,6 +61,11 @@
         public static class IssueCredentialNames
         {
             /// <summary>
+            /// Credential Acknowledge Message Type Name
+            /// </summary>
+            public const string AcknowledgeCredential = "https://didcomm.org/issue-credential/1.0/ack";
+
+            /// <summary>
             /// Credential Propose Message Type Name
             /// </summary>
             public const string ProposeCredential = "https://didcomm.org/issue-credential/1.0/propose-credential";
@@ -86,6 +96,11 @@
         /// </summary>
         public class PresentProofNames
         {
+            /// <summary>
+            /// Acknowledge Presentation Message Type Name
+            /// </summary>
+            public const string AcknowledgePresentation = "https://didcomm.org/present-proof/1.0/ack";
+            
             /// <summary>
             /// Propose Presentation Message Type Name
             /// </summary>
