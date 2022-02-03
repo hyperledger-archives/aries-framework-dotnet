@@ -179,6 +179,15 @@ namespace Hyperledger.Aries.TestHarness
             Assert.Equal(CredentialState.Issued, issuerCredRecord.State);
             Assert.Equal(CredentialState.Issued, holderCredRecord.State);
 
+            Assert.Equal(
+                issuerCredRecord.GetTag(TagConstants.LastThreadId),
+                holderCredRecord.GetTag(TagConstants.LastThreadId));
+            
+            var ackSlim = new SemaphoreSlim(0, 1);
+            holder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(x => x.MessageType == MessageTypes.IssueCredentialNames.AcknowledgeCredential)
+                .Subscribe(x => ackSlim.Release());
+            
             var ackMessage =
                 await credentialService.CreateAcknowledgementMessageAsync(holder.Context, holderCredentialRecord.Id);
             await messageService.SendAsync(holder.Context, ackMessage, holderConnection);
