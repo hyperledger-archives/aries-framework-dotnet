@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Extensions;
@@ -233,7 +234,7 @@ namespace Hyperledger.Aries.TestHarness
                 issuerCredRecord.GetTag(TagConstants.LastThreadId),
                 holderCredRecord.GetTag(TagConstants.LastThreadId));
         }
-
+        
         public static async Task ProofProtocolAsync(MockAgent requester, MockAgent holder,
             ConnectionRecord requesterConnection, ConnectionRecord holderConnection, ProofRequest proofRequest)
         {

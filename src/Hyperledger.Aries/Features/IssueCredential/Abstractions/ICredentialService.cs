@@ -4,6 +4,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential.Models.Messages;
+using Hyperledger.Aries.Features.IssueCredential.Models;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.IssueCredential
