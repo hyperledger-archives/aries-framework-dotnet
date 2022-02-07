@@ -6,6 +6,7 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
+using Hyperledger.Aries.Features.RevocationNotification;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Runtime;
@@ -65,6 +66,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.TryAddSingleton<IWalletRecordService, DefaultWalletRecordService>();
             builder.TryAddSingleton<IWalletService, DefaultWalletService>();
             builder.TryAddSingleton<IPaymentService, DefaultPaymentService>();
+            builder.TryAddSingleton<IRevocationNotificationService, DefaultRevocationNotificationService>();
 
             return builder;
         }

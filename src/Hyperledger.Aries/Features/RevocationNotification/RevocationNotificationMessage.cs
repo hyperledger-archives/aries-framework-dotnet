@@ -5,7 +5,8 @@ using Newtonsoft.Json;
 namespace Hyperledger.Aries.Features.RevocationNotification
 {
     /// <summary>
-    ///  A message representing a Revocation Notification Message according to v.1.0
+    ///  Message representing a Revocation Notification Message according to v.1.0
+    ///  https://github.com/hyperledger/aries-rfcs/blob/main/features/0183-revocation-notification/README.md
     /// </summary>
     public class RevocationNotificationMessage : AgentMessage
     {
@@ -16,8 +17,8 @@ namespace Hyperledger.Aries.Features.RevocationNotification
         {
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps
-                ? MessageTypesHttps.IssueCredentialNames.RevocationNotification
-                : MessageTypes.IssueCredentialNames.RevocationNotification;
+                ? MessageTypesHttps.RevocationNotification
+                : MessageTypes.RevocationNotification;
         }
 
         /// <summary>
@@ -27,8 +28,8 @@ namespace Hyperledger.Aries.Features.RevocationNotification
         {
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps
-                ? MessageTypesHttps.IssueCredentialNames.RevocationNotification
-                : MessageTypes.IssueCredentialNames.RevocationNotification;
+                ? MessageTypesHttps.RevocationNotification
+                : MessageTypes.RevocationNotification;
         }
 
         /// <summary>

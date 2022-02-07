@@ -56,6 +56,18 @@
         public const string DiscoveryDiscloseMessageType = "https://didcomm.org/discover-features/1.0/disclose";
 
         /// <summary>
+        /// Acknowledge Revocation Notification Message Type.
+        /// </summary>
+        public const string RevocationNotificationAcknowledgement =
+            "https://didcomm.org/revocation_notification/1.0/ack";
+        
+        /// <summary>
+        /// Revocation Notification Message Type.
+        /// </summary>
+        public const string RevocationNotification =
+            "https://didcomm.org/revocation_notification/1.0/revoke";
+
+        /// <summary>
         /// Issue Credential
         /// </summary>
         public static class IssueCredentialNames
@@ -89,12 +101,6 @@
             /// Issue Credential Message Type Name
             /// </summary>
             public const string IssueCredential = "https://didcomm.org/issue-credential/1.0/issue-credential";
-            
-            /// <summary>
-            /// Revocation Notification Message Type.
-            /// </summary>
-            public const string RevocationNotification =
-                "https://didcomm.org/revocation_notification/1.0/revoke";
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
+using Hyperledger.Aries.Features.RevocationNotification;
 using Hyperledger.Aries.Features.Routing;
 using Hyperledger.Aries.Features.TrustPing;
 using Hyperledger.Aries.Utils;
@@ -70,6 +71,10 @@ namespace Hyperledger.Aries.Agents
 
         /// <summary>Adds the handler for supporting default proof flow.</summary>
         protected void AddProofHandler() => Handlers.Add(Provider.GetRequiredService<DefaultProofHandler>());
+
+        /// <summary>Adds the default handler for supporting revocation notifications.</summary>
+        protected void AddRevocationNotificationHandler() =>
+            Handlers.Add(Provider.GetRequiredService<DefaultRevocationNotificationHandler>());
 
         /// <summary>Adds a default forwarding handler.</summary>
         protected void AddForwardHandler() => Handlers.Add(Provider.GetRequiredService<DefaultForwardHandler>());

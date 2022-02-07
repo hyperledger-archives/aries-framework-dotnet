@@ -20,7 +20,7 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries.Features.IssueCredential.Models;
+using Hyperledger.Aries.Features.IssueCredential.Models.Messages;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
@@ -222,18 +222,19 @@ namespace Hyperledger.Aries.Features.IssueCredential
             if (!sendRevocationNotification)
                 return;
 
-            Logger.LogInformation($"Sending Revocation Notification for {credentialId}...");
+            var connection = await ConnectionService.GetAsync(agentContext, credentialRecord.ConnectionId);
 
-            var msg = new RevocationNotificationMessage
+            Logger.LogInformation($"Sending Revocation Notification for credential {credentialId} to {connection.Endpoint}...");
+
+            var revocationNotificationMessage = new RevocationNotificationMessage
             {
                 ThreadId = credentialRecord.GetTag(TagConstants.LastThreadId)
             };
-            msg.AddDecorator(new PleaseAckDecorator(new [] {OnValues.OUTCOME}), DecoratorNames.PleaseAckDecorator);
+            revocationNotificationMessage.AddDecorator(new PleaseAckDecorator(new [] {OnValues.OUTCOME}), DecoratorNames.PleaseAckDecorator);
 
-            var connection = await ConnectionService.GetAsync(agentContext, credentialRecord.ConnectionId);
             await MessageService.SendAsync(
                 agentContext,
-                msg,
+                revocationNotificationMessage,
                 connection);
         }
 
