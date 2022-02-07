@@ -190,19 +190,6 @@ namespace Hyperledger.TestHarness
                 await credentialService.CreateAcknowledgementMessageAsync(holder.Context, holderCredentialRecord.Id);
             await messageService.SendAsync(holder.Context, ackMessage, holderConnection);
 
-            Assert.Equal(
-                issuerCredRecord.GetTag(TagConstants.LastThreadId),
-                holderCredRecord.GetTag(TagConstants.LastThreadId));
-            
-            var ackSlim = new SemaphoreSlim(0, 1);
-            holder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(x => x.MessageType == MessageTypes.IssueCredentialNames.AcknowledgeCredential)
-                .Subscribe(x => ackSlim.Release());
-            
-            var ackMessage =
-                await credentialService.CreateAcknowledgementMessageAsync(holder.Context, holderCredentialRecord.Id);
-            await messageService.SendAsync(holder.Context, ackMessage, holderConnection);
-
             await ackSlim.WaitAsync(TimeSpan.FromSeconds(30));
             
             Assert.Equal(ackMessage.Id, 
