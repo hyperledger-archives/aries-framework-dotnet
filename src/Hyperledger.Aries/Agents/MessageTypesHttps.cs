@@ -51,6 +51,32 @@
         public const string DiscoveryDiscloseMessageType = "https://didcomm.org/discover-features/1.0/disclose";
 
         /// <summary>
+        /// Did Exchange Message Types
+        /// </summary>
+        public static class DidExchange
+        {
+            /// <summary>
+            ///  DidExchange Request Message Type
+            /// </summary>
+            public const string Request = "https://didcomm.org/didexchange/1.0/request";
+        
+            /// <summary>
+            /// DidExchange Response Message Type
+            /// </summary>
+            public const string Response = "https://didcomm.org/didexchange/1.0/response";
+        
+            /// <summary>
+            /// DidExchange Complete Message Type
+            /// </summary>
+            public const string Complete = "https://didcomm.org/didexchange/1.0/complete";
+
+            /// <summary>
+            /// DidExchange Problem Report Message Type
+            /// </summary>
+            public const string ProblemReport = "https://didcomm.org/didexchange/1.0/problem_report";
+        }
+
+        /// <summary>
         /// Issue Credential
         /// </summary>
         public static class IssueCredentialNames
