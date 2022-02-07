@@ -19,6 +19,7 @@ using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Decorators.Service;
 using Hyperledger.Aries.Common;
+using Hyperledger.Aries.Features.PresentProof.Messages;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
