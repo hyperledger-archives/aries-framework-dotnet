@@ -7,6 +7,7 @@ using Hyperledger.Aries.Features.BasicMessage;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.OperationCompleted;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.ProblemReport;
 using Hyperledger.Aries.Features.Routing;
@@ -84,6 +85,9 @@ namespace Hyperledger.Aries.Agents
 
         /// <summary>Adds a default statistic handler.</summary>
         protected void AddStatisticHandler() => Handlers.Add(Provider.GetRequiredService<DefaultStatisticHandler>());
+
+        /// <summary>Adds a default operation completed handler.</summary>
+        protected void AddOperationCompletedHandler() => Handlers.Add(Provider.GetRequiredService<DefaultOperationCompletedHandler>());
 
         /// <summary>Adds a default problem report message handler.</summary>
         protected void AddProblemReportHandler() => Handlers.Add(Provider.GetRequiredService<DefaultProblemReportHandler>());
