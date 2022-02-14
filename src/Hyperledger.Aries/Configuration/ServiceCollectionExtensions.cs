@@ -7,6 +7,7 @@ using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.OperationCompleted;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.ProblemReport;
 using Hyperledger.Aries.Features.Statistic;
@@ -72,6 +73,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.TryAddSingleton<IAttachmentService, DefaultAttachmentService>();
             builder.TryAddSingleton<IStatisticService, DefaultStatisticService>();
             builder.TryAddSingleton<IProblemReportService, DefaultProblemReportService>();
+            builder.TryAddSingleton<IOperationCompletedService, DefaultOperationCompletedService>();
 
             return builder;
         }

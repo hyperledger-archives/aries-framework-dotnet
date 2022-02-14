@@ -51,6 +51,8 @@
         public const string DiscoveryDiscloseMessageType = "https://didcomm.org/discover-features/1.0/disclose";
 
         public const string ProblemReportMessageType = "https://didcomm.org/report-problem/1.0/problem-report";
+
+        public const string OperationCompleted = "https://didcomm.org/operation-completed/1.0/operation-completed";
         /// <summary>
         /// Issue Credential
         /// </summary>
