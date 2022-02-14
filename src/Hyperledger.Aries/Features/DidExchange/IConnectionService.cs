@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Common;
+using Hyperledger.Aries.Features.DidExchange.Models;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.DidExchange
@@ -95,6 +97,23 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <param name="connectionId">Connection Identifier.</param>
         /// <returns>The response async with a boolean indicating if deletion occured successfully</returns>
         Task<bool> DeleteAsync(IAgentContext agentContext, string connectionId);
+
+        /// <summary>
+        /// Creates a Connection Acknowledgement Message async.
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="connectionRecordId">The ID of the connection record.</param>
+        /// <param name="status">The status of the acknowledgement message</param>
+        /// <returns>The connection acknowledge message</returns>
+        Task<ConnectionAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string connectionRecordId, string status = AcknowledgementStatusConstants.Ok);
+
+        /// <summary>
+        /// Processes a Connection Acknowledgement Message async. 
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="connectionAcknowledgeMessage">The connection acknowledgement message.</param>
+        /// <returns>The record associated with the acknowledgement message</returns>
+        Task<ConnectionRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext, ConnectionAcknowledgeMessage connectionAcknowledgeMessage);
 
         /// <summary>
         /// Retrieves a <see cref="ConnectionRecord"/> by key.
