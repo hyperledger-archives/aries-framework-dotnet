@@ -9,6 +9,7 @@ using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Decorators.Signature;
 using Hyperledger.Aries.Decorators.Threading;
+using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange.Models;
 using Hyperledger.Aries.Storage;

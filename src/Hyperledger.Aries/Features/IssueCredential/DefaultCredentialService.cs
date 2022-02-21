@@ -20,6 +20,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Features.IssueCredential.Models;
+using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Storage;

@@ -3,7 +3,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connection.SendPing
   using Agents;
   using Aries.Features.DidExchange;
   using Aries.Features.TrustPing;
-  using Common;
+  using Models.Events;
   using Connections;
   using Contracts;
   using MediatR;

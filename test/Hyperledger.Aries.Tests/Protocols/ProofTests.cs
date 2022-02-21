@@ -25,7 +25,7 @@ using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.Options;
 using Hyperledger.Aries.Extensions;
 using FluentAssertions;
-using Hyperledger.Aries.Common;
+using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Configuration;
 
 namespace Hyperledger.Aries.Tests.Protocols
