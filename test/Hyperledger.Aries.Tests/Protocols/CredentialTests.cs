@@ -7,7 +7,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Common;
+using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Utils;

@@ -1,4 +1,4 @@
-﻿namespace Hyperledger.Aries.Common
+﻿namespace Hyperledger.Aries.Models.Events
 {
     /// <summary>
     /// Representation of a message processing event.
