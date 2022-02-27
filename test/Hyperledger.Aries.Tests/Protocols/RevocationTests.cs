@@ -127,8 +127,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             {
                 Assert.Equal(CredentialState.Issued, credential.State);
             }
-
-
+            
             // Verification - without revocation
             var (requestPresentationMessage, proofRecordIssuer) = await proofService1
                 .CreateRequestAsync(context1, new ProofRequest
@@ -307,7 +306,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
                 await Task.Delay(TimeSpan.FromSeconds(15));
 
-                // Verify latest issued credential with non-revocation proof
+                // Verify latest issued credential with non-revocation proof on global level
 
                 now = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
 
@@ -347,7 +346,51 @@ namespace Hyperledger.Aries.Tests.Protocols
                 proofRecordIssuer = await proofService1.ProcessPresentationAsync(context1, presentationMessage);
 
                 valid = await proofService1.VerifyProofAsync(context1, proofRecordIssuer.Id);
+                Assert.True(valid);
+                
+                // Verify latest issued credential with non-revocation proof on attribute level
+                now = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
 
+                (requestPresentationMessage, proofRecordIssuer) = await proofService1
+                    .CreateRequestAsync(context1, new ProofRequest
+                    {
+                        Name = "Test Verification",
+                        Version = "1.0",
+                        Nonce = await AnonCreds.GenerateNonceAsync(),
+                        RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
+                        {
+                            { "id-verification", new ProofAttributeInfo
+                                {
+                                    Names = new [] { "name", "age" },
+                                    NonRevoked = new RevocationInterval
+                                    {
+                                        From = 0,
+                                        To = now
+                                    }            
+                                } 
+                            }
+                        }
+                    });
+
+                proofRecordHolder = await proofService2.ProcessRequestAsync(context2, requestPresentationMessage, pair.Connection2);
+                
+                (presentationMessage, _) = await proofService2.CreatePresentationAsync(
+                    context2, proofRecordHolder.Id, new RequestedCredentials
+                    {
+                        RequestedAttributes = new Dictionary<string, RequestedAttribute>
+                        {
+                            { "id-verification", new RequestedAttribute
+                                {
+                                    CredentialId = holderCredentialId,
+                                    Revealed = true
+                                }
+                            }
+                        }
+                    });
+
+                proofRecordIssuer = await proofService1.ProcessPresentationAsync(context1, presentationMessage);
+
+                valid = await proofService1.VerifyProofAsync(context1, proofRecordIssuer.Id);
                 Assert.True(valid);
             }
         }
