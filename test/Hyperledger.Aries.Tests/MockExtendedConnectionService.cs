@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.DidExchange.Models;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Tests
@@ -44,6 +46,18 @@ namespace Hyperledger.Aries.Tests
         }
 
         public Task<bool> DeleteAsync(IAgentContext agentContext, string connectionId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ConnectionAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string connectionRecordId,
+            string status = AcknowledgementStatusConstants.Ok)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ConnectionRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext,
+            ConnectionAcknowledgeMessage connectionAcknowledgeMessage)
         {
             throw new System.NotImplementedException();
         }

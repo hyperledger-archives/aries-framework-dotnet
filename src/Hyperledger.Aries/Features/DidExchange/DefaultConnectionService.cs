@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Decorators.Signature;
 using Hyperledger.Aries.Decorators.Threading;
-using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Features.DidExchange.Models;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.CryptoApi;
@@ -347,6 +349,39 @@ namespace Hyperledger.Aries.Features.DidExchange
             return await RecordService.DeleteAsync<ConnectionRecord>(agentContext.Wallet, connectionId);
         }
 
+        /// <inheritdoc />
+        public async Task<ConnectionAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string connectionRecordId,
+            string status = AcknowledgementStatusConstants.Ok)
+        {
+            var record = await GetAsync(agentContext, connectionRecordId);
+            
+            var threadId = record.GetTag(TagConstants.LastThreadId);
+            var acknowledgeMessage = new ConnectionAcknowledgeMessage(agentContext.UseMessageTypesHttps)
+            {
+                Id = threadId,
+                Status = status
+            };
+            acknowledgeMessage.ThreadFrom(threadId);
+
+            return acknowledgeMessage;
+        }
+
+        /// <inheritdoc />
+        public async Task<ConnectionRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext,
+            ConnectionAcknowledgeMessage acknowledgeMessage)
+        {
+            var connectionRecord = await this.GetByThreadIdAsync(agentContext, acknowledgeMessage.GetThreadId());
+
+            EventAggregator.Publish(new ServiceMessageProcessingEvent
+            {
+                RecordId = connectionRecord.Id,
+                MessageType = acknowledgeMessage.Type,
+                ThreadId = acknowledgeMessage.GetThreadId()
+            });
+            
+            return connectionRecord;      
+        }  
+        
         public virtual async Task<ConnectionRecord> ResolveByMyKeyAsync(IAgentContext agentContext, string myKey)
         {
             if (string.IsNullOrEmpty(myKey))
