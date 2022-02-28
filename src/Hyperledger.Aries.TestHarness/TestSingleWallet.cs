@@ -29,6 +29,7 @@ namespace Hyperledger.TestHarness
         protected IProvisioningService provisioningService;
         protected IWalletRecordService recordService;
         protected IPaymentService paymentService;
+        protected ILedgerService ledgerService;
 
         protected IHost Host { get; private set; }
 
@@ -41,6 +42,7 @@ namespace Hyperledger.TestHarness
 
             await Context.Wallet.CloseAsync();
             await Wallet.DeleteWalletAsync(walletOptions.WalletConfiguration.ToJson(), walletOptions.WalletCredentials.ToJson());
+            Host.Dispose();
         }
 
         /// <summary>
@@ -80,6 +82,7 @@ namespace Hyperledger.TestHarness
             provisioningService = Host.Services.GetService<IProvisioningService>();
             recordService = Host.Services.GetService<IWalletRecordService>();
             paymentService = Host.Services.GetService<IPaymentService>();
+            ledgerService = Host.Services.GetService<ILedgerService>();
         }
 
         async Task<CreateAndStoreMyDidResult> PromoteTrustee(string seed)
