@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Indy.WalletApi;
+using Hyperledger.Aries.Features.Handshakes.Common;
 
 namespace Hyperledger.Aries.Agents
 {

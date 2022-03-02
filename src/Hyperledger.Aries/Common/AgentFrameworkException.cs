@@ -1,6 +1,5 @@
 ﻿using System;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries

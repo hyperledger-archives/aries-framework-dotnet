@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Hyperledger.Aries.Features.Handshakes.Common;
 
 namespace Hyperledger.Aries.Features.DidExchange
 {

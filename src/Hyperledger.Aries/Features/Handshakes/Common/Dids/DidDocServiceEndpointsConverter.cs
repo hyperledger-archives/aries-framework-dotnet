@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Common.Dids
 {
     internal class DidDocServiceEndpointsConverter : JsonConverter
     {

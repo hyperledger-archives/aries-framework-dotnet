@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Common.Dids
 {
     /// <summary>
     /// Strongly type DID doc model.

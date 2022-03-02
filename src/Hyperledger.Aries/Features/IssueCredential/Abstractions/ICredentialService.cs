@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.IssueCredential

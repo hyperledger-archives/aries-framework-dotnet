@@ -1,21 +1,22 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
+using Hyperledger.Aries;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Payments;
+using Hyperledger.Aries.Storage;
+using Hyperledger.Indy.DidApi;
+using Hyperledger.Indy.LedgerApi;
+using Hyperledger.Indy.PoolApi;
 using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Xunit;
-using Hyperledger.Aries.Extensions;
-using System.IO;
 using Microsoft.Extensions.Options;
-using Hyperledger.Indy.PoolApi;
-using Hyperledger.Indy.DidApi;
-using Hyperledger.Indy.LedgerApi;
-using Hyperledger.Aries.Agents;
+using Xunit;
 using IndyPayments = Hyperledger.Indy.PaymentsApi.Payments;
-using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries;
-using Hyperledger.Aries.Payments;
-using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.TestHarness
 {

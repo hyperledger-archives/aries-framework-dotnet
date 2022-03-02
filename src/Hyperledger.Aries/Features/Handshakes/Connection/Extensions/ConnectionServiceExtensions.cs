@@ -2,11 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Connection.Extensions
 {
     /// <summary>
     /// A collection of convenience methods for the <see cref="ICredentialService"/> class.

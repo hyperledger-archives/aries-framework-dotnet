@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Hyperledger.Aries.Storage;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Connection
 {
     /// <summary>
     /// Connection Service.
@@ -50,7 +53,23 @@ namespace Hyperledger.Aries.Features.DidExchange
         Task RevokeInvitationAsync(IAgentContext agentContext, string invitationId);
 
         /// <summary>
-        /// Accepts the connection invitation async.
+        /// Process an invitation offer
+        /// </summary>
+        /// <param name="agentContext">Agent context</param>
+        /// <param name="offer">Connection offer message</param>
+        /// <returns>The new connection record.</returns>
+        Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, ConnectionInvitationMessage offer);
+
+        /// <summary>
+        /// Accepts an existing invitation.
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="connectionRecord">The existing ConnectionRecord.</param>
+        /// <returns>The ConnectionRequestMessage and the updated ConnectionRecord.</returns>
+        Task<(ConnectionRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord connectionRecord);
+        
+        /// <summary>
+        /// Accepts a connection invitation without existing ConnectionRecord.
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="offer">Offer.</param>

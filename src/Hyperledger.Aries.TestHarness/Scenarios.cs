@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Indy.AnonCredsApi;
@@ -102,7 +105,7 @@ namespace Hyperledger.TestHarness
         {
             // Create an issuer DID/VK. Can also be created during provisioning
             var issuer = await Did.CreateAndStoreMyDidAsync(issuerContext.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
+                new { seed = TestConstants.StewardSeed }.ToJson());
 
             // Create a schema and credential definition for this issuer
             var (definitionId, _) = await CreateDummySchemaAndNonRevokableCredDef(issuerContext, schemaService,

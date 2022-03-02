@@ -54,6 +54,9 @@ namespace Hyperledger.TestHarness.Utils
                 //Trust ping protocol
                 new MessageType(MessageTypes.TrustPingMessageType),
                 new MessageType(MessageTypes.TrustPingResponseMessageType),
+                
+                // Did Exchange
+                new MessageType(MessageTypesHttps.DidExchange.Request)
             };
         }
 

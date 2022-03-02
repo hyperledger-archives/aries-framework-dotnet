@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Hyperledger.Aries.Configuration;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Common.Dids
 {
     /// <summary>
     /// Extensions for interacting with DID docs.

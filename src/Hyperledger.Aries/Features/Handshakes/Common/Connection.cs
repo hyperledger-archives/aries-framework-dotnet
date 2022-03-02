@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Hyperledger.Aries.Features.Handshakes.Common.Dids;
+using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Common
 {
     /// <summary>
     /// Connection object

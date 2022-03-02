@@ -1,21 +1,21 @@
-﻿using Hyperledger.Aries.Contracts;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.PresentProof;
+using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Features.IssueCredential;
-using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries.Features.PresentProof;
-using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Tests
 {
     public class RuntimeTests
     {
         [Fact]
-        public void ResolveDependancyServices()
+        public void ResolveDependencyServices()
         {
             var services = new ServiceCollection();
             services.AddAriesFramework();

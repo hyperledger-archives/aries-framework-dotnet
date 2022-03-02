@@ -1,9 +1,9 @@
 namespace Hyperledger.Aries.AspNetCore.Features.Connections
 {
+  using Aries.Features.Handshakes.Common;
+  using Bases;
   using System;
   using System.Collections.Generic;
-  using Hyperledger.Aries.AspNetCore.Features.Bases;
-  using Hyperledger.Aries.Features.DidExchange;
 
   public class GetConnectionsResponse : BaseResponse
   {

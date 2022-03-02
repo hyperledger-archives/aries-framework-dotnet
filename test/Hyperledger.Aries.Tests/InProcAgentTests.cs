@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.TestHarness.Mock;
 using Xunit;
 

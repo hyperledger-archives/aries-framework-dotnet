@@ -1,7 +1,8 @@
 ﻿using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Features.BasicMessage;
-using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.Routing;
@@ -21,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             collection.AddTransient<DefaultConnectionHandler>();
             collection.AddTransient<DefaultCredentialHandler>();
+            collection.AddTransient<DefaultDidExchangeHandler>();
             collection.AddTransient<DefaultProofHandler>();
             collection.AddTransient<DefaultForwardHandler>();
             collection.AddTransient<DefaultTrustPingMessageHandler>();

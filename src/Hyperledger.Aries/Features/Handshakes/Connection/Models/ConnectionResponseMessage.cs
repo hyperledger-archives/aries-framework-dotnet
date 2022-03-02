@@ -4,7 +4,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Decorators.Signature;
 using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Connection.Models
 {
     /// <summary>
     /// Represents a connection response message

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Hyperledger.Aries.Utils;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Connection
 {
     internal class DefaultConnectionHandler : IMessageHandler
     {
@@ -53,7 +54,7 @@ namespace Hyperledger.Aries.Features.DidExchange
                 case MessageTypes.ConnectionInvitation:
                     {
                         var invitation = messageContext.GetMessage<ConnectionInvitationMessage>();
-                        await _connectionService.CreateRequestAsync(agentContext, invitation);
+                        await _connectionService.ProcessInvitationAsync(agentContext, invitation);
                         return null;
                     }
 

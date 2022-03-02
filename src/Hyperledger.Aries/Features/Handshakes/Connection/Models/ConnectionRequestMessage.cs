@@ -2,7 +2,7 @@
 using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Connection.Models
 {
     /// <summary>
     /// Represents a connection request message.
@@ -48,7 +48,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// The connection object.
         /// </value>
         [JsonProperty("connection")]
-        public Connection Connection { get; set; }
+        public Common.Connection Connection { get; set; }
 
         /// <inheritdoc />
         public override string ToString() =>

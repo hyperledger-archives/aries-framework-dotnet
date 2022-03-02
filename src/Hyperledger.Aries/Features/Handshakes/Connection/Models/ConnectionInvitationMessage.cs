@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Connection.Models
 {
     /// <summary>
     /// Represents an invitation message for establishing connection.
