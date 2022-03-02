@@ -51,7 +51,6 @@ namespace Hyperledger.Aries.Features.PresentProof
     /// </summary>
     public class ProposedAttribute
     {
-
         /// <summary>
         /// Gets or sets the name of the Attribute
         /// </summary>

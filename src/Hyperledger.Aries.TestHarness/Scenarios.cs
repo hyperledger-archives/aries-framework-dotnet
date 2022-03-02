@@ -110,7 +110,8 @@ namespace Hyperledger.TestHarness
             var offerConfig = offerConfiguration ?? new OfferConfiguration
             {
                 IssuerDid = issuer.Did,
-                CredentialDefinitionId = definitionId
+                CredentialDefinitionId = definitionId,
+                CredentialAttributeValues = credentialAttributes
             };
 
             // Send an offer to the holder using the established connection channel
