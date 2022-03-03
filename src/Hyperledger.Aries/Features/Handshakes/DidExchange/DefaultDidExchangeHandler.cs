@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Decorators.Threading;
 using Hyperledger.Aries.Features.Handshakes.DidExchange.Models;
 
 namespace Hyperledger.Aries.Features.Handshakes.DidExchange
@@ -28,12 +29,28 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
             {
                 case MessageTypesHttps.DidExchange.Request:
                     var request = messageContext.GetMessage<DidExchangeRequestMessage>();
-                    await _didExchangeService.ProcessRequestAsync(agentContext, request);
+                    try
+                    {
+                        await _didExchangeService.ProcessRequestAsync(agentContext, request);
+                    }
+                    catch (Exception)
+                    {
+                        return CreateProblemReportMessage(request);
+                    }
+                    
                     return null;
                 
                 case MessageTypesHttps.DidExchange.Response:
                     var response = messageContext.GetMessage<DidExchangeResponseMessage>();
-                    await _didExchangeService.ProcessResponseAsync(agentContext, response, messageContext.Connection);
+                    try
+                    {
+                        await _didExchangeService.ProcessResponseAsync(agentContext, response, messageContext.Connection);
+                    }
+                    catch (Exception)
+                    {
+                        return CreateProblemReportMessage(response);
+                    }
+                    
                     return null;
                 
                 case MessageTypesHttps.DidExchange.Complete:
@@ -42,11 +59,24 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
                     return null;
                 
                 case MessageTypesHttps.DidExchange.ProblemReport:
-                    throw new NotImplementedException();                
+                    var problemReport = messageContext.GetMessage<DidExchangeProblemReportMessage>();
+                    await _didExchangeService.ProcessProblemReportMessage(agentContext, problemReport, messageContext.Connection);
+                    return null;
+                
                 default:
                     throw new AriesFrameworkException(ErrorCode.InvalidMessage,
                         $"Unsupported message type {messageContext.GetMessageType()}");
             }
+        }
+
+        private static DidExchangeProblemReportMessage CreateProblemReportMessage(AgentMessage message)
+        {
+            var response = message.CreateThreadedReply<DidExchangeProblemReportMessage>();
+            response.ProblemCode = message is DidExchangeRequestMessage
+                ? DidExchangeProblemReportMessage.Error.RequestProcessingError
+                : DidExchangeProblemReportMessage.Error.ResponseProcessingError;
+
+            return response;
         }
     }
 }

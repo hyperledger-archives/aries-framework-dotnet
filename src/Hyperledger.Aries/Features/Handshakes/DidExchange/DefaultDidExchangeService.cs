@@ -250,17 +250,35 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public Task<(DidExchangeProblemReportMessage, ConnectionRecord)> AbandonDidExchange(IAgentContext agentContext, ConnectionRecord connectionRecord)
+        public async Task<(DidExchangeProblemReportMessage, ConnectionRecord)> AbandonDidExchange(IAgentContext agentContext, ConnectionRecord connectionRecord)
         {
-            // Todo: Implement problem report
-            throw new NotImplementedException();
+            await connectionRecord.TriggerAsync(ConnectionTrigger.Abandon);
+            await _recordService.UpdateAsync(agentContext.Wallet, connectionRecord);
+            
+            var myRole = connectionRecord.Role;
+            var problemCode = myRole == ConnectionRole.Invitee
+                ? DidExchangeProblemReportMessage.Error.ResponseNotAccepted
+                : DidExchangeProblemReportMessage.Error.RequestNotAccepted;
+            
+            var problemReport = new DidExchangeProblemReportMessage {ProblemCode = problemCode};
+
+            return (problemReport, connectionRecord);
         }
 
         /// <inheritdoc/>
-        public Task<ConnectionRecord> ProcessProblemReportMessage(IAgentContext agentContext, DidExchangeProblemReportMessage problemReportMessage)
+        public async Task<ConnectionRecord> ProcessProblemReportMessage(IAgentContext agentContext, DidExchangeProblemReportMessage problemReportMessage, ConnectionRecord connectionRecord)
         {
-            // Todo: Implement problem report
-            throw new NotImplementedException();
+            await connectionRecord.TriggerAsync(ConnectionTrigger.Abandon);
+            await _recordService.UpdateAsync(agentContext.Wallet, connectionRecord);
+
+            _eventAggregator.Publish(new ServiceMessageProcessingEvent
+            {
+                MessageType = problemReportMessage.Type,
+                RecordId = connectionRecord.Id,
+                ThreadId = problemReportMessage.GetThreadId()
+            });
+            
+            return connectionRecord;
         }
     }
 }

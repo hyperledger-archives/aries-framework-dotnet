@@ -81,7 +81,8 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         /// </summary>
         /// <param name="agentContext">The agent context.</param>
         /// <param name="problemReportMessage">The problem report message.</param>
+        /// <param name="connectionRecord">The connection record.</param>
         /// <returns>The connection record.</returns>
-        Task<ConnectionRecord> ProcessProblemReportMessage(IAgentContext agentContext, DidExchangeProblemReportMessage problemReportMessage);
+        Task<ConnectionRecord> ProcessProblemReportMessage(IAgentContext agentContext, DidExchangeProblemReportMessage problemReportMessage, ConnectionRecord connectionRecord);
     }
 }
