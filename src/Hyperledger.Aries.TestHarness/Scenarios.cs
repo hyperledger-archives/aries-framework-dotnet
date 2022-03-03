@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
-using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.Handshakes.Connection;
 using Hyperledger.Aries.Features.Handshakes.Connection.Models;
