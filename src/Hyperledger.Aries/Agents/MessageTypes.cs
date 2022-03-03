@@ -6,6 +6,11 @@
     public static class MessageTypes
     {
         /// <summary>
+        /// The connection acknowledgement.
+        /// </summary>
+        public const string ConnectionAcknowledgement = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/ack";
+
+        /// <summary>
         /// The connection invitation.
         /// </summary>
         public const string ConnectionInvitation = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/invitation";
@@ -56,6 +61,11 @@
         public static class IssueCredentialNames
         {
             /// <summary>
+            /// Credential Acknowledge Message Type Name
+            /// </summary>
+            public const string AcknowledgeCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/ack";
+            
+            /// <summary>
             /// Credential Propose Message Type Name
             /// </summary>
             public const string ProposeCredential = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/propose-credential";
@@ -86,6 +96,11 @@
         /// </summary>
         public class PresentProofNames
         {
+            /// <summary>
+            /// Acknowledge Presentation Message Type Name
+            /// </summary>
+            public const string AcknowledgePresentation = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/ack";
+            
             /// <summary>
             /// Propose Presentation Message Type Name
             /// </summary>

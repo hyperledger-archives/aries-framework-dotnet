@@ -176,5 +176,22 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="credentialId"></param>
         /// <returns></returns>
         Task DeleteCredentialAsync(IAgentContext agentContext, string credentialId);
+        
+        /// <summary>
+        /// Creates a Credential Acknowledgement Message async.
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="credentialRecordId">The ID of the credential record.</param>
+        /// <param name="status">The status of the acknowledgement message</param>
+        /// <returns>The acknowledgement message</returns>
+        Task<CredentialAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string credentialRecordId, string status = AcknowledgementStatusConstants.Ok);
+
+        /// <summary>
+        /// Processes a Credential Acknowledgement Message async. 
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="credentialAcknowledgeMessage">The credential acknowledgement message.</param>
+        /// <returns>The record associated with the acknowledgement message</returns>
+        Task<CredentialRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext, CredentialAcknowledgeMessage credentialAcknowledgeMessage);
     }
 }

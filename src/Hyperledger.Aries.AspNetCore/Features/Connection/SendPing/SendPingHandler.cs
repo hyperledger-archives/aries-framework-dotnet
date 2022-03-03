@@ -11,10 +11,13 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
   using Models.Events;
   using Storage;
   using System;
+  using System.Collections.Generic;
+  using System.Reactive.Subjects;
+  using System.Linq;
   using System.Reactive.Linq;
   using System.Threading;
   using System.Threading.Tasks;
-
+  
   public class SendPingHandler : IRequestHandler<SendPingRequest, SendPingResponse>
   {
     /// <summary>

@@ -236,6 +236,39 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
+        public async Task<CredentialAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string credentialRecordId,
+            string status = AcknowledgementStatusConstants.Ok)
+        {
+            var record = await GetAsync(agentContext, credentialRecordId);
+            
+            var threadId = record.GetTag(TagConstants.LastThreadId);
+            var acknowledgeMessage = new CredentialAcknowledgeMessage(agentContext.UseMessageTypesHttps)
+            {
+                Id = threadId,
+                Status = status
+            };
+            acknowledgeMessage.ThreadFrom(threadId);
+
+            return acknowledgeMessage;
+        }
+
+        /// <inheritdoc />
+        public async Task<CredentialRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext,
+            CredentialAcknowledgeMessage credentialAcknowledgeMessage)
+        {
+            var credentialRecord = await this.GetByThreadIdAsync(agentContext, credentialAcknowledgeMessage.GetThreadId());
+
+            EventAggregator.Publish(new ServiceMessageProcessingEvent
+            {
+                RecordId = credentialRecord.Id,
+                MessageType = credentialAcknowledgeMessage.Type,
+                ThreadId = credentialAcknowledgeMessage.GetThreadId()
+            });
+            
+            return credentialRecord;
+        }
+
+        /// <inheritdoc />
         public virtual async Task<string> ProcessOfferAsync(IAgentContext agentContext, CredentialOfferMessage credentialOffer,
             ConnectionRecord connection)
         {

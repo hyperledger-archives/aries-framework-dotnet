@@ -311,6 +311,37 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
+        public async Task<PresentationAcknowledgeMessage> CreateAcknowledgeMessageAsync(IAgentContext agentContext, string proofRecordId, string status = AcknowledgementStatusConstants.Ok)
+        {
+            var record = await GetAsync(agentContext, proofRecordId);
+            
+            var threadId = record.GetTag(TagConstants.LastThreadId);
+            var acknowledgeMessage = new PresentationAcknowledgeMessage(agentContext.UseMessageTypesHttps)
+            {
+                Id = threadId,
+                Status = status
+            };
+            acknowledgeMessage.ThreadFrom(threadId);
+
+            return acknowledgeMessage;
+        }
+        
+        /// <inheritdoc />
+        public virtual async Task<ProofRecord> ProcessAcknowledgeMessageAsync(IAgentContext agentContext, PresentationAcknowledgeMessage acknowledgeMessage)
+        {
+            var proofRecord = await this.GetByThreadIdAsync(agentContext, acknowledgeMessage.GetThreadId());
+
+            EventAggregator.Publish(new ServiceMessageProcessingEvent
+            {
+                RecordId = proofRecord.Id,
+                MessageType = acknowledgeMessage.Type,
+                ThreadId = acknowledgeMessage.GetThreadId()
+            });
+            
+            return proofRecord;
+        }
+        
+        /// <inheritdoc />
         public virtual async Task<(ProposePresentationMessage, ProofRecord)> CreateProposalAsync(IAgentContext agentContext, ProofProposal proofProposal, string connectionId)
         {
             Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
@@ -631,7 +662,6 @@ namespace Hyperledger.Aries.Features.PresentProof
                 proofRecord.RequestJson = requestJson;
                 await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
             }
-
 
             EventAggregator.Publish(new ServiceMessageProcessingEvent
             {

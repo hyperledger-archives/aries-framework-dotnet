@@ -61,6 +61,18 @@ namespace Hyperledger.Aries.Tests
             throw new System.NotImplementedException();
         }
 
+        public Task<ConnectionAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string connectionRecordId,
+            string status = AcknowledgementStatusConstants.Ok)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ConnectionRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext,
+            ConnectionAcknowledgeMessage connectionAcknowledgeMessage)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<ConnectionRecord> ResolveByMyKeyAsync(IAgentContext agentContext, string myKey)
         {
             throw new System.NotImplementedException();
