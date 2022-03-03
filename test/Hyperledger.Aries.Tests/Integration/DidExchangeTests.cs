@@ -90,8 +90,8 @@ namespace Hyperledger.Aries.Tests.Integration
             
             var newRequesterRecord = (await connectionService.ListAsync(_requester.Context, SearchQuery.Equal(nameof(ConnectionRecord.TheirDid), newResponderRecord.MyDid))).First();
             
-            Assert.Equal(ConnectionState.Negotiating, newResponderRecord.State);
-            Assert.Equal(ConnectionState.Negotiating, newRequesterRecord.State);
+            Assert.Equal(ConnectionState.Connected, newResponderRecord.State);
+            Assert.Equal(ConnectionState.Connected, newRequesterRecord.State);
             Assert.Equal(newRequesterRecord.TheirDid, newResponderRecord.MyDid);
             Assert.Equal(newResponderRecord.TheirDid, newRequesterRecord.MyDid);
 
