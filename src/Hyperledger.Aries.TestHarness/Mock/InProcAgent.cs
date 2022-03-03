@@ -63,6 +63,7 @@ namespace Hyperledger.TestHarness.Mock
             AddDiscoveryHandler();
             AddForwardHandler();
             AddProofHandler();
+            AddRevocationNotificationHandler();
             AddBasicMessageHandler();
             AddHandler<RetrieveBackupHandler>();
             AddHandler<DefaultStoreBackupHandler>();

@@ -12,7 +12,11 @@ using Hyperledger.TestHarness.Mock;
 using Hyperledger.Aries.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using System.Diagnostics;
+using System.Reactive.Linq;
+using System.Threading;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Runtime;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -32,6 +36,28 @@ namespace Hyperledger.Aries.Tests.Protocols
             var context2 = pair.Agent2.Context;
             var messageService2 = pair.Agent2.Provider.GetService<IMessageService>();
             var messageService1 = pair.Agent1.Provider.GetRequiredService<IMessageService>();
+            
+            var eventAggregator = pair.Agent1.Provider.GetService<IEventAggregator>();
+            
+            var countOfProcessingRevocationNotificationsAcknowledgements = 0;
+            eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(_ => _.MessageType == MessageTypes.RevocationNotificationAcknowledgement)
+                .Subscribe(_ =>
+                {
+                    countOfProcessingRevocationNotificationsAcknowledgements++;
+                });
+            
+            eventAggregator = pair.Agent2.Provider.GetService<IEventAggregator>();
+            
+            var countOfProcessingRevocationNotifications = 0;
+            eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(_ => _.MessageType == MessageTypes.RevocationNotification)
+                .Subscribe(_ =>
+                {
+                    countOfProcessingRevocationNotifications++;
+                });
+            
+
 
             // Configure agent1 as issuer
             var issuerConfiguration = await pair.Agent1.Provider.GetRequiredService<IProvisioningService>()
@@ -100,7 +126,6 @@ namespace Hyperledger.Aries.Tests.Protocols
                 .SendAsync(context1, offer, pair.Connection1);
 
             // Find credential for Agent 2 and accept all offers
-
             var credentials = await credentialService2.ListAsync(context2);
             foreach (var credential in credentials.Where(x => x.State == CredentialState.Offered))
             {
@@ -127,7 +152,6 @@ namespace Hyperledger.Aries.Tests.Protocols
             {
                 Assert.Equal(CredentialState.Issued, credential.State);
             }
-
 
             // Verification - without revocation
             var (requestPresentationMessage, proofRecordIssuer) = await proofService1
@@ -212,16 +236,23 @@ namespace Hyperledger.Aries.Tests.Protocols
                 .VerifyProofAsync(context1, proofRecordIssuer.Id);
 
             Assert.True(valid);
-
             Assert.False(await proofService2.IsRevokedAsync(context2, availableCredentials.First().CredentialInfo.Referent));
-
+            
             // Revoke the credential
             await pair.Agent1.Provider.GetService<ICredentialService>()
-               .RevokeCredentialAsync(context1, issuerCredentialWithRevocationId);
+               .RevokeCredentialAsync(context1, issuerCredentialWithRevocationId, true);
 
             await Task.Delay(TimeSpan.FromSeconds(5));
 
             now = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
+            
+            var list = await pair.Agent2.Provider.GetService<ICredentialService>()
+                .ListAsync(context2);
+            var cred = list.First();
+            
+            Assert.Equal(CredentialState.Revoked, cred.State);
+            Assert.Equal(1, countOfProcessingRevocationNotifications);
+            Assert.Equal(1, countOfProcessingRevocationNotificationsAcknowledgements);
 
             (requestPresentationMessage, proofRecordIssuer) = await proofService1
                 .CreateRequestAsync(context1, new ProofRequest

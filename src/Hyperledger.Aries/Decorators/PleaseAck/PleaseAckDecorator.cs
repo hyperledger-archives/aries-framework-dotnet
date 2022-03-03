@@ -6,7 +6,7 @@ namespace Hyperledger.Aries.Decorators.PleaseAck
     /// Please ACK decorator for requesting an acknowledgement.
     ///
     /// Based on Aries RFC 0317: Please ACK Decorator
-    /// https://github.com/hyperledger/aries-rfcs/tree/master/features/0056-service-decorator
+    /// https://github.com/hyperledger/aries-rfcs/blob/main/features/0317-please-ack/README.md
     /// </summary>
     public class PleaseAckDecorator
     {

@@ -31,6 +31,7 @@ namespace Hyperledger.TestHarness.Mock
             AddCredentialHandler();
             AddProofHandler();
             AddDiscoveryHandler();
+            AddRevocationNotificationHandler();
         }
     }
 }

@@ -9,19 +9,15 @@ namespace Hyperledger.Aries.Features.RevocationNotification
     /// </summary>
     public class DefaultRevocationNotificationHandler : IMessageHandler
     {
-        private readonly IAgentContext _agentContext;
         private readonly IRevocationNotificationService _revocationNotificationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRevocationNotificationHandler"/> class.
         /// </summary>
-        /// <param name="agentContext">The agent context.</param>
         /// <param name="revocationNotificationService">The default service for handling revocation notifications.</param>
         public DefaultRevocationNotificationHandler(
-            IAgentContext agentContext,
             IRevocationNotificationService revocationNotificationService)
         {
-            _agentContext = agentContext;
             _revocationNotificationService = revocationNotificationService;
         }
 
@@ -53,7 +49,7 @@ namespace Hyperledger.Aries.Features.RevocationNotification
                 {
                     var revocationNotificationMessage = messageContext.GetMessage<RevocationNotificationMessage>();
                     await _revocationNotificationService.ProcessRevocationNotificationAsync(
-                        _agentContext, revocationNotificationMessage);
+                        agentContext, revocationNotificationMessage);
                     return null;
                 }    
 
@@ -64,7 +60,7 @@ namespace Hyperledger.Aries.Features.RevocationNotification
                 case MessageTypes.RevocationNotificationAcknowledgement:
                 case MessageTypesHttps.RevocationNotificationAcknowledgement:
                     await _revocationNotificationService.ProcessRevocationNotificationAcknowledgementAsync(
-                        _agentContext, messageContext.GetMessage<RevocationNotificationAcknowledgeMessage>());
+                        agentContext, messageContext.GetMessage<RevocationNotificationAcknowledgeMessage>());
                     return null;
             }
         }

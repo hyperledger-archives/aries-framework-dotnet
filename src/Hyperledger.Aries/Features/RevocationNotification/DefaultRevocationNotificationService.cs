@@ -9,42 +9,43 @@ using Hyperledger.Aries.Decorators.Threading;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.RevocationNotification
 {
     /// <inheritdoc />
     public class DefaultRevocationNotificationService : IRevocationNotificationService
     {
-        private readonly IAgentContext _agentContext;
         private readonly IConnectionService _connectionService;
         private readonly ICredentialService _credentialService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IMessageService _messageService;
+        private readonly IWalletRecordService _recordService;
 
         /// <summary>
         ///  Initializes a new instance of the <see cref="DefaultRevocationNotificationService"/> class.
         /// </summary>
-        /// <param name="agentContext">The agent context.</param>
         /// <param name="connectionService">The connection service.</param>
         /// <param name="credentialService">The credential service.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name="messageService">The message service.</param>
+        /// <param name="recordService">The record service.</param>
         public DefaultRevocationNotificationService(
-            IAgentContext agentContext,
             IConnectionService connectionService,
             ICredentialService credentialService,
             IEventAggregator eventAggregator,
-            IMessageService messageService)
+            IMessageService messageService,
+            IWalletRecordService recordService)
         {
-            _agentContext = agentContext;
             _connectionService = connectionService;
             _credentialService = credentialService;
             _eventAggregator = eventAggregator;
             _messageService = messageService;
+            _recordService = recordService;
         }
         
         /// <inheritdoc />
-        public async Task ProcessRevocationNotificationAsync(
+        public virtual async Task ProcessRevocationNotificationAsync(
             IAgentContext agentContext,
             RevocationNotificationMessage revocationNotificationMessage)
         {
@@ -52,7 +53,7 @@ namespace Hyperledger.Aries.Features.RevocationNotification
                 DecoratorNames.PleaseAckDecorator);
             
             var credentialRecord = await _credentialService.GetByThreadIdAsync(
-                _agentContext, revocationNotificationMessage.ThreadId);
+                agentContext, revocationNotificationMessage.ThreadId);
 
             if (plsAckDec != null)
             {
@@ -63,12 +64,10 @@ namespace Hyperledger.Aries.Features.RevocationNotification
                 };    
                 acknowledgeMessage.ThreadFrom(revocationNotificationMessage);
 
-                var connectionRecord = 
-                    await _connectionService.GetByThreadIdAsync(_agentContext, acknowledgeMessage.Id);
-                
-                if (plsAckDec.On.Contains(OnValues.RECEIPT))
-                    await _messageService.SendAsync(_agentContext, acknowledgeMessage, connectionRecord);
-                
+                var connectionRecord = await _connectionService.GetAsync(agentContext, credentialRecord.ConnectionId);
+
+                await credentialRecord.TriggerAsync(CredentialTrigger.Revoke);
+                await _recordService.UpdateAsync(agentContext.Wallet, credentialRecord);
                 _eventAggregator.Publish(new ServiceMessageProcessingEvent
                 {
                     RecordId = credentialRecord.Id, 
@@ -76,12 +75,14 @@ namespace Hyperledger.Aries.Features.RevocationNotification
                     ThreadId = revocationNotificationMessage.ThreadId
                 });
                 
-                if (plsAckDec.On.Contains(OnValues.OUTCOME)) 
-                    await _messageService.SendAsync(_agentContext, acknowledgeMessage, connectionRecord);
+                if (plsAckDec.On.Contains(OnValues.OUTCOME) || plsAckDec.On.Contains(OnValues.RECEIPT)) 
+                    await _messageService.SendAsync(agentContext, acknowledgeMessage, connectionRecord);
 
                 return;
             }
             
+            await credentialRecord.TriggerAsync(CredentialTrigger.Revoke);
+            await _recordService.UpdateAsync(agentContext.Wallet, credentialRecord);
             _eventAggregator.Publish(new ServiceMessageProcessingEvent
             {
                 RecordId = credentialRecord.Id,
@@ -91,17 +92,17 @@ namespace Hyperledger.Aries.Features.RevocationNotification
         }
 
         /// <inheritdoc />
-        public async Task ProcessRevocationNotificationAcknowledgementAsync(
+        public virtual async Task ProcessRevocationNotificationAcknowledgementAsync(
             IAgentContext agentContext,
             RevocationNotificationAcknowledgeMessage revocationNotificationAcknowledgeMessage)
         {
             var credentialRecord = await _credentialService.GetByThreadIdAsync(
-                _agentContext, revocationNotificationAcknowledgeMessage.Id);
+                agentContext, revocationNotificationAcknowledgeMessage.Id);
             
             _eventAggregator.Publish(new ServiceMessageProcessingEvent
             {
                 RecordId = credentialRecord.Id,
-                MessageType = MessageTypes.RevocationNotification,
+                MessageType = MessageTypes.RevocationNotificationAcknowledgement,
                 ThreadId = revocationNotificationAcknowledgeMessage.GetThreadId()
             });
         }
