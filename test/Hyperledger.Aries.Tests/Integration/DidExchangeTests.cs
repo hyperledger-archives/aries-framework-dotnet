@@ -37,7 +37,7 @@ namespace Hyperledger.Aries.Tests.Integration
         {
             _responder = await MockUtils.CreateAsync("responder", config1, cred, new MockAgentHttpHandler((cb) => _router.RouteMessage(cb.name, cb.data)), TestConstants.StewardSeed);
             _router.RegisterAgent(_responder);
-            _requester = await MockUtils.CreateAsync("requestor", config2, cred, new MockAgentHttpHandler((cb) => _router.RouteMessage(cb.name, cb.data)));
+            _requester = await MockUtils.CreateAsync("requester", config2, cred, new MockAgentHttpHandler((cb) => _router.RouteMessage(cb.name, cb.data)));
             _router.RegisterAgent(_requester);
             
             var ledgerService = _responder.ServiceProvider.GetRequiredService<ILedgerService>();

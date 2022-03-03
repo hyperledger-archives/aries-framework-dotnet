@@ -141,6 +141,8 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         /// <inheritdoc/>
         public async Task<(DidExchangeResponseMessage, ConnectionRecord)> CreateResponseAsync(IAgentContext agentContext, ConnectionRecord connectionRecord)
         {
+            await connectionRecord.TriggerAsync(ConnectionTrigger.Response);
+            
             var myDid = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");
 
             connectionRecord.MyDid = DidUtils.ConvertVerkeyToDidKey(myDid.VerKey);
@@ -172,6 +174,8 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         /// <inheritdoc/>
         public async Task<ConnectionRecord> ProcessResponseAsync(IAgentContext agentContext, DidExchangeResponseMessage responseMessage, ConnectionRecord connectionRecord)
         {
+            await connectionRecord.TriggerAsync(ConnectionTrigger.Response);
+            
             DidDoc didDoc = null;
             if (responseMessage.DidDoc.Data.Base64 is { } data)
             {
@@ -217,7 +221,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         /// <inheritdoc/>
         public async Task<(DidExchangeCompleteMessage, ConnectionRecord)> CreateComplete(IAgentContext agentContext, ConnectionRecord connectionRecord)
         {
-            await connectionRecord.TriggerAsync(ConnectionTrigger.Response);
+            await connectionRecord.TriggerAsync(ConnectionTrigger.Complete);
             await _recordService.UpdateAsync(agentContext.Wallet, connectionRecord);
 
             var completeMessage = new DidExchangeCompleteMessage
@@ -232,7 +236,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         public async Task<ConnectionRecord> ProcessComplete(IAgentContext agentContext, DidExchangeCompleteMessage completeMessage,
             ConnectionRecord connectionRecord)
         {
-            await connectionRecord.TriggerAsync(ConnectionTrigger.Response);
+            await connectionRecord.TriggerAsync(ConnectionTrigger.Complete);
             await _recordService.UpdateAsync(agentContext.Wallet, connectionRecord);
             
             _eventAggregator.Publish(new ServiceMessageProcessingEvent
