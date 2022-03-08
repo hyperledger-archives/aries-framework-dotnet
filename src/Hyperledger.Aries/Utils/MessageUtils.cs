@@ -54,7 +54,7 @@ namespace Hyperledger.Aries.Utils
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            return $"{baseUrl}?m={message.ToJson().ToBase64()}";
+            return $"{baseUrl}?m={message.ToJson().ToBase64Url()}";
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Hyperledger.Aries.Utils
                 throw new ArgumentException("Unable to find expected query parameter", (nameof(encodedMessage)));
             }
 
-            return messageBase64.FromBase64();
+            return messageBase64.FromBase64Url();
         }
 
         /// <summary>

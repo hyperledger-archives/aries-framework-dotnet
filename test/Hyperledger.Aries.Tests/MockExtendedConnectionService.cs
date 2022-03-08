@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Common;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Features.DidExchange.Models;
+using Hyperledger.Aries.Features.Handshakes.Common;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Tests
@@ -26,6 +27,16 @@ namespace Hyperledger.Aries.Tests
         }
 
         public Task RevokeInvitationAsync(IAgentContext agentContext, string invitationId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, ConnectionInvitationMessage offer)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<(ConnectionRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord connectionRecord)
         {
             throw new System.NotImplementedException();
         }

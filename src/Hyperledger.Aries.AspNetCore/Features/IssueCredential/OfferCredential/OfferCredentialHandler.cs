@@ -1,9 +1,10 @@
 namespace Hyperledger.Aries.AspNetCore.Features.IssueCredentials
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Configuration;
-  using Hyperledger.Aries.Features.DidExchange;
-  using Hyperledger.Aries.Features.IssueCredential;
+  using Agents;
+  using Aries.Configuration;
+  using Aries.Features.Handshakes.Common;
+  using Aries.Features.Handshakes.Connection;
+  using Aries.Features.IssueCredential;
   using MediatR;
   using System.Threading;
   using System.Threading.Tasks;

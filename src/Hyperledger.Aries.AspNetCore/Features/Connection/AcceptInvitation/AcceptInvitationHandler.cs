@@ -1,11 +1,13 @@
 namespace Hyperledger.Aries.AspNetCore.Features.Connections
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Features.DidExchange;
-  using Hyperledger.Aries.Utils;
+  using Agents;
+  using Aries.Features.Handshakes.Common;
+  using Aries.Features.Handshakes.Connection;
+  using Aries.Features.Handshakes.Connection.Models;
   using MediatR;
   using System.Threading;
   using System.Threading.Tasks;
+  using Utils;
 
   public class AcceptInvitationHandler : IRequestHandler<AcceptInvitationRequest, AcceptInvitationResponse>
   {

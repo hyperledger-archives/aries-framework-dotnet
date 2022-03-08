@@ -1,6 +1,6 @@
-﻿using Hyperledger.Aries.Decorators.Transport;
-using Hyperledger.Aries.Features.DidExchange;
-using System;
+﻿using System;
+using Hyperledger.Aries.Decorators.Transport;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Xunit;
 
 namespace Hyperledger.Aries.Tests.Decorators

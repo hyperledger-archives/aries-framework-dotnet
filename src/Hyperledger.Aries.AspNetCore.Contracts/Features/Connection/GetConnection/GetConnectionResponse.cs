@@ -1,7 +1,7 @@
 namespace Hyperledger.Aries.AspNetCore.Features.Connections
 {
-  using Hyperledger.Aries.AspNetCore.Features.Bases;
-  using Hyperledger.Aries.Features.DidExchange;
+  using Aries.Features.Handshakes.Common;
+  using Bases;
   using System;
 
   public class GetConnectionResponse : BaseResponse

@@ -8,6 +8,8 @@
 
         public const string DefaultVerkey = "MeHaPyPGsbBCgMKo13oWK7MeHaPyPGsbBCgMKo13oWK7";
 
-        public const string StewartDid = "000000000000000000000000Steward1";
+        public const string StewardSeed = "000000000000000000000000Steward1";
+
+        public const string StewardDid = "Th7MpTaRZVRYnPiabds81Y";
     }
 }

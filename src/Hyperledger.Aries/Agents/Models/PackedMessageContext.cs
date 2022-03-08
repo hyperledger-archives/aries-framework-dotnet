@@ -1,5 +1,5 @@
 using Hyperledger.Aries.Extensions;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Newtonsoft.Json.Linq;
 
 namespace Hyperledger.Aries.Agents

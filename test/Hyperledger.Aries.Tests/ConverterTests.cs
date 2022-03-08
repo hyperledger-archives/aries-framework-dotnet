@@ -1,12 +1,12 @@
-﻿using Hyperledger.Aries.Extensions;
-using Hyperledger.Aries.Features.DidExchange;
+﻿using System.Linq;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
+using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.PresentProof;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.IssueCredential;
-using System.Linq;
-using Hyperledger.Aries.Features.PresentProof;
 
 namespace Hyperledger.Aries.Tests
 {
@@ -27,7 +27,7 @@ namespace Hyperledger.Aries.Tests
         }
 
         [Fact]
-        public void DeserializeAgentMessageWithDectorators()
+        public void DeserializeAgentMessageWithDecorators()
         {
             var messageJson = "{\"@id\":\"a9f6ca12-2e36-4fed-b8d1-7a2cd6e3692d\",\"@type\":\"did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/request\",\"~sample\":{\"Prop1\":\"123\"}}";
             var obj = JsonConvert.DeserializeObject<ConnectionRequestMessage>(messageJson,

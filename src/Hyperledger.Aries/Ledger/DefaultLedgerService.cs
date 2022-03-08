@@ -2,20 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Ledger.Models;
+using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Utils;
+using Hyperledger.Indy;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.LedgerApi;
-using Hyperledger.Indy.PoolApi;
 using Newtonsoft.Json.Linq;
 using IndyPayments = Hyperledger.Indy.PaymentsApi.Payments;
 using IndyLedger = Hyperledger.Indy.LedgerApi.Ledger;
-using Hyperledger.Aries.Payments;
-using Polly;
-using Hyperledger.Indy;
-using System.Diagnostics;
 
 namespace Hyperledger.Aries.Ledger
 {
@@ -110,6 +108,24 @@ namespace Hyperledger.Aries.Ledger
         }
 
         /// <inheritdoc />
+        public async Task<ServiceEndpointResult> LookupServiceEndpointAsync(IAgentContext context, string did)
+        {
+            var res = await LookupAttributeAsync(context, did, "endpoint");
+
+            var jobj = JObject.Parse(res);
+            var endpoint = jobj["result"]?["data"]?.ToString();
+            
+            return !string.IsNullOrEmpty(endpoint) ? JObject.Parse(endpoint).ToObject<ServiceEndpointResult>() : null;
+        }
+
+        /// <inheritdoc />
+        public async Task RegisterServiceEndpointAsync(IAgentContext context, string did, string serviceEndpoint, TransactionCost paymentInfo = null)
+        {
+            var value = new {endpoint = serviceEndpoint};
+            await RegisterAttributeAsync(context, did, did, "endpoint", value);
+        }
+
+        /// <inheritdoc />
         public virtual async Task RegisterCredentialDefinitionAsync(IAgentContext context, string submitterDid, string data, TransactionCost paymentInfo = null)
         {
             var req = await IndyLedger.BuildCredDefRequestAsync(submitterDid, data);
@@ -152,7 +168,7 @@ namespace Hyperledger.Aries.Ledger
             var req = await IndyLedger.BuildGetAttribRequestAsync(null, targetDid, attributeName, null, null);
             var res = await IndyLedger.SubmitRequestAsync(await agentContext.Pool, req);
 
-            return null;
+            return res;
         }
 
         /// <inheritdoc />

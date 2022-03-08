@@ -1,12 +1,13 @@
 namespace Hyperledger.Aries.AspNetCore.Features.BasicMessaging
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Configuration;
-  using Hyperledger.Aries.Features.BasicMessage;
-  using Hyperledger.Aries.Features.DidExchange;
-  using Hyperledger.Aries.Storage;
+  using Agents;
+  using Aries.Configuration;
+  using Aries.Features.BasicMessage;
+  using Aries.Features.Handshakes.Common;
+  using Aries.Features.Handshakes.Connection;
   using MediatR;
   using Microsoft.Extensions.Options;
+  using Storage;
   using System;
   using System.Globalization;
   using System.Threading;
