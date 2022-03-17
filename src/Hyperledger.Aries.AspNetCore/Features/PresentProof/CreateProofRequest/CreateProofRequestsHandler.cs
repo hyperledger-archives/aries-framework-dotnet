@@ -1,14 +1,14 @@
 namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Configuration;
-  using Hyperledger.Aries.Features.PresentProof;
-  using Hyperledger.Aries.Extensions;
+  using Agents;
+  using Aries.Configuration;
+  using Aries.Features.Handshakes.Common;
+  using Aries.Features.Handshakes.Connection;
+  using Aries.Features.PresentProof;
+  using Indy.AnonCredsApi;
   using MediatR;
   using System.Threading;
   using System.Threading.Tasks;
-  using Hyperledger.Aries.Features.DidExchange;
-  using Hyperledger.Indy.AnonCredsApi;
 
   public class CreateProofRequestsHandler : IRequestHandler<CreateProofRequestRequest, CreateProofRequestResponse>
   {

@@ -1,7 +1,7 @@
 ﻿namespace Hyperledger.Aries.AspNetCore.Features.Connections
 {
+  using Aries.Features.Handshakes.Connection.Models;
   using FluentValidation;
-  using Hyperledger.Aries.Features.DidExchange;
 
   public class CreateInvitationRequestValidator : AbstractValidator<CreateInvitationRequest>
   {

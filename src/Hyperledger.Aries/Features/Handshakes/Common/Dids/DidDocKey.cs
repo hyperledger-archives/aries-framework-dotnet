@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Common.Dids
 {
     /// <summary>
     /// Strongly type DID doc key model.

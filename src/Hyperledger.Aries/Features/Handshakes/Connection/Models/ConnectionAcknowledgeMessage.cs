@@ -2,7 +2,7 @@ using System;
 using Hyperledger.Aries.Agents;
 using Newtonsoft.Json;
 
-namespace Hyperledger.Aries.Features.DidExchange.Models
+namespace Hyperledger.Aries.Features.Handshakes.Connection.Models
 {
     /// <summary>
     /// Connection acknowledge message

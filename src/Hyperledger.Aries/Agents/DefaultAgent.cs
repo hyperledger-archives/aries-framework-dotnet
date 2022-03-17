@@ -22,6 +22,7 @@ namespace Hyperledger.Aries.Agents
         {
             AddConnectionHandler();
             AddCredentialHandler();
+            AddDidExchangeHandler();
             AddProofHandler();
             AddDiscoveryHandler();
             AddBasicMessageHandler();

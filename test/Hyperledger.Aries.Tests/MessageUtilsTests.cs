@@ -1,9 +1,9 @@
 using System;
-using Hyperledger.Aries.Utils;
 using FluentAssertions;
-using Xunit;
-using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
+using Hyperledger.Aries.Utils;
+using Xunit;
 
 namespace Hyperledger.Aries.Tests
 {

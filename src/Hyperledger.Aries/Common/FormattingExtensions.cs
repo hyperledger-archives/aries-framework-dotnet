@@ -101,18 +101,18 @@ namespace Hyperledger.Aries.Extensions
             JsonConvert.SerializeObject(obj, settings);
 
         /// <summary>
-        /// Converts a string to base64 representation.
+        /// Converts a string to Base64Url representation.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns>The value base64 encoded.</returns>
-        public static string ToBase64(this string value) => Base64UrlEncoder.Encode(value);
+        /// <returns>The value Base64Url encoded.</returns>
+        public static string ToBase64Url(this string value) => Base64UrlEncoder.Encode(value);
 
         /// <summary>
-        /// Converts a string from base64 representation.
+        /// Converts a string from Base64Url representation.
         /// </summary>
-        /// <param name="value">The base64 value.</param>
+        /// <param name="value">The Base64Url value.</param>
         /// <returns>The value decoded.</returns>
-        public static string FromBase64(this string value) => Base64UrlEncoder.Decode(value);
+        public static string FromBase64Url(this string value) => Base64UrlEncoder.Decode(value);
 
         /// <summary>
         /// Convert a byte array into a hex string

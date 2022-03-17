@@ -1,13 +1,12 @@
 namespace Hyperledger.Aries.AspNetCore.Features.PresentProofs
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Configuration;
-  using Hyperledger.Aries.Features.DidExchange;
-  using Hyperledger.Aries.Features.PresentProof;
-  using Hyperledger.Aries.Utils;
+  using Agents;
+  using Aries.Configuration;
+  using Aries.Features.PresentProof;
   using MediatR;
   using System.Threading;
   using System.Threading.Tasks;
+  using Utils;
 
   public class AcceptProofRequestHandler : IRequestHandler<AcceptProofRequestRequest, AcceptProofRequestResponse>
   {

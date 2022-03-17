@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Storage;
 using Hyperledger.TestHarness;

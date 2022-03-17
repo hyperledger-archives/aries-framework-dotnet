@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
@@ -6,13 +7,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Stateless;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Common
 {
     /// <summary>
     /// Represents a connection record in the agency wallet.
     /// </summary>
     /// <seealso cref="RecordBase" />
-    public class ConnectionRecord : RecordBase
+    public sealed class ConnectionRecord : RecordBase
     {
         private ConnectionState _state;
 
@@ -21,7 +22,9 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// </summary>
         public ConnectionRecord()
         {
+            Id = Guid.NewGuid().ToString().ToLowerInvariant();
             State = ConnectionState.Invited;
+            RecordVersion = 1;
         }
 
         /// <summary>
@@ -128,6 +131,27 @@ namespace Hyperledger.Aries.Features.DidExchange
             set;
         }
 
+        /// <summary>
+        /// My role in the handshake protocol 
+        /// </summary>
+        [JsonIgnore]
+        public ConnectionRole Role
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the handshake protocol
+        /// </summary>
+        /// <value>Connections or DidExchange</value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public HandshakeProtocol HandshakeProtocol
+        {
+            get;
+            set;
+        }
+
         #region State Machine Implementation
 
         /// <summary>
@@ -152,11 +176,15 @@ namespace Hyperledger.Aries.Features.DidExchange
             var state = new StateMachine<ConnectionState, ConnectionTrigger>(() => State, x => State = x);
             state.Configure(ConnectionState.Invited).Permit(ConnectionTrigger.InvitationAccept, ConnectionState.Negotiating);
             state.Configure(ConnectionState.Invited).Permit(ConnectionTrigger.Request, ConnectionState.Negotiating);
-            state.Configure(ConnectionState.Negotiating).Permit(ConnectionTrigger.Request, ConnectionState.Connected);
+            state.Configure(ConnectionState.Invited).Permit(ConnectionTrigger.Abandon, ConnectionState.Abandoned);
             state.Configure(ConnectionState.Negotiating).Permit(ConnectionTrigger.Response, ConnectionState.Connected);
+            state.Configure(ConnectionState.Negotiating).Permit(ConnectionTrigger.Abandon, ConnectionState.Abandoned);
+            state.Configure(ConnectionState.Connected).Ignore(ConnectionTrigger.Complete);
+            state.Configure(ConnectionState.Connected).Permit(ConnectionTrigger.Abandon, ConnectionState.Abandoned);
+            state.Configure(ConnectionState.Abandoned).Ignore(ConnectionTrigger.Abandon);
+
             return state;
         }
-
         #endregion
     }
 
@@ -178,7 +206,28 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <summary>
         /// The connected
         /// </summary>
-        Connected
+        Connected,
+        /// <summary>
+        /// The Abandoned
+        /// </summary>
+        Abandoned
+    }
+
+    /// <summary>
+    /// Enumeration of possible connection roles
+    /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    public enum ConnectionRole
+    {
+        /// <summary>
+        /// The inviter either explicitly or implicitly
+        /// </summary>
+        Inviter = 0,
+        /// <summary>
+        /// The invitee either explicitly or implicitly
+        /// </summary>
+        Invitee
     }
 
     /// <summary>
@@ -189,6 +238,7 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <summary>
         /// The invitation accept
         /// </summary>
+        [Obsolete("Should use Request instead")]
         InvitationAccept,
         /// <summary>
         /// The request
@@ -197,6 +247,14 @@ namespace Hyperledger.Aries.Features.DidExchange
         /// <summary>
         /// The response
         /// </summary>
-        Response
+        Response,
+        /// <summary>
+        /// The complete
+        /// </summary>
+        Complete,
+        /// <summary>
+        /// The abandon
+        /// </summary>
+        Abandon
     }
 }

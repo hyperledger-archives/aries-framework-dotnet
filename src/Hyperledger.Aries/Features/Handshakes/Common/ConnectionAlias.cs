@@ -1,4 +1,4 @@
-﻿namespace Hyperledger.Aries.Features.DidExchange
+﻿namespace Hyperledger.Aries.Features.Handshakes.Common
 {
     /// <summary>
     /// Connection alias object for tagging 

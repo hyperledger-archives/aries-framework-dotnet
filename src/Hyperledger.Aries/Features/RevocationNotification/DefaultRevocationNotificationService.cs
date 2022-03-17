@@ -6,7 +6,7 @@ using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Decorators;
 using Hyperledger.Aries.Decorators.PleaseAck;
 using Hyperledger.Aries.Decorators.Threading;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Connection;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;

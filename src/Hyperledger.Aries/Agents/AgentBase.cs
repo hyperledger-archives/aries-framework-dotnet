@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.BasicMessage;
-using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
+using Hyperledger.Aries.Features.Handshakes.Common;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.RevocationNotification;
@@ -65,6 +67,9 @@ namespace Hyperledger.Aries.Agents
 
         /// <summary>Adds a handler for supporting default credential flow.</summary>
         protected void AddCredentialHandler() => Handlers.Add(Provider.GetRequiredService<DefaultCredentialHandler>());
+
+        /// <summary>Adds a handler for supporting default did exchange flow.</summary>
+        protected void AddDidExchangeHandler() => Handlers.Add(Provider.GetRequiredService<DefaultDidExchangeHandler>());
 
         /// <summary>Adds the handler for supporting default proof flow.</summary>
         protected void AddTrustPingHandler() => Handlers.Add(Provider.GetRequiredService<DefaultTrustPingMessageHandler>());

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Hyperledger.Aries.Features.Handshakes.Common;
 
-namespace Hyperledger.Aries.Features.DidExchange
+namespace Hyperledger.Aries.Features.Handshakes.Connection.Models
 {
     /// <summary>
     /// Config for controlling invitation creation.

@@ -1,5 +1,5 @@
 ﻿using Hyperledger.Aries.Extensions;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Storage;
 using Newtonsoft.Json.Linq;
 

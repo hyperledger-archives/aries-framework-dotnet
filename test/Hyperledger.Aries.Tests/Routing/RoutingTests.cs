@@ -1,16 +1,14 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Hyperledger.Aries.Agents.Edge;
 using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Routing;
 using Hyperledger.Aries.Storage;
 using Hyperledger.TestHarness.Mock;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Hyperledger.Aries.Tests.Routing
