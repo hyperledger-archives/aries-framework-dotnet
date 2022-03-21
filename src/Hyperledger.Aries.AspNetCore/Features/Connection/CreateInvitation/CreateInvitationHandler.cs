@@ -1,9 +1,11 @@
 namespace Hyperledger.Aries.AspNetCore.Features.Connections
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Configuration;
-  using Hyperledger.Aries.Extensions;
-  using Hyperledger.Aries.Features.DidExchange;
+  using Agents;
+  using Aries.Configuration;
+  using Aries.Features.Handshakes.Common;
+  using Aries.Features.Handshakes.Connection;
+  using Aries.Features.Handshakes.Connection.Models;
+  using Extensions;
   using MediatR;
   using System.Threading;
   using System.Threading.Tasks;
@@ -38,7 +40,7 @@ namespace Hyperledger.Aries.AspNetCore.Features.Connections
         await ConnectionService.CreateInvitationAsync(agentContext, aCreateInvitationRequest.InviteConfiguration);
 
       string endpointUri = (await ProvisioningService.GetProvisioningAsync(agentContext.Wallet)).Endpoint.Uri;
-      string encodedInvitation = connectionInvitationMessage.ToJson().ToBase64();
+      string encodedInvitation = connectionInvitationMessage.ToJson().ToBase64Url();
       var response =
         new CreateInvitationResponse
         (

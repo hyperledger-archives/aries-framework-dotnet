@@ -49,6 +49,12 @@ namespace Hyperledger.Aries.Storage
         /// <value>The tags.</value>
         [JsonIgnore]
         protected internal Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();
+        
+        /// <summary>
+        /// Get and set the schema version of a wallet record
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        protected internal int RecordVersion { get; set; }
 
         /// <summary>
         /// Gets the attribute.

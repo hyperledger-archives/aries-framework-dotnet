@@ -6,7 +6,8 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Agents.Edge;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Extensions;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 

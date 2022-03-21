@@ -52,6 +52,10 @@
         /// </summary>
         InvalidProofEncoding,
         /// <summary>
+        /// A given signature was invalid
+        /// </summary>
+        InvalidSignatureEncoding,
+        /// <summary>
         /// The revocation registry unavailable
         /// </summary>
         RevocationRegistryUnavailable,
