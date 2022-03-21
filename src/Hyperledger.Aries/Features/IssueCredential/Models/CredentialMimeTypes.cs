@@ -14,5 +14,10 @@
         /// Application JSON mime type
         /// </summary>
         public const string ApplicationJsonMimeType = "application/json";
+        
+        /// <summary>
+        /// MIME type for images in PNG format. The content should be a PNG file which is encoded in Base64.
+        /// </summary>
+        public const string ImagePngMimeType = "image/png";
     }
 }

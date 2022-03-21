@@ -130,6 +130,37 @@ namespace Hyperledger.Aries.Tests.Protocols
         }
 
         [Fact]
+        public async Task CanStoreAndReceiveImagePngMimeTypes()
+        {
+            const string pngFile = "base64_encoded_png_image_file";
+            
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
+                _schemaService, _credentialService, _messages, issuerConnection,
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
+                {
+                    new CredentialPreviewAttribute
+                    {
+                        MimeType = CredentialMimeTypes.ImagePngMimeType,
+                        Name = "preview_image",
+                        Value = pngFile
+                    }
+                });
+
+            var actualResult = string.Empty;
+            foreach (var credentialPreviewAttribute in holderCredential.CredentialAttributesValues)
+            {
+                if (credentialPreviewAttribute.MimeType == CredentialMimeTypes.ImagePngMimeType)
+                    actualResult = credentialPreviewAttribute.Value as string;
+            }
+            
+            Assert.Equal(pngFile, actualResult);
+        }
+        
+
+        [Fact]
         public async Task CanCreateCredentialOffer()
         {
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
@@ -217,7 +248,6 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
             Assert.True(ex.Message.Split('\n').Count() == 2);
         }
-
 
         [Fact]
         public async Task RevokeCredentialOfferThrowsCredentialNotFound()
