@@ -13,23 +13,10 @@ namespace Hyperledger.Aries.Features.RevocationNotification
         /// <summary>
         /// Initializes a new instance of <see cref="RevocationNotificationMessage"/> class.
         /// </summary>
-        public RevocationNotificationMessage()
+        public RevocationNotificationMessage() : base(true)
         {
             Id = Guid.NewGuid().ToString();
-            Type = UseMessageTypesHttps
-                ? MessageTypesHttps.RevocationNotification
-                : MessageTypes.RevocationNotification;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="RevocationNotificationMessage"/> class.
-        /// </summary>
-        public RevocationNotificationMessage(bool useMessageTypeHttps = false) : base(useMessageTypeHttps)
-        {
-            Id = Guid.NewGuid().ToString();
-            Type = UseMessageTypesHttps
-                ? MessageTypesHttps.RevocationNotification
-                : MessageTypes.RevocationNotification;
+            Type = MessageTypesHttps.RevocationNotification;
         }
 
         /// <summary>

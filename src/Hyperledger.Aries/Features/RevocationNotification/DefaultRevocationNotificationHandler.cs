@@ -29,9 +29,7 @@ namespace Hyperledger.Aries.Features.RevocationNotification
         /// </value>
         public IEnumerable<MessageType> SupportedMessageTypes => new MessageType[]
         {
-            MessageTypes.RevocationNotification,
             MessageTypesHttps.RevocationNotification,
-            MessageTypes.RevocationNotificationAcknowledgement, 
             MessageTypesHttps.RevocationNotificationAcknowledgement
         };
 
@@ -44,24 +42,22 @@ namespace Hyperledger.Aries.Features.RevocationNotification
         {
             switch (messageContext.GetMessageType())
             {
-                case MessageTypes.RevocationNotification:
                 case MessageTypesHttps.RevocationNotification:
                 {
                     var revocationNotificationMessage = messageContext.GetMessage<RevocationNotificationMessage>();
-                    await _revocationNotificationService.ProcessRevocationNotificationAsync(
+                    var acknowledgeMessage = await _revocationNotificationService.ProcessRevocationNotificationAsync(
                         agentContext, revocationNotificationMessage);
-                    return null;
+                    return acknowledgeMessage;
                 }    
-
-                default:
-                    throw new AriesFrameworkException(ErrorCode.InvalidMessage,
-                        $"Unsupported message type {messageContext.GetMessageType()}");
                 
-                case MessageTypes.RevocationNotificationAcknowledgement:
                 case MessageTypesHttps.RevocationNotificationAcknowledgement:
                     await _revocationNotificationService.ProcessRevocationNotificationAcknowledgementAsync(
                         agentContext, messageContext.GetMessage<RevocationNotificationAcknowledgeMessage>());
                     return null;
+                
+                default:
+                    throw new AriesFrameworkException(ErrorCode.InvalidMessage,
+                        $"Unsupported message type {messageContext.GetMessageType()}");
             }
         }
     }

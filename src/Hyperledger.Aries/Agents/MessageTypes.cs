@@ -56,18 +56,6 @@
         public const string DiscoveryDiscloseMessageType = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/discover-features/1.0/disclose";
 
         /// <summary>
-        /// Acknowledge Revocation Notification Message Type.
-        /// </summary>
-        public const string RevocationNotificationAcknowledgement =
-            "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/revocation_notification/1.0/ack";
-        
-        /// <summary>
-        /// Revocation Notification Message Type.
-        /// </summary>
-        public const string RevocationNotification =
-            "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/revocation_notification/1.0/revoke";
-
-        /// <summary>
         /// Issue Credential
         /// </summary>
         public static class IssueCredentialNames

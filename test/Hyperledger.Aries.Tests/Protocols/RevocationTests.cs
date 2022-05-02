@@ -139,11 +139,11 @@ namespace Hyperledger.Aries.Tests.Protocols
             var receivedRevocationNotificationAckMessage = false;
 
             _fixture.EventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(x => x.MessageType == MessageTypes.RevocationNotification)
+                .Where(x => x.MessageType == MessageTypesHttps.RevocationNotification)
                 .Subscribe(_ => receivedRevocationNotificationMessage = true);
             
             _fixture.EventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
-                .Where(x => x.MessageType == MessageTypes.RevocationNotification)
+                .Where(x => x.MessageType == MessageTypesHttps.RevocationNotification)
                 .Subscribe(_ => receivedRevocationNotificationAckMessage = true);
             
             

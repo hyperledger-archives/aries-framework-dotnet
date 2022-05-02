@@ -14,7 +14,7 @@ namespace Hyperledger.Aries.Features.RevocationNotification
         /// </summary>
         /// <param name="agentContext">The agent context.</param>
         /// <param name="revocationNotificationMessage">The incoming revocation notification message.</param>
-        public Task ProcessRevocationNotificationAsync(
+        public Task<RevocationNotificationAcknowledgeMessage> ProcessRevocationNotificationAsync(
             IAgentContext agentContext,
             RevocationNotificationMessage revocationNotificationMessage);
 
