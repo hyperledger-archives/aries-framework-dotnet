@@ -40,6 +40,8 @@ namespace Hyperledger.Aries.Features.RevocationNotification
             IAgentContext agentContext,
             RevocationNotificationMessage revocationNotificationMessage)
         {
+            RevocationNotificationAcknowledgeMessage result = null;
+            
             var plsAckDec = revocationNotificationMessage.FindDecorator<PleaseAckDecorator>(
                 DecoratorNames.PleaseAckDecorator);
             
@@ -55,19 +57,8 @@ namespace Hyperledger.Aries.Features.RevocationNotification
                 };    
                 acknowledgeMessage.ThreadFrom(revocationNotificationMessage);
 
-                await credentialRecord.TriggerAsync(CredentialTrigger.Revoke);
-                await _recordService.UpdateAsync(agentContext.Wallet, credentialRecord);
-                _eventAggregator.Publish(new ServiceMessageProcessingEvent
-                {
-                    RecordId = credentialRecord.Id, 
-                    MessageType = MessageTypesHttps.RevocationNotification,
-                    ThreadId = revocationNotificationMessage.ThreadId
-                });
-
                 if (plsAckDec.On.Contains(OnValues.OUTCOME) || plsAckDec.On.Contains(OnValues.RECEIPT))
-                    return acknowledgeMessage;
-                
-                return null;
+                    result = acknowledgeMessage;
             }
             
             await credentialRecord.TriggerAsync(CredentialTrigger.Revoke);
@@ -79,7 +70,7 @@ namespace Hyperledger.Aries.Features.RevocationNotification
                 ThreadId = revocationNotificationMessage.ThreadId
             });
 
-            return null;
+            return result;
         }
 
         /// <inheritdoc />
