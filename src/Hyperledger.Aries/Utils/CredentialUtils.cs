@@ -32,6 +32,7 @@ namespace Hyperledger.Aries.Utils
                 {
                     case CredentialMimeTypes.TextMimeType:
                     case CredentialMimeTypes.ApplicationJsonMimeType:
+                    case CredentialMimeTypes.ImagePngMimeType:
                         result.Add(item.Name, FormatStringCredentialAttribute(item));
                         break;
                     default:
@@ -99,6 +100,7 @@ namespace Hyperledger.Aries.Utils
                 case null:
                 case CredentialMimeTypes.TextMimeType:
                 case CredentialMimeTypes.ApplicationJsonMimeType:
+                case CredentialMimeTypes.ImagePngMimeType:
                     break;
                 default:
                     throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, $"{attribute.Name} mime type of {attribute.MimeType} not supported");
@@ -141,6 +143,7 @@ namespace Hyperledger.Aries.Utils
             {
                 case CredentialMimeTypes.TextMimeType:
                 case CredentialMimeTypes.ApplicationJsonMimeType:
+                case CredentialMimeTypes.ImagePngMimeType:
                     return (string)attributeValue;
                 default:
                     throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, $"Mime type of {mimeType} not supported");
@@ -161,6 +164,7 @@ namespace Hyperledger.Aries.Utils
                     return attributeValue.Value<string>();
                 case CredentialMimeTypes.TextMimeType:
                 case CredentialMimeTypes.ApplicationJsonMimeType:
+                case CredentialMimeTypes.ImagePngMimeType:
                     return attributeValue.Value<string>();
                 default:
                     throw new AriesFrameworkException(ErrorCode.InvalidParameterFormat, $"Mime type of {mimeType} not supported");
