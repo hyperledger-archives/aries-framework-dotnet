@@ -5,6 +5,8 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Extensions;
@@ -17,12 +19,13 @@ using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Utils;
+using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Mock;
 using Hyperledger.TestHarness.Utils;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Hyperledger.TestHarness
+namespace Hyperledger.Aries.TestHarness
 {
     public static class AgentScenarios
     {

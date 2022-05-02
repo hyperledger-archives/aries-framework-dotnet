@@ -17,6 +17,7 @@ using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Runtime;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.TestHarness;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.WalletApi;

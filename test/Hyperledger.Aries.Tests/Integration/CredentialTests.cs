@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.TestHarness;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Mock;
 using Xunit;

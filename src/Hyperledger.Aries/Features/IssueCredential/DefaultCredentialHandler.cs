@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Features.IssueCredential.Models.Messages;
 using Hyperledger.Aries.Features.IssueCredential.Models;
 using Hyperledger.Aries.Storage;
 using Newtonsoft.Json;

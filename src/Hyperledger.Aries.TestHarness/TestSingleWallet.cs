@@ -36,7 +36,7 @@ namespace Hyperledger.TestHarness
 
         protected virtual string GetPoolName() => "TestPool";
         protected virtual string GetIssuerSeed() => null;
-        public async Task DisposeAsync()
+        public virtual async Task DisposeAsync()
         {
             var walletOptions = Host.Services.GetService<IOptions<AgentOptions>>().Value;
             await Host.StopAsync();
@@ -50,7 +50,7 @@ namespace Hyperledger.TestHarness
         /// Create a single wallet and enable payments
         /// </summary>
         /// <returns></returns>
-        public async Task InitializeAsync()
+        public virtual async Task InitializeAsync()
         {
             Host = new HostBuilder()
                 .ConfigureServices(services =>

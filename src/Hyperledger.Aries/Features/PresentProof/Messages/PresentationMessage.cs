@@ -12,7 +12,7 @@ namespace Hyperledger.Aries.Features.PresentProof
     public class PresentationMessage : AgentMessage
     {        
         /// <summary>
-        /// Initializes a new instace of the <see cref="PresentationMessage" /> class.
+        /// Initializes a new instance of the <see cref="PresentationMessage" /> class.
         /// </summary>
         public PresentationMessage() : base()
         {
@@ -21,7 +21,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <summary>
-        /// Initializes a new instace of the <see cref="PresentationMessage" /> class.
+        /// Initializes a new instance of the <see cref="PresentationMessage" /> class.
         /// </summary>
         public PresentationMessage(bool useMessageTypesHttps = false) : base(useMessageTypesHttps)
         {

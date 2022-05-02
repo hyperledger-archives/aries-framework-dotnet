@@ -1,13 +1,13 @@
 using System;
 using Hyperledger.Aries.Agents;
-using Newtonsoft.Json;
+using Hyperledger.Aries.Common;
 
 namespace Hyperledger.Aries.Features.PresentProof.Messages
 {
     /// <summary>
     /// Presentation acknowledge message
     /// </summary>
-    public class PresentationAcknowledgeMessage : AgentMessage
+    public class PresentationAcknowledgeMessage : AcknowledgeMessage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PresentationAcknowledgeMessage" /> class.
@@ -26,11 +26,5 @@ namespace Hyperledger.Aries.Features.PresentProof.Messages
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps ? MessageTypesHttps.PresentProofNames.AcknowledgePresentation : MessageTypes.PresentProofNames.AcknowledgePresentation;
         }
-        
-        /// <summary>
-        /// Gets or sets the acknowledgement status.
-        /// </summary>
-        [JsonProperty("status")]
-        public string Status { get; set; }
     }
 }

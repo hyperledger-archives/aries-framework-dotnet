@@ -5,6 +5,7 @@ using Hyperledger.Aries.Features.Handshakes.Connection;
 using Hyperledger.Aries.Features.Handshakes.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
+using Hyperledger.Aries.Features.RevocationNotification;
 using Hyperledger.Aries.Features.Routing;
 using Hyperledger.Aries.Features.TrustPing;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -28,6 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
             collection.AddTransient<DefaultTrustPingMessageHandler>();
             collection.AddTransient<DefaultDiscoveryHandler>();
             collection.AddTransient<DefaultBasicMessageHandler>();
+            collection.AddTransient<DefaultRevocationNotificationHandler>();
         }
 
         /// <summary>

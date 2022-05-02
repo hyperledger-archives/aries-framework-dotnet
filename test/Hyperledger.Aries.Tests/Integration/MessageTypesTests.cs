@@ -1,10 +1,8 @@
 ﻿using Hyperledger.Aries.Storage;
-using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Mock;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using Hyperledger.Aries.TestHarness;
 using Xunit;
 
 namespace Hyperledger.Aries.Tests.Integration

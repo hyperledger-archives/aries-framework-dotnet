@@ -10,10 +10,10 @@ using Hyperledger.Aries.Decorators;
 using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Decorators.Service;
 using Hyperledger.Aries.Decorators.Threading;
+using Hyperledger.Aries.Decorators.PleaseAck;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.Handshakes.Connection;
-using Hyperledger.Aries.Features.IssueCredential.Models;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Models.Records;
@@ -26,7 +26,9 @@ using Hyperledger.Indy.BlobStorageApi;
 using Hyperledger.Indy.DidApi;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using Hyperledger.Aries.Features.IssueCredential.Models.Messages;
 using Polly;
+using Hyperledger.Aries.Features.RevocationNotification;
 
 namespace Hyperledger.Aries.Features.IssueCredential
 {
@@ -175,7 +177,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
         }
 
         /// <inheritdoc />
-        public virtual async Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId)
+        public virtual async Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId, bool sendRevocationNotification = false)
         {
             var credentialRecord = await GetAsync(agentContext, credentialId);
 
@@ -213,12 +215,28 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 paymentInfo: paymentInfo);
 
             if (paymentInfo != null)
-            {
                 await RecordService.UpdateAsync(agentContext.Wallet, paymentInfo.PaymentAddress);
-            }
 
             // Update local credential record
             await RecordService.UpdateAsync(agentContext.Wallet, credentialRecord);
+            
+            if (!sendRevocationNotification)
+                return;
+
+            var connection = await ConnectionService.GetAsync(agentContext, credentialRecord.ConnectionId);
+
+            Logger.LogInformation($"Sending Revocation Notification for credential {credentialId} to {connection.Endpoint}...");
+
+            var revocationNotificationMessage = new RevocationNotificationMessage
+            {
+                ThreadId = credentialRecord.GetTag(TagConstants.LastThreadId)
+            };
+            revocationNotificationMessage.AddDecorator(new PleaseAckDecorator(new [] {OnValues.OUTCOME}), DecoratorNames.PleaseAckDecorator);
+
+            await MessageService.SendAsync(
+                agentContext,
+                revocationNotificationMessage,
+                connection);
         }
 
         /// <inheritdoc />

@@ -13,11 +13,12 @@ using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.PoolApi;
+using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Utils;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Hyperledger.TestHarness
+namespace Hyperledger.Aries.TestHarness
 {
     public static class Scenarios
     {

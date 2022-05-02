@@ -1,7 +1,7 @@
 ﻿namespace Hyperledger.Aries.Decorators
 {
     /// <summary>
-    /// Decleration of attachment identifiers.
+    /// Declaration of attachment identifiers.
     /// </summary>
     public static class DecoratorNames
     {
@@ -16,13 +16,18 @@
         public const string ThreadingDecorator = "thread";
 
         /// <summary>
-        /// Attachement decorator.
+        /// Attachment decorator.
         /// </summary>
-        public const string AttachementDecorator = "attachement";
+        public const string AttachmentDecorator = "attachment";
 
         /// <summary>
         /// Service Decorator
         /// </summary>
         public const string ServiceDecorator = "service";
+        
+        /// <summary>
+        /// Please ACK Decorator
+        /// </summary>
+        public const string PleaseAckDecorator = "please_ack";
     }
 }

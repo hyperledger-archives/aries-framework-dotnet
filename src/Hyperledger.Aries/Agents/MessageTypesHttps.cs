@@ -56,6 +56,16 @@
         public const string DiscoveryDiscloseMessageType = "https://didcomm.org/discover-features/1.0/disclose";
 
         /// <summary>
+        /// Acknowledge Revocation Notification Message Type.
+        /// </summary>
+        public const string RevocationNotificationAcknowledgement =
+            "https://didcomm.org/revocation_notification/1.0/ack";
+        
+        /// <summary>
+        /// Revocation Notification Message Type.
+        /// </summary>
+        public const string RevocationNotification =
+            "https://didcomm.org/revocation_notification/1.0/revoke";
         /// Did Exchange Message Types
         /// </summary>
         public static class DidExchange
@@ -120,7 +130,7 @@
         /// <summary>
         /// Type names for Present Proof Protocol
         /// </summary>
-        public class PresentProofNames
+        public static class PresentProofNames
         {
             /// <summary>
             /// Acknowledge Presentation Message Type Name

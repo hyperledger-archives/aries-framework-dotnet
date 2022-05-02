@@ -28,6 +28,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
+using Hyperledger.Aries.TestHarness;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {

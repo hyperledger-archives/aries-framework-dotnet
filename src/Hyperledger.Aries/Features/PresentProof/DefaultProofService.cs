@@ -664,7 +664,7 @@ namespace Hyperledger.Aries.Features.PresentProof
                 proofRecord.RequestJson = requestJson;
                 await RecordService.UpdateAsync(agentContext.Wallet, proofRecord);
             }
-
+            
             EventAggregator.Publish(new ServiceMessageProcessingEvent
             {
                 RecordId = proofRecord.Id,
@@ -807,8 +807,8 @@ namespace Hyperledger.Aries.Features.PresentProof
                     from: 0, //proofRequest.NonRevoked.From,
                     to: proofRequest.NonRevoked.To);
 
-                var tailsfile = await TailsService.EnsureTailsExistsAsync(agentContext, credential.RevocationRegistryId);
-                var tailsReader = await TailsService.OpenTailsAsync(tailsfile);
+                var tailsFile = await TailsService.EnsureTailsExistsAsync(agentContext, credential.RevocationRegistryId);
+                var tailsReader = await TailsService.OpenTailsAsync(tailsFile);
 
                 var state = await AnonCreds.CreateRevocationStateAsync(
                     blobStorageReader: tailsReader,

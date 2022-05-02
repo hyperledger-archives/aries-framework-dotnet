@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Common;
+using Hyperledger.Aries.Features.IssueCredential.Models.Messages;
 using Hyperledger.Aries.Features.Handshakes.Common;
-using Hyperledger.Aries.Features.IssueCredential.Models;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.IssueCredential
@@ -168,8 +168,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialId">Identifier of the credential to be revoked.</param>
+        /// <param name="sendRevocationNotification">If true sends a Revocation Notification to the holder</param>
         /// <returns>The response async.</returns>
-        Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId);
+        Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId, bool sendRevocationNotification = false);
 
         /// <summary>
         /// Deletes the credential and it's associated record

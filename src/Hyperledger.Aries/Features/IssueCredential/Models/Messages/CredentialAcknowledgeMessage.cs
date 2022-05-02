@@ -1,13 +1,13 @@
 using System;
 using Hyperledger.Aries.Agents;
-using Newtonsoft.Json;
+using Hyperledger.Aries.Common;
 
-namespace Hyperledger.Aries.Features.IssueCredential.Models
+namespace Hyperledger.Aries.Features.IssueCredential.Models.Messages
 {
     /// <summary>
     /// Credential acknowledge message
     /// </summary>
-    public class CredentialAcknowledgeMessage : AgentMessage
+    public class CredentialAcknowledgeMessage : AcknowledgeMessage
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CredentialAcknowledgeMessage" /> class.
@@ -26,11 +26,5 @@ namespace Hyperledger.Aries.Features.IssueCredential.Models
             Id = Guid.NewGuid().ToString();
             Type = UseMessageTypesHttps ? MessageTypesHttps.IssueCredentialNames.AcknowledgeCredential : MessageTypes.IssueCredentialNames.AcknowledgeCredential;
         }
-        
-        /// <summary>
-        /// Gets or sets the acknowledgement status.
-        /// </summary>
-        [JsonProperty("status")]
-        public string Status { get; set; }
     }
 }
