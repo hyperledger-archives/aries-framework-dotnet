@@ -238,7 +238,12 @@ namespace Hyperledger.TestHarness.Mock
         }
 
         /// <inheritdoc />
-        public Task DisposeAsync() => Host.StopAsync(TimeSpan.FromSeconds(10));
+        public Task DisposeAsync()
+        {
+            Host.StopAsync(TimeSpan.FromSeconds(10));
+            Host.Dispose();
+            return Task.CompletedTask;
+        }
 
         public class PairedAgents
         {

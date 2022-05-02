@@ -36,7 +36,6 @@ namespace Hyperledger.Aries.Features.Handshakes.Common
             return (ConnectionRecord)MemberwiseClone();
         }
 
-
         /// <summary>
         /// Creates a deep copy of the current <see cref="ConnectionRecord"/>
         /// </summary>
