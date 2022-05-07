@@ -777,6 +777,49 @@ namespace Hyperledger.Aries.Features.PresentProof
             return result.ToJson();
         }
 
+        private bool HasNonRevokedOnAttributeLevel(ProofRequest proofRequest)
+        {
+            var hasNonRevokedOnAttributeLevel = false;
+            foreach (var proofRequestRequestedAttribute in proofRequest.RequestedAttributes)
+            {
+                if (proofRequestRequestedAttribute.Value.NonRevoked != null)
+                    hasNonRevokedOnAttributeLevel = true;
+            }
+
+            foreach (var proofRequestRequestedPredicate in proofRequest.RequestedPredicates)
+            {
+                if (proofRequestRequestedPredicate.Value.NonRevoked != null)
+                    hasNonRevokedOnAttributeLevel = true;
+            }
+
+            return hasNonRevokedOnAttributeLevel;
+        }
+
+        private async Task<(ParseRegistryResponseResult, string)> BuildRevocationStateAsync(
+            IAgentContext agentContext, CredentialInfo credential, ParseResponseResult registryDefinition,
+            RevocationInterval nonRevoked)
+        {
+            var delta = await LedgerService.LookupRevocationRegistryDeltaAsync(
+                agentContext: agentContext,
+                revocationRegistryId: credential.RevocationRegistryId,
+                // Ledger will not return correct revocation state if the 'from' field
+                // is other than 0
+                from: 0, //nonRevoked.From,
+                to: nonRevoked.To);
+
+            var tailsFile = await TailsService.EnsureTailsExistsAsync(agentContext, credential.RevocationRegistryId);
+            var tailsReader = await TailsService.OpenTailsAsync(tailsFile);
+
+            var state = await AnonCreds.CreateRevocationStateAsync(
+                blobStorageReader: tailsReader,
+                revRegDef: registryDefinition.ObjectJson,
+                revRegDelta: delta.ObjectJson,
+                timestamp: (long)delta.Timestamp,
+                credRevId: credential.CredentialRevocationId);
+
+            return (delta, state);
+        }
+
         private async Task<string> BuildRevocationStatesAsync(IAgentContext agentContext,
             IEnumerable<CredentialInfo> credentialObjects,
             ProofRequest proofRequest,
@@ -787,43 +830,65 @@ namespace Hyperledger.Aries.Features.PresentProof
             allCredentials.AddRange(requestedCredentials.RequestedPredicates.Values);
 
             var result = new Dictionary<string, Dictionary<string, JObject>>();
+            
+            if (proofRequest.NonRevoked == null)
+                return result.ToJson();
+            
+            if(!HasNonRevokedOnAttributeLevel(proofRequest))
+                return result.ToJson();
+            
             foreach (var requestedCredential in allCredentials)
             {
                 // ReSharper disable once PossibleMultipleEnumeration
                 var credential = credentialObjects.First(x => x.Referent == requestedCredential.CredentialId);
-                if (credential.RevocationRegistryId == null ||
-                    (proofRequest.NonRevoked == null))
+                if (credential.RevocationRegistryId == null)
                     continue;
 
                 var registryDefinition = await LedgerService.LookupRevocationRegistryDefinitionAsync(
                     agentContext: agentContext,
                     registryId: credential.RevocationRegistryId);
 
-                var delta = await LedgerService.LookupRevocationRegistryDeltaAsync(
-                    agentContext: agentContext,
-                    revocationRegistryId: credential.RevocationRegistryId,
-                    // Ledger will not return correct revocation state if the 'from' field
-                    // is other than 0
-                    from: 0, //proofRequest.NonRevoked.From,
-                    to: proofRequest.NonRevoked.To);
-
-                var tailsFile = await TailsService.EnsureTailsExistsAsync(agentContext, credential.RevocationRegistryId);
-                var tailsReader = await TailsService.OpenTailsAsync(tailsFile);
-
-                var state = await AnonCreds.CreateRevocationStateAsync(
-                    blobStorageReader: tailsReader,
-                    revRegDef: registryDefinition.ObjectJson,
-                    revRegDelta: delta.ObjectJson,
-                    timestamp: (long)delta.Timestamp,
-                    credRevId: credential.CredentialRevocationId);
-
-                if (!result.ContainsKey(credential.RevocationRegistryId))
-                    result.Add(credential.RevocationRegistryId, new Dictionary<string, JObject>());
-
-                requestedCredential.Timestamp = (long)delta.Timestamp;
-                if (!result[credential.RevocationRegistryId].ContainsKey($"{delta.Timestamp}"))
+                if (proofRequest.NonRevoked != null)
                 {
-                    result[credential.RevocationRegistryId].Add($"{delta.Timestamp}", JObject.Parse(state));
+                    var (delta, state) = await BuildRevocationStateAsync(
+                        agentContext, credential, registryDefinition, proofRequest.NonRevoked);
+                    
+                    if (!result.ContainsKey(credential.RevocationRegistryId))
+                        result.Add(credential.RevocationRegistryId, new Dictionary<string, JObject>());
+
+                    requestedCredential.Timestamp = (long) delta.Timestamp;
+                    if (!result[credential.RevocationRegistryId].ContainsKey($"{delta.Timestamp}"))
+                        result[credential.RevocationRegistryId].Add($"{delta.Timestamp}", JObject.Parse(state));
+                    
+                    continue;
+                }
+
+                foreach (var proofRequestRequestedAttribute in proofRequest.RequestedAttributes)
+                {
+                    var revocationInterval = proofRequestRequestedAttribute.Value.NonRevoked;
+                    var (delta, state) = await BuildRevocationStateAsync(
+                        agentContext, credential, registryDefinition, revocationInterval);
+                    
+                    if (!result.ContainsKey(credential.RevocationRegistryId))
+                        result.Add(credential.RevocationRegistryId, new Dictionary<string, JObject>());
+
+                    requestedCredential.Timestamp = (long) delta.Timestamp;
+                    if (!result[credential.RevocationRegistryId].ContainsKey($"{delta.Timestamp}"))
+                        result[credential.RevocationRegistryId].Add($"{delta.Timestamp}", JObject.Parse(state));
+                }
+
+                foreach (var proofRequestRequestedPredicate in proofRequest.RequestedPredicates)
+                {
+                    var revocationInterval = proofRequestRequestedPredicate.Value.NonRevoked;
+                    var (delta, state) = await BuildRevocationStateAsync(
+                        agentContext, credential, registryDefinition, revocationInterval);
+                    
+                    if (!result.ContainsKey(credential.RevocationRegistryId))
+                        result.Add(credential.RevocationRegistryId, new Dictionary<string, JObject>());
+
+                    requestedCredential.Timestamp = (long) delta.Timestamp;
+                    if (!result[credential.RevocationRegistryId].ContainsKey($"{delta.Timestamp}"))
+                        result[credential.RevocationRegistryId].Add($"{delta.Timestamp}", JObject.Parse(state));
                 }
             }
 
@@ -898,9 +963,9 @@ namespace Hyperledger.Aries.Features.PresentProof
                     {
                         referents.Add(attr.Referent, attr);
                     }
-
                 }
             }
+            
             if (proofProposal.ProposedPredicates.Count > 1)
             {
                 var predList = proofProposal.ProposedPredicates;
@@ -917,13 +982,10 @@ namespace Hyperledger.Aries.Features.PresentProof
                     {
                         referents.Add(pred.Referent, pred);
                     }
-
                 }
             }
-
         }
 
         #endregion
-
     }
 }
