@@ -19,6 +19,7 @@ using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.AnonCredsApi;
+using Hyperledger.Indy.LedgerApi;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -779,20 +780,15 @@ namespace Hyperledger.Aries.Features.PresentProof
 
         private bool HasNonRevokedOnAttributeLevel(ProofRequest proofRequest)
         {
-            var hasNonRevokedOnAttributeLevel = false;
             foreach (var proofRequestRequestedAttribute in proofRequest.RequestedAttributes)
-            {
                 if (proofRequestRequestedAttribute.Value.NonRevoked != null)
-                    hasNonRevokedOnAttributeLevel = true;
-            }
+                    return true;
 
             foreach (var proofRequestRequestedPredicate in proofRequest.RequestedPredicates)
-            {
                 if (proofRequestRequestedPredicate.Value.NonRevoked != null)
-                    hasNonRevokedOnAttributeLevel = true;
-            }
+                    return true;
 
-            return hasNonRevokedOnAttributeLevel;
+            return false;
         }
 
         private async Task<(ParseRegistryResponseResult, string)> BuildRevocationStateAsync(
@@ -831,12 +827,9 @@ namespace Hyperledger.Aries.Features.PresentProof
 
             var result = new Dictionary<string, Dictionary<string, JObject>>();
             
-            if (proofRequest.NonRevoked == null)
+            if (proofRequest.NonRevoked == null && !HasNonRevokedOnAttributeLevel(proofRequest))
                 return result.ToJson();
-            
-            if(!HasNonRevokedOnAttributeLevel(proofRequest))
-                return result.ToJson();
-            
+
             foreach (var requestedCredential in allCredentials)
             {
                 // ReSharper disable once PossibleMultipleEnumeration
