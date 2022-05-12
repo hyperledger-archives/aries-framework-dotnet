@@ -344,5 +344,86 @@ namespace Hyperledger.Aries.Tests.Protocols
             var valid = await _fixture.IssuerProofService.VerifyProofAsync(_fixture.IssuerAgentContext, proofRecordIssuer.Id);
             Assert.True(valid);
         }
+        
+        [Fact(DisplayName = "Test verification with NonRevoked set on attribute level")]
+        public async Task CanVerifyWithNonRevokedSetOnAttributeLevel()
+        {
+            var (offer, record) = await _fixture.IssuerCredentialService
+                .CreateOfferAsync(_fixture.IssuerAgentContext, new OfferConfiguration
+                {
+                    CredentialDefinitionId = _fixture.RevocableCredentialDefinitionId,
+                    IssuerDid = _fixture.IssuerConfiguration.IssuerDid,
+                    CredentialAttributeValues = new[]
+                    {
+                        new CredentialPreviewAttribute("name", "random"),
+                        new CredentialPreviewAttribute("age", "22")
+                    }
+                });
+            await _fixture.IssuerMessageService.SendAsync(_fixture.IssuerAgentContext, offer, _fixture.PairedAgents.Connection1);
+            
+            var credentialRecordOnHolderSide = (await _fixture.HolderCredentialService.ListAsync(_fixture.HolderAgentContext))
+                .First(credentialRecord => credentialRecord.State == CredentialState.Offered);
+            var (request, _) = await _fixture.HolderCredentialService.CreateRequestAsync(_fixture.HolderAgentContext, credentialRecordOnHolderSide.Id);
+            await _fixture.HolderMessageService.SendAsync(_fixture.HolderAgentContext, request, _fixture.PairedAgents.Connection2);
+
+            var credentialRecordOnIssuerSide = (await _fixture.IssuerCredentialService.ListRequestsAsync(
+                _fixture.IssuerAgentContext)).First();
+            var (issuance, _) = await _fixture.IssuerCredentialService.CreateCredentialAsync(_fixture.IssuerAgentContext, credentialRecordOnIssuerSide.Id);
+            await _fixture.IssuerMessageService.SendAsync(_fixture.IssuerAgentContext, issuance, _fixture.PairedAgents.Connection1);
+            
+            credentialRecordOnHolderSide =
+                await _fixture.HolderCredentialService.GetAsync(_fixture.HolderAgentContext,
+                    credentialRecordOnHolderSide.Id);
+            credentialRecordOnIssuerSide =
+                await _fixture.IssuerCredentialService.GetAsync(_fixture.IssuerAgentContext,
+                    credentialRecordOnIssuerSide.Id);
+            
+            Assert.Equal(CredentialState.Issued, credentialRecordOnHolderSide.State);
+            Assert.Equal(CredentialState.Issued, credentialRecordOnIssuerSide.State);
+            
+            var (requestPresentationMessage, proofRecordIssuer) = await _fixture.IssuerProofService
+                .CreateRequestAsync(_fixture.IssuerAgentContext, new ProofRequest
+                {
+                    Name = "Test Verification",
+                    Version = "1.0",
+                    Nonce = await AnonCreds.GenerateNonceAsync(),
+                    RequestedAttributes = new Dictionary<string, ProofAttributeInfo>
+                    {
+                        { "id-verification", new ProofAttributeInfo
+                            {
+                                Names = new [] { "name", "age" },
+                                NonRevoked = new RevocationInterval
+                                {
+                                    From = 0,
+                                    To = _now
+                                }            
+                            } 
+                        }
+                    }
+                });
+
+            var proofRecordHolder = await _fixture.HolderProofService.ProcessRequestAsync(_fixture.HolderAgentContext, requestPresentationMessage, _fixture.PairedAgents.Connection2);
+            var availableCredentials = await _fixture.HolderProofService
+                .ListCredentialsForProofRequestAsync(_fixture.HolderAgentContext, proofRecordHolder.RequestJson.ToObject<ProofRequest>(), "id-verification");  
+    
+            var(presentationMessage, _) = await _fixture.HolderProofService.CreatePresentationAsync(
+                _fixture.HolderAgentContext, proofRecordHolder.Id, new RequestedCredentials
+                {
+                    RequestedAttributes = new Dictionary<string, RequestedAttribute>
+                    {
+                        { "id-verification", new RequestedAttribute
+                            {
+                                CredentialId = availableCredentials.First().CredentialInfo.Referent,
+                                Revealed = true
+                            }
+                        }
+                    }
+                });
+
+            proofRecordIssuer = await _fixture.IssuerProofService.ProcessPresentationAsync(_fixture.IssuerAgentContext, presentationMessage);
+
+            var valid = await _fixture.IssuerProofService.VerifyProofAsync(_fixture.IssuerAgentContext, proofRecordIssuer.Id);
+            Assert.True(valid);
+        }
     }
 }
