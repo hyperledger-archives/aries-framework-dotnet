@@ -1,7 +1,7 @@
 ﻿using System;
 using Hyperledger.Aries.Decorators.Threading;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Xunit;
-using Hyperledger.Aries.Features.DidExchange;
 
 namespace Hyperledger.Aries.Tests.Decorators
 {

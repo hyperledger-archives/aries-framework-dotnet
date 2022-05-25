@@ -6,6 +6,11 @@
     public static class MessageTypesHttps
     {
         /// <summary>
+        /// The connection acknowledgement.
+        /// </summary>
+        public const string ConnectionAcknowledgement = "https://didcomm.org/connections/1.0/ack";
+        
+        /// <summary>
         /// The connection invitation.
         /// </summary>
         public const string ConnectionInvitation = "https://didcomm.org/connections/1.0/invitation";
@@ -54,10 +59,51 @@
 
         public const string OperationCompleted = "https://didcomm.org/operation-completed/1.0/operation-completed";
         /// <summary>
+        /// Acknowledge Revocation Notification Message Type.
+        /// </summary>
+        public const string RevocationNotificationAcknowledgement =
+            "https://didcomm.org/revocation_notification/1.0/ack";
+        
+        /// <summary>
+        /// Revocation Notification Message Type.
+        /// </summary>
+        public const string RevocationNotification =
+            "https://didcomm.org/revocation_notification/1.0/revoke";
+        /// Did Exchange Message Types
+        /// </summary>
+        public static class DidExchange
+        {
+            /// <summary>
+            ///  DidExchange Request Message Type
+            /// </summary>
+            public const string Request = "https://didcomm.org/didexchange/1.0/request";
+        
+            /// <summary>
+            /// DidExchange Response Message Type
+            /// </summary>
+            public const string Response = "https://didcomm.org/didexchange/1.0/response";
+        
+            /// <summary>
+            /// DidExchange Complete Message Type
+            /// </summary>
+            public const string Complete = "https://didcomm.org/didexchange/1.0/complete";
+
+            /// <summary>
+            /// DidExchange Problem Report Message Type
+            /// </summary>
+            public const string ProblemReport = "https://didcomm.org/didexchange/1.0/problem_report";
+        }
+
+        /// <summary>
         /// Issue Credential
         /// </summary>
         public static class IssueCredentialNames
         {
+            /// <summary>
+            /// Credential Acknowledge Message Type Name
+            /// </summary>
+            public const string AcknowledgeCredential = "https://didcomm.org/issue-credential/1.0/ack";
+
             /// <summary>
             /// Credential Propose Message Type Name
             /// </summary>
@@ -87,8 +133,13 @@
         /// <summary>
         /// Type names for Present Proof Protocol
         /// </summary>
-        public class PresentProofNames
+        public static class PresentProofNames
         {
+            /// <summary>
+            /// Acknowledge Presentation Message Type Name
+            /// </summary>
+            public const string AcknowledgePresentation = "https://didcomm.org/present-proof/1.0/ack";
+            
             /// <summary>
             /// Propose Presentation Message Type Name
             /// </summary>

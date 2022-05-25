@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Storage;
-using Hyperledger.TestHarness;
+using Hyperledger.Aries.TestHarness;
 using Hyperledger.TestHarness.Mock;
 using Xunit;
 
@@ -25,16 +25,20 @@ namespace Hyperledger.Aries.Tests.Integration
             _router.RegisterAgent(_agent2);
         }
 
-        [Fact]
-        public async Task CanConnect()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CanConnect(bool useDidKeyFormat)
         {
-            await AgentScenarios.EstablishConnectionAsync(_agent1, _agent2);
+            await AgentScenarios.EstablishConnectionAsync(_agent1, _agent2, useDidKeyFormat);
         }
 
-        [Fact]
-        public async Task CanConnectWithReturnRouting()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CanConnectWithReturnRouting(bool useDidKeyFormat)
         {
-            await AgentScenarios.EstablishConnectionWithReturnRoutingAsync(_agent1, _agent2);
+            await AgentScenarios.EstablishConnectionWithReturnRoutingAsync(_agent1, _agent2, useDidKeyFormat);
         }
 
         public async Task DisposeAsync()

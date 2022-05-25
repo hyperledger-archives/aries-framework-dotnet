@@ -4,8 +4,9 @@ using Hyperledger.Aries.Attachments;
 using Hyperledger.Aries.Attachments.Abstractions;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
-using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.OperationCompleted;
 using Hyperledger.Aries.Features.PresentProof;
@@ -57,6 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.TryAddSingleton<IEventAggregator, EventAggregator>();
             builder.TryAddSingleton<IConnectionService, DefaultConnectionService>();
             builder.TryAddSingleton<ICredentialService, DefaultCredentialService>();
+            builder.TryAddSingleton<IDidExchangeService, DefaultDidExchangeService>();
             builder.TryAddSingleton<ILedgerService, DefaultLedgerService>();
             builder.TryAddSingleton<ILedgerSigningService, DefaultLedgerSigningService>();
             builder.TryAddSingleton<IPoolService, DefaultPoolService>();
@@ -74,6 +76,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.TryAddSingleton<IStatisticService, DefaultStatisticService>();
             builder.TryAddSingleton<IProblemReportService, DefaultProblemReportService>();
             builder.TryAddSingleton<IOperationCompletedService, DefaultOperationCompletedService>();
+            builder.TryAddSingleton<IRevocationNotificationService, DefaultRevocationNotificationService>();
 
             return builder;
         }

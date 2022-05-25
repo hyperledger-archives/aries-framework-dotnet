@@ -1,10 +1,10 @@
-﻿using Hyperledger.Aries.Decorators.Attachments;
+﻿using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Agents;
 
 namespace Hyperledger.Aries.Tests.Decorators
 {

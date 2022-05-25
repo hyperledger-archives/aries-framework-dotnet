@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.TestHarness;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Mock;
 using Xunit;
@@ -26,7 +27,7 @@ namespace Hyperledger.Aries.Tests.Integration
 
         public async Task InitializeAsync()
         {
-            _issuerAgent = await MockUtils.CreateAsync("issuer", config1, cred, new MockAgentHttpHandler((cb) => _router.RouteMessage(cb.name, cb.data)), TestConstants.StewartDid);
+            _issuerAgent = await MockUtils.CreateAsync("issuer", config1, cred, new MockAgentHttpHandler((cb) => _router.RouteMessage(cb.name, cb.data)), TestConstants.StewardSeed);
             _router.RegisterAgent(_issuerAgent);
             _holderAgent = await MockUtils.CreateAsync("holder", config2, cred, new MockAgentHttpHandler((cb) => _router.RouteMessage((cb).name, cb.data)));
             _router.RegisterAgent(_holderAgent);
@@ -41,6 +42,18 @@ namespace Hyperledger.Aries.Tests.Integration
                 new CredentialPreviewAttribute("first_name", "Test"),
                 new CredentialPreviewAttribute("last_name", "Holder")
             });
+        }
+        
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task CanIssueCredentialConnectionless(bool useDidKeyFormat)
+        {
+            await AgentScenarios.IssueCredentialConnectionlessAsync(_issuerAgent, _holderAgent, new List<CredentialPreviewAttribute>
+            {
+                new CredentialPreviewAttribute("first_name", "Test"),
+                new CredentialPreviewAttribute("last_name", "Holder")
+            }, useDidKeyFormat);
         }
 
         public async Task DisposeAsync()

@@ -1,14 +1,15 @@
 namespace Hyperledger.Aries.AspNetCore.Features.Connections
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Configuration;
-  using Hyperledger.Aries.Contracts;
-  using Hyperledger.Aries.Features.DidExchange;
-  using Hyperledger.Aries.Features.TrustPing;
-  using Hyperledger.Aries.Models.Events;
-  using Hyperledger.Aries.Storage;
+  using Agents;
+  using Aries.Configuration;
+  using Aries.Features.Handshakes.Common;
+  using Aries.Features.Handshakes.Connection;
+  using Aries.Features.TrustPing;
+  using Contracts;
   using MediatR;
   using Microsoft.Extensions.Options;
+  using Models.Events;
+  using Storage;
   using System;
   using System.Collections.Generic;
   using System.Reactive.Subjects;

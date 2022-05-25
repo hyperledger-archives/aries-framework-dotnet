@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Common;
+using Hyperledger.Aries.Features.IssueCredential.Models.Messages;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.IssueCredential
@@ -166,8 +168,9 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </summary>
         /// <param name="agentContext">Agent Context.</param>
         /// <param name="credentialId">Identifier of the credential to be revoked.</param>
+        /// <param name="sendRevocationNotification">If true sends a Revocation Notification to the holder</param>
         /// <returns>The response async.</returns>
-        Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId);
+        Task RevokeCredentialAsync(IAgentContext agentContext, string credentialId, bool sendRevocationNotification = false);
 
         /// <summary>
         /// Deletes the credential and it's associated record
@@ -176,5 +179,22 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// <param name="credentialId"></param>
         /// <returns></returns>
         Task DeleteCredentialAsync(IAgentContext agentContext, string credentialId);
+        
+        /// <summary>
+        /// Creates a Credential Acknowledgement Message async.
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="credentialRecordId">The ID of the credential record.</param>
+        /// <param name="status">The status of the acknowledgement message</param>
+        /// <returns>The acknowledgement message</returns>
+        Task<CredentialAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string credentialRecordId, string status = AcknowledgementStatusConstants.Ok);
+
+        /// <summary>
+        /// Processes a Credential Acknowledgement Message async. 
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="credentialAcknowledgeMessage">The credential acknowledgement message.</param>
+        /// <returns>The record associated with the acknowledgement message</returns>
+        Task<CredentialRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext, CredentialAcknowledgeMessage credentialAcknowledgeMessage);
     }
 }

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Routing;
 using Hyperledger.Aries.Routing.Mediator.Storage;
@@ -59,10 +61,12 @@ namespace Hyperledger.TestHarness.Mock
         {
             AddConnectionHandler();
             AddCredentialHandler();
+            AddDidExchangeHandler();
             AddDiscoveryHandler();
             AddDiscoveryHandler();
             AddForwardHandler();
             AddProofHandler();
+            AddRevocationNotificationHandler();
             AddBasicMessageHandler();
             AddHandler<RetrieveBackupHandler>();
             AddHandler<DefaultStoreBackupHandler>();
@@ -234,7 +238,12 @@ namespace Hyperledger.TestHarness.Mock
         }
 
         /// <inheritdoc />
-        public Task DisposeAsync() => Host.StopAsync(TimeSpan.FromSeconds(10));
+        public Task DisposeAsync()
+        {
+            Host.StopAsync(TimeSpan.FromSeconds(10));
+            Host.Dispose();
+            return Task.CompletedTask;
+        }
 
         public class PairedAgents
         {

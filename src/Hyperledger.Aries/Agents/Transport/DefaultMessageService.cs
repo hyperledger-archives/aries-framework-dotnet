@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Decorators.Transport;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Logging;
@@ -79,7 +80,7 @@ namespace Hyperledger.Aries.Agents
 
         /// <inheritdoc />
         public async Task<MessageContext> SendReceiveAsync(IAgentContext agentContext, AgentMessage message, string recipientKey,
-            string endpointUri, string[] routingKeys = null, string senderKey = null)
+            string endpointUri, string[] routingKeys = null, string senderKey = null, ReturnRouteTypes returnType = ReturnRouteTypes.all)
         {
             Logger.LogInformation(LoggingEvents.SendMessage, "Recipient {0} Endpoint {1}", recipientKey,
                 endpointUri);
@@ -100,7 +101,7 @@ namespace Hyperledger.Aries.Agents
             if (dispatcher == null)
                 throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, $"No registered dispatcher for transport scheme : {uri.Scheme}");
 
-            message.AddReturnRouting();
+            message.AddReturnRouting(returnType);
             var wireMsg = await CryptoUtils.PrepareAsync(agentContext, message, recipientKey, routingKeys, senderKey);
 
             var response = await dispatcher.DispatchAsync(uri, new PackedMessageContext(wireMsg));

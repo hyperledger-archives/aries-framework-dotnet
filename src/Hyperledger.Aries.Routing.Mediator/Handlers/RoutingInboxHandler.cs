@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.Logging;

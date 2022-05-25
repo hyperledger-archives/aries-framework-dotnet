@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Common;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.PresentProof.Messages;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.PresentProof
@@ -12,7 +14,6 @@ namespace Hyperledger.Aries.Features.PresentProof
     /// </summary>
     public interface IProofService
     {
-
         /// <summary>
         /// Creates a proof proposal.
         /// </summary>
@@ -66,8 +67,9 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </summary>
         /// <param name="agentContext"></param>
         /// <param name="proofRequest"></param>
+        /// <param name="useDidKeyFormat"></param>
         /// <returns></returns>
-        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, ProofRequest proofRequest);
+        Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(IAgentContext agentContext, ProofRequest proofRequest, bool useDidKeyFormat = false);
 
         /// <summary>
         /// Creates a proof request.
@@ -224,5 +226,22 @@ namespace Hyperledger.Aries.Features.PresentProof
             IAgentContext agentContext,
             ProofRequest proofRequest,
             string attributeReferent);
+
+        /// <summary>
+        /// Creates a presentation acknowledge message async.
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="proofRecordId">The ID of the proof record that is used.</param>
+        /// <param name="status">The status of the acknowledgement message</param>
+        /// <returns>The Presentation Acknowledgement Message.</returns>
+        Task<PresentationAcknowledgeMessage> CreateAcknowledgeMessageAsync(IAgentContext agentContext, string proofRecordId, string status = AcknowledgementStatusConstants.Ok);
+
+        /// <summary>
+        /// Processes a presentation acknowledge message async.
+        /// </summary>
+        /// <param name="agentContext">Agent Context.</param>
+        /// <param name="presentationAcknowledgeMessage">The presentation acknowledgement message.</param>
+        /// <returns>The proof record associated with the acknowledge message.</returns>
+        Task<ProofRecord> ProcessAcknowledgeMessageAsync(IAgentContext agentContext, PresentationAcknowledgeMessage presentationAcknowledgeMessage);
     }
 }

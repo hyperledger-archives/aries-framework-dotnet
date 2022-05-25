@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Features.IssueCredential.Models.Messages;
+using Hyperledger.Aries.Features.IssueCredential.Models;
 using Hyperledger.Aries.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -44,9 +46,11 @@ namespace Hyperledger.Aries.Features.IssueCredential
         /// </value>
         public IEnumerable<MessageType> SupportedMessageTypes => new MessageType[]
         {
+            MessageTypes.IssueCredentialNames.AcknowledgeCredential,
             MessageTypes.IssueCredentialNames.OfferCredential,
             MessageTypes.IssueCredentialNames.RequestCredential,
             MessageTypes.IssueCredentialNames.IssueCredential,
+            MessageTypesHttps.IssueCredentialNames.AcknowledgeCredential,
             MessageTypesHttps.IssueCredentialNames.OfferCredential,
             MessageTypesHttps.IssueCredentialNames.RequestCredential,
             MessageTypesHttps.IssueCredentialNames.IssueCredential
@@ -64,6 +68,14 @@ namespace Hyperledger.Aries.Features.IssueCredential
             switch (messageContext.GetMessageType())
             {
                 // v1
+                case MessageTypesHttps.IssueCredentialNames.AcknowledgeCredential:
+                case MessageTypes.IssueCredentialNames.AcknowledgeCredential:
+                {
+                    var acknowledgementMessage = messageContext.GetMessage<CredentialAcknowledgeMessage>();
+                    await _credentialService.ProcessAcknowledgementMessageAsync(agentContext, acknowledgementMessage);
+                    return null;
+                }
+                
                 case MessageTypesHttps.IssueCredentialNames.OfferCredential:
                 case MessageTypes.IssueCredentialNames.OfferCredential:
                     {
@@ -74,7 +86,7 @@ namespace Hyperledger.Aries.Features.IssueCredential
                         messageContext.ContextRecord = await _credentialService.GetAsync(agentContext, recordId);
 
                         // Auto request credential if set in the agent option
-                        if (_agentOptions.AutoRespondCredentialOffer == true)
+                        if (_agentOptions.AutoRespondCredentialOffer)
                         {
                             var (message, record) = await _credentialService.CreateRequestAsync(agentContext, recordId);
                             messageContext.ContextRecord = record;

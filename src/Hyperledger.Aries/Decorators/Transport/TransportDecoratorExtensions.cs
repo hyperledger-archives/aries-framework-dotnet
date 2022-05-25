@@ -13,11 +13,12 @@ namespace System
         /// Adds return routing to message
         /// </summary>
         /// <param name="message">The message to add return routing</param>
-        public static void AddReturnRouting(this AgentMessage message)
+        /// <param name="returnType">The message to add return routing</param>
+        public static void AddReturnRouting(this AgentMessage message, ReturnRouteTypes returnType = ReturnRouteTypes.all)
         {
             message.AddDecorator(new TransportDecorator
             {
-                ReturnRoute = ReturnRouteTypes.all.ToString("G")
+                ReturnRoute = returnType.ToString("G")
             }, DecoratorNames.TransportDecorator);
         }
 

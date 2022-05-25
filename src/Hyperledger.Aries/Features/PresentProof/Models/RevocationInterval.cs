@@ -3,7 +3,7 @@
 namespace Hyperledger.Aries.Features.PresentProof
 {
     /// <summary>
-    /// Proof revokation interval.
+    /// Proof revocation interval.
     /// </summary>
     public class RevocationInterval
     {

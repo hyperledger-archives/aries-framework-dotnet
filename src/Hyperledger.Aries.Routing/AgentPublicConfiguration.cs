@@ -1,4 +1,4 @@
-﻿using Hyperledger.Aries.Features.DidExchange;
+﻿using Hyperledger.Aries.Features.Handshakes.Connection.Models;
 
 namespace Hyperledger.Aries.Routing
 {

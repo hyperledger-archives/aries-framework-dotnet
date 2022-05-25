@@ -1,8 +1,8 @@
 namespace Hyperledger.Aries.AspNetCore.Features.Connections
 {
+  using Aries.Features.Handshakes.Connection.Models;
+  using Bases;
   using System;
-  using Hyperledger.Aries.AspNetCore.Features.Bases;
-  using Hyperledger.Aries.Features.DidExchange;
 
   public class ReceiveInvitationResponse : BaseResponse
   {

@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Ledger;
+using Hyperledger.Aries.Ledger.Models;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Indy.LedgerApi;
-using Hyperledger.Indy.PoolApi;
 
 namespace Hyperledger.Aries.Contracts
 {
@@ -178,6 +178,25 @@ namespace Hyperledger.Aries.Contracts
         /// <param name="paymentInfo">Payment information</param>
         /// <returns></returns>
         Task RegisterSchemaAsync(IAgentContext context, string issuerDid, string schemaJson,
+            TransactionCost paymentInfo = null);
+
+        /// <summary>
+        /// Lookup service endpoint information for a did on a public ledger
+        /// </summary>
+        /// <param name="context">The agent context.</param>
+        /// <param name="did">The did.</param>
+        /// <returns></returns>
+        Task<ServiceEndpointResult> LookupServiceEndpointAsync(IAgentContext context, string did);
+
+        /// <summary>
+        /// Register service endpoint information for a did on a public ledger
+        /// </summary>
+        /// <param name="context">The agent context.</param>
+        /// <param name="did">The destination did.</param>
+        /// <param name="serviceEndpoint">The endpoint information to be added</param>
+        /// <param name="paymentInfo">Payment information.</param>
+        /// <returns></returns>
+        Task RegisterServiceEndpointAsync(IAgentContext context, string did, string serviceEndpoint,
             TransactionCost paymentInfo = null);
     }
 }

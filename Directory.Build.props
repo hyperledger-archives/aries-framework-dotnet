@@ -9,7 +9,7 @@
         <Product>Hyperledger Aries Dotnet</Product>
         <RepositoryUrl>https://github.com/hyperledger/aries-framework-dotnet.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <Version>1.6.2</Version>
+        <Version>1.6.4</Version>
     </PropertyGroup>
 
     <!-- Common compile parameters -->

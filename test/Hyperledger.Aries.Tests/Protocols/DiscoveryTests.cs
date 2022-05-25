@@ -1,13 +1,13 @@
-﻿using Hyperledger.Aries.Contracts;
-using Hyperledger.TestHarness.Utils;
+﻿using System;
+using System.Threading.Tasks;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Indy.WalletApi;
+using Hyperledger.TestHarness.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Xunit;
-using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.Discovery;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -64,7 +64,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             var rsp = _discoveryService.CreateQueryResponse(_holderContext, msg);
 
-            Assert.True(rsp.Protocols.Count == 4);
+            Assert.Equal(5, rsp.Protocols.Count);
         }
 
         [Fact]

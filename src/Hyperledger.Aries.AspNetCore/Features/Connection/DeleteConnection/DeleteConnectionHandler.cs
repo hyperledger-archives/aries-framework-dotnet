@@ -1,7 +1,7 @@
 namespace Hyperledger.Aries.AspNetCore.Features.Connections
 {
-  using Hyperledger.Aries.Agents;
-  using Hyperledger.Aries.Features.DidExchange;
+  using Agents;
+  using Aries.Features.Handshakes.Connection;
   using MediatR;
   using System.Threading;
   using System.Threading.Tasks;

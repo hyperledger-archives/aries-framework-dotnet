@@ -3,36 +3,40 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
-using Hyperledger.TestHarness.Utils;
+using Hyperledger.Aries.Features.Handshakes.Common;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
+using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.PoolApi;
+using Hyperledger.TestHarness;
+using Hyperledger.TestHarness.Utils;
 using Newtonsoft.Json;
 using Xunit;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Features.IssueCredential;
-using Hyperledger.Aries.Features.PresentProof;
 
-namespace Hyperledger.TestHarness
+namespace Hyperledger.Aries.TestHarness
 {
     public static class Scenarios
     {
         public static async Task<(ConnectionRecord firstParty, ConnectionRecord secondParty)> EstablishConnectionAsync(
             IConnectionService connectionService,
-            IProducerConsumerCollection<AgentMessage> _messages,
-            IAgentContext firstContext,
-            IAgentContext secondContext,
+            IProducerConsumerCollection<AgentMessage> messages,
+            IAgentContext inviterContext,
+            IAgentContext inviteeContext,
             ConnectionInvitationMessage inviteMessage = null,
-            string inviteeconnectionId = null)
+            string inviteeConnectionId = null,
+            bool useDidKeyFormat = false)
         {
             // Create invitation by the issuer
-            var connectionSecondId = Guid.NewGuid().ToString();
+            inviteeConnectionId ??= Guid.NewGuid().ToString();
 
             var inviteConfig = new InviteConfiguration
             {
-                ConnectionId = connectionSecondId,
+                ConnectionId = inviteeConnectionId,
                 MyAlias = new ConnectionAlias
                 {
                     Name = "Issuer",
@@ -42,52 +46,52 @@ namespace Hyperledger.TestHarness
                 {
                     Name = "Holder",
                     ImageUrl = "www.holderdomain.com/profilephoto"
-                }
+                },
+                UseDidKeyFormat = useDidKeyFormat
             };
 
             if (inviteMessage == null)
-                (inviteMessage, _) = await connectionService.CreateInvitationAsync(firstContext, inviteConfig);
+                (inviteMessage, _) = await connectionService.CreateInvitationAsync(inviterContext, inviteConfig);
 
-            var connectionFirst = await connectionService.GetAsync(firstContext, inviteeconnectionId ?? inviteConfig.ConnectionId);
-            Assert.Equal(ConnectionState.Invited, connectionFirst.State);
+            var recordOnInviterSide = await connectionService.GetAsync(inviterContext, inviteConfig.ConnectionId);
+            Assert.Equal(ConnectionState.Invited, recordOnInviterSide.State);
 
             // Holder accepts invitation and sends a message request
-            (var request, var inviteeConnection) = await connectionService.CreateRequestAsync(secondContext, inviteMessage);
-            var connectionSecond = inviteeConnection;
+            var (request, recordOnInviteeSide) = await connectionService.CreateRequestAsync(inviteeContext, inviteMessage);
 
-            _messages.TryAdd(request);
+            messages.TryAdd(request);
 
-            Assert.Equal(ConnectionState.Negotiating, connectionSecond.State);
+            Assert.Equal(ConnectionState.Negotiating, recordOnInviteeSide.State);
 
             // Issuer processes incoming message
-            var issuerMessage = _messages.OfType<ConnectionRequestMessage>().FirstOrDefault();
+            var issuerMessage = messages.OfType<ConnectionRequestMessage>().FirstOrDefault();
             Assert.NotNull(issuerMessage);
 
             // Issuer processes the connection request by storing it and accepting it if auto connection flow is enabled
-            connectionSecondId = await connectionService.ProcessRequestAsync(firstContext, issuerMessage, connectionFirst);
+            inviteeConnectionId = await connectionService.ProcessRequestAsync(inviterContext, issuerMessage, recordOnInviterSide);
 
-            connectionFirst = await connectionService.GetAsync(firstContext, connectionSecondId);
-            Assert.Equal(ConnectionState.Negotiating, connectionFirst.State);
+            recordOnInviterSide = await connectionService.GetAsync(inviterContext, inviteeConnectionId);
+            Assert.Equal(ConnectionState.Negotiating, recordOnInviterSide.State);
 
             // Issuer accepts the connection request
-            (var response, var _) = await connectionService.CreateResponseAsync(firstContext, connectionSecondId);
-            _messages.TryAdd(response);
+            var (response, _) = await connectionService.CreateResponseAsync(inviterContext, inviteeConnectionId);
+            messages.TryAdd(response);
 
-            connectionFirst = await connectionService.GetAsync(firstContext, connectionSecondId);
-            Assert.Equal(ConnectionState.Connected, connectionFirst.State);
+            recordOnInviterSide = await connectionService.GetAsync(inviterContext, inviteeConnectionId);
+            Assert.Equal(ConnectionState.Connected, recordOnInviterSide.State);
 
             // Holder processes incoming message
-            var holderMessage = _messages.OfType<ConnectionResponseMessage>().FirstOrDefault();
+            var holderMessage = messages.OfType<ConnectionResponseMessage>().FirstOrDefault();
             Assert.NotNull(holderMessage);
 
             // Holder processes the response message by accepting it
-            await connectionService.ProcessResponseAsync(secondContext, holderMessage, connectionSecond);
-
+            await connectionService.ProcessResponseAsync(inviteeContext, holderMessage, recordOnInviteeSide);
+            
             // Retrieve updated connection state for both issuer and holder
-            connectionFirst = await connectionService.GetAsync(firstContext, connectionFirst.Id);
-            connectionSecond = await connectionService.GetAsync(secondContext, connectionSecond.Id);
+            recordOnInviterSide = await connectionService.GetAsync(inviterContext, recordOnInviterSide.Id);
+            recordOnInviteeSide = await connectionService.GetAsync(inviteeContext, recordOnInviteeSide.Id);
 
-            return (connectionFirst, connectionSecond);
+            return (recordOnInviterSide, recordOnInviteeSide);
         }
 
         public static async Task<(CredentialRecord issuerCredential, CredentialRecord holderCredential)> IssueCredentialAsync(
@@ -100,7 +104,7 @@ namespace Hyperledger.TestHarness
         {
             // Create an issuer DID/VK. Can also be created during provisioning
             var issuer = await Did.CreateAndStoreMyDidAsync(issuerContext.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
+                new { seed = TestConstants.StewardSeed }.ToJson());
 
             // Create a schema and credential definition for this issuer
             var (definitionId, _) = await CreateDummySchemaAndNonRevokableCredDef(issuerContext, schemaService,
@@ -109,7 +113,8 @@ namespace Hyperledger.TestHarness
             var offerConfig = offerConfiguration ?? new OfferConfiguration
             {
                 IssuerDid = issuer.Did,
-                CredentialDefinitionId = definitionId
+                CredentialDefinitionId = definitionId,
+                CredentialAttributeValues = credentialAttributes
             };
 
             // Send an offer to the holder using the established connection channel

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.PresentProof.Messages;
 
 namespace Hyperledger.Aries.Features.PresentProof
 {
@@ -21,9 +22,11 @@ namespace Hyperledger.Aries.Features.PresentProof
         /// </value>
         public IEnumerable<MessageType> SupportedMessageTypes => new MessageType[]
         {
+            MessageTypes.PresentProofNames.AcknowledgePresentation,
             MessageTypes.PresentProofNames.ProposePresentation,
             MessageTypes.PresentProofNames.Presentation,
             MessageTypes.PresentProofNames.RequestPresentation,
+            MessageTypesHttps.PresentProofNames.AcknowledgePresentation,
             MessageTypesHttps.PresentProofNames.ProposePresentation,
             MessageTypesHttps.PresentProofNames.Presentation,
             MessageTypesHttps.PresentProofNames.RequestPresentation
@@ -68,6 +71,17 @@ namespace Hyperledger.Aries.Features.PresentProof
                     messageContext.ContextRecord = record;
                     break;
                 }
+
+                case MessageTypes.PresentProofNames.AcknowledgePresentation:
+                case MessageTypesHttps.PresentProofNames.AcknowledgePresentation:
+                {
+                    var message = messageContext.GetMessage<PresentationAcknowledgeMessage>();
+                    var record = await _proofService.ProcessAcknowledgeMessageAsync(agentContext, message);
+
+                    messageContext.ContextRecord = record;
+                    break;
+                }
+                
                 default:
                     throw new AriesFrameworkException(ErrorCode.InvalidMessage,
                         $"Unsupported message type {messageContext.GetMessageType()}");

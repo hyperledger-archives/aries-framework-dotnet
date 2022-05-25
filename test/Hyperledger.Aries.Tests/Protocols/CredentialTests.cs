@@ -5,26 +5,28 @@ using System.Linq;
 using System.Net.Http;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.Connection.Models;
+using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Models.Events;
-using Hyperledger.TestHarness;
-using Hyperledger.TestHarness.Utils;
+using Hyperledger.Aries.Payments;
+using Hyperledger.Aries.Runtime;
+using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.TestHarness;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.DidApi;
 using Hyperledger.Indy.WalletApi;
+using Hyperledger.TestHarness;
+using Hyperledger.TestHarness.Utils;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
-using Hyperledger.Aries.Runtime;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Features.IssueCredential;
-using Hyperledger.Aries.Ledger;
-using Hyperledger.Aries.Payments;
-using Hyperledger.Aries.Storage;
-using Microsoft.Extensions.Options;
-using Hyperledger.Aries.Configuration;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -130,10 +132,41 @@ namespace Hyperledger.Aries.Tests.Protocols
         }
 
         [Fact]
+        public async Task CanStoreAndReceiveImagePngMimeTypes()
+        {
+            const string pngFile = "base64_encoded_png_image_file";
+            
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
+                _schemaService, _credentialService, _messages, issuerConnection,
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
+                {
+                    new CredentialPreviewAttribute
+                    {
+                        MimeType = CredentialMimeTypes.ImagePngMimeType,
+                        Name = "preview_image",
+                        Value = pngFile
+                    }
+                });
+
+            var actualResult = string.Empty;
+            foreach (var credentialPreviewAttribute in holderCredential.CredentialAttributesValues)
+            {
+                if (credentialPreviewAttribute.MimeType == CredentialMimeTypes.ImagePngMimeType)
+                    actualResult = credentialPreviewAttribute.Value as string;
+            }
+            
+            Assert.Equal(pngFile, actualResult);
+        }
+        
+
+        [Fact]
         public async Task CanCreateCredentialOffer()
         {
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
+                new { seed = TestConstants.StewardSeed }.ToJson());
 
             var result = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(_issuerWallet, _schemaService, issuer.Did,
                 new[] { "test-attr" });
@@ -150,7 +183,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         public async Task CanCreateCredentialOfferWithPreview()
         {
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
+                new { seed = TestConstants.StewardSeed }.ToJson());
 
             var result = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(_issuerWallet, _schemaService, issuer.Did,
                 new[] { "test-attr" });
@@ -218,7 +251,6 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(ex.Message.Split('\n').Count() == 2);
         }
 
-
         [Fact]
         public async Task RevokeCredentialOfferThrowsCredentialNotFound()
         {
@@ -235,7 +267,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             // Create an issuer DID/VK. Can also be created during provisioning
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
+                new { seed = TestConstants.StewardSeed }.ToJson());
 
             // Create a schema and credential definition for this issuer
             var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(_issuerWallet, _schemaService, issuer.Did,
@@ -344,7 +376,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             // Create an issuer DID/VK. Can also be created during provisioning
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
+                new { seed = TestConstants.StewardSeed }.ToJson());
 
             // Create a schema and credential definition for this issuer
             var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(_issuerWallet, _schemaService, issuer.Did,
@@ -394,7 +426,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         {
             // Create an issuer DID/VK. Can also be created during provisioning
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
+                new { seed = TestConstants.StewardSeed }.ToJson());
 
             var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateCredentialAsync(_issuerWallet, "bad-credential-id"));
             Assert.True(ex.ErrorCode == ErrorCode.RecordNotFound);
@@ -409,7 +441,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             // Create an issuer DID/VK. Can also be created during provisioning
             var issuer = await Did.CreateAndStoreMyDidAsync(_issuerWallet.Wallet,
-                new { seed = TestConstants.StewartDid }.ToJson());
+                new { seed = TestConstants.StewardSeed }.ToJson());
 
             // Create a schema and credential definition for this issuer
             var (definitionId, _) = await Scenarios.CreateDummySchemaAndNonRevokableCredDef(_issuerWallet, _schemaService, issuer.Did,

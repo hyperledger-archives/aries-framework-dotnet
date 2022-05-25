@@ -1,21 +1,22 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
+using Hyperledger.Aries;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Payments;
+using Hyperledger.Aries.Storage;
+using Hyperledger.Indy.DidApi;
+using Hyperledger.Indy.LedgerApi;
+using Hyperledger.Indy.PoolApi;
 using Hyperledger.Indy.WalletApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Xunit;
-using Hyperledger.Aries.Extensions;
-using System.IO;
 using Microsoft.Extensions.Options;
-using Hyperledger.Indy.PoolApi;
-using Hyperledger.Indy.DidApi;
-using Hyperledger.Indy.LedgerApi;
-using Hyperledger.Aries.Agents;
+using Xunit;
 using IndyPayments = Hyperledger.Indy.PaymentsApi.Payments;
-using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries;
-using Hyperledger.Aries.Payments;
-using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.TestHarness
 {
@@ -29,25 +30,27 @@ namespace Hyperledger.TestHarness
         protected IProvisioningService provisioningService;
         protected IWalletRecordService recordService;
         protected IPaymentService paymentService;
+        protected ILedgerService ledgerService;
 
         protected IHost Host { get; private set; }
 
         protected virtual string GetPoolName() => "TestPool";
         protected virtual string GetIssuerSeed() => null;
-        public async Task DisposeAsync()
+        public virtual async Task DisposeAsync()
         {
             var walletOptions = Host.Services.GetService<IOptions<AgentOptions>>().Value;
             await Host.StopAsync();
 
             await Context.Wallet.CloseAsync();
             await Wallet.DeleteWalletAsync(walletOptions.WalletConfiguration.ToJson(), walletOptions.WalletCredentials.ToJson());
+            Host.Dispose();
         }
 
         /// <summary>
         /// Create a single wallet and enable payments
         /// </summary>
         /// <returns></returns>
-        public async Task InitializeAsync()
+        public virtual async Task InitializeAsync()
         {
             Host = new HostBuilder()
                 .ConfigureServices(services =>
@@ -80,6 +83,7 @@ namespace Hyperledger.TestHarness
             provisioningService = Host.Services.GetService<IProvisioningService>();
             recordService = Host.Services.GetService<IWalletRecordService>();
             paymentService = Host.Services.GetService<IPaymentService>();
+            ledgerService = Host.Services.GetService<ILedgerService>();
         }
 
         async Task<CreateAndStoreMyDidResult> PromoteTrustee(string seed)

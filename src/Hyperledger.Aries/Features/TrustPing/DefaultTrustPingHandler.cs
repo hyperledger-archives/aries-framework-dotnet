@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Decorators.Threading;
-using Hyperledger.Aries.Models.Events;
 
 namespace Hyperledger.Aries.Features.TrustPing
 {

@@ -22,6 +22,7 @@ namespace Hyperledger.Aries.Agents
         {
             AddConnectionHandler();
             AddCredentialHandler();
+            AddDidExchangeHandler();
             AddProofHandler();
             AddDiscoveryHandler();
             AddBasicMessageHandler();
@@ -30,6 +31,7 @@ namespace Hyperledger.Aries.Agents
             AddStatisticHandler();
             AddProblemReportHandler();
             AddOperationCompletedHandler();
+            AddRevocationNotificationHandler();
         }
     }
 }

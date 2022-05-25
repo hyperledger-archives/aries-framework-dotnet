@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
-using Hyperledger.Aries.Features.DidExchange;
-using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Storage;
-using Hyperledger.Indy.CryptoApi;
 using Microsoft.Extensions.Options;
-using Multiformats.Base;
-using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing.Edge
 {

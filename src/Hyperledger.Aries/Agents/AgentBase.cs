@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.BasicMessage;
-using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
+using Hyperledger.Aries.Features.Handshakes.Common;
+using Hyperledger.Aries.Features.Handshakes.Connection;
+using Hyperledger.Aries.Features.Handshakes.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.OperationCompleted;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.ProblemReport;
+using Hyperledger.Aries.Features.RevocationNotification;
 using Hyperledger.Aries.Features.Routing;
 using Hyperledger.Aries.Features.Statistic;
 using Hyperledger.Aries.Features.TrustPing;
@@ -68,11 +71,18 @@ namespace Hyperledger.Aries.Agents
         /// <summary>Adds a handler for supporting default credential flow.</summary>
         protected void AddCredentialHandler() => Handlers.Add(Provider.GetRequiredService<DefaultCredentialHandler>());
 
+        /// <summary>Adds a handler for supporting default did exchange flow.</summary>
+        protected void AddDidExchangeHandler() => Handlers.Add(Provider.GetRequiredService<DefaultDidExchangeHandler>());
+
         /// <summary>Adds the handler for supporting default proof flow.</summary>
         protected void AddTrustPingHandler() => Handlers.Add(Provider.GetRequiredService<DefaultTrustPingMessageHandler>());
 
         /// <summary>Adds the handler for supporting default proof flow.</summary>
         protected void AddProofHandler() => Handlers.Add(Provider.GetRequiredService<DefaultProofHandler>());
+
+        /// <summary>Adds the default handler for supporting revocation notifications.</summary>
+        protected void AddRevocationNotificationHandler() =>
+            Handlers.Add(Provider.GetRequiredService<DefaultRevocationNotificationHandler>());
 
         /// <summary>Adds a default forwarding handler.</summary>
         protected void AddForwardHandler() => Handlers.Add(Provider.GetRequiredService<DefaultForwardHandler>());
