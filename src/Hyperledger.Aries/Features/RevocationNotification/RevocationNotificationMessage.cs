@@ -25,7 +25,7 @@ namespace Hyperledger.Aries.Features.RevocationNotification
         /// a different credential format but contains the same claims as described here; therefore, this message
         /// notifies the holder that all of these credentials have been revoked.
         /// </summary>
-        /// <value>The thread id</Value>
+        /// <value>The thread id</value>
         public string ThreadId { get; set; }
 
         /// <summary>

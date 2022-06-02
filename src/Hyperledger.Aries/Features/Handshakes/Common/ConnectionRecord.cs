@@ -173,7 +173,9 @@ namespace Hyperledger.Aries.Features.Handshakes.Common
         private StateMachine<ConnectionState, ConnectionTrigger> GetStateMachine()
         {
             var state = new StateMachine<ConnectionState, ConnectionTrigger>(() => State, x => State = x);
+#pragma warning disable CS0618
             state.Configure(ConnectionState.Invited).Permit(ConnectionTrigger.InvitationAccept, ConnectionState.Negotiating);
+#pragma warning restore CS0618
             state.Configure(ConnectionState.Invited).Permit(ConnectionTrigger.Request, ConnectionState.Negotiating);
             state.Configure(ConnectionState.Invited).Permit(ConnectionTrigger.Abandon, ConnectionState.Abandoned);
             state.Configure(ConnectionState.Negotiating).Permit(ConnectionTrigger.Response, ConnectionState.Connected);

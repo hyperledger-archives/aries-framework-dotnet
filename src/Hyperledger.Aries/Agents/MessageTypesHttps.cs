@@ -72,14 +72,14 @@
         /// <summary>
         /// Acknowledge Revocation Notification Message Type.
         /// </summary>
-        public const string RevocationNotificationAcknowledgement =
-            "https://didcomm.org/revocation_notification/1.0/ack";
+        public const string RevocationNotificationAcknowledgement = "https://didcomm.org/revocation_notification/1.0/ack";
         
         /// <summary>
         /// Revocation Notification Message Type.
         /// </summary>
-        public const string RevocationNotification =
-            "https://didcomm.org/revocation_notification/1.0/revoke";
+        public const string RevocationNotification = "https://didcomm.org/revocation_notification/1.0/revoke";
+        
+        /// <summary>
         /// Did Exchange Message Types
         /// </summary>
         public static class DidExchange

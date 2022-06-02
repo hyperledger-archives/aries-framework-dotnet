@@ -1,18 +1,18 @@
-﻿using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Decorators.Attachments;
-using Hyperledger.Aries.Extensions;
-using Hyperledger.Aries.Features.IssueCredential;
-using Hyperledger.Indy.CryptoApi;
-using Multiformats.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Hyperledger.Indy.WalletApi;
-using Hyperledger.Indy.DidApi;
-using Hyperledger.Indy;
+using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Decorators.Attachments;
+using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Indy;
+using Hyperledger.Indy.CryptoApi;
+using Hyperledger.Indy.DidApi;
+using Hyperledger.Indy.WalletApi;
+using Multiformats.Base;
 using Newtonsoft.Json;
 
 namespace Hyperledger.Aries.Routing.Edge
@@ -148,7 +148,7 @@ namespace Hyperledger.Aries.Routing.Edge
                 // Add 1 sec delay to allow filesystem to catch up
                 await Task.Delay(TimeSpan.FromSeconds(1));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine("Wallet could not be deleted");
             }

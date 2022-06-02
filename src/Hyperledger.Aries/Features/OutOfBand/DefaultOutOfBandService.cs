@@ -38,7 +38,7 @@ namespace Hyperledger.Aries.Features.OutOfBand
         }
 
         /// <inheritdoc />
-        public async Task<(InvitationMessage, ConnectionRecord)> CreateInvitationAsync(IAgentContext agentContext, IEnumerable<AgentMessage> requests = null, InviteConfiguration config = null)
+        public virtual async Task<(InvitationMessage, ConnectionRecord)> CreateInvitationAsync(IAgentContext agentContext, IEnumerable<AgentMessage> requests = null, InviteConfiguration config = null)
         {
             config ??= new InviteConfiguration();
             var (_, record) = await _connectionService.CreateInvitationAsync(agentContext, config);
@@ -75,7 +75,7 @@ namespace Hyperledger.Aries.Features.OutOfBand
         }
 
         /// <inheritdoc />
-        public async Task<(HandshakeReuseMessage, ConnectionRecord)> ProcessInvitationMessage(IAgentContext agentContext, InvitationMessage invitation)
+        public virtual async Task<(HandshakeReuseMessage, ConnectionRecord)> ProcessInvitationMessage(IAgentContext agentContext, InvitationMessage invitation)
         {
             if (invitation.Accept.Contains("didcomm/aip2;env=rfc19") == false)
                 throw new NotImplementedException("The agent only supports encryption envelope v1.");
@@ -127,7 +127,7 @@ namespace Hyperledger.Aries.Features.OutOfBand
         }
 
         /// <inheritdoc />
-        public async Task<HandshakeReuseAcceptedMessage> ProcessHandshakeReuseMessage(IAgentContext agentContext, HandshakeReuseMessage handshakeReuseMessage)
+        public virtual Task<HandshakeReuseAcceptedMessage> ProcessHandshakeReuseMessage(IAgentContext agentContext, HandshakeReuseMessage handshakeReuseMessage)
         {
             var accept = new HandshakeReuseAcceptedMessage();
             accept.ThreadFrom(handshakeReuseMessage);
@@ -138,11 +138,11 @@ namespace Hyperledger.Aries.Features.OutOfBand
                 ThreadId = handshakeReuseMessage.GetThreadId()
             });
 
-            return accept;
+            return Task.FromResult(accept);
         }
 
         /// <inheritdoc />
-        public Task ProcessHandshakeReuseAccepted(IAgentContext agentContext,
+        public virtual Task ProcessHandshakeReuseAccepted(IAgentContext agentContext,
             HandshakeReuseAcceptedMessage handshakeReuseAcceptedMessage)
         {
             _eventAggregator.Publish(new ServiceMessageProcessingEvent
