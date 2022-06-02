@@ -9,6 +9,7 @@ using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.Handshakes.Connection;
 using Hyperledger.Aries.Features.Handshakes.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.OutOfBand;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.RevocationNotification;
 using Hyperledger.Aries.Features.Routing;
@@ -62,6 +63,9 @@ namespace Hyperledger.Aries.Agents
             Middlewares = provider.GetServices<IAgentMiddleware>();
         }
 
+        /// <summary>Adds a handler for supporting default out-of-band flows.</summary>
+        protected void AddOutOfBandHandler() => Handlers.Add(Provider.GetRequiredService<DefaultOutOfBandHandler>());
+        
         /// <summary>Adds a handler for supporting default connection flow.</summary>
         protected void AddConnectionHandler() => Handlers.Add(Provider.GetRequiredService<DefaultConnectionHandler>());
 

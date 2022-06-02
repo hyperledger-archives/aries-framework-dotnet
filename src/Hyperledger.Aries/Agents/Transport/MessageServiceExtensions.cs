@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Features.Handshakes.Common;
+using Hyperledger.Aries.Utils;
 
 namespace Hyperledger.Aries.Agents
 {
@@ -20,7 +21,7 @@ namespace Hyperledger.Aries.Agents
         public static async Task SendAsync(this IMessageService service, IAgentContext agentContext, AgentMessage message, ConnectionRecord connection)
         {
             var routingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0];
-            var recipientKey = connection.TheirVk ?? connection.GetTag("InvitationKey") ?? throw new InvalidOperationException("Cannot locate a recipient key");
+            var recipientKey = connection.TheirVk ?? connection.GetTag(TagConstants.InvitationKey) ?? throw new InvalidOperationException("Cannot locate a recipient key");
 
             if (connection.Endpoint?.Uri == null)
                 throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot send to connection that does not have endpoint information specified");
@@ -40,7 +41,7 @@ namespace Hyperledger.Aries.Agents
         public static async Task<MessageContext> SendReceiveAsync(this IMessageService service, IAgentContext agentContext, AgentMessage message, ConnectionRecord connection)
         {
             var routingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0];
-            var recipientKey = connection.TheirVk ?? connection.GetTag("InvitationKey") ?? throw new InvalidOperationException("Cannot locate a recipient key");
+            var recipientKey = connection.TheirVk ?? connection.GetTag(TagConstants.InvitationKey) ?? throw new InvalidOperationException("Cannot locate a recipient key");
 
             if (connection.Endpoint?.Uri == null)
                 throw new AriesFrameworkException(ErrorCode.A2AMessageTransmissionError, "Cannot send to connection that does not have endpoint information specified");

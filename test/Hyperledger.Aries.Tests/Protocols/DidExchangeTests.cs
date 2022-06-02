@@ -67,7 +67,7 @@ namespace Hyperledger.Aries.Tests.Protocols
         {
             var (request, _) = await _didExchangeService.CreateRequestAsync(_requester, TestConstants.StewardDid);
             
-            var responderRecord = await _didExchangeService.ProcessRequestAsync(_responder, request);
+            var responderRecord = await _didExchangeService.ProcessRequestAsync(_responder, request, null);
 
             var (response, record) = await _didExchangeService.CreateResponseAsync(_responder, responderRecord);
             

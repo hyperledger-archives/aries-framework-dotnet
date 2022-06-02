@@ -133,7 +133,7 @@ namespace Hyperledger.Aries.Features.Handshakes.Common
         /// <summary>
         /// My role in the handshake protocol 
         /// </summary>
-        [JsonIgnore]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ConnectionRole Role
         {
             get;

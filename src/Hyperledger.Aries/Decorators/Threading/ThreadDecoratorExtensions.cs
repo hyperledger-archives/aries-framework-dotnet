@@ -68,17 +68,40 @@ namespace Hyperledger.Aries.Decorators.Threading
 
             return threadId;
         }
+        
+        /// <summary>
+        /// Gets the current messages parent thread id.
+        /// </summary>
+        /// <param name="message">Message to extract the parent thread id from.</param>
+        /// <returns>Parent thread id of the message.</returns>
+        public static string GetParentThreadId(this AgentMessage message)
+        {
+            string threadId = null;
+            try
+            {
+                var threadBlock = message.GetDecorator<ThreadDecorator>(DecoratorIdentifier);
+                threadId = threadBlock.ParentThreadId;
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            return threadId;
+        }
 
         /// <summary>
         /// Threads the current message.
         /// </summary>
         /// <param name="messageToThread">Message to thread.</param>
         /// <param name="threadId">Thread id to thread the message with.</param>
-        public static void ThreadFrom(this AgentMessage messageToThread, string threadId)
+        /// <param name="parentThreadId">Parent thread id to thread the message with.</param>
+        public static void ThreadFrom(this AgentMessage messageToThread, string threadId, string parentThreadId = null)
         {
             var currentThreadContext = new ThreadDecorator
             {
-                ThreadId = threadId
+                ThreadId = threadId,
+                ParentThreadId = parentThreadId
             };
             messageToThread.AddDecorator(currentThreadContext, DecoratorIdentifier);
         }

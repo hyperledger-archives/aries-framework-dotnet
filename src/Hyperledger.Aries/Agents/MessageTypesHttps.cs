@@ -54,6 +54,20 @@
         /// Discovery Disclose Message Type.
         /// </summary>
         public const string DiscoveryDiscloseMessageType = "https://didcomm.org/discover-features/1.0/disclose";
+        
+        /// <summary>
+        /// Out of band message types
+        /// </summary>
+        public static class OutOfBand
+        {
+            public const string Invitation = "https://didcomm.org/out-of-band/1.1/invitation";
+
+            public const string HandshakeReuse = "https://didcomm.org/out-of-band/1.1/handshake-reuse";
+
+            public const string HandshakeReuseAccepted = "https://didcomm.org/out-of-band/1.1/handshake-reuse-accepted";
+
+            public const string ProblemReport = "https://didcomm.org/out-of-band/1.1/problem_report";
+        }
 
         /// <summary>
         /// Acknowledge Revocation Notification Message Type.

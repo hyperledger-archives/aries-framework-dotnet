@@ -6,6 +6,7 @@ using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.Handshakes.Connection;
 using Hyperledger.Aries.Features.Handshakes.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.OutOfBand;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.RevocationNotification;
 using Hyperledger.Aries.Ledger;
@@ -52,6 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
         internal static IServiceCollection AddDefaultServices(this IServiceCollection builder)
         {
             builder.TryAddSingleton<IEventAggregator, EventAggregator>();
+            builder.TryAddSingleton<IOutOfBandService, DefaultOutOfBandService>();
             builder.TryAddSingleton<IConnectionService, DefaultConnectionService>();
             builder.TryAddSingleton<ICredentialService, DefaultCredentialService>();
             builder.TryAddSingleton<IDidExchangeService, DefaultDidExchangeService>();

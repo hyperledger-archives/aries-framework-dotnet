@@ -66,6 +66,14 @@
         /// <summary>
         /// Item not found on ledger
         /// </summary>
-        LedgerItemNotFound
+        LedgerItemNotFound,
+        /// <summary>
+        /// No public did was provisioned
+        /// </summary>
+        NoPublicDid,
+        /// <summary>
+        /// The did method is not supported
+        /// </summary>
+        UnsupportedDidMethod
     }
 }

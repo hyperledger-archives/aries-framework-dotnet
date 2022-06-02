@@ -42,5 +42,14 @@ namespace Hyperledger.Aries.Decorators.Attachments
         /// </value>
         [JsonProperty("jws", NullValueHandling = NullValueHandling.Ignore)]
         public JsonWebSignature JsonWebSignature { get; set; }
+        
+        /// <summary>
+        /// Get or sets a json
+        /// </summary>
+        /// <value>
+        /// The json object as string.
+        /// </value>
+        [JsonProperty("json", NullValueHandling = NullValueHandling.Ignore)]
+        public string Json { get; set; }
     }
 }

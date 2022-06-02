@@ -5,19 +5,21 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Models.Events;
-using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Decorators.Threading;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.BasicMessage;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.Handshakes.Connection;
 using Hyperledger.Aries.Features.Handshakes.Connection.Models;
+using Hyperledger.Aries.Features.Handshakes.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.OutOfBand;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Mock;
@@ -64,6 +66,180 @@ namespace Hyperledger.Aries.TestHarness
                 connectionRecord2.GetTag(TagConstants.LastThreadId));
 
             return (connectionRecord1, connectionRecord2);
+        }
+
+        public static async Task<(ConnectionRecord requesterConnection, ConnectionRecord responderConnection)> ExchangeDidsWithPrivateDids(MockAgent requester, MockAgent responder)
+        {
+            var outOfBandService = requester.GetService<IOutOfBandService>();
+            var didExchangeService = requester.GetService<IDidExchangeService>();
+            var connectionService = requester.GetService<IConnectionService>();
+            var messsageService = requester.GetService<IMessageService>();
+
+            var slim = new SemaphoreSlim(0, 1);
+            responder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(x => x.MessageType == MessageTypesHttps.DidExchange.Request)
+                .Subscribe(x => slim.Release());
+
+            var (invitation, responderRecord) = await outOfBandService.CreateInvitationAsync(responder.Context, new List<AgentMessage>());
+
+            var (_, requesterRecord) = await outOfBandService.ProcessInvitationMessage(requester.Context, invitation);
+
+            var (requestMessage, _) = await didExchangeService.CreateRequestAsync(requester.Context, requesterRecord);
+            requesterRecord = await connectionService.GetAsync(requester.Context, requesterRecord.Id);
+            
+            Assert.Equal(invitation.Id, requestMessage.GetParentThreadId());
+            Assert.Equal(invitation.Id, requesterRecord.GetTag(TagConstants.ParentThreadId));
+            Assert.Equal(requestMessage.Id, requesterRecord.GetTag(TagConstants.LastThreadId));
+
+            await messsageService.SendAsync(requester.Context, requestMessage, requesterRecord);
+            
+            await slim.WaitAsync(TimeSpan.FromSeconds(30));
+
+            requesterRecord = await connectionService.GetAsync(requester.Context, requesterRecord.Id);
+            responderRecord = await connectionService.GetAsync(responder.Context, responderRecord.Id);
+            Assert.Equal(ConnectionState.Negotiating, responderRecord.State);
+            Assert.Equal(ConnectionState.Negotiating, requesterRecord.State);
+            Assert.Equal(ConnectionRole.Invitee, requesterRecord.Role);
+            Assert.Equal(ConnectionRole.Inviter, responderRecord.Role);
+            Assert.Equal(invitation.Id, requesterRecord.GetTag(TagConstants.ParentThreadId));
+            Assert.Equal(invitation.Id, responderRecord.GetTag(TagConstants.ParentThreadId));
+            Assert.Equal(requestMessage.Id, requesterRecord.GetTag(TagConstants.LastThreadId));
+            Assert.Equal(requestMessage.Id, responderRecord.GetTag(TagConstants.LastThreadId));
+            
+            requester.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(x => x.MessageType == MessageTypesHttps.DidExchange.Response)
+                .Subscribe(x => slim.Release());
+
+            var (responseMessage, _) = await didExchangeService.CreateResponseAsync(responder.Context, responderRecord);
+            responderRecord = await connectionService.GetAsync(responder.Context, responderRecord.Id);
+
+            await messsageService.SendAsync(responder.Context, responseMessage, responderRecord);
+            
+            await slim.WaitAsync(TimeSpan.FromSeconds(30));
+            
+            requesterRecord = await connectionService.GetAsync(requester.Context, requesterRecord.Id);
+            responderRecord = await connectionService.GetAsync(responder.Context, responderRecord.Id);
+            Assert.Equal(ConnectionState.Connected, responderRecord.State);
+            Assert.Equal(ConnectionState.Connected, requesterRecord.State);
+            Assert.Equal(ConnectionRole.Invitee, requesterRecord.Role);
+            Assert.Equal(ConnectionRole.Inviter, responderRecord.Role);
+            
+            responder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(x => x.MessageType == MessageTypesHttps.DidExchange.Complete)
+                .Subscribe(x => slim.Release());
+
+            var (completeMessage, _) = await didExchangeService.CreateComplete(requester.Context, requesterRecord);
+
+            await messsageService.SendAsync(requester.Context, completeMessage, requesterRecord);
+            
+            await slim.WaitAsync(TimeSpan.FromSeconds(30));
+            
+            requesterRecord = await connectionService.GetAsync(requester.Context, requesterRecord.Id);
+            responderRecord = await connectionService.GetAsync(responder.Context, responderRecord.Id);
+            Assert.Equal(ConnectionState.Connected, responderRecord.State);
+            Assert.Equal(ConnectionState.Connected, requesterRecord.State);
+            Assert.Equal(ConnectionRole.Invitee, requesterRecord.Role);
+            Assert.Equal(ConnectionRole.Inviter, responderRecord.Role);
+            
+            Assert.Equal(requesterRecord.TheirDid, responderRecord.MyDid);
+            Assert.Equal(requesterRecord.TheirVk, responderRecord.MyVk);
+            
+            Assert.Equal(requesterRecord.MyDid, responderRecord.TheirDid);
+            Assert.Equal(requesterRecord.MyVk, responderRecord.TheirVk);
+
+            return (requesterRecord, responderRecord);
+        }
+
+        public static async Task<(ConnectionRecord requesterConnection, ConnectionRecord responderConnection)> ExchangeDidsWithPublicDid(MockAgent requester, MockAgent responder)
+        {
+            var slim = new SemaphoreSlim(0, 1);
+            
+            var outOfBandService = requester.GetService<IOutOfBandService>();
+            var didExchangeService = requester.GetService<IDidExchangeService>();
+            var connectionService = requester.GetService<IConnectionService>();
+            var messsageService = requester.GetService<IMessageService>();
+
+            var (invitation, responderRecord) = await outOfBandService.CreateInvitationAsync(responder.Context, config: new InviteConfiguration {UsePublicDid = true});
+            
+            var (_, requesterRecord) = await outOfBandService.ProcessInvitationMessage(requester.Context, invitation);
+            
+            var (requestMessage, _) = await didExchangeService.CreateRequestAsync(requester.Context, requesterRecord);
+            requesterRecord = await connectionService.GetAsync(requester.Context, requesterRecord.Id);
+            
+            Assert.Equal(invitation.Id, requestMessage.GetParentThreadId());
+
+            // Did Exchange Request
+            responder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(x => x.MessageType == MessageTypesHttps.DidExchange.Request)
+                .Subscribe(x => slim.Release());
+
+            await messsageService.SendAsync(requester.Context, requestMessage, requesterRecord);
+            
+            await slim.WaitAsync(TimeSpan.FromSeconds(30));
+
+            requesterRecord = await connectionService.GetAsync(requester.Context, requesterRecord.Id);
+            responderRecord = (await connectionService.ListAsync(responder.Context, SearchQuery.Equal(nameof(ConnectionRecord.TheirDid), requesterRecord.MyDid))).First();
+
+            Assert.Equal(ConnectionState.Negotiating, responderRecord.State);
+            Assert.Equal(ConnectionState.Negotiating, requesterRecord.State);
+            Assert.Equal(requesterRecord.TheirDid,  DidUtils.ToDid(DidUtils.DidSovMethodSpec, TestConstants.StewardDid));
+            Assert.Equal(responderRecord.TheirDid, requesterRecord.MyDid);
+
+            Assert.Equal(
+                requesterRecord.GetTag(TagConstants.LastThreadId),
+                responderRecord.GetTag(TagConstants.LastThreadId));
+            
+            // Did Exchange Response
+            requester.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(x => x.MessageType == MessageTypesHttps.DidExchange.Response)
+                .Subscribe(x => slim.Release());
+            
+            var (response, newResponderRecord) = await didExchangeService.CreateResponseAsync(responder.Context, responderRecord);
+            
+            Assert.Equal(requestMessage.GetThreadId(), response.GetThreadId());
+            Assert.Equal(invitation.Id, response.GetParentThreadId());
+            
+            await messsageService.SendAsync(responder.Context, response, newResponderRecord);
+            
+            await slim.WaitAsync(TimeSpan.FromSeconds(30));
+            
+            var newRequesterRecord = (await connectionService.ListAsync(requester.Context, SearchQuery.Equal(nameof(ConnectionRecord.TheirDid), newResponderRecord.MyDid))).First();
+            
+            Assert.Equal(ConnectionState.Connected, newResponderRecord.State);
+            Assert.Equal(ConnectionState.Connected, newRequesterRecord.State);
+            Assert.Equal(newRequesterRecord.TheirDid, newResponderRecord.MyDid);
+            Assert.Equal(newResponderRecord.TheirDid, newRequesterRecord.MyDid);
+
+            Assert.Equal(
+                newRequesterRecord.GetTag(TagConstants.LastThreadId),
+                newResponderRecord.GetTag(TagConstants.LastThreadId));
+            
+            // Did Exchange Complete
+            responder.GetService<IEventAggregator>().GetEventByType<ServiceMessageProcessingEvent>()
+                .Where(x => x.MessageType == MessageTypesHttps.DidExchange.Complete)
+                .Subscribe(x => slim.Release());
+
+            var (completeMessage, finalRequesterRecord) = await didExchangeService.CreateComplete(requester.Context, newRequesterRecord);
+            
+            Assert.Equal(invitation.Id, completeMessage.GetParentThreadId());
+            Assert.Equal(response.GetThreadId(), completeMessage.GetThreadId());
+
+            await messsageService.SendAsync(requester.Context, completeMessage, finalRequesterRecord);
+            
+            await slim.WaitAsync(TimeSpan.FromSeconds(30));
+            
+            var finalResponderRecord = (await connectionService.ListAsync(responder.Context, SearchQuery.Equal(nameof(ConnectionRecord.TheirDid), finalRequesterRecord.MyDid))).First();
+            
+            Assert.Equal(ConnectionState.Connected, finalResponderRecord.State);
+            Assert.Equal(ConnectionState.Connected, finalRequesterRecord.State);
+            Assert.Equal(finalRequesterRecord.TheirDid, finalResponderRecord.MyDid);
+            Assert.Equal(finalResponderRecord.TheirDid, finalRequesterRecord.MyDid);
+            
+            Assert.Equal(
+                finalRequesterRecord.GetTag(TagConstants.LastThreadId),
+                finalResponderRecord.GetTag(TagConstants.LastThreadId));
+
+            return (finalRequesterRecord, finalResponderRecord);
         }
 
         public static async Task<(ConnectionRecord inviteeConnection, ConnectionRecord inviterConnection)> EstablishConnectionWithReturnRoutingAsync(MockAgent invitee, MockAgent inviter, bool useDidKeyFormat = false)

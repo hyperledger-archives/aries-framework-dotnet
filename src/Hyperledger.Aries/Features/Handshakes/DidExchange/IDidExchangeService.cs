@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.Handshakes.DidExchange.Models;
+using Hyperledger.Aries.Features.OutOfBand;
 
 namespace Hyperledger.Aries.Features.Handshakes.DidExchange
 {
@@ -14,9 +15,9 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         /// Not implemented yet
         /// </summary>
         /// <param name="agentContext">The agent context.</param>
-        /// <param name="message">The invitation message.</param>
+        /// <param name="invitation">The invitation message.</param>
         /// <returns>The did exchange request message</returns>
-        Task<(DidExchangeRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, AgentMessage message);
+        Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, InvitationMessage invitation);
         
         /// <summary>
         /// Create did exchange request based on a public resolvable did.
@@ -25,14 +26,23 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         /// <param name="did">A public resolvable did.</param>
         /// <returns>The did exchange request message</returns>
         Task<(DidExchangeRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, string did);
+        
+        /// <summary>
+        /// Create did exchange request based on a public resolvable did.
+        /// </summary>
+        /// <param name="agentContext">The agent context.</param>
+        /// <param name="record">An existent connection record.</param>
+        /// <returns>The did exchange request message</returns>
+        Task<(DidExchangeRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord record);
 
         /// <summary>
         /// Process a did exchange request message.
         /// </summary>
         /// <param name="agentContext">The agent context.</param>
         /// <param name="requestMessage">The did exchange request message.</param>
+        /// <param name="record">The connection record if request was based on an invitation.</param>
         /// <returns>The connection record.</returns>
-        Task<ConnectionRecord> ProcessRequestAsync(IAgentContext agentContext, DidExchangeRequestMessage requestMessage);
+        Task<ConnectionRecord> ProcessRequestAsync(IAgentContext agentContext, DidExchangeRequestMessage requestMessage, ConnectionRecord record = null);
 
         /// <summary>
         /// Create did exchange response message. 
