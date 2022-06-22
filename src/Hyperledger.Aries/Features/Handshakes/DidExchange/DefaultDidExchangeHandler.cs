@@ -31,7 +31,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
                     var request = messageContext.GetMessage<DidExchangeRequestMessage>();
                     try
                     {
-                        await _didExchangeService.ProcessRequestAsync(agentContext, request);
+                        await _didExchangeService.ProcessRequestAsync(agentContext, request, messageContext.Connection);
                     }
                     catch (Exception)
                     {

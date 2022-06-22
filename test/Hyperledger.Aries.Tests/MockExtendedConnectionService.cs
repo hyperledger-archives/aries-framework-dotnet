@@ -5,6 +5,7 @@ using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.Handshakes.Connection;
 using Hyperledger.Aries.Features.Handshakes.Connection.Models;
+using Hyperledger.Aries.Features.OutOfBand;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Tests
@@ -32,6 +33,11 @@ namespace Hyperledger.Aries.Tests
         }
 
         public async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, ConnectionInvitationMessage offer)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, InvitationMessage invitation)
         {
             throw new System.NotImplementedException();
         }

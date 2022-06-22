@@ -5,6 +5,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.Handshakes.Connection.Models;
+using Hyperledger.Aries.Features.OutOfBand;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.Handshakes.Connection
@@ -59,6 +60,14 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection
         /// <param name="offer">Connection offer message</param>
         /// <returns>The new connection record.</returns>
         Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, ConnectionInvitationMessage offer);
+
+        /// <summary>
+        /// Process an out-of-band invitation
+        /// </summary>
+        /// <param name="agentContext">Agent context.</param>
+        /// <param name="invitation">Out-of-band invitation message</param>
+        /// <returns>The <see cref="ConnectionRecord"/></returns>
+        Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, InvitationMessage invitation);
 
         /// <summary>
         /// Accepts an existing invitation.

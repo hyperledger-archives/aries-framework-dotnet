@@ -24,6 +24,16 @@ namespace Hyperledger.Aries.Utils
         public const string DidSovMethodSpec = "sov";
 
         /// <summary>
+        /// Did Key method spec.
+        /// </summary>
+        public const string DidKeyMethodSpec = "key";
+
+        /// <summary>
+        /// Did Indy method spec.
+        /// </summary>
+        public const string DidIndyMethodSpec = "indy";
+
+        /// <summary>
         /// Constructs a DID from a method spec and identifier.
         /// </summary>
         /// <param name="methodSpec">DID method spec.</param>
@@ -44,6 +54,21 @@ namespace Hyperledger.Aries.Utils
                 return null;
             
             return regExMatches[0].Groups[2].Value;
+        }
+
+        /// <summary>
+        /// Extracts the method specification from a DID.
+        /// </summary>
+        /// <param name="did">DID to extract the method spec from.</param>
+        /// <returns></returns>
+        public static string MethodSpecFromDid(string did)
+        {
+            var regExMatches = Regex.Matches(did, DID_REGEX);
+            
+            if (regExMatches.Count != 1 || regExMatches[0].Groups.Count < 3)
+                return null;
+
+            return regExMatches[0].Groups[1].Value;
         }
 
         /// <summary>
@@ -134,6 +159,29 @@ namespace Hyperledger.Aries.Utils
             }
 
             throw new ArgumentException($"Value {didKey} has missing ED25519 multicodec prefix", nameof(didKey));
+        }
+
+        /// <summary>
+        /// Ensure a given string represents a supported DID method.
+        /// Will transform unqualified verkeys into did:key format.
+        /// </summary>
+        /// <param name="didCandidate"></param>
+        /// <returns></returns>
+        /// <exception cref="AriesFrameworkException"></exception>
+        public static string EnsureQualifiedDid(string didCandidate)
+        {
+            if (MethodSpecFromDid(didCandidate) == DidKeyMethodSpec ||
+                MethodSpecFromDid(didCandidate) == DidSovMethodSpec)
+            {
+                return didCandidate;
+            }
+
+            if (IsVerkey(didCandidate))
+            {
+                return ConvertVerkeyToDidKey(didCandidate);
+            }
+            
+            throw new AriesFrameworkException(ErrorCode.UnsupportedDidMethod);
         }
     }
 }

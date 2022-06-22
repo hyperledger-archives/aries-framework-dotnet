@@ -26,6 +26,7 @@ namespace Hyperledger.TestHarness.Mock
 
         protected override void ConfigureHandlers()
         {
+            AddOutOfBandHandler();
             AddConnectionHandler();
             AddDidExchangeHandler();
             AddForwardHandler();

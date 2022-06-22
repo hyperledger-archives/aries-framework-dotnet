@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Hyperledger.Aries.Common;
 using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Utils;
 
 namespace Hyperledger.Aries.Features.Handshakes.Common.Dids
 {
@@ -83,6 +87,33 @@ namespace Hyperledger.Aries.Features.Handshakes.Common.Dids
                         RoutingKeys = connection.Endpoint?.Verkey != null ? connection.Endpoint.Verkey : new string[0]
                     }
                 }
+            };
+        }
+
+        /// <summary>
+        /// Create an inline DIDComm service based on ConnectionRecord and ProvisioningRecord
+        /// </summary>
+        /// <param name="connection">The connection record.</param>
+        /// <param name="provisioningRecord">The provisioning record.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">Throws if recipientKey is not defined.</exception>
+        public static DidCommServiceEndpoint MyDidCommService(this ConnectionRecord connection, ProvisioningRecord provisioningRecord)
+        {
+            string recipientKey = connection.MyVk ?? connection.GetTag(TagConstants.ConnectionKey);
+            if (string.IsNullOrEmpty(recipientKey))
+                throw new ArgumentException("Recipient key is undefined.");
+            
+            var recipientKeys = new List<string>{ DidUtils.EnsureQualifiedDid(recipientKey) };
+            var routingKeys = provisioningRecord.Endpoint.Verkey.Select(DidUtils.EnsureQualifiedDid);
+            
+            return new DidCommServiceEndpoint
+            {
+                Id = connection.MyDid ?? recipientKeys.First(),
+                Priority = 0,
+                Accept = new List<string> {MediaTypes.EncryptionEnvelopeV1},
+                RecipientKeys = recipientKeys,
+                RoutingKeys = routingKeys.ToList(),
+                ServiceEndpoint = provisioningRecord.Endpoint.Uri
             };
         }
     }

@@ -14,6 +14,7 @@ using Hyperledger.Aries.Features.Handshakes.Common;
 using Hyperledger.Aries.Features.Handshakes.Common.Dids;
 using Hyperledger.Aries.Features.Handshakes.Connection.Extensions;
 using Hyperledger.Aries.Features.Handshakes.Connection.Models;
+using Hyperledger.Aries.Features.OutOfBand;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
@@ -142,7 +143,7 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection
                 MyVk = my.VerKey,
                 Role = ConnectionRole.Invitee
             };
-            connection.SetTag("InvitationKey", invitation.RecipientKeys.First());
+            connection.SetTag(TagConstants.InvitationKey, invitation.RecipientKeys.First());
 
             if (!string.IsNullOrEmpty(invitation.Label) || !string.IsNullOrEmpty(invitation.ImageUrl))
             {
@@ -164,6 +165,50 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection
                 RecordId = connection.Id,
                 ThreadId = invitation.GetThreadId()
             });
+
+            return connection;
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, InvitationMessage invitation)
+        {
+            // Todo: Check for existing ConnectionRecords
+            // Based on recipient key only
+
+            DidCommServiceEndpoint service = null;
+            foreach (var obj in invitation.Services)
+            {
+                if (obj is DidCommServiceEndpoint serviceEndpoint)
+                {
+                    service = serviceEndpoint;
+                    break;
+                }
+            }
+
+            if (service == null) throw new ArgumentNullException(nameof(invitation.Services), "No service endpoint defined");
+
+            var my = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");
+
+            var connection = new ConnectionRecord
+            {
+                Endpoint = new AgentEndpoint(service.ServiceEndpoint, null, service.RoutingKeys != null && service.RoutingKeys.Count != 0 ? service.RoutingKeys.ToArray() : null),
+                MyDid = my.Did,
+                MyVk = my.VerKey,
+                Role = ConnectionRole.Invitee
+            };
+            connection.SetTag(TagConstants.InvitationKey, service.RecipientKeys.First());
+
+            if (!string.IsNullOrEmpty(invitation.Label))
+            {
+                connection.Alias = new ConnectionAlias
+                {
+                    Name = invitation.Label
+                };
+
+                if (string.IsNullOrEmpty(invitation.Label))
+                    connection.SetTag(TagConstants.Alias, invitation.Label);
+            }
+            await RecordService.AddAsync(agentContext.Wallet, connection);
 
             return connection;
         }

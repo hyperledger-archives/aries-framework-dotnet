@@ -20,6 +20,7 @@ namespace Hyperledger.Aries.Agents
         /// </summary>
         protected override void ConfigureHandlers()
         {
+            AddOutOfBandHandler();
             AddConnectionHandler();
             AddCredentialHandler();
             AddDidExchangeHandler();

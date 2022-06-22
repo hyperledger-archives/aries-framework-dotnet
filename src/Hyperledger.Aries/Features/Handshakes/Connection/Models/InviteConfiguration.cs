@@ -44,6 +44,11 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection.Models
         public bool UseDidKeyFormat { get; set; } = false;
 
         /// <summary>
+        /// Indicator if this invitation should keep the 
+        /// </summary>
+        public bool UsePublicDid { get; set; } = false;
+
+        /// <summary>
         /// Controls the tags that are persisted against the invite/connection record.
         /// </summary>
         public Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();

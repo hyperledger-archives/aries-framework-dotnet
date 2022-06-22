@@ -17,6 +17,8 @@
 
         public const string IssuerDid = "issuerDid";
 
+        public const string InvitationKey = "InvitationKey";
+
         public const string AutoAcceptConnection = "autoAcceptConnection";
 
         public const string Role = "role";
@@ -28,6 +30,10 @@
         public const string Requestor = "requestor";
         
         public const string LastThreadId = "threadId";
+
+        public const string ParentThreadId = "parentThreadId";
+
+        public const string UsePublicDid = "usePublicDid";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
     }
