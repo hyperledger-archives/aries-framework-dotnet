@@ -4,7 +4,6 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Ledger;
 using Hyperledger.Aries.Ledger.Models;
 using Hyperledger.Aries.Payments;
-using Hyperledger.Indy.LedgerApi;
 
 namespace Hyperledger.Aries.Contracts
 {

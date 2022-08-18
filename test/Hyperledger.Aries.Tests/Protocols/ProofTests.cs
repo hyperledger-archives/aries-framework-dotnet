@@ -19,7 +19,9 @@ using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Runtime;
 using Hyperledger.Aries.Storage;
+using Hyperledger.Aries.TestHarness;
 using Hyperledger.Indy.AnonCredsApi;
+using Hyperledger.Indy.PoolApi;
 using Hyperledger.Indy.WalletApi;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Utils;
@@ -28,7 +30,6 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using Hyperledger.Aries.TestHarness;
 
 namespace Hyperledger.Aries.Tests.Protocols
 {
@@ -130,7 +131,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
                 {
                     new CredentialPreviewAttribute("first_name", "Test"),
                     new CredentialPreviewAttribute("last_name", "Holder")
@@ -178,7 +179,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
                 {
                     new CredentialPreviewAttribute("first_name", "Test"),
                     new CredentialPreviewAttribute("last_name", "Holder")
@@ -232,7 +233,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
                 {
                      new CredentialPreviewAttribute("first_name", "Test"),
                      new CredentialPreviewAttribute("last_name", "Test"),
@@ -600,7 +601,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
                 {
                     new CredentialPreviewAttribute("first_name", "Test"),
                     new CredentialPreviewAttribute("last_name", "Holder")
@@ -705,7 +706,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
                 {
                     new CredentialPreviewAttribute("first_name", "Test"),
                     new CredentialPreviewAttribute("last_name", "Holder")
@@ -799,7 +800,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, true, new List<CredentialPreviewAttribute>
                 {
                     new CredentialPreviewAttribute("first_name", "Test"),
                     new CredentialPreviewAttribute("last_name", "Holder")

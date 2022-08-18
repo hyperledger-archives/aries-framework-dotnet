@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Hyperledger.TestHarness;
-using Newtonsoft.Json.Linq;
-using Xunit;
-using Microsoft.Extensions.DependencyInjection;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.TestHarness;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
+using Xunit;
 
 namespace Hyperledger.Aries.Tests
 {
-    public class SchemaServiceTests : TestSingleWallet
+    public abstract class SchemaServiceTests : TestSingleWallet
     {
+        protected TestSingleWallet _fixture;
+        
         [Fact]
         public async Task CanCreateAndResolveSchema()
         {
@@ -95,6 +97,30 @@ namespace Hyperledger.Aries.Tests
             var recordResult = await schemaService.GetCredentialDefinitionAsync(Context.Wallet, credId);
 
             Assert.Equal(schemaId, recordResult.SchemaId);
+        }
+        
+        public class SchemaServiceTestsV1 : SchemaServiceTests, IClassFixture<SchemaServiceTestsV1.SingleTestWalletFixture>
+        {
+            public class SingleTestWalletFixture : TestSingleWallet
+            {
+            }
+        
+            public SchemaServiceTestsV1(SingleTestWalletFixture fixture)
+            {
+                _fixture = fixture;
+            }
+        }
+
+        public class SchemaServiceTestsV2 : SchemaServiceTests, IClassFixture<SchemaServiceTestsV2.SingleTestWalletV2Fixture>
+        {
+            public class SingleTestWalletV2Fixture : TestSingleWalletV2
+            {
+            }
+        
+            public SchemaServiceTestsV2(SingleTestWalletV2Fixture fixture)
+            {
+                _fixture = fixture;
+            }
         }
     }
 }

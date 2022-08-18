@@ -15,6 +15,7 @@ using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using Hyperledger.Indy.DidApi;
+using Hyperledger.Indy.PoolApi;
 
 namespace Hyperledger.Aries.Features.Handshakes.DidExchange
 {
@@ -58,7 +59,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
             }
             else if (invitation.Services.FirstOrDefault() is string resolvableDid)
             {
-                var recipientKey = await Did.KeyForDidAsync(await agentContext.Pool, agentContext.Wallet, resolvableDid);
+                var recipientKey = await Did.KeyForDidAsync(await agentContext.Pool as Pool, agentContext.Wallet, resolvableDid);
                 var endpointResult = await _ledgerService.LookupServiceEndpointAsync(agentContext, resolvableDid);
 
                 connectionRecord = new ConnectionRecord
@@ -85,7 +86,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         /// <inheritdoc/>
         public async Task<(DidExchangeRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, string did)
         {
-            var theirVerkey = await Did.KeyForDidAsync(await agentContext.Pool, agentContext.Wallet, did);
+            var theirVerkey = await Did.KeyForDidAsync(await agentContext.Pool as Pool, agentContext.Wallet, did);
             var endpointResult = await _ledgerService.LookupServiceEndpointAsync(agentContext, did);
             
             var myDid = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");

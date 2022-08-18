@@ -46,12 +46,13 @@
         <FluentValidationVersion>9.2.0</FluentValidationVersion>
         <FlurlVersion>2.8.2</FlurlVersion>
         <HyperledgerIndySdkVersion>1.11.1</HyperledgerIndySdkVersion>
+        <HyperledgerIndyVdrVersion>0.4.2-alpha</HyperledgerIndyVdrVersion>
         <MediatrExtensionsMicrosoftDependencyInjectionVersion>8.0.1</MediatrExtensionsMicrosoftDependencyInjectionVersion>
         <MediatrVersion>8.0.2</MediatrVersion>
         <MicroElementsSwashbuckleFluentValidationVersion>4.0.0</MicroElementsSwashbuckleFluentValidationVersion>
         <MoqVersion>4.14.5</MoqVersion>
         <MultiformatsBaseVersion>2.0.2</MultiformatsBaseVersion>
-        <NewtonsoftJsonVersion>12.0.3</NewtonsoftJsonVersion>
+        <NewtonsoftJsonVersion>13.0.1</NewtonsoftJsonVersion>
         <NLogConfigVersion>4.7.2</NLogConfigVersion>
         <PollyVersion>7.2.1</PollyVersion>
         <StatelessVersion>5.1.2</StatelessVersion>
