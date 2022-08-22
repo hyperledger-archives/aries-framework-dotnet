@@ -20,6 +20,7 @@ using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.TestHarness;
 using Hyperledger.Indy.AnonCredsApi;
 using Hyperledger.Indy.DidApi;
+using Hyperledger.Indy.PoolApi;
 using Hyperledger.Indy.WalletApi;
 using Hyperledger.TestHarness;
 using Hyperledger.TestHarness.Utils;
@@ -118,7 +119,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
                 {
                     new CredentialPreviewAttribute("first_name", "Test"),
                     new CredentialPreviewAttribute("last_name", "Holder")
@@ -140,7 +141,7 @@ namespace Hyperledger.Aries.Tests.Protocols
 
             var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
                 {
                     new CredentialPreviewAttribute
                     {

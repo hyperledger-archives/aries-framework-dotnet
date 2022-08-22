@@ -1,16 +1,15 @@
-using System;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.TestHarness;
-using Xunit;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
 namespace Hyperledger.Aries.Tests
 {
-    public class LedgerTests : TestSingleWallet
+    public abstract class PoolServiceTests : TestSingleWallet
     {
-        protected override string GetIssuerSeed() => TestConstants.StewardSeed;
-
+        protected TestSingleWallet _fixture;
+        
         [Fact(DisplayName = "Get Transaction Author Agreement from ledger if exists")]
         public async Task GetTaaFromLedger()
         {
@@ -32,16 +31,28 @@ namespace Hyperledger.Aries.Tests
             Assert.True(true);
         }
         
-        [Fact(DisplayName = "Set and get service endpoint on ledger")]
-        public async Task SetAndGetServiceEndpointFromLedger()
+        public class PoolServiceV1Tests : PoolServiceTests, IClassFixture<PoolServiceV1Tests.SingleTestWalletFixture>
         {
-            var endpoint = $"http://{Guid.NewGuid().ToString().ToLowerInvariant()}";
+            public class SingleTestWalletFixture : TestSingleWallet
+            {
+            }
+        
+            public PoolServiceV1Tests(SingleTestWalletFixture fixture)
+            {
+                _fixture = fixture;
+            }
+        }
 
-            await ledgerService.RegisterServiceEndpointAsync(Context, TestConstants.StewardDid, endpoint);
-
-            var result = await ledgerService.LookupServiceEndpointAsync(Context, TestConstants.StewardDid);
-            
-            Assert.Equal(endpoint, result.Result.Endpoint);
+        public class PoolServiceV2Tests : PoolServiceTests, IClassFixture<PoolServiceV2Tests.SingleTestWalletV2Fixture>
+        {
+            public class SingleTestWalletV2Fixture : TestSingleWalletV2
+            {
+            }
+        
+            public PoolServiceV2Tests(SingleTestWalletV2Fixture fixture)
+            {
+                _fixture = fixture;
+            }
         }
     }
 }

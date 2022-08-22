@@ -10,13 +10,13 @@ namespace Hyperledger.Aries.Ledger
     /// </summary>
     public struct PoolAwaitable
     {
-        private readonly Func<Task<Pool>> _initializer;
+        private readonly Func<Task<object>> _initializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PoolAwaitable"/> struct.
         /// </summary>
         /// <param name="initializer">Initializer.</param>
-        public PoolAwaitable(Func<Task<Pool>> initializer)
+        public PoolAwaitable(Func<Task<object>> initializer)
         {
             _initializer = initializer;
         }
@@ -25,7 +25,7 @@ namespace Hyperledger.Aries.Ledger
         /// Gets the awaiter for this instance.
         /// </summary>
         /// <returns>The awaiter.</returns>
-        public TaskAwaiter<Pool> GetAwaiter()
+        public TaskAwaiter<object> GetAwaiter()
         {
             return _initializer().GetAwaiter();
         }
@@ -35,7 +35,7 @@ namespace Hyperledger.Aries.Ledger
         /// </summary>
         /// <returns>The pool awatable.</returns>
         /// <param name="pool">Pool.</param>
-        public static PoolAwaitable FromPool(Pool pool)
+        public static PoolAwaitable FromPool(object pool)
         {
             return new PoolAwaitable(() => Task.FromResult(pool));
         }

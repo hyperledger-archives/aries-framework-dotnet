@@ -143,7 +143,7 @@ namespace Hyperledger.Aries.Tests
             provisioned.Should().BeTrue();
 
             // Cleanup
-            await pool.CloseAsync();
+            await (pool as Pool)!.CloseAsync();
             await Pool.DeletePoolLedgerConfigAsync(poolName);
             await hostBuilder.StopAsync();
         }

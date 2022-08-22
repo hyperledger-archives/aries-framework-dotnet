@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Decorators.Payments;
-using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
+using Hyperledger.Aries.Ledger;
+using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.PoolApi;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using IndyPayments = Hyperledger.Indy.PaymentsApi.Payments;
 using IndyLedger = Hyperledger.Indy.LedgerApi.Ledger;
-using Hyperledger.Aries.Configuration;
-using Hyperledger.Aries.Ledger;
-using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Payments.SovrinToken
 {
@@ -112,7 +112,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
 
             // Cache sources data in record for one hour
             var request = await IndyPayments.BuildGetPaymentSourcesAsync(agentContext.Wallet, null, paymentAddress.Address);
-            var response = await IndyLedger.SubmitRequestAsync(await agentContext.Pool, request.Result);
+            var response = await IndyLedger.SubmitRequestAsync(await agentContext.Pool as Pool, request.Result);
 
             var sourcesJson = await IndyPayments.ParseGetPaymentSourcesAsync(paymentAddress.Method, response);
             var sources = sourcesJson.ToObject<IList<IndyPaymentInputSource>>();
@@ -169,7 +169,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
                 }.ToJson(),
                 extra: null);
 
-            var response = await IndyLedger.SignAndSubmitRequestAsync(await agentContext.Pool, agentContext.Wallet,
+            var response = await IndyLedger.SignAndSubmitRequestAsync(await agentContext.Pool as Pool, agentContext.Wallet,
                 provisioning.Endpoint.Did, paymentResult.Result);
 
             var paymentResponse = await IndyPayments.ParsePaymentResponseAsync(TokenConfiguration.MethodName, response);
@@ -203,7 +203,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
         public async Task<ulong> GetTransactionFeeAsync(IAgentContext agentContext, string txnType)
         {
             var feeAliases = await GetTransactionFeesAsync(agentContext);
-            var authRules = await LookupAuthorizationRulesAsync(await agentContext.Pool);
+            var authRules = await LookupAuthorizationRulesAsync(await agentContext.Pool as Pool);
 
             // TODO: Add better selective logic that takes action and role into account
             // Ex: ADD action may have fees, but EDIT may not have any
@@ -269,7 +269,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
             if (_transactionFees == null)
             {
                 var feesRequest = await IndyPayments.BuildGetTxnFeesRequestAsync(agentContext.Wallet, null, TokenConfiguration.MethodName);
-                var feesResponse = await IndyLedger.SubmitRequestAsync(await agentContext.Pool, feesRequest);
+                var feesResponse = await IndyLedger.SubmitRequestAsync(await agentContext.Pool as Pool, feesRequest);
 
                 var feesParsed = await IndyPayments.ParseGetTxnFeesResponseAsync(TokenConfiguration.MethodName, feesResponse);
                 _transactionFees = feesParsed.ToObject<IDictionary<string, ulong>>();
@@ -354,7 +354,7 @@ namespace Hyperledger.Aries.Payments.SovrinToken
             }
 
             var req = await IndyPayments.BuildVerifyPaymentRequestAsync(context.Wallet, null, paymentRecord.ReceiptId);
-            var res = await IndyLedger.SubmitRequestAsync(await context.Pool, req.Result);
+            var res = await IndyLedger.SubmitRequestAsync(await context.Pool as Pool, req.Result);
 
             var resParsed = JObject.Parse(await IndyPayments.ParseVerifyPaymentResponseAsync("sov", res));
             var receipts = resParsed["receipts"].ToObject<IList<IndyPaymentOutputSource>>()

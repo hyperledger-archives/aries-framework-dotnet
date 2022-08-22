@@ -1,10 +1,10 @@
+using System;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
-using Hyperledger.Aries.Contracts;
-using IndyLedger = Hyperledger.Indy.LedgerApi.Ledger;
-using Hyperledger.Indy.WalletApi;
 using Hyperledger.Aries.Configuration;
-using System;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Indy.WalletApi;
+using IndyLedger = Hyperledger.Indy.LedgerApi.Ledger;
 
 namespace Hyperledger.Aries.Ledger
 {

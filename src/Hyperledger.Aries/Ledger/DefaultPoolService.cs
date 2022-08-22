@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Extensions;
-using IndyLedger = Hyperledger.Indy.LedgerApi.Ledger;
 using Hyperledger.Indy.PoolApi;
 using Newtonsoft.Json.Linq;
+using IndyLedger = Hyperledger.Indy.LedgerApi.Ledger;
 
 namespace Hyperledger.Aries.Ledger
 {
@@ -31,7 +31,7 @@ namespace Hyperledger.Aries.Ledger
             new ConcurrentDictionary<string, IndyAml>();
 
         /// <inheritdoc />
-        public virtual async Task<Pool> GetPoolAsync(string poolName, int protocolVersion)
+        public virtual async Task<object> GetPoolAsync(string poolName, int protocolVersion)
         {
             await Pool.SetProtocolVersionAsync(protocolVersion);
 
@@ -39,7 +39,7 @@ namespace Hyperledger.Aries.Ledger
         }
 
         /// <inheritdoc />
-        public virtual async Task<Pool> GetPoolAsync(string poolName)
+        public virtual async Task<object> GetPoolAsync(string poolName)
         {
             if (Pools.TryGetValue(poolName, out var pool))
             {
@@ -57,6 +57,12 @@ namespace Hyperledger.Aries.Ledger
             var poolConfig = new { genesis_txn = genesisFile }.ToJson();
 
             await Pool.CreatePoolLedgerConfigAsync(poolName, poolConfig);
+        }
+
+        /// <inheritdoc />
+        public Task<string> SubmitRequestAsync(PoolAwaitable poolHandle, object requestHandle)
+        {
+            throw new NotImplementedException($"{nameof(SubmitRequestAsync)} is not implemented within DefaultLedgerService; use DefaultLedgerServiceV2 instead");
         }
 
         /// <inheritdoc />
@@ -83,7 +89,7 @@ namespace Hyperledger.Aries.Ledger
 
             var pool = await GetPoolAsync(poolName, 2);
             var req = await IndyLedger.BuildGetTxnAuthorAgreementRequestAsync(null, null);
-            var res = await IndyLedger.SubmitRequestAsync(pool, req);
+            var res = await IndyLedger.SubmitRequestAsync(pool as Pool, req);
 
             EnsureSuccessResponse(res);
 
@@ -123,7 +129,7 @@ namespace Hyperledger.Aries.Ledger
                 submitter_did: null,
                 timestamp: timestamp == DateTimeOffset.MinValue ? -1 : timestamp.ToUnixTimeSeconds(),
                 version: version);
-            var res = await IndyLedger.SubmitRequestAsync(pool, req);
+            var res = await IndyLedger.SubmitRequestAsync(pool as Pool, req);
 
             EnsureSuccessResponse(res);
 

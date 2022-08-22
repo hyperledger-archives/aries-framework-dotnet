@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Ledger;
-using Hyperledger.Indy.PoolApi;
 
 namespace Hyperledger.Aries.Contracts
 {
@@ -11,7 +10,7 @@ namespace Hyperledger.Aries.Contracts
     public interface IPoolService
     {
         /// <summary>
-        /// Opens the pool configuration with the specified name and sets
+        /// Gets the pool with the specified name and sets
         /// the node protocol version of the current process.
         /// </summary>
         /// <param name="poolName">Name of the pool configuration.</param>
@@ -19,14 +18,14 @@ namespace Hyperledger.Aries.Contracts
         /// <returns>
         /// A handle to the pool.
         /// </returns>
-        Task<Pool> GetPoolAsync(string poolName, int protocolVersion);
+        Task<object> GetPoolAsync(string poolName, int protocolVersion);
 
         /// <summary>
-        /// Opens the pool configuration with the specified name.
+        /// Gets the pool configuration with the specified name.
         /// </summary>
-        /// <returns>The pool async.</returns>
+        /// <returns>A handle to the pool.</returns>
         /// <param name="poolName">Pool name.</param>
-        Task<Pool> GetPoolAsync(string poolName);
+        Task<object> GetPoolAsync(string poolName);
 
         /// <summary>
         /// Gets the transaction author agreement if one is set on
@@ -47,12 +46,20 @@ namespace Hyperledger.Aries.Contracts
         Task<IndyAml> GetAmlAsync(string poolName, DateTimeOffset timestamp = default(DateTimeOffset), string version = null);
 
         /// <summary>
-        /// Creates a pool configuration.
+        /// Creates a pool for a given genesis file.
         /// </summary>
         /// <param name="poolName">The name of the pool configuration.</param>
         /// <param name="genesisFile">Genesis transaction file.</param>
         /// <returns>
         /// </returns>
         Task CreatePoolAsync(string poolName, string genesisFile);
+        
+        /// <summary>
+        /// Submit a ledger request for a given pool.
+        /// </summary>
+        /// <param name="poolHandle">The awaitable pool handle.</param>
+        /// <param name="requestHandle">The request handle.</param>
+        /// <returns></returns>
+        public Task<string> SubmitRequestAsync(PoolAwaitable poolHandle, object requestHandle);
     }
 }

@@ -10,8 +10,10 @@ using Hyperledger.Aries.Features.OutOfBand;
 using Hyperledger.Aries.Features.PresentProof;
 using Hyperledger.Aries.Features.RevocationNotification;
 using Hyperledger.Aries.Ledger;
+using Hyperledger.Aries.Ledger.V2;
 using Hyperledger.Aries.Payments;
 using Hyperledger.Aries.Runtime;
+using Hyperledger.Aries.Signatures;
 using Hyperledger.Aries.Storage;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -49,6 +51,21 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Invoke(frameworkBuilder);
             return frameworkBuilder;
         }
+        
+        /// <summary>
+        /// Registers the agent framework required services and overwrites the default services with the next version of the services
+        /// </summary>
+        /// <param name="services">Services.</param>
+        /// <param name="builder">Builder.</param>
+        public static AriesFrameworkBuilder AddAriesFrameworkV2(this IServiceCollection services, Action<AriesFrameworkBuilder> builder)
+        {
+            services.AddAriesFramework();
+            services.AddDefaultServicesV2();
+            
+            var frameworkBuilder = new AriesFrameworkBuilder(services);
+            builder.Invoke(frameworkBuilder);
+            return frameworkBuilder;
+        }
 
         internal static IServiceCollection AddDefaultServices(this IServiceCollection builder)
         {
@@ -71,6 +88,15 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.TryAddSingleton<IWalletService, DefaultWalletService>();
             builder.TryAddSingleton<IPaymentService, DefaultPaymentService>();
             builder.TryAddSingleton<IRevocationNotificationService, DefaultRevocationNotificationService>();
+
+            return builder;
+        }
+        
+        internal static IServiceCollection AddDefaultServicesV2(this IServiceCollection builder)
+        {
+            builder.AddSingleton<ILedgerService, DefaultLedgerServiceV2>();
+            builder.AddSingleton<IPoolService, DefaultPoolServiceV2>();
+            builder.AddSingleton<ISigningService, DefaultSigningService>();
 
             return builder;
         }
