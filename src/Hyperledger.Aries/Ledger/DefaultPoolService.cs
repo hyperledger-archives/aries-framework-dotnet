@@ -59,7 +59,8 @@ namespace Hyperledger.Aries.Ledger
             await Pool.CreatePoolLedgerConfigAsync(poolName, poolConfig);
         }
 
-        public async Task<string> SubmitRequestAsync(PoolAwaitable poolHandle, object requestHandle)
+        /// <inheritdoc />
+        public Task<string> SubmitRequestAsync(PoolAwaitable poolHandle, object requestHandle)
         {
             throw new NotImplementedException($"{nameof(SubmitRequestAsync)} is not implemented within DefaultLedgerService; use DefaultLedgerServiceV2 instead");
         }

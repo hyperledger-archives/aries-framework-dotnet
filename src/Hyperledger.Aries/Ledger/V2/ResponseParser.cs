@@ -50,7 +50,7 @@ namespace Hyperledger.Aries.Ledger.V2
         ///     tag: string - allows to distinct between credential definitions for the same issuer and schema
         ///     value: Dictionary with Credential Definition's data: {
         ///         primary: primary credential public key,
-        ///         Optional<revocation>: revocation credential public key
+        ///         revocation: revocation credential public key [optional]
         ///     },
         ///     ver: Version of the Credential Definition json
         /// }
@@ -90,7 +90,7 @@ namespace Hyperledger.Aries.Ledger.V2
         ///         "maxCredNum": number - Maximum number of credentials the Registry can serve.
         ///         "tailsHash": string - Hash of tails.
         ///         "tailsLocation": string - Location of tails file.
-        ///         "publicKeys": <public_keys> - Registry's public key.
+        ///         "publicKeys": Registry's public key.
         ///     },
         ///     "ver": string - version of revocation registry definition json.
         /// }
@@ -106,7 +106,7 @@ namespace Hyperledger.Aries.Ledger.V2
         /// Parse revocation registry response result in the format compatible with Anoncreds API.
         /// </summary>
         /// <param name="revocRegResponse">Ledger response from revocation registry lookup</param>
-        /// <returns><see cref="ParseRegistryResponseResult"/>></returns>
+        /// <returns><see cref="ParseRegistryResponseResult"/></returns>
         internal static ParseRegistryResponseResult ParseRevocRegResponse(string revocRegResponse)
         {
             var jobj = JObject.Parse(revocRegResponse)["result"]!;

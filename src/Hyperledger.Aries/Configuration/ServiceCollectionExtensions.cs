@@ -55,7 +55,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Registers the agent framework required services and overwrites the default services with the next version of the services
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">Services.</param>
+        /// <param name="builder">Builder.</param>
         public static AriesFrameworkBuilder AddAriesFrameworkV2(this IServiceCollection services, Action<AriesFrameworkBuilder> builder)
         {
             services.AddAriesFramework();

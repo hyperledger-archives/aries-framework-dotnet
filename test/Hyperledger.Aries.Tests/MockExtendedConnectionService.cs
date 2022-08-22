@@ -32,17 +32,17 @@ namespace Hyperledger.Aries.Tests
             throw new System.NotImplementedException();
         }
 
-        public async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, ConnectionInvitationMessage offer)
+        public Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, ConnectionInvitationMessage offer)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, InvitationMessage invitation)
+        public Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, InvitationMessage invitation)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<(ConnectionRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord connectionRecord)
+        public Task<(ConnectionRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord connectionRecord)
         {
             throw new System.NotImplementedException();
         }
