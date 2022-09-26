@@ -158,16 +158,14 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var credentialAttributesValues = credential.CredentialAttributesValues.ToList();
             
             var newCredentialAttributesValues = new List<CredentialPreviewAttribute>();
-            var count = 0;
             foreach (var (key, value) in values)
             {
                 newCredentialAttributesValues.Add(new CredentialPreviewAttribute
                 {
                     Name = key,
                     Value = value.Raw,
-                    MimeType = credentialAttributesValues[count].MimeType ?? CredentialMimeTypes.TextMimeType
+                    MimeType = credentialAttributesValues.FirstOrDefault(x => x.Name == key)?.MimeType ?? CredentialMimeTypes.TextMimeType
                 });
-                count++;
             }
             credential.CredentialAttributesValues = newCredentialAttributesValues;
             
