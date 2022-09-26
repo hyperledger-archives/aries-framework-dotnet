@@ -155,7 +155,20 @@ namespace Hyperledger.Aries.Features.IssueCredential
             var values = jcred["values"].ToObject<Dictionary<string, AttributeValue>>();
 
             var credential = await _credentialService.GetAsync(agentContext, credentialId);
-            credential.CredentialAttributesValues = values.Select(x => new CredentialPreviewAttribute { Name = x.Key, Value = x.Value.Raw, MimeType = CredentialMimeTypes.TextMimeType }).ToList();
+            var credentialAttributesValues = credential.CredentialAttributesValues.ToList();
+            
+            var newCredentialAttributesValues = new List<CredentialPreviewAttribute>();
+            foreach (var (key, value) in values)
+            {
+                newCredentialAttributesValues.Add(new CredentialPreviewAttribute
+                {
+                    Name = key,
+                    Value = value.Raw,
+                    MimeType = credentialAttributesValues.FirstOrDefault(x => x.Name == key)?.MimeType ?? CredentialMimeTypes.TextMimeType
+                });
+            }
+            credential.CredentialAttributesValues = newCredentialAttributesValues;
+            
             await _recordService.UpdateAsync(agentContext.Wallet, credential);
 
             return credential;
