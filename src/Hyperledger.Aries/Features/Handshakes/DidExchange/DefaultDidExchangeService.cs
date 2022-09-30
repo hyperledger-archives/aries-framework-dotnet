@@ -37,7 +37,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, InvitationMessage invitation)
+        public virtual async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, InvitationMessage invitation)
         {
             if (invitation.HandshakeProtocols.Contains(HandshakeProtocolUri.DidExchange) == false)
                 throw new NotImplementedException("The given handshake protocols are not implemented.");
@@ -84,7 +84,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<(DidExchangeRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, string did)
+        public virtual async Task<(DidExchangeRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, string did)
         {
             var theirVerkey = await Did.KeyForDidAsync(await agentContext.Pool as Pool, agentContext.Wallet, did);
             var endpointResult = await _ledgerService.LookupServiceEndpointAsync(agentContext, did);
@@ -130,7 +130,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
             return (request, connection);
         }
 
-        public async Task<(DidExchangeRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord record)
+        public virtual async Task<(DidExchangeRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord record)
         {
             await record.TriggerAsync(ConnectionTrigger.Request);
             
@@ -169,7 +169,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<ConnectionRecord> ProcessRequestAsync(IAgentContext agentContext,
+        public virtual async Task<ConnectionRecord> ProcessRequestAsync(IAgentContext agentContext,
             DidExchangeRequestMessage requestMessage, ConnectionRecord record = null)
         {
             var existingConnectionRecords = await _recordService.SearchAsync<ConnectionRecord>(agentContext.Wallet,
@@ -244,7 +244,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<(DidExchangeResponseMessage, ConnectionRecord)> CreateResponseAsync(IAgentContext agentContext, ConnectionRecord connectionRecord)
+        public virtual async Task<(DidExchangeResponseMessage, ConnectionRecord)> CreateResponseAsync(IAgentContext agentContext, ConnectionRecord connectionRecord)
         {
             await connectionRecord.TriggerAsync(ConnectionTrigger.Response);
 
@@ -287,7 +287,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<ConnectionRecord> ProcessResponseAsync(IAgentContext agentContext, DidExchangeResponseMessage responseMessage, ConnectionRecord connectionRecord)
+        public virtual async Task<ConnectionRecord> ProcessResponseAsync(IAgentContext agentContext, DidExchangeResponseMessage responseMessage, ConnectionRecord connectionRecord)
         {
             await connectionRecord.TriggerAsync(ConnectionTrigger.Response);
             
@@ -337,7 +337,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<(DidExchangeCompleteMessage, ConnectionRecord)> CreateComplete(IAgentContext agentContext, ConnectionRecord connectionRecord)
+        public virtual async Task<(DidExchangeCompleteMessage, ConnectionRecord)> CreateComplete(IAgentContext agentContext, ConnectionRecord connectionRecord)
         {
             await connectionRecord.TriggerAsync(ConnectionTrigger.Complete);
             await _recordService.UpdateAsync(agentContext.Wallet, connectionRecord);
@@ -352,7 +352,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<ConnectionRecord> ProcessComplete(IAgentContext agentContext, DidExchangeCompleteMessage completeMessage,
+        public virtual async Task<ConnectionRecord> ProcessComplete(IAgentContext agentContext, DidExchangeCompleteMessage completeMessage,
             ConnectionRecord connectionRecord)
         {
             await connectionRecord.TriggerAsync(ConnectionTrigger.Complete);
@@ -369,7 +369,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<(DidExchangeProblemReportMessage, ConnectionRecord)> AbandonDidExchange(IAgentContext agentContext, ConnectionRecord connectionRecord)
+        public virtual async Task<(DidExchangeProblemReportMessage, ConnectionRecord)> AbandonDidExchange(IAgentContext agentContext, ConnectionRecord connectionRecord)
         {
             await connectionRecord.TriggerAsync(ConnectionTrigger.Abandon);
             await _recordService.UpdateAsync(agentContext.Wallet, connectionRecord);
@@ -385,7 +385,7 @@ namespace Hyperledger.Aries.Features.Handshakes.DidExchange
         }
 
         /// <inheritdoc/>
-        public async Task<ConnectionRecord> ProcessProblemReportMessage(IAgentContext agentContext, DidExchangeProblemReportMessage problemReportMessage, ConnectionRecord connectionRecord)
+        public virtual async Task<ConnectionRecord> ProcessProblemReportMessage(IAgentContext agentContext, DidExchangeProblemReportMessage problemReportMessage, ConnectionRecord connectionRecord)
         {
             await connectionRecord.TriggerAsync(ConnectionTrigger.Abandon);
             await _recordService.UpdateAsync(agentContext.Wallet, connectionRecord);

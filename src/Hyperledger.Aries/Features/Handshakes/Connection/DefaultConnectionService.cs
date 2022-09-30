@@ -120,7 +120,7 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection
         }
 
         /// <inheritdoc />
-        public async Task RevokeInvitationAsync(IAgentContext agentContext, string invitationId)
+        public virtual async Task RevokeInvitationAsync(IAgentContext agentContext, string invitationId)
         {
             var connection = await GetAsync(agentContext, invitationId);
 
@@ -132,7 +132,7 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection
         }
 
         /// <inheritdoc />
-        public async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, ConnectionInvitationMessage invitation)
+        public virtual async Task<ConnectionRecord> ProcessInvitationAsync(IAgentContext agentContext, ConnectionInvitationMessage invitation)
         {
             var my = await Did.CreateAndStoreMyDidAsync(agentContext.Wallet, "{}");
 
@@ -214,7 +214,7 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection
         }
 
         /// <inheritdoc />
-        public async Task<(ConnectionRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord connection)
+        public virtual async Task<(ConnectionRequestMessage, ConnectionRecord)> CreateRequestAsync(IAgentContext agentContext, ConnectionRecord connection)
         {
             Logger.LogInformation(LoggingEvents.AcceptInvitation, "Key {0}, Endpoint {1}",
                 connection.Endpoint.Verkey, connection.Endpoint.Uri);
@@ -419,7 +419,7 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection
         }
 
         /// <inheritdoc />
-        public async Task<ConnectionAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string connectionRecordId,
+        public virtual async Task<ConnectionAcknowledgeMessage> CreateAcknowledgementMessageAsync(IAgentContext agentContext, string connectionRecordId,
             string status = AcknowledgementStatusConstants.Ok)
         {
             var record = await GetAsync(agentContext, connectionRecordId);
@@ -436,7 +436,7 @@ namespace Hyperledger.Aries.Features.Handshakes.Connection
         }
 
         /// <inheritdoc />
-        public async Task<ConnectionRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext,
+        public virtual async Task<ConnectionRecord> ProcessAcknowledgementMessageAsync(IAgentContext agentContext,
             ConnectionAcknowledgeMessage acknowledgeMessage)
         {
             var connectionRecord = await this.GetByThreadIdAsync(agentContext, acknowledgeMessage.GetThreadId());

@@ -176,13 +176,13 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
-        public async Task<bool> IsRevokedAsync(IAgentContext context, string credentialRecordId)
+        public virtual async Task<bool> IsRevokedAsync(IAgentContext context, string credentialRecordId)
         {
             return await IsRevokedAsync(context, await RecordService.GetAsync<CredentialRecord>(context.Wallet, credentialRecordId));
         }
 
         /// <inheritdoc />
-        public async Task<bool> IsRevokedAsync(IAgentContext context, CredentialRecord record)
+        public virtual async Task<bool> IsRevokedAsync(IAgentContext context, CredentialRecord record)
         {
             if (record.RevocationRegistryId == null) return false;
             if (record.State == CredentialState.Offered || record.State == CredentialState.Requested) return false;
@@ -314,7 +314,8 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
-        public async Task<PresentationAcknowledgeMessage> CreateAcknowledgeMessageAsync(IAgentContext agentContext, string proofRecordId, string status = AcknowledgementStatusConstants.Ok)
+        public virtual async Task<PresentationAcknowledgeMessage> CreateAcknowledgeMessageAsync(IAgentContext agentContext, 
+            string proofRecordId, string status = AcknowledgementStatusConstants.Ok)
         {
             var record = await GetAsync(agentContext, proofRecordId);
             
@@ -426,8 +427,8 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
-        public async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(IAgentContext agentContext, ProofRequestParameters requestParams,
-            string proofRecordId, string connectionId)
+        public virtual async Task<(RequestPresentationMessage, ProofRecord)> CreateRequestFromProposalAsync(
+            IAgentContext agentContext, ProofRequestParameters requestParams, string proofRecordId, string connectionId)
         {
             Logger.LogInformation(LoggingEvents.CreateProofRequest, "ConnectionId {0}", connectionId);
 
@@ -552,7 +553,7 @@ namespace Hyperledger.Aries.Features.PresentProof
         }
 
         /// <inheritdoc />
-        public Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(
+        public virtual Task<(RequestPresentationMessage, ProofRecord)> CreateRequestAsync(
             IAgentContext agentContext,
             ProofRequest proofRequest,
             string connectionId) =>

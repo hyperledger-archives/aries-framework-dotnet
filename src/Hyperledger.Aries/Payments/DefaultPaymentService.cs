@@ -8,61 +8,61 @@ namespace Hyperledger.Aries.Payments
     public class DefaultPaymentService : IPaymentService
     {
         /// <inheritdoc />
-        public void AttachPaymentReceipt(IAgentContext context, AgentMessage agentMessage, PaymentRecord paymentRecord)
+        public virtual void AttachPaymentReceipt(IAgentContext context, AgentMessage agentMessage, PaymentRecord paymentRecord)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public Task<PaymentRecord> AttachPaymentRequestAsync(IAgentContext context, AgentMessage agentMessage, PaymentDetails details, PaymentAddressRecord addressRecord = null)
+        public virtual Task<PaymentRecord> AttachPaymentRequestAsync(IAgentContext context, AgentMessage agentMessage, PaymentDetails details, PaymentAddressRecord addressRecord = null)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public Task<PaymentAddressRecord> CreatePaymentAddressAsync(IAgentContext agentContext, AddressOptions configuration = null)
+        public virtual Task<PaymentAddressRecord> CreatePaymentAddressAsync(IAgentContext agentContext, AddressOptions configuration = null)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<TransactionCost> GetTransactionCostAsync(IAgentContext context, string transactionType, PaymentAddressRecord addressRecord = null)
+        public virtual Task<TransactionCost> GetTransactionCostAsync(IAgentContext context, string transactionType, PaymentAddressRecord addressRecord = null)
         {
             return Task.FromResult<TransactionCost>(null);
         }
 
         /// <inheritdoc />
-        public Task RefreshBalanceAsync(IAgentContext agentContext, PaymentAddressRecord paymentAddress = null)
+        public virtual Task RefreshBalanceAsync(IAgentContext agentContext, PaymentAddressRecord paymentAddress = null)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<PaymentAddressRecord> GetDefaultPaymentAddressAsync(IAgentContext agentContext)
+        public virtual Task<PaymentAddressRecord> GetDefaultPaymentAddressAsync(IAgentContext agentContext)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public Task<ulong> GetTransactionFeeAsync(IAgentContext agentContext, string transactionType)
+        public virtual Task<ulong> GetTransactionFeeAsync(IAgentContext agentContext, string transactionType)
         {
             return Task.FromResult(0UL);
         }
 
         /// <inheritdoc />
-        public Task MakePaymentAsync(IAgentContext agentContext, PaymentRecord paymentRecord, PaymentAddressRecord addressRecord = null)
+        public virtual Task MakePaymentAsync(IAgentContext agentContext, PaymentRecord paymentRecord, PaymentAddressRecord addressRecord = null)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task SetDefaultPaymentAddressAsync(IAgentContext agentContext, PaymentAddressRecord addressRecord)
+        public virtual Task SetDefaultPaymentAddressAsync(IAgentContext agentContext, PaymentAddressRecord addressRecord)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc />
-        public Task<bool> VerifyPaymentAsync(IAgentContext context, PaymentRecord paymentRecord)
+        public virtual Task<bool> VerifyPaymentAsync(IAgentContext context, PaymentRecord paymentRecord)
         {
             throw new NotImplementedException();
         }
