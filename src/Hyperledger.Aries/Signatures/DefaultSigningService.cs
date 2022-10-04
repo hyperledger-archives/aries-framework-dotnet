@@ -8,12 +8,12 @@ namespace Hyperledger.Aries.Signatures
 {
     public class DefaultSigningService : ISigningService
     {
-        public Task<byte[]> SignMessageAsync(IAgentContext context, string signingDid, string message)
+        public virtual Task<byte[]> SignMessageAsync(IAgentContext context, string signingDid, string message)
         {
             return SignMessageAsync(context, signingDid, Encoding.UTF8.GetBytes(message));
         }
         
-        public async Task<byte[]> SignMessageAsync(IAgentContext context, string signingDid, byte[] message)
+        public virtual async Task<byte[]> SignMessageAsync(IAgentContext context, string signingDid, byte[] message)
         {
             var key = await Did.KeyForLocalDidAsync(context.Wallet, signingDid);
             return await Crypto.SignAsync(context.Wallet, key, message);

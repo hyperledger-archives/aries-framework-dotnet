@@ -60,13 +60,13 @@ namespace Hyperledger.Aries.Ledger
         }
 
         /// <inheritdoc />
-        public Task<string> SubmitRequestAsync(PoolAwaitable poolHandle, object requestHandle)
+        public virtual Task<string> SubmitRequestAsync(PoolAwaitable poolHandle, object requestHandle)
         {
             throw new NotImplementedException($"{nameof(SubmitRequestAsync)} is not implemented within DefaultLedgerService; use DefaultLedgerServiceV2 instead");
         }
 
         /// <inheritdoc />
-        public async Task<IndyTaa> GetTaaAsync(string poolName)
+        public virtual async Task<IndyTaa> GetTaaAsync(string poolName)
         {
             IndyTaa ParseTaa(string response)
             {
@@ -107,7 +107,7 @@ namespace Hyperledger.Aries.Ledger
         }
 
         /// <inheritdoc />
-        public async Task<IndyAml> GetAmlAsync(string poolName, DateTimeOffset timestamp = default, string version = null)
+        public virtual async Task<IndyAml> GetAmlAsync(string poolName, DateTimeOffset timestamp = default, string version = null)
         {
             IndyAml ParseAml(string response)
             {
