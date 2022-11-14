@@ -501,11 +501,6 @@ namespace Hyperledger.Aries.Features.IssueCredential
                 }
             }
 
-            if (config.CredentialAttributeValues != null && config.CredentialAttributeValues.Any())
-            {
-                CredentialUtils.ValidateCredentialPreviewAttributes(config.CredentialAttributeValues);
-            }
-
             var offerJson = await AnonCreds.IssuerCreateCredentialOfferAsync(
                 agentContext.Wallet, config.CredentialDefinitionId);
 

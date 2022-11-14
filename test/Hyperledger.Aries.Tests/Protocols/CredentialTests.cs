@@ -139,7 +139,7 @@ namespace Hyperledger.Aries.Tests.Protocols
             var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
                 _connectionService, _messages, _issuerWallet, _holderWallet);
 
-            var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
+            var (_, holderCredential) = await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
                 holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
                 {
@@ -161,6 +161,35 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.Equal(pngFile, actualResult);
         }
         
+        [Fact]
+        public async Task CanStoreAndReceiveApplicationPdfMimeTypes()
+        {
+            const string pdfFile = "base64_encoded_pdf_file";
+            
+            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
+                _connectionService, _messages, _issuerWallet, _holderWallet);
+
+            var (_, holderCredential) = await Scenarios.IssueCredentialAsync(
+                _schemaService, _credentialService, _messages, issuerConnection,
+                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
+                {
+                    new CredentialPreviewAttribute
+                    {
+                        MimeType = CredentialMimeTypes.ApplicationPdfMimeType,
+                        Name = "pdf_file",
+                        Value = pdfFile
+                    }
+                });
+
+            var actualResult = string.Empty;
+            foreach (var credentialPreviewAttribute in holderCredential.CredentialAttributesValues)
+            {
+                if (credentialPreviewAttribute.MimeType == CredentialMimeTypes.ApplicationPdfMimeType)
+                    actualResult = credentialPreviewAttribute.Value as string;
+            }
+            
+            Assert.Equal(pdfFile, actualResult);
+        }
 
         [Fact]
         public async Task CanCreateCredentialOffer()
@@ -208,47 +237,6 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(previewAttr.Name == "test-attr");
             Assert.True(previewAttr.MimeType == CredentialMimeTypes.TextMimeType);
             Assert.True((string)previewAttr.Value == "test-attr-value");
-        }
-
-        [Fact]
-        public async Task CreateCredentialOfferWithBadAttributeValuesThrowsException()
-        {
-            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
-                new OfferConfiguration
-                {
-                    CredentialAttributeValues = new List<CredentialPreviewAttribute>
-                    {
-                        new CredentialPreviewAttribute("test-attr","test-attr-value")
-                        {
-                            MimeType = "bad-mime-type"
-                        }
-                    }
-                }));
-
-            Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
-        }
-
-        [Fact]
-        public async Task CreateCredentialOfferWithMultipleBadAttributeValuesThrowsException()
-        {
-            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
-                new OfferConfiguration
-                {
-                    CredentialAttributeValues = new List<CredentialPreviewAttribute>
-                    {
-                        new CredentialPreviewAttribute("test-attr","test-attr-value")
-                        {
-                            MimeType = "bad-mime-type"
-                        },
-                        new CredentialPreviewAttribute("test-attr1","test-attr-value1")
-                        {
-                            MimeType = "bad-mime-type"
-                        }
-                    }
-                }));
-
-            Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
-            Assert.True(ex.Message.Split('\n').Count() == 2);
         }
 
         [Fact]

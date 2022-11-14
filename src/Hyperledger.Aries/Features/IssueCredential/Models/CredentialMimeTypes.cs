@@ -16,7 +16,12 @@
         public const string ApplicationJsonMimeType = "application/json";
         
         /// <summary>
-        /// MIME type for images in PNG format. The content should be a PNG file which is encoded in Base64.
+        /// MIME type for PDFs. The content should be a PDF file encoded in Base64.
+        /// </summary>
+        public const string ApplicationPdfMimeType = "application/pdf";
+        
+        /// <summary>
+        /// MIME type for images in PNG format. The content should be a PNG file encoded in Base64.
         /// </summary>
         public const string ImagePngMimeType = "image/png";
     }
