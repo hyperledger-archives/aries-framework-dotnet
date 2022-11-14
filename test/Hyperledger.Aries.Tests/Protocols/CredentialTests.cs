@@ -132,9 +132,11 @@ namespace Hyperledger.Aries.Tests.Protocols
         }
 
         [Fact]
-        public async Task CanStoreAndReceiveImagePngMimeTypes()
+        public async Task CanStoreAndReceiveMimeTypes()
         {
+            const string pdfFile = "base64_encoded_pdf_file";
             const string pngFile = "base64_encoded_png_image_file";
+            const string unknownFile = "base64_encoded_unknown_file";
             
             var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
                 _connectionService, _messages, _issuerWallet, _holderWallet);
@@ -143,54 +145,56 @@ namespace Hyperledger.Aries.Tests.Protocols
                 _schemaService, _credentialService, _messages, issuerConnection,
                 holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
                 {
+                    new CredentialPreviewAttribute
+                    {
+                        MimeType = CredentialMimeTypes.TextMimeType,
+                        Name = "attribute_name",
+                        Value = "attribute_value"
+                    },
                     new CredentialPreviewAttribute
                     {
                         MimeType = CredentialMimeTypes.ImagePngMimeType,
-                        Name = "preview_image",
-                        Value = pngFile
-                    }
-                });
-
-            var actualResult = string.Empty;
-            foreach (var credentialPreviewAttribute in holderCredential.CredentialAttributesValues)
-            {
-                if (credentialPreviewAttribute.MimeType == CredentialMimeTypes.ImagePngMimeType)
-                    actualResult = credentialPreviewAttribute.Value as string;
-            }
-            
-            Assert.Equal(pngFile, actualResult);
-        }
-        
-        [Fact]
-        public async Task CanStoreAndReceiveApplicationPdfMimeTypes()
-        {
-            const string pdfFile = "base64_encoded_pdf_file";
-            
-            var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
-                _connectionService, _messages, _issuerWallet, _holderWallet);
-
-            var (_, holderCredential) = await Scenarios.IssueCredentialAsync(
-                _schemaService, _credentialService, _messages, issuerConnection,
-                holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
-                {
+                        Name = pngFile,
+                        Value = pdfFile
+                    },
                     new CredentialPreviewAttribute
                     {
                         MimeType = CredentialMimeTypes.ApplicationPdfMimeType,
-                        Name = "pdf_file",
+                        Name = pdfFile,
                         Value = pdfFile
+                    },
+                    new CredentialPreviewAttribute
+                    {
+                        Name = unknownFile,
+                        Value = unknownFile
                     }
                 });
 
-            var actualResult = string.Empty;
+            var attributesWithMimeTypeTextCount = 0;
+            var attributesWithMimeTypeImagePngCount = 0;
+            var attributesWithMimeTypeApplicationPdfCount = 0;
+            
             foreach (var credentialPreviewAttribute in holderCredential.CredentialAttributesValues)
             {
-                if (credentialPreviewAttribute.MimeType == CredentialMimeTypes.ApplicationPdfMimeType)
-                    actualResult = credentialPreviewAttribute.Value as string;
+                switch (credentialPreviewAttribute.MimeType)
+                {
+                    case CredentialMimeTypes.TextMimeType:
+                        attributesWithMimeTypeTextCount++;
+                        break;
+                    case CredentialMimeTypes.ImagePngMimeType:
+                        attributesWithMimeTypeImagePngCount++;
+                        break;
+                    case CredentialMimeTypes.ApplicationPdfMimeType:
+                        attributesWithMimeTypeApplicationPdfCount++;
+                        break;
+                }
             }
             
-            Assert.Equal(pdfFile, actualResult);
+            Assert.Equal(2, attributesWithMimeTypeTextCount);
+            Assert.Equal(1, attributesWithMimeTypeImagePngCount);
+            Assert.Equal(1, attributesWithMimeTypeApplicationPdfCount);
         }
-
+        
         [Fact]
         public async Task CanCreateCredentialOffer()
         {
