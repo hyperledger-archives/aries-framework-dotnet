@@ -132,36 +132,69 @@ namespace Hyperledger.Aries.Tests.Protocols
         }
 
         [Fact]
-        public async Task CanStoreAndReceiveImagePngMimeTypes()
+        public async Task CanStoreAndReceiveMimeTypes()
         {
+            const string pdfFile = "base64_encoded_pdf_file";
             const string pngFile = "base64_encoded_png_image_file";
+            const string unknownFile = "base64_encoded_unknown_file";
             
             var (issuerConnection, holderConnection) = await Scenarios.EstablishConnectionAsync(
                 _connectionService, _messages, _issuerWallet, _holderWallet);
 
-            var (issuerCredential, holderCredential) = await Scenarios.IssueCredentialAsync(
+            var (_, holderCredential) = await Scenarios.IssueCredentialAsync(
                 _schemaService, _credentialService, _messages, issuerConnection,
                 holderConnection, _issuerWallet, _holderWallet, await _holderWallet.Pool as Pool, TestConstants.DefaultMasterSecret, false, new List<CredentialPreviewAttribute>
                 {
                     new CredentialPreviewAttribute
                     {
+                        MimeType = CredentialMimeTypes.TextMimeType,
+                        Name = "attribute_name",
+                        Value = "attribute_value"
+                    },
+                    new CredentialPreviewAttribute
+                    {
                         MimeType = CredentialMimeTypes.ImagePngMimeType,
-                        Name = "preview_image",
-                        Value = pngFile
+                        Name = pngFile,
+                        Value = pdfFile
+                    },
+                    new CredentialPreviewAttribute
+                    {
+                        MimeType = CredentialMimeTypes.ApplicationPdfMimeType,
+                        Name = pdfFile,
+                        Value = pdfFile
+                    },
+                    new CredentialPreviewAttribute
+                    {
+                        Name = unknownFile,
+                        Value = unknownFile
                     }
                 });
 
-            var actualResult = string.Empty;
+            var attributesWithMimeTypeTextCount = 0;
+            var attributesWithMimeTypeImagePngCount = 0;
+            var attributesWithMimeTypeApplicationPdfCount = 0;
+            
             foreach (var credentialPreviewAttribute in holderCredential.CredentialAttributesValues)
             {
-                if (credentialPreviewAttribute.MimeType == CredentialMimeTypes.ImagePngMimeType)
-                    actualResult = credentialPreviewAttribute.Value as string;
+                switch (credentialPreviewAttribute.MimeType)
+                {
+                    case CredentialMimeTypes.TextMimeType:
+                        attributesWithMimeTypeTextCount++;
+                        break;
+                    case CredentialMimeTypes.ImagePngMimeType:
+                        attributesWithMimeTypeImagePngCount++;
+                        break;
+                    case CredentialMimeTypes.ApplicationPdfMimeType:
+                        attributesWithMimeTypeApplicationPdfCount++;
+                        break;
+                }
             }
             
-            Assert.Equal(pngFile, actualResult);
+            Assert.Equal(2, attributesWithMimeTypeTextCount);
+            Assert.Equal(1, attributesWithMimeTypeImagePngCount);
+            Assert.Equal(1, attributesWithMimeTypeApplicationPdfCount);
         }
         
-
         [Fact]
         public async Task CanCreateCredentialOffer()
         {
@@ -208,47 +241,6 @@ namespace Hyperledger.Aries.Tests.Protocols
             Assert.True(previewAttr.Name == "test-attr");
             Assert.True(previewAttr.MimeType == CredentialMimeTypes.TextMimeType);
             Assert.True((string)previewAttr.Value == "test-attr-value");
-        }
-
-        [Fact]
-        public async Task CreateCredentialOfferWithBadAttributeValuesThrowsException()
-        {
-            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
-                new OfferConfiguration
-                {
-                    CredentialAttributeValues = new List<CredentialPreviewAttribute>
-                    {
-                        new CredentialPreviewAttribute("test-attr","test-attr-value")
-                        {
-                            MimeType = "bad-mime-type"
-                        }
-                    }
-                }));
-
-            Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
-        }
-
-        [Fact]
-        public async Task CreateCredentialOfferWithMultipleBadAttributeValuesThrowsException()
-        {
-            var ex = await Assert.ThrowsAsync<AriesFrameworkException>(async () => await _credentialService.CreateOfferAsync(_issuerWallet,
-                new OfferConfiguration
-                {
-                    CredentialAttributeValues = new List<CredentialPreviewAttribute>
-                    {
-                        new CredentialPreviewAttribute("test-attr","test-attr-value")
-                        {
-                            MimeType = "bad-mime-type"
-                        },
-                        new CredentialPreviewAttribute("test-attr1","test-attr-value1")
-                        {
-                            MimeType = "bad-mime-type"
-                        }
-                    }
-                }));
-
-            Assert.True(ex.ErrorCode == ErrorCode.InvalidParameterFormat);
-            Assert.True(ex.Message.Split('\n').Count() == 2);
         }
 
         [Fact]
