@@ -27,7 +27,7 @@ Aries Framework for .NET is a comprehensive implementation of the Aries protocol
 
 ### Installation
 
-Aries Framework for .NET comes as a Nuget package available at [nuget.org](https://www.nuget.org/packages/AgentFramework/)
+Aries Framework for .NET comes as a Nuget package available at [nuget.org](https://www.nuget.org/packages/Hyperledger.Aries/)
 
 ```bash
 PM> Install-Package Hyperledger.Aries
