@@ -2,6 +2,7 @@
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.BasicMessage;
 using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Features.Handshakes.Connection;
 using Hyperledger.Aries.Features.Handshakes.DidExchange;
@@ -71,6 +72,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             builder.TryAddSingleton<IEventAggregator, EventAggregator>();
             builder.TryAddSingleton<IOutOfBandService, DefaultOutOfBandService>();
+            builder.TryAddSingleton<IBasicMessageService, DefaultBasicMessageService>();
             builder.TryAddSingleton<IConnectionService, DefaultConnectionService>();
             builder.TryAddSingleton<ICredentialService, DefaultCredentialService>();
             builder.TryAddSingleton<IDidExchangeService, DefaultDidExchangeService>();
