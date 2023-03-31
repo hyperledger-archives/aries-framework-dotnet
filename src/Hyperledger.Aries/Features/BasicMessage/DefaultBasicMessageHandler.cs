@@ -12,17 +12,19 @@ namespace Hyperledger.Aries.Features.BasicMessage
     /// <seealso cref="MessageHandlerBase{BasicMessage}" />
     public class DefaultBasicMessageHandler : MessageHandlerBase<BasicMessage>
     {
-        private readonly IWalletRecordService _recordService;
+        private readonly IBasicMessageService _basicMessageService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultBasicMessageHandler"/> class.
         /// </summary>
-        /// <param name="recordService">The record service.</param>
-        public DefaultBasicMessageHandler(IWalletRecordService recordService)
+        /// <param name="basicMessageService">The basic message service.</param>
+        public DefaultBasicMessageHandler(
+            IBasicMessageService basicMessageService)
         {
-            _recordService = recordService;
+            _basicMessageService = basicMessageService;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<MessageType> SupportedMessageTypes => new MessageType[] { MessageTypes.BasicMessageType, MessageTypesHttps.BasicMessageType };
 
         /// <summary>
@@ -34,17 +36,8 @@ namespace Hyperledger.Aries.Features.BasicMessage
         /// <returns></returns>
         protected override async Task<AgentMessage> ProcessAsync(BasicMessage message, IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
-            var record = new BasicMessageRecord
-            {
-                Id = Guid.NewGuid().ToString(),
-                ConnectionId = messageContext.Connection.Id,
-                Text = message.Content,
-                SentTime = DateTime.TryParse(message.SentTime, out var dateTime) ? dateTime : DateTime.UtcNow,
-                Direction = MessageDirection.Incoming
-            };
-            await _recordService.AddAsync(agentContext.Wallet, record);
+            var record = await _basicMessageService.ProcessIncomingBasicMessageAsync(agentContext, messageContext, message);
             messageContext.ContextRecord = record;
-
             return null;
         }
     }
