@@ -1,6 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Decorators.Threading;
+using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;
 
 namespace Hyperledger.Aries.Features.BasicMessage;
@@ -12,27 +15,38 @@ public class DefaultBasicMessageService : IBasicMessageService
     /// Initializes a new instance of the <see cref="DefaultBasicMessageService"/> class.
     /// </summary>
     /// <param name="recordService">The record service.</param>
-    public DefaultBasicMessageService(IWalletRecordService recordService)
+    public DefaultBasicMessageService(
+        IEventAggregator eventAggregator,
+        IWalletRecordService recordService)
     {
+        EventAggregator = eventAggregator;
         RecordService = recordService;
     }
-    
+
+    protected readonly IEventAggregator EventAggregator;
     protected readonly IWalletRecordService RecordService;
 
     /// <inheritdoc />
-    public virtual async Task<BasicMessageRecord> ProcessIncomingBasicMessageAsync(IAgentContext agentContext, UnpackedMessageContext unpackedMessageContext,
+    public virtual async Task<BasicMessageRecord> ProcessIncomingBasicMessageAsync(IAgentContext agentContext, string connectionId,
         BasicMessage basicMessage)
     {
         var record = new BasicMessageRecord
         {
             Id = Guid.NewGuid().ToString(),
-            ConnectionId = unpackedMessageContext.Connection.Id,
+            ConnectionId = connectionId,
             Text = basicMessage.Content,
             SentTime = DateTime.TryParse(basicMessage.SentTime, out var dateTime) ? dateTime : DateTime.UtcNow,
             Direction = MessageDirection.Incoming
         };
         await RecordService.AddAsync(agentContext.Wallet, record);
         
+        EventAggregator.Publish(new ServiceMessageProcessingEvent
+        {
+            MessageType = basicMessage.Type,
+            RecordId = record.Id,
+            ThreadId = basicMessage.GetThreadId()
+        });
+
         return record;
     }
 }

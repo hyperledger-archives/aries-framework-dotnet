@@ -12,8 +12,8 @@ public interface IBasicMessageService
     /// Processes the incoming basic message.
     /// </summary>
     /// <param name="agentContext">The agent context.</param>
-    /// <param name="unpackedMessageContext">The unpacked message context.</param>
+    /// <param name="connectionId">The connection id.</param>
     /// <param name="basicMessage">The basic message.</param>
     /// <returns>Records associated with the message.</returns>
-    Task<BasicMessageRecord> ProcessIncomingBasicMessageAsync(IAgentContext agentContext, UnpackedMessageContext unpackedMessageContext, BasicMessage basicMessage);
+    Task<BasicMessageRecord> ProcessIncomingBasicMessageAsync(IAgentContext agentContext, string connectionId, BasicMessage basicMessage);
 }

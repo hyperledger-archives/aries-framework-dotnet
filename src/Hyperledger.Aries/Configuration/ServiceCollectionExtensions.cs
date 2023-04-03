@@ -71,8 +71,8 @@ namespace Microsoft.Extensions.DependencyInjection
         internal static IServiceCollection AddDefaultServices(this IServiceCollection builder)
         {
             builder.TryAddSingleton<IEventAggregator, EventAggregator>();
-            builder.TryAddSingleton<IOutOfBandService, DefaultOutOfBandService>();
             builder.TryAddSingleton<IBasicMessageService, DefaultBasicMessageService>();
+            builder.TryAddSingleton<IOutOfBandService, DefaultOutOfBandService>();
             builder.TryAddSingleton<IConnectionService, DefaultConnectionService>();
             builder.TryAddSingleton<ICredentialService, DefaultCredentialService>();
             builder.TryAddSingleton<IDidExchangeService, DefaultDidExchangeService>();

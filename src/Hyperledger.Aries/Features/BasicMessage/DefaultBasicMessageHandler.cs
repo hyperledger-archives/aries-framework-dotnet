@@ -36,7 +36,7 @@ namespace Hyperledger.Aries.Features.BasicMessage
         /// <returns></returns>
         protected override async Task<AgentMessage> ProcessAsync(BasicMessage message, IAgentContext agentContext, UnpackedMessageContext messageContext)
         {
-            var record = await _basicMessageService.ProcessIncomingBasicMessageAsync(agentContext, messageContext, message);
+            var record = await _basicMessageService.ProcessIncomingBasicMessageAsync(agentContext, messageContext.Connection.Id, message);
             messageContext.ContextRecord = record;
             return null;
         }
