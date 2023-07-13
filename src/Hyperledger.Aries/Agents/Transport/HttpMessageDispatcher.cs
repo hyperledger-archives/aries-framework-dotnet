@@ -36,7 +36,8 @@ namespace Hyperledger.Aries.Agents
             };
 
             var agentContentType = new MediaTypeHeaderValue(DefaultMessageService.AgentWireMessageMimeType);
-            request.Content.Headers.ContentType = agentContentType;
+            var encryptedEnvelopeContentType = new MediaTypeHeaderValue(DefaultMessageService.EncryptedEnvelopeMessageMimeType);
+            request.Content.Headers.ContentType = encryptedEnvelopeContentType;
 
             var response = await HttpClient.SendAsync(request);
 
@@ -47,7 +48,9 @@ namespace Hyperledger.Aries.Agents
                     ErrorCode.A2AMessageTransmissionError, $"Dispatch Failure. Endpoint:{endpointUri} Status: {response.StatusCode} Content: {responseBody}");
             }
 
-            if (response.Content?.Headers.ContentType?.Equals(agentContentType) ?? false)
+            var responseContentType = response.Content?.Headers.ContentType; 
+            if ((responseContentType?.Equals(encryptedEnvelopeContentType) ?? false)
+                || (responseContentType?.Equals(agentContentType) ?? false))
             {
                 var rawContent = await response.Content.ReadAsByteArrayAsync();
 
