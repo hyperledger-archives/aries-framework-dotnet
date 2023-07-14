@@ -14,7 +14,6 @@ namespace Hyperledger.Aries.Features.BasicMessage
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultBasicMessageService"/> class.
         /// </summary>
-        /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name="recordService">The record service.</param>
         public DefaultBasicMessageService(
             IEventAggregator eventAggregator,
@@ -28,8 +27,7 @@ namespace Hyperledger.Aries.Features.BasicMessage
         protected readonly IWalletRecordService RecordService;
 
         /// <inheritdoc />
-        public virtual async Task<BasicMessageRecord> ProcessIncomingBasicMessageAsync(IAgentContext agentContext,
-            string connectionId,
+        public virtual async Task<BasicMessageRecord> ProcessIncomingBasicMessageAsync(IAgentContext agentContext, string connectionId,
             BasicMessage basicMessage)
         {
             var record = new BasicMessageRecord
