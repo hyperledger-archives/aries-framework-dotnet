@@ -40,6 +40,7 @@ namespace Hyperledger.Aries.Routing
             RoutingTypeNames.CreateInboxMessage,
             RoutingTypeNames.AddRouteMessage,
             RoutingTypeNames.AddDeviceInfoMessage,
+            RoutingTypeNames.UpsertDeviceInfoMessage,
             RoutingTypeNames.GetInboxItemsMessage,
             RoutingTypeNames.DeleteInboxItemsMessage
         };
@@ -72,6 +73,10 @@ namespace Hyperledger.Aries.Routing
                 case RoutingTypeNames.AddDeviceInfoMessage:
                     await AddDeviceInfoAsync(agentContext, messageContext.Connection, messageContext.GetMessage<AddDeviceInfoMessage>());
                     break;
+                
+                case RoutingTypeNames.UpsertDeviceInfoMessage:
+                    await UpsertDeviceInfoAsync(agentContext, messageContext.Connection, messageContext.GetMessage<UpsertDeviceInfoMessage>());
+                    break;
 
                 default:
                     break;
@@ -88,11 +93,44 @@ namespace Hyperledger.Aries.Routing
                 throw new InvalidOperationException("Inbox was not found. Create an inbox first");
             }
 
+            await AddDeviceInfoAsync(agentContext, inboxId, addDeviceInfoMessage.DeviceId, addDeviceInfoMessage.DeviceVendor);
+        }
+
+        private async Task UpsertDeviceInfoAsync(IAgentContext agentContext, ConnectionRecord connection, UpsertDeviceInfoMessage upsertDeviceInfoMessage)
+        {
+            var inboxId = connection.GetTag("InboxId");
+            if (inboxId == null)
+            {
+                throw new InvalidOperationException("Inbox was not found. Create an inbox first");
+            }
+
+            var devices = await recordService.SearchAsync<DeviceInfoRecord>(agentContext.Wallet,
+                SearchQuery.Equal(nameof(DeviceInfoRecord.InboxId), inboxId));
+
+            var deviceInfo = devices
+                .OrderByDescending(x => x.UpdatedAtUtc ?? x.CreatedAtUtc)
+                .FirstOrDefault();
+
+            if (deviceInfo == null)
+            {
+                await AddDeviceInfoAsync(agentContext, inboxId, upsertDeviceInfoMessage.DeviceId, upsertDeviceInfoMessage.DeviceVendor);
+            }
+            else
+            {
+                deviceInfo.DeviceId = upsertDeviceInfoMessage.DeviceId;
+                deviceInfo.DeviceVendor = upsertDeviceInfoMessage.DeviceVendor;
+
+                await recordService.UpdateAsync(agentContext.Wallet, deviceInfo);
+            }
+        }
+
+        private async Task AddDeviceInfoAsync(IAgentContext agentContext, string inboxId, string deviceId, string deviceVendor)
+        {
             var deviceRecord = new DeviceInfoRecord
             {
                 InboxId = inboxId,
-                DeviceId = addDeviceInfoMessage.DeviceId,
-                DeviceVendor = addDeviceInfoMessage.DeviceVendor
+                DeviceId = deviceId,
+                DeviceVendor = deviceVendor
             };
             try
             {
@@ -103,7 +141,7 @@ namespace Hyperledger.Aries.Routing
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Unable to register device", addDeviceInfoMessage);
+                logger.LogError(e, $"Unable to register device '{deviceId}'");
             }
         }
 
