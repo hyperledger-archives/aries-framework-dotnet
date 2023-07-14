@@ -17,11 +17,15 @@ namespace Hyperledger.Aries.Agents
 
         /// <summary>The agent wire message MIME type</summary>
         public const string AgentWireMessageMimeType = "application/ssi-agent-wire";
+        
+        /// <summary>The agent wire message MIME type</summary>
+        public const string JsonMessageMimeType = "application/json";
 
         public static readonly IEnumerable<string> SupportedMimeTypes = new List<string>
         {
             EncryptedEnvelopeMessageMimeType,
-            AgentWireMessageMimeType
+            AgentWireMessageMimeType,
+            JsonMessageMimeType
         };
 
         /// <summary>The logger</summary>

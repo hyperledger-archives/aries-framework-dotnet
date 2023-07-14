@@ -52,7 +52,7 @@ namespace Hyperledger.TestHarness.Mock
                 if (response != null)
                 {
                     responseMessage.Content = new ByteArrayContent(response.Payload);
-                    responseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(DefaultMessageService.EncryptedEnvelopeMessageMimeType);
+                    responseMessage.Content.Headers.ContentType = request.Content?.Headers.ContentType;
                 }
 
                 return responseMessage;

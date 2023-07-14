@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -35,7 +36,6 @@ namespace Hyperledger.Aries.Agents
                 Content = new ByteArrayContent(message.Payload)
             };
 
-            var agentContentType = new MediaTypeHeaderValue(DefaultMessageService.AgentWireMessageMimeType);
             var encryptedEnvelopeContentType = new MediaTypeHeaderValue(DefaultMessageService.EncryptedEnvelopeMessageMimeType);
             request.Content.Headers.ContentType = encryptedEnvelopeContentType;
 
@@ -48,9 +48,8 @@ namespace Hyperledger.Aries.Agents
                     ErrorCode.A2AMessageTransmissionError, $"Dispatch Failure. Endpoint:{endpointUri} Status: {response.StatusCode} Content: {responseBody}");
             }
 
-            var responseContentType = response.Content?.Headers.ContentType; 
-            if ((responseContentType?.Equals(encryptedEnvelopeContentType) ?? false)
-                || (responseContentType?.Equals(agentContentType) ?? false))
+            var responseContentType = response.Content?.Headers?.ContentType?.MediaType;
+            if(DefaultMessageService.SupportedMimeTypes.Contains(responseContentType))
             {
                 var rawContent = await response.Content.ReadAsByteArrayAsync();
 
