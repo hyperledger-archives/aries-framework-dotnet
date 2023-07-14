@@ -60,7 +60,7 @@
 
       if (response != null)
       {
-        aHttpContext.Response.ContentType = DefaultMessageService.EncryptedEnvelopeMessageMimeType;
+        aHttpContext.Response.ContentType = aHttpContext.Request.ContentType;
         await aHttpContext.Response.WriteAsync(response.Payload.GetUTF8String());
       }
       else
