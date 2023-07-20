@@ -15,7 +15,6 @@ namespace Hyperledger.Aries.Features.BasicMessage
         /// <param name="connectionId">The connection id.</param>
         /// <param name="basicMessage">The basic message.</param>
         /// <returns>Records associated with the message.</returns>
-        Task<BasicMessageRecord> ProcessIncomingBasicMessageAsync(IAgentContext agentContext, string connectionId,
-            BasicMessage basicMessage);
-    }
+        Task<BasicMessageRecord> ProcessIncomingBasicMessageAsync(IAgentContext agentContext, string connectionId, BasicMessage basicMessage);
+     }
 }
