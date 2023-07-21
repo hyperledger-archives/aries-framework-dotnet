@@ -208,7 +208,7 @@ namespace Hyperledger.Aries.Tests
             var context = new DefaultHttpContext();
             context.Request.Body = new MemoryStream();
             context.Request.Method = HttpMethod.Post.Method;
-            context.Request.ContentType = DefaultMessageService.AgentWireMessageMimeType;
+            context.Request.ContentType = DefaultMessageService.EncryptedEnvelopeMessageMimeType;
             context.Request.ContentLength = 1;
 
             await context.Request.Body.WriteAsync(new ReadOnlyMemory<byte>(new { dummy = "dummy" }.ToJson().GetUTF8Bytes()));
