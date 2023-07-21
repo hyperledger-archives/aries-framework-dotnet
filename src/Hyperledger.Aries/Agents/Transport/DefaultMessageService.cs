@@ -12,8 +12,21 @@ namespace Hyperledger.Aries.Agents
     /// <inheritdoc />
     public class DefaultMessageService : IMessageService
     {
+        /// <summary>The encrypted envelope message MIME type</summary>
+        public const string EncryptedEnvelopeMessageMimeType = "application/didcomm-envelope-enc";
+
         /// <summary>The agent wire message MIME type</summary>
         public const string AgentWireMessageMimeType = "application/ssi-agent-wire";
+        
+        /// <summary>The agent wire message MIME type</summary>
+        public const string JsonMessageMimeType = "application/json";
+
+        public static readonly IEnumerable<string> SupportedMimeTypes = new List<string>
+        {
+            EncryptedEnvelopeMessageMimeType,
+            AgentWireMessageMimeType,
+            JsonMessageMimeType
+        };
 
         /// <summary>The logger</summary>
         // ReSharper disable InconsistentNaming

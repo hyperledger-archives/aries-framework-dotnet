@@ -6,6 +6,7 @@
   using Hyperledger.Aries.Extensions;
   using Microsoft.AspNetCore.Http;
   using Hyperledger.Aries.Agents;
+  using System.Linq;
 
   /// <summary>
   /// An agent middleware
@@ -34,7 +35,7 @@
       if
       (
         !HttpMethods.IsPost(aHttpContext.Request.Method) ||
-        !(aHttpContext.Request.ContentType?.Equals(DefaultMessageService.AgentWireMessageMimeType) ?? false)
+        !DefaultMessageService.SupportedMimeTypes.Contains(aHttpContext.Request.ContentType)
       )
       {
         await NextRequestDelegate(aHttpContext);
@@ -59,7 +60,7 @@
 
       if (response != null)
       {
-        aHttpContext.Response.ContentType = DefaultMessageService.AgentWireMessageMimeType;
+        aHttpContext.Response.ContentType = aHttpContext.Request.ContentType;
         await aHttpContext.Response.WriteAsync(response.Payload.GetUTF8String());
       }
       else
