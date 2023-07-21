@@ -14,6 +14,7 @@ namespace Hyperledger.Aries.Features.BasicMessage
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultBasicMessageService"/> class.
         /// </summary>
+        /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name="recordService">The record service.</param>
         public DefaultBasicMessageService(
             IEventAggregator eventAggregator,

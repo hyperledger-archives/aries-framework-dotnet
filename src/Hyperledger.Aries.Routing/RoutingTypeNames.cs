@@ -17,5 +17,6 @@
         public const string InboxItemMessage = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/basic-routing/1.0/inbox-item";
 
         public const string AddDeviceInfoMessage = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/basic-routing/1.0/add-device-info";
+        public const string UpsertDeviceInfoMessage = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/basic-routing/1.0/upsert-device-info";
     }
 }

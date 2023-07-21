@@ -53,6 +53,17 @@ namespace Hyperledger.Aries.Routing
         /// <param name="message">The message.</param>
         /// <returns></returns>
         Task AddDeviceAsync(IAgentContext agentContext, AddDeviceInfoMessage message);
+        
+        /// <summary>
+        /// Register or update a device with the mediator agent.
+        /// </summary>
+        /// <remarks>
+        /// This can be used for registering devices for push notifications
+        /// </remarks>
+        /// <param name="agentContext">The agent context.</param>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        Task UpsertDeviceAsync(IAgentContext agentContext, UpsertDeviceInfoMessage message);
 
         /// <summary>
         /// Fetch and process all messages from the mediator agent

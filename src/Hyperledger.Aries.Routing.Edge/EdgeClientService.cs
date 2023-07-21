@@ -132,7 +132,17 @@ namespace Hyperledger.Aries.Routing.Edge
             return (processedItems.Count, unprocessedItem);
         }
 
-        public virtual async Task AddDeviceAsync(IAgentContext agentContext, AddDeviceInfoMessage message)
+        public virtual Task AddDeviceAsync(IAgentContext agentContext, AddDeviceInfoMessage message)
+        {
+            return SendAgentMessageAsync(agentContext, message);
+        }
+
+        public virtual Task UpsertDeviceAsync(IAgentContext agentContext, UpsertDeviceInfoMessage message)
+        {
+            return SendAgentMessageAsync(agentContext, message);
+        }
+
+        private async Task SendAgentMessageAsync(IAgentContext agentContext, AgentMessage message)
         {
             var connection = await GetMediatorConnectionAsync(agentContext);
             if (connection != null)
