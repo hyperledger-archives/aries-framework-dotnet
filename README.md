@@ -7,7 +7,9 @@
 > :warning: **This project is archived and no longer maintained.** The repository is kept for historical purposes and is read-only.
 >
 > The work is continued at Open Wallet Foundation (OWF):
-> https://github.com/openwallet-foundation/wallet-framework-dotnet
+> https://github.com/openwallet-foundation-labs/wallet-framework-dotnet
+
+---
 
 Aries Framework for .NET is a comprehensive implementation of the Aries protocols. It's purpose is to provide a universal library for building SSI application for the cloud, mobile and IoT stack.
 
