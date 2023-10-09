@@ -1,22 +1,33 @@
-# Aries Framework for .NET
 
-[![Build Status](https://dev.azure.com/Hyperledger/Aries/_apis/build/status/hyperledger.aries-framework-dotnet?branchName=master)](https://dev.azure.com/Hyperledger/Aries/_build/latest?definitionId=80&branchName=master)
-[![Build Status](https://travis-ci.com/hyperledger/aries-framework-dotnet.svg?branch=master)](https://travis-ci.com/hyperledger/aries-framework-dotnet.svg?branch=master)
-[![MyGet](https://img.shields.io/nuget/v/Hyperledger.Aries.svg)](https://www.nuget.org/packages/Hyperledger.Aries/)
+
+# Aries Framework for .NET [ARCHIVED]
+
+![Archived](https://img.shields.io/badge/status-archived-red)
+
+> :warning: **This project is archived and no longer maintained.** The repository is kept for historical purposes and is read-only.
+>
+> The work is continued at Open Wallet Foundation (OWF):
+> https://github.com/openwallet-foundation/wallet-framework-dotnet
 
 Aries Framework for .NET is a comprehensive implementation of the Aries protocols. It's purpose is to provide a universal library for building SSI application for the cloud, mobile and IoT stack.
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Environment Setup](#environment-setup)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Quickstart Guide](#quickstart-Guide)
-  - [Create new web application](#create-new-web-application)
-  - [Add the framework dependencies](#add-the-framework-dependencies)
-  - [Register the agent middleware](#register-the-agent-middleware)
-- [Demo](#demo)
-- [License](#license)
+- [Aries Framework for .NET \[ARCHIVED\]](#aries-framework-for-net-archived)
+  - [Environment Setup](#environment-setup)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Quickstart Guide](#quickstart-guide)
+    - [Create new web application](#create-new-web-application)
+    - [Add the framework dependencies](#add-the-framework-dependencies)
+    - [Register the agent middleware](#register-the-agent-middleware)
+  - [Demo](#demo)
+  - [Testing](#testing)
+    - [Install libindy library](#install-libindy-library)
+    - [Run an indy node pool on localhost](#run-an-indy-node-pool-on-localhost)
+    - [Run an indy node pool on server](#run-an-indy-node-pool-on-server)
+    - [Run the tests](#run-the-tests)
+  - [License](#license)
 
 ## Environment Setup
 
